@@ -57,13 +57,33 @@ namespace VolleybalCompetition_creator
                         }
                         foreach (JObject match in poule["matches"])
                         {
+                            // "2013-09-28T20:30:00+0200"
+                            // "2013-09-22T11:00:00+02:00"
+                            // (string)match["datetime"]
+                            CultureInfo provider = CultureInfo.InvariantCulture;
+                            string datetimeStr = (string)match["datetime"];
+                            DateTime datetime = DateTime.ParseExact(datetimeStr, "MM/dd/yyyy HH:mm:ss", provider);
+                            //datetime = DateTime.ParseExact("2013-09-22T11:00:00+02:00", "yyyy-MM-ddTHH:mm:sszzz", null);
+                            // default tijd afleiden van de geplande wedstrijd tijd
+                            string time = datetime.ToString("HH:mm:ss");
+                            // default dag afleiden van de geplande wedstrijd dag
+                            string day = datetime.ToString("ddd");
+
                             string teamName = (string)match["homeTeam"];
                             int teamId = (int)match["homeTeamId"];
                             if (teams.ContainsKey(teamId) == false)
                             {
-                                teams.Add(teamId, new Team(teamName,po));
+                                Team t = new Team(teamName, po);
+                                t.defaultDay = day;
+                                t.defaultTime = time;
+                                teams.Add(teamId, t);
                             }
                             Team homeTeam = teams[teamId];
+                            if (homeTeam.defaultDay == null)
+                            {
+                                homeTeam.defaultDay = day;
+                                homeTeam.defaultTime = time;
+                            }
                             homeTeam.club = club;
                             if (club.teams.Contains(homeTeam) == false)
                             {
@@ -88,14 +108,7 @@ namespace VolleybalCompetition_creator
                             {
                                 po.teams.Add(visitorTeam);
                             }
-                            // "2013-09-28T20:30:00+0200"
-                            // "2013-09-22T11:00:00+02:00"
-                            // (string)match["datetime"]
-                            CultureInfo provider = CultureInfo.InvariantCulture;
-                            string datetimeStr = (string)match["datetime"];
-                            DateTime datetime = DateTime.ParseExact(datetimeStr, "MM/dd/yyyy HH:mm:ss", provider);
-                            //datetime = DateTime.ParseExact("2013-09-22T11:00:00+02:00", "yyyy-MM-ddTHH:mm:sszzz", null);
-                            Match mat = new Match(datetime, homeTeam,visitorTeam, serie, po);
+                                                        Match mat = new Match(datetime, homeTeam,visitorTeam, serie, po);
                             po.matches.Add(mat);
                         }
                     }

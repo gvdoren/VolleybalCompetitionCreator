@@ -27,7 +27,7 @@ namespace VolleybalCompetition_creator
             InitializeComponent();
             this.Text = "Poule - " + poule.serie.name + poule.name;
             objectListView1.ShowGroups = false;
-            objectListView1.SetObjects(poule.teams);
+            objectListView1.SetObjects(new List<Team>(poule.teams));
             myDropSink.CanDropBetween = true;
             objectListView1.DropSink = myDropSink;
             this.objectListView1.FormatRow += objectListView1_FormatRow;
@@ -161,7 +161,6 @@ namespace VolleybalCompetition_creator
         private void objectListView1_ItemsChanged(object sender, ItemsChangedEventArgs e)
         {
             updateMatches();
-
         }
     }
 }

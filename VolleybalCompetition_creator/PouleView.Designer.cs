@@ -31,7 +31,6 @@
             this.objectListView1 = new BrightIdeasSoftware.ObjectListView();
             this.invisible = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.label1 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
@@ -49,19 +48,17 @@
             // 
             this.objectListView1.AllColumns.Add(this.invisible);
             this.objectListView1.AllColumns.Add(this.olvColumn3);
-            this.objectListView1.AllColumns.Add(this.olvColumn1);
             this.objectListView1.AllColumns.Add(this.olvColumn2);
             this.objectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.invisible,
             this.olvColumn3,
-            this.olvColumn1,
             this.olvColumn2});
             this.objectListView1.FullRowSelect = true;
             this.objectListView1.IsSimpleDragSource = true;
             this.objectListView1.IsSimpleDropSink = true;
             this.objectListView1.Location = new System.Drawing.Point(-2, 25);
             this.objectListView1.Name = "objectListView1";
-            this.objectListView1.Size = new System.Drawing.Size(341, 275);
+            this.objectListView1.Size = new System.Drawing.Size(172, 275);
             this.objectListView1.TabIndex = 0;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
@@ -87,17 +84,6 @@
             this.olvColumn3.Text = "Number";
             this.olvColumn3.Width = 50;
             // 
-            // olvColumn1
-            // 
-            this.olvColumn1.AspectName = "club.name";
-            this.olvColumn1.CellPadding = null;
-            this.olvColumn1.FillsFreeSpace = true;
-            this.olvColumn1.MaximumWidth = 200;
-            this.olvColumn1.MinimumWidth = 100;
-            this.olvColumn1.Sortable = false;
-            this.olvColumn1.Text = "Club";
-            this.olvColumn1.Width = 100;
-            // 
             // olvColumn2
             // 
             this.olvColumn2.AspectName = "name";
@@ -121,9 +107,9 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(362, 25);
+            this.button1.Location = new System.Drawing.Point(176, 25);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.Size = new System.Drawing.Size(49, 23);
             this.button1.TabIndex = 2;
             this.button1.Text = "/\\";
             this.button1.UseVisualStyleBackColor = true;
@@ -131,9 +117,9 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(362, 55);
+            this.button2.Location = new System.Drawing.Point(176, 55);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.Size = new System.Drawing.Size(49, 23);
             this.button2.TabIndex = 3;
             this.button2.Text = "\\/";
             this.button2.UseVisualStyleBackColor = true;
@@ -141,9 +127,9 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(362, 85);
+            this.button3.Location = new System.Drawing.Point(176, 85);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.Size = new System.Drawing.Size(49, 23);
             this.button3.TabIndex = 4;
             this.button3.Text = "Switch";
             this.button3.UseVisualStyleBackColor = true;
@@ -174,7 +160,7 @@
             this.olvColumn6.MaximumWidth = 120;
             this.olvColumn6.MinimumWidth = 120;
             this.olvColumn6.Text = "DatumTijd";
-            this.olvColumn6.Width = 140;
+            this.olvColumn6.Width = 120;
             // 
             // olvColumn4
             // 
@@ -221,7 +207,6 @@
 
         private BrightIdeasSoftware.ObjectListView objectListView1;
         private System.Windows.Forms.Label label1;
-        private BrightIdeasSoftware.OLVColumn olvColumn1;
         private BrightIdeasSoftware.OLVColumn olvColumn2;
         private BrightIdeasSoftware.OLVColumn olvColumn3;
         private BrightIdeasSoftware.OLVColumn invisible;
