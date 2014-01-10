@@ -38,6 +38,7 @@
             this.button3 = new System.Windows.Forms.Button();
             this.objectListView2 = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn6 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn5 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
@@ -58,7 +59,7 @@
             this.objectListView1.IsSimpleDropSink = true;
             this.objectListView1.Location = new System.Drawing.Point(-2, 25);
             this.objectListView1.Name = "objectListView1";
-            this.objectListView1.Size = new System.Drawing.Size(172, 275);
+            this.objectListView1.Size = new System.Drawing.Size(173, 275);
             this.objectListView1.TabIndex = 0;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
@@ -79,10 +80,9 @@
             this.olvColumn3.AspectName = "";
             this.olvColumn3.AspectToStringFormat = "";
             this.olvColumn3.CellPadding = null;
-            this.olvColumn3.MaximumWidth = 50;
             this.olvColumn3.Sortable = false;
-            this.olvColumn3.Text = "Number";
-            this.olvColumn3.Width = 50;
+            this.olvColumn3.Text = "";
+            this.olvColumn3.Width = 30;
             // 
             // olvColumn2
             // 
@@ -107,7 +107,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(176, 25);
+            this.button1.Location = new System.Drawing.Point(177, 25);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(49, 23);
             this.button1.TabIndex = 2;
@@ -117,7 +117,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(176, 55);
+            this.button2.Location = new System.Drawing.Point(177, 55);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(49, 23);
             this.button2.TabIndex = 3;
@@ -127,7 +127,7 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(176, 85);
+            this.button3.Location = new System.Drawing.Point(177, 85);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(49, 23);
             this.button3.TabIndex = 4;
@@ -138,17 +138,19 @@
             // objectListView2
             // 
             this.objectListView2.AllColumns.Add(this.olvColumn6);
+            this.objectListView2.AllColumns.Add(this.olvColumn1);
             this.objectListView2.AllColumns.Add(this.olvColumn4);
             this.objectListView2.AllColumns.Add(this.olvColumn5);
             this.objectListView2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
             this.objectListView2.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumn6,
+            this.olvColumn1,
             this.olvColumn4,
             this.olvColumn5});
             this.objectListView2.Location = new System.Drawing.Point(1, 325);
             this.objectListView2.Name = "objectListView2";
-            this.objectListView2.Size = new System.Drawing.Size(450, 117);
+            this.objectListView2.Size = new System.Drawing.Size(352, 117);
             this.objectListView2.TabIndex = 5;
             this.objectListView2.UseCompatibleStateImageBehavior = false;
             this.objectListView2.View = System.Windows.Forms.View.Details;
@@ -156,11 +158,20 @@
             // olvColumn6
             // 
             this.olvColumn6.AspectName = "datetime";
+            this.olvColumn6.AspectToStringFormat = "{0:dd-MM-yyyy}";
             this.olvColumn6.CellPadding = null;
-            this.olvColumn6.MaximumWidth = 120;
-            this.olvColumn6.MinimumWidth = 120;
-            this.olvColumn6.Text = "DatumTijd";
-            this.olvColumn6.Width = 120;
+            this.olvColumn6.Text = "Datum";
+            this.olvColumn6.Width = 70;
+            // 
+            // olvColumn1
+            // 
+            this.olvColumn1.AspectName = "homeTeam.defaultTime";
+            this.olvColumn1.AspectToStringFormat = "";
+            this.olvColumn1.CellPadding = null;
+            this.olvColumn1.MaximumWidth = 40;
+            this.olvColumn1.MinimumWidth = 40;
+            this.olvColumn1.Text = "Tijd";
+            this.olvColumn1.Width = 40;
             // 
             // olvColumn4
             // 
@@ -217,5 +228,6 @@
         private BrightIdeasSoftware.OLVColumn olvColumn4;
         private BrightIdeasSoftware.OLVColumn olvColumn5;
         private BrightIdeasSoftware.OLVColumn olvColumn6;
+        private BrightIdeasSoftware.OLVColumn olvColumn1;
     }
 }

@@ -18,6 +18,7 @@ namespace VolleybalCompetition_creator
         public List<Poule> poules = new List<Poule>();
         public Dictionary<int, Team> teams = new Dictionary<int, Team>();
         public Annorama annorama = new Annorama();
+        public List<Constraint> constraints = new List<Constraint>();
         public Klvv()
         {
             //var json = new WebClient().DownloadString("http://klvv.be/server/clubs.php");
@@ -30,6 +31,8 @@ namespace VolleybalCompetition_creator
                 //var json1 = new WebClient().DownloadString(url);
                 //File.WriteAllText(@"../../Data/clubmatches"+club.Id+".json",json1.ToString());
                 // partial data required, only get the series id out. That will be used to read the serie data
+                ConstraintZaal zaalConstraint = new ConstraintZaal();
+                zaalConstraint.club = club;
                 Console.WriteLine(club.name);
                 string json1 = File.ReadAllText(@"../../Data/clubmatches"+club.Id+".json");// local copy
                 JArray poules = JArray.Parse(json1);
@@ -65,24 +68,33 @@ namespace VolleybalCompetition_creator
                             DateTime datetime = DateTime.ParseExact(datetimeStr, "MM/dd/yyyy HH:mm:ss", provider);
                             //datetime = DateTime.ParseExact("2013-09-22T11:00:00+02:00", "yyyy-MM-ddTHH:mm:sszzz", null);
                             // default tijd afleiden van de geplande wedstrijd tijd
-                            string time = datetime.ToString("HH:mm:ss");
+                            Time time = new Time(datetime);
                             // default dag afleiden van de geplande wedstrijd dag
                             string day = datetime.ToString("ddd");
-
+                            if (day == "za")
+                            {
+                                if (time < zaalConstraint.Zatvroeg) zaalConstraint.Zatvroeg = time;
+                                if (time > zaalConstraint.Zatlaat) zaalConstraint.Zatlaat = time;
+                            }
+                            if (day == "zo")
+                            {
+                                if (time < zaalConstraint.Zonvroeg) zaalConstraint.Zonvroeg = time;
+                                if (time > zaalConstraint.Zonlaat) zaalConstraint.Zonlaat = time;
+                            }
                             string teamName = (string)match["homeTeam"];
                             int teamId = (int)match["homeTeamId"];
                             if (teams.ContainsKey(teamId) == false)
                             {
                                 Team t = new Team(teamName, po);
                                 t.defaultDay = day;
-                                t.defaultTime = time;
+                                t.defaultTime = new Time(datetime.Hour,datetime.Minute);
                                 teams.Add(teamId, t);
                             }
                             Team homeTeam = teams[teamId];
                             if (homeTeam.defaultDay == null)
                             {
                                 homeTeam.defaultDay = day;
-                                homeTeam.defaultTime = time;
+                                homeTeam.defaultTime = new Time(datetime.Hour, datetime.Minute); ;
                             }
                             homeTeam.club = club;
                             if (club.teams.Contains(homeTeam) == false)
@@ -108,11 +120,12 @@ namespace VolleybalCompetition_creator
                             {
                                 po.teams.Add(visitorTeam);
                             }
-                                                        Match mat = new Match(datetime, homeTeam,visitorTeam, serie, po);
+                            Match mat = new Match(datetime, homeTeam,visitorTeam, serie, po);
                             po.matches.Add(mat);
                         }
                     }
                 }
+                constraints.Add(zaalConstraint);
             }
         }
     }

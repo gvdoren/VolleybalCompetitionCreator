@@ -11,7 +11,7 @@ namespace VolleybalCompetition_creator
         public Club club { get; set; }
         public Poule poule = null;
         public string seriePouleName { get { return poule.serie.name + poule.name; } }
-        public string defaultTime;
+        public Time defaultTime;
         public string defaultDay;
         public Team(string name, Poule poule) 
         { 
