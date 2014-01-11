@@ -36,7 +36,15 @@ namespace VolleybalCompetition_creator
             objectListView1.HideSelection = false;
             objectListView2.ShowGroups = false;
             objectListView2.SetObjects(poule.matches);
+            klvv.OnMyChange += state_OnMyChange;
+            
         }
+        public void state_OnMyChange(object source, MyEventArgs e)
+        {
+            objectListView1.BuildList(true);
+            objectListView2.BuildList(true);
+        }
+       
 
         private void objectListView1_ModelCanDrop(object sender, BrightIdeasSoftware.ModelDropEventArgs e)
         {
@@ -75,7 +83,8 @@ namespace VolleybalCompetition_creator
                         objectListView1.SelectedIndex = e.DropTargetIndex + offset;
                         objectListView1.BuildList();
                         //objectListView1.SelectedObjects = e.SourceModels;
-                       
+                        updateMatches();
+                      
                         
                     }
 
@@ -108,6 +117,7 @@ namespace VolleybalCompetition_creator
                 list.Add(obj);
                 objectListView1.InsertObjects(index, list);
                 objectListView1.SelectObject(obj);
+                updateMatches();
             }
         }
 
@@ -122,6 +132,7 @@ namespace VolleybalCompetition_creator
                 list.Add(obj);
                 objectListView1.InsertObjects(index, list);
                 objectListView1.SelectObject(obj);
+                updateMatches();
             }
 
         }
@@ -145,6 +156,7 @@ namespace VolleybalCompetition_creator
                 i++;
             }
             objectListView1.SelectedObjects = selected;
+            updateMatches();
         }
 
         void updateMatches()
@@ -154,13 +166,24 @@ namespace VolleybalCompetition_creator
             {
                 poule.teams.Add((Team)obj1);
             }
+            Console.WriteLine("Start Evaluate");
+            foreach (Team team in poule.teams)
+            {
+                Console.WriteLine("{0} -> {1}",team.name,team.conflict);
+            }
+            klvv.Evaluate();
+            Console.WriteLine("After Evaluate");
+            foreach (Team team in poule.teams)
+            {
+                Console.WriteLine("{0} -> {1}", team.name, team.conflict);
+            }
             objectListView2.BuildList();
             objectListView2.Refresh();
         }
 
         private void objectListView1_ItemsChanged(object sender, ItemsChangedEventArgs e)
         {
-            updateMatches();
+            //updateMatches();
         }
     }
 }

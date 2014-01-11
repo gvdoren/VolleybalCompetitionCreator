@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 namespace VolleybalCompetition_creator
 {
     //{"Id":"11","Name":"Avoc Achel","LogoId":"11"}
-    public class Club
+    public class Club: ConstraintAdmin
     {
         public List<Team> teams = new List<Team>();
         public List<Serie> series = new List<Serie>();

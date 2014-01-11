@@ -5,7 +5,7 @@ using System.Text;
 
 namespace VolleybalCompetition_creator
 {
-    public class Team
+    public class Team: ConstraintAdmin
     {
         public string name {get;set;}
         public Club club { get; set; }

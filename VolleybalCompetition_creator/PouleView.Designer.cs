@@ -41,6 +41,8 @@
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn5 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn7 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn8 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).BeginInit();
             this.SuspendLayout();
@@ -50,10 +52,12 @@
             this.objectListView1.AllColumns.Add(this.invisible);
             this.objectListView1.AllColumns.Add(this.olvColumn3);
             this.objectListView1.AllColumns.Add(this.olvColumn2);
+            this.objectListView1.AllColumns.Add(this.olvColumn7);
             this.objectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.invisible,
             this.olvColumn3,
-            this.olvColumn2});
+            this.olvColumn2,
+            this.olvColumn7});
             this.objectListView1.FullRowSelect = true;
             this.objectListView1.IsSimpleDragSource = true;
             this.objectListView1.IsSimpleDropSink = true;
@@ -141,13 +145,15 @@
             this.objectListView2.AllColumns.Add(this.olvColumn1);
             this.objectListView2.AllColumns.Add(this.olvColumn4);
             this.objectListView2.AllColumns.Add(this.olvColumn5);
+            this.objectListView2.AllColumns.Add(this.olvColumn8);
             this.objectListView2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
             this.objectListView2.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumn6,
             this.olvColumn1,
             this.olvColumn4,
-            this.olvColumn5});
+            this.olvColumn5,
+            this.olvColumn8});
             this.objectListView2.Location = new System.Drawing.Point(1, 325);
             this.objectListView2.Name = "objectListView2";
             this.objectListView2.Size = new System.Drawing.Size(352, 117);
@@ -193,6 +199,18 @@
             this.olvColumn5.Text = "bezoekers Team";
             this.olvColumn5.Width = 100;
             // 
+            // olvColumn7
+            // 
+            this.olvColumn7.AspectName = "conflict";
+            this.olvColumn7.CellPadding = null;
+            this.olvColumn7.Text = "Conflicts";
+            // 
+            // olvColumn8
+            // 
+            this.olvColumn8.AspectName = "conflict";
+            this.olvColumn8.CellPadding = null;
+            this.olvColumn8.Text = "Conflict";
+            // 
             // PouleView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -229,5 +247,7 @@
         private BrightIdeasSoftware.OLVColumn olvColumn5;
         private BrightIdeasSoftware.OLVColumn olvColumn6;
         private BrightIdeasSoftware.OLVColumn olvColumn1;
+        private BrightIdeasSoftware.OLVColumn olvColumn7;
+        private BrightIdeasSoftware.OLVColumn olvColumn8;
     }
 }

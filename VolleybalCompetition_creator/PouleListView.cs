@@ -27,7 +27,7 @@ namespace VolleybalCompetition_creator
             //objectListView1.Activation = ItemActivation.TwoClick;
             objectListView1.UseFiltering = true;
             state.OnMyChange += new MyEventHandler(state_OnMyChange); 
-
+            klvv.OnMyChange += state_OnMyChange;
         }
         public void state_OnMyChange(object source, MyEventArgs e)
         {

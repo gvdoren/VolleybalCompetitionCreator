@@ -19,6 +19,32 @@ namespace VolleybalCompetition_creator
         public Dictionary<int, Team> teams = new Dictionary<int, Team>();
         public Annorama annorama = new Annorama();
         public List<Constraint> constraints = new List<Constraint>();
+        public void Evaluate()
+        {
+            foreach (Team team in teams.Values) team.ClearConflicts();
+            foreach (Poule poule in poules)
+            {
+                poule.ClearConflicts();
+                foreach (Match match in poule.matches)
+                {
+                    match.ClearConflicts();
+                }
+            }
+            foreach (Serie serie in series.Values)
+            {
+                serie.ClearConflicts();
+            }
+            foreach (Club club in clubs)
+            {
+                club.ClearConflicts();
+            }
+            foreach (Constraint constraint in constraints)
+            {
+                constraint.Evaluate(this);
+            }
+            Changed();
+        }
+        
         public Klvv()
         {
             //var json = new WebClient().DownloadString("http://klvv.be/server/clubs.php");
@@ -127,6 +153,24 @@ namespace VolleybalCompetition_creator
                 }
                 constraints.Add(zaalConstraint);
             }
+
+            Club cl1 = constraints[0].club;
+            constraints[0].club = constraints[1].club;
+            constraints[1].club = cl1;
+            Evaluate();
+        }
+
+        public event MyEventHandler OnMyChange;
+        public void Changed()
+        {
+            //call it then you need to update:
+            if (OnMyChange != null)
+            {
+                MyEventArgs e = new MyEventArgs();
+                //e.EventInfo = content;
+                OnMyChange(this, e);
+            }
         }
     }
+
 }

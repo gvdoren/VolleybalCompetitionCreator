@@ -5,7 +5,7 @@ using System.Text;
 
 namespace VolleybalCompetition_creator
 {
-    public class Poule
+    public class Poule: ConstraintAdmin
     {
         public Serie serie = null;
         public string name { get; set; }
@@ -13,7 +13,5 @@ namespace VolleybalCompetition_creator
         public Poule(string name) { this.name = name; }
         public List<Weekend> weekends = new List<Weekend>();
         public List<Match> matches = new List<Match>();
-
-        
     }
 }

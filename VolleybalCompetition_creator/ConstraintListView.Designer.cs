@@ -1,6 +1,6 @@
 ﻿namespace VolleybalCompetition_creator
 {
-    partial class PouleListView
+    partial class ConstraintListView
     {
         /// <summary>
         /// Required designer variable.
@@ -47,43 +47,44 @@
             this.olvColumn1,
             this.olvColumn2,
             this.olvColumn3});
-            this.objectListView1.FullRowSelect = true;
-            this.objectListView1.Location = new System.Drawing.Point(0, -1);
+            this.objectListView1.Location = new System.Drawing.Point(-1, -1);
             this.objectListView1.Name = "objectListView1";
-            this.objectListView1.ShowGroups = false;
-            this.objectListView1.Size = new System.Drawing.Size(285, 266);
+            this.objectListView1.Size = new System.Drawing.Size(287, 263);
             this.objectListView1.TabIndex = 0;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
-            this.objectListView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.objectListView1_MouseDoubleClick);
             // 
             // olvColumn1
             // 
-            this.olvColumn1.AspectName = "serie.name";
+            this.olvColumn1.AspectName = "name";
             this.olvColumn1.CellPadding = null;
-            this.olvColumn1.Text = "Serie";
+            this.olvColumn1.FillsFreeSpace = true;
+            this.olvColumn1.MaximumWidth = 150;
+            this.olvColumn1.Text = "Constraint";
             // 
             // olvColumn2
             // 
-            this.olvColumn2.AspectName = "name";
+            this.olvColumn2.AspectName = "club.name";
             this.olvColumn2.CellPadding = null;
-            this.olvColumn2.Text = "Poule";
+            this.olvColumn2.FillsFreeSpace = true;
+            this.olvColumn2.MaximumWidth = 100;
+            this.olvColumn2.Text = "Club";
             // 
             // olvColumn3
             // 
             this.olvColumn3.AspectName = "conflict";
             this.olvColumn3.CellPadding = null;
-            this.olvColumn3.Text = "Conflicts";
+            this.olvColumn3.Text = "conflict-level";
             // 
-            // PouleListView
+            // ConstraintListView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 262);
             this.Controls.Add(this.objectListView1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Name = "PouleListView";
-            this.Text = "PouleListView";
+            this.Name = "ConstraintListView";
+            this.Text = "ConstraintListView";
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).EndInit();
             this.ResumeLayout(false);
 

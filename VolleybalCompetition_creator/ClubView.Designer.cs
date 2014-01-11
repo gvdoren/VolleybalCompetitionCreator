@@ -53,6 +53,7 @@
             this.objectListView1.UseFiltering = true;
             this.objectListView1.View = System.Windows.Forms.View.Details;
             this.objectListView1.SelectedIndexChanged += new System.EventHandler(this.objectListView1_SelectedIndexChanged);
+            this.objectListView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.objectListView1_MouseDoubleClick);
             // 
             // FirstColumn
             // 
@@ -64,9 +65,9 @@
             // 
             // olvColumn1
             // 
-            this.olvColumn1.AspectName = "Id";
+            this.olvColumn1.AspectName = "conflict";
             this.olvColumn1.CellPadding = null;
-            this.olvColumn1.Text = "Id";
+            this.olvColumn1.Text = "Conflicts";
             // 
             // ClubView
             // 
