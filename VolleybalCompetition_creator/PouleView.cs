@@ -83,11 +83,22 @@ namespace VolleybalCompetition_creator
                         objectListView1.SelectedIndex = e.DropTargetIndex + offset;
                         objectListView1.BuildList();
                         //objectListView1.SelectedObjects = e.SourceModels;
+                        if (e.SourceListView != objectListView1)
+                        {
+                            // remove the team from another poule in the series
+                            foreach (Poule p in poule.serie.poules.Values)
+                            {
+                                if (p != poule)
+                                {
+                                    foreach(Team t in e.SourceModels)
+                                    {
+                                        p.teams.Remove(t);
+                                    }
+                                }
+                            }
+                        }
                         updateMatches();
-                      
-                        
                     }
-
                 }
             }
 
@@ -184,6 +195,11 @@ namespace VolleybalCompetition_creator
         private void objectListView1_ItemsChanged(object sender, ItemsChangedEventArgs e)
         {
             //updateMatches();
+        }
+
+        private void objectListView1_DragDrop(object sender, DragEventArgs e)
+        {
+            updateMatches();
         }
     }
 }

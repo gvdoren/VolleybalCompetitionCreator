@@ -12,7 +12,7 @@ namespace VolleybalCompetition_creator
         public Poule poule = null;
         public string seriePouleName { get { return poule.serie.name + poule.name; } }
         public Time defaultTime;
-        public string defaultDay;
+        public DayOfWeek defaultDay = DayOfWeek.Monday; // initial value since monday is never the default
         public Team(string name, Poule poule) 
         { 
             this.name = name;

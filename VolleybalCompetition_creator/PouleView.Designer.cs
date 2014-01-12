@@ -32,6 +32,7 @@
             this.invisible = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn7 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.label1 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
@@ -41,8 +42,8 @@
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn5 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn7 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn8 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn9 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).BeginInit();
             this.SuspendLayout();
@@ -71,6 +72,7 @@
             this.objectListView1.ModelCanDrop += new System.EventHandler<BrightIdeasSoftware.ModelDropEventArgs>(this.objectListView1_ModelCanDrop);
             this.objectListView1.ModelDropped += new System.EventHandler<BrightIdeasSoftware.ModelDropEventArgs>(this.objectListView1_ModelDropped);
             this.objectListView1.SelectionChanged += new System.EventHandler(this.objectListView1_SelectionChanged);
+            this.objectListView1.DragDrop += new System.Windows.Forms.DragEventHandler(this.objectListView1_DragDrop);
             // 
             // invisible
             // 
@@ -98,6 +100,12 @@
             this.olvColumn2.Sortable = false;
             this.olvColumn2.Text = "Team";
             this.olvColumn2.Width = 100;
+            // 
+            // olvColumn7
+            // 
+            this.olvColumn7.AspectName = "conflict";
+            this.olvColumn7.CellPadding = null;
+            this.olvColumn7.Text = "Conflicts";
             // 
             // label1
             // 
@@ -143,6 +151,7 @@
             // 
             this.objectListView2.AllColumns.Add(this.olvColumn6);
             this.objectListView2.AllColumns.Add(this.olvColumn1);
+            this.objectListView2.AllColumns.Add(this.olvColumn9);
             this.objectListView2.AllColumns.Add(this.olvColumn4);
             this.objectListView2.AllColumns.Add(this.olvColumn5);
             this.objectListView2.AllColumns.Add(this.olvColumn8);
@@ -151,6 +160,7 @@
             this.objectListView2.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumn6,
             this.olvColumn1,
+            this.olvColumn9,
             this.olvColumn4,
             this.olvColumn5,
             this.olvColumn8});
@@ -199,17 +209,17 @@
             this.olvColumn5.Text = "bezoekers Team";
             this.olvColumn5.Width = 100;
             // 
-            // olvColumn7
-            // 
-            this.olvColumn7.AspectName = "conflict";
-            this.olvColumn7.CellPadding = null;
-            this.olvColumn7.Text = "Conflicts";
-            // 
             // olvColumn8
             // 
             this.olvColumn8.AspectName = "conflict";
             this.olvColumn8.CellPadding = null;
             this.olvColumn8.Text = "Conflict";
+            // 
+            // olvColumn9
+            // 
+            this.olvColumn9.AspectName = "DayString";
+            this.olvColumn9.CellPadding = null;
+            this.olvColumn9.Text = "Dag";
             // 
             // PouleView
             // 
@@ -249,5 +259,6 @@
         private BrightIdeasSoftware.OLVColumn olvColumn1;
         private BrightIdeasSoftware.OLVColumn olvColumn7;
         private BrightIdeasSoftware.OLVColumn olvColumn8;
+        private BrightIdeasSoftware.OLVColumn olvColumn9;
     }
 }

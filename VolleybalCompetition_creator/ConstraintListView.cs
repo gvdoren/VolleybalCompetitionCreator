@@ -28,5 +28,33 @@ namespace VolleybalCompetition_creator
         {
             objectListView1.BuildList(true);
         }
+        private void objectListView1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            ListViewHitTestInfo hit = objectListView1.HitTest(e.Location);
+            if (hit.Item != null)
+            {
+                ConstraintView constraintView = null;
+                Constraint constraint = objectListView1.GetModelObject(hit.Item.Index) as Constraint;
+                if (constraint != null)
+                {
+                    // check whether the PouleView is already existing
+                    foreach (DockContent content in this.DockPanel.Contents)
+                    {
+                        constraintView = content as ConstraintView;
+                        if (constraintView != null)
+                        {
+                            constraintView.Activate();
+                        }
+                    }
+                    if (constraintView == null)
+                    {
+                        constraintView = new ConstraintView(klvv, state);
+                        constraintView.Show(Pane, DockAlignment.Bottom, 0.3);
+                    }
+                    // Show the correct constraint
+                    constraintView.Show("textView", constraint);
+                }
+            };
+        }
     }
 }

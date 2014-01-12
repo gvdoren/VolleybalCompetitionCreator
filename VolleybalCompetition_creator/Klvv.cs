@@ -96,13 +96,13 @@ namespace VolleybalCompetition_creator
                             // default tijd afleiden van de geplande wedstrijd tijd
                             Time time = new Time(datetime);
                             // default dag afleiden van de geplande wedstrijd dag
-                            string day = datetime.ToString("ddd");
-                            if (day == "za")
+                            DayOfWeek day = datetime.DayOfWeek;
+                            if (day == DayOfWeek.Saturday)
                             {
                                 if (time < zaalConstraint.Zatvroeg) zaalConstraint.Zatvroeg = time;
                                 if (time > zaalConstraint.Zatlaat) zaalConstraint.Zatlaat = time;
                             }
-                            if (day == "zo")
+                            if (day == DayOfWeek.Sunday)
                             {
                                 if (time < zaalConstraint.Zonvroeg) zaalConstraint.Zonvroeg = time;
                                 if (time > zaalConstraint.Zonlaat) zaalConstraint.Zonlaat = time;
@@ -117,7 +117,7 @@ namespace VolleybalCompetition_creator
                                 teams.Add(teamId, t);
                             }
                             Team homeTeam = teams[teamId];
-                            if (homeTeam.defaultDay == null)
+                            if (homeTeam.defaultDay == DayOfWeek.Monday)
                             {
                                 homeTeam.defaultDay = day;
                                 homeTeam.defaultTime = new Time(datetime.Hour, datetime.Minute); ;

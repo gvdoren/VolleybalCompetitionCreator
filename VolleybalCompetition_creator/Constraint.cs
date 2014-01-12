@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace VolleybalCompetition_creator
 {
@@ -50,7 +51,7 @@ namespace VolleybalCompetition_creator
             {
                 foreach (Match match in poule.matches)
                 {
-                    if (match.homeTeam == null || match.homeTeam.club == club)
+                    if (match.homeTeam != null && match.homeTeam.club == club)
                     {
                         if (match.Day == DayOfWeek.Saturday && (match.Time < Zatvroeg || match.Time > Zatlaat))
                         {
