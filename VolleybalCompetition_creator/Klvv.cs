@@ -19,7 +19,16 @@ namespace VolleybalCompetition_creator
         public Dictionary<int, Team> teams = new Dictionary<int, Team>();
         public Annorama annorama = new Annorama();
         public List<Constraint> constraints = new List<Constraint>();
-        public void Evaluate()
+        public void Optimize()
+        {
+            poules.Sort(delegate(Poule p1, Poule p2) { return p1.conflict.CompareTo(p2.conflict); });
+            foreach (Poule p in poules)
+            {
+                //p.OptimizeTeamAssignment(this);
+                Changed();
+            }
+        }
+        public void Evaluate(Poule p)
         {
             foreach (Team team in teams.Values) team.ClearConflicts();
             foreach (Poule poule in poules)
@@ -40,9 +49,8 @@ namespace VolleybalCompetition_creator
             }
             foreach (Constraint constraint in constraints)
             {
-                constraint.Evaluate(this);
+                constraint.Evaluate(this,p);
             }
-            Changed();
         }
         
         public Klvv()
@@ -149,15 +157,28 @@ namespace VolleybalCompetition_creator
                             Match mat = new Match(datetime, homeTeam,visitorTeam, serie, po);
                             po.matches.Add(mat);
                         }
+                        po.matches.Sort(delegate(Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
                     }
                 }
                 constraints.Add(zaalConstraint);
             }
-
+            // enkele constraints creeren
             Club cl1 = constraints[0].club;
             constraints[0].club = constraints[1].club;
             constraints[1].club = cl1;
-            Evaluate();
+            foreach(Club club in clubs)
+            {
+                if (club.teams.Count > 1)
+                {
+                    ConstraintNotAtTheSameTime constraint = new ConstraintNotAtTheSameTime();
+                    constraint.team1 = club.teams[club.teams.Count - 2];
+                    constraint.team2 = club.teams[club.teams.Count - 1];
+                    constraint.club = club;
+                    constraints.Add(constraint);
+                }
+            }
+            Evaluate(null);
+            Changed();
         }
 
         public event MyEventHandler OnMyChange;

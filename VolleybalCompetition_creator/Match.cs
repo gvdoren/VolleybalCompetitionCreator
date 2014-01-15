@@ -13,8 +13,8 @@ namespace VolleybalCompetition_creator
             get
             {
                 DateTime date = SaturdayInWeek(Year, Week).AddDays(homeTeam.defaultDay == DayOfWeek.Saturday ? 0 : 1);
-                date.AddHours(homeTeam.defaultTime.Hours);
-                date.AddMinutes(homeTeam.defaultTime.Minutes);
+                date = date.AddHours(homeTeam.defaultTime.Hours);
+                date = date.AddMinutes(homeTeam.defaultTime.Minutes);
                 return date;
             }
         }

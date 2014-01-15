@@ -18,7 +18,8 @@ namespace VolleybalCompetition_creator
         GlobalState state = null;
         public Poule poule = null;
         SimpleDropSink myDropSink = new SimpleDropSink();
-        
+        ProgressDialog diag = new ProgressDialog();
+
         public PouleView(Klvv klvv, GlobalState state, Poule poule)
         {
             this.klvv = klvv;
@@ -37,10 +38,14 @@ namespace VolleybalCompetition_creator
             objectListView2.ShowGroups = false;
             objectListView2.SetObjects(poule.matches);
             klvv.OnMyChange += state_OnMyChange;
-            
         }
         public void state_OnMyChange(object source, MyEventArgs e)
         {
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action(() => state_OnMyChange(source, e)));
+                return;
+            }
             objectListView1.BuildList(true);
             objectListView2.BuildList(true);
         }
@@ -177,17 +182,21 @@ namespace VolleybalCompetition_creator
             {
                 poule.teams.Add((Team)obj1);
             }
-            Console.WriteLine("Start Evaluate");
+            /*Console.WriteLine("Start Evaluate");
             foreach (Team team in poule.teams)
             {
                 Console.WriteLine("{0} -> {1}",team.name,team.conflict);
             }
-            klvv.Evaluate();
-            Console.WriteLine("After Evaluate");
+             * */
+            klvv.Evaluate(null);
+            klvv.Changed();
+
+            /*Console.WriteLine("After Evaluate");
             foreach (Team team in poule.teams)
             {
                 Console.WriteLine("{0} -> {1}", team.name, team.conflict);
             }
+             * */
             objectListView2.BuildList();
             objectListView2.Refresh();
         }
@@ -200,6 +209,30 @@ namespace VolleybalCompetition_creator
         private void objectListView1_DragDrop(object sender, DragEventArgs e)
         {
             updateMatches();
+        }
+
+        private void PouleView_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            klvv.OnMyChange -= state_OnMyChange;
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            ProgressDialog diag = new ProgressDialog();
+            diag.WorkFunction += OptimizeTeamAssignment;
+            diag.CompletionFunction += OptimizeTeamAssignmentCompleted; 
+            diag.Start("Optimizing", null);
+        }
+        private void OptimizeTeamAssignment(object sender, MyEventArgs e)
+        {
+            IProgress intf = (IProgress)sender;
+            poule.OptimizeTeamAssignment(klvv,intf);
+        }
+        private void OptimizeTeamAssignmentCompleted(object sender, MyEventArgs e)
+        {
+            objectListView1.SetObjects(poule.teams);
+            klvv.Evaluate(null);
+            klvv.Changed();
         }
     }
 }

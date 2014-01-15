@@ -31,7 +31,13 @@ namespace VolleybalCompetition_creator
         }
         public void state_OnMyChange(object source, MyEventArgs e)
         {
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action(() => state_OnMyChange(source, e)));
+                return;
+            }
             objectListView1.BuildList(true);
+            Refresh();
         }
         public class SerieFilter: IModelFilter 
         {
@@ -82,6 +88,31 @@ namespace VolleybalCompetition_creator
                     pouleView.Show(this.DockPanel);
                 }
             };
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            ProgressDialog diag = new ProgressDialog();
+            diag.WorkFunction += OptimizeTeamAssignment;
+            diag.CompletionFunction += OptimizeTeamAssignmentCompleted; 
+            diag.Start("Optimizing", null);
+        }
+        private void OptimizeTeamAssignment(object sender, MyEventArgs e)
+        {
+            foreach (Poule poule in klvv.poules)
+            {
+                IProgress intf = (IProgress)sender;
+                intf.SetText("Optimizing - " + poule.serie.name + poule.name);
+                poule.OptimizeTeamAssignment(klvv,intf);
+                klvv.Evaluate(null);
+                klvv.Changed();
+                if(intf.Cancelled()) return;
+            }
+        }
+        private void OptimizeTeamAssignmentCompleted(object sender, MyEventArgs e)
+        {
+            klvv.Evaluate(null);
+            klvv.Changed();
         }
 
 

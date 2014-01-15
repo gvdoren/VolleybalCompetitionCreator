@@ -31,6 +31,11 @@ namespace VolleybalCompetition_creator
         }
         public void state_OnMyChange(object source, MyEventArgs e)
         {
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action(() => state_OnMyChange(source, e)));
+                return;
+            }
             objectListView1.BuildList(true);
         }
         public class SerieFilter: IModelFilter 

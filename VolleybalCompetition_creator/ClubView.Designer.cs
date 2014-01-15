@@ -44,6 +44,7 @@
             this.objectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.FirstColumn,
             this.olvColumn1});
+            this.objectListView1.FullRowSelect = true;
             this.objectListView1.HasCollapsibleGroups = false;
             this.objectListView1.Location = new System.Drawing.Point(1, 1);
             this.objectListView1.Name = "objectListView1";
@@ -59,6 +60,8 @@
             // 
             this.FirstColumn.AspectName = "name";
             this.FirstColumn.CellPadding = null;
+            this.FirstColumn.FillsFreeSpace = true;
+            this.FirstColumn.MinimumWidth = 60;
             this.FirstColumn.Text = "Club";
             this.FirstColumn.UseInitialLetterForGroup = true;
             this.FirstColumn.Width = 104;

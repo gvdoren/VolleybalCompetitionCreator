@@ -23,15 +23,14 @@ namespace VolleybalCompetition_creator
             clubview.ShowHint = DockState.DockLeft;
             clubview.Show(dockPanel);
 
-            SerieView serieview = new SerieView(klvv, state);
-            serieview.ShowHint = DockState.DockRight;
-            serieview.Show(dockPanel);
-
+            //SerieView serieview = new SerieView(klvv, state);
+            //serieview.ShowHint = DockState.DockRight;
+            //serieview.Show(dockPanel);
             //serieview.Show(clubview.Pane, DockAlignment.Right, 0.35);
+            //SerieTreeView serietreeview = new SerieTreeView(klvv, state);
+            //serietreeview.ShowHint = DockState.DockRight;
+            //serietreeview.Show(dockPanel);
             
-            SerieTreeView serietreeview = new SerieTreeView(klvv, state);
-            serietreeview.ShowHint = DockState.DockRight;
-            serietreeview.Show(dockPanel);
             PouleListView pouleListview = new PouleListView(klvv, state);
             pouleListview.ShowHint = DockState.DockLeft;
             pouleListview.Show(clubview.Pane, DockAlignment.Right, 0.5);

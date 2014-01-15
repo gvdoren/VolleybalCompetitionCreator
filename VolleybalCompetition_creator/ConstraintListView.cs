@@ -21,12 +21,28 @@ namespace VolleybalCompetition_creator
             this.state = state;
             InitializeComponent();
             objectListView1.SetObjects(klvv.constraints);
+            UpdateConflictCount();
             klvv.OnMyChange += state_OnMyChange;
             
         }
         public void state_OnMyChange(object source, MyEventArgs e)
         {
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action(() => state_OnMyChange(source, e)));
+                return;
+            }
             objectListView1.BuildList(true);
+            UpdateConflictCount();
+         }
+        private void UpdateConflictCount()
+        {
+            int conflicts = 0;
+            foreach (Constraint constraint in klvv.constraints)
+            {
+                conflicts += constraint.conflict;
+            }
+            label1.Text = "Conflicts: " + conflicts.ToString();
         }
         private void objectListView1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
@@ -37,13 +53,16 @@ namespace VolleybalCompetition_creator
                 Constraint constraint = objectListView1.GetModelObject(hit.Item.Index) as Constraint;
                 if (constraint != null)
                 {
+                    //this.DockPanel.
                     // check whether the PouleView is already existing
                     foreach (DockContent content in this.DockPanel.Contents)
                     {
-                        constraintView = content as ConstraintView;
-                        if (constraintView != null)
+                        ConstraintView temp = content as ConstraintView;
+                        if (temp != null)
                         {
+                            constraintView = temp; 
                             constraintView.Activate();
+                            
                         }
                     }
                     if (constraintView == null)

@@ -36,6 +36,11 @@ namespace VolleybalCompetition_creator
         }
         public void state_OnMyChange(object source, MyEventArgs e)
         {
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action(() => state_OnMyChange(source, e)));
+                return;
+            }
             treeListView1.UseFiltering = false; 
             treeListView1.UseFiltering = true;
             treeListView1.ExpandAll();

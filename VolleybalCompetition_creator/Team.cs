@@ -18,5 +18,9 @@ namespace VolleybalCompetition_creator
             this.name = name;
             this.poule = poule;
         }
+        public bool IsMatch(Match match)
+        {
+            return match.homeTeam == this || match.visitorTeam == this;
+        }
     }
 }

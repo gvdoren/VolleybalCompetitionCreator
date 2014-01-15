@@ -40,10 +40,11 @@
             this.objectListView2 = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn6 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn9 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn5 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn8 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn9 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.button4 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).BeginInit();
             this.SuspendLayout();
@@ -95,7 +96,7 @@
             this.olvColumn2.AspectName = "name";
             this.olvColumn2.CellPadding = null;
             this.olvColumn2.FillsFreeSpace = true;
-            this.olvColumn2.MaximumWidth = 200;
+            this.olvColumn2.MaximumWidth = 300;
             this.olvColumn2.MinimumWidth = 100;
             this.olvColumn2.Sortable = false;
             this.olvColumn2.Text = "Team";
@@ -121,7 +122,7 @@
             // 
             this.button1.Location = new System.Drawing.Point(177, 25);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(49, 23);
+            this.button1.Size = new System.Drawing.Size(57, 23);
             this.button1.TabIndex = 2;
             this.button1.Text = "/\\";
             this.button1.UseVisualStyleBackColor = true;
@@ -131,7 +132,7 @@
             // 
             this.button2.Location = new System.Drawing.Point(177, 55);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(49, 23);
+            this.button2.Size = new System.Drawing.Size(57, 23);
             this.button2.TabIndex = 3;
             this.button2.Text = "\\/";
             this.button2.UseVisualStyleBackColor = true;
@@ -141,7 +142,7 @@
             // 
             this.button3.Location = new System.Drawing.Point(177, 85);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(49, 23);
+            this.button3.Size = new System.Drawing.Size(57, 23);
             this.button3.TabIndex = 4;
             this.button3.Text = "Switch";
             this.button3.UseVisualStyleBackColor = true;
@@ -155,8 +156,9 @@
             this.objectListView2.AllColumns.Add(this.olvColumn4);
             this.objectListView2.AllColumns.Add(this.olvColumn5);
             this.objectListView2.AllColumns.Add(this.olvColumn8);
-            this.objectListView2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)));
+            this.objectListView2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.objectListView2.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumn6,
             this.olvColumn1,
@@ -164,9 +166,11 @@
             this.olvColumn4,
             this.olvColumn5,
             this.olvColumn8});
+            this.objectListView2.FullRowSelect = true;
             this.objectListView2.Location = new System.Drawing.Point(1, 325);
+            this.objectListView2.MinimumSize = new System.Drawing.Size(400, 4);
             this.objectListView2.Name = "objectListView2";
-            this.objectListView2.Size = new System.Drawing.Size(352, 117);
+            this.objectListView2.Size = new System.Drawing.Size(621, 117);
             this.objectListView2.TabIndex = 5;
             this.objectListView2.UseCompatibleStateImageBehavior = false;
             this.objectListView2.View = System.Windows.Forms.View.Details;
@@ -188,6 +192,12 @@
             this.olvColumn1.MinimumWidth = 40;
             this.olvColumn1.Text = "Tijd";
             this.olvColumn1.Width = 40;
+            // 
+            // olvColumn9
+            // 
+            this.olvColumn9.AspectName = "DayString";
+            this.olvColumn9.CellPadding = null;
+            this.olvColumn9.Text = "Dag";
             // 
             // olvColumn4
             // 
@@ -215,17 +225,22 @@
             this.olvColumn8.CellPadding = null;
             this.olvColumn8.Text = "Conflict";
             // 
-            // olvColumn9
+            // button4
             // 
-            this.olvColumn9.AspectName = "DayString";
-            this.olvColumn9.CellPadding = null;
-            this.olvColumn9.Text = "Dag";
+            this.button4.Location = new System.Drawing.Point(178, 115);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(56, 23);
+            this.button4.TabIndex = 6;
+            this.button4.Text = "Optimize";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // PouleView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(802, 441);
+            this.Controls.Add(this.button4);
             this.Controls.Add(this.objectListView2);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
@@ -235,6 +250,7 @@
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "PouleView";
             this.Text = "PouleView";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.PouleView_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).EndInit();
             this.ResumeLayout(false);
@@ -260,5 +276,6 @@
         private BrightIdeasSoftware.OLVColumn olvColumn7;
         private BrightIdeasSoftware.OLVColumn olvColumn8;
         private BrightIdeasSoftware.OLVColumn olvColumn9;
+        private System.Windows.Forms.Button button4;
     }
 }
