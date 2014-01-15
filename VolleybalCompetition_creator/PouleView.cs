@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 using BrightIdeasSoftware;
-
+using System.Drawing.Drawing2D;
 
 namespace VolleybalCompetition_creator
 {
@@ -237,6 +237,7 @@ namespace VolleybalCompetition_creator
 
         private void objectListView2_SelectionChanged(object sender, EventArgs e)
         {
+            button5.Enabled = (objectListView2.SelectedObjects.Count == 1) ;
         }
 
         private void objectListView1_CellClick(object sender, CellClickEventArgs e)
@@ -265,6 +266,19 @@ namespace VolleybalCompetition_creator
                 }
                 state.ShowConstraints(constraints);
             }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            Match match1 = (Match)objectListView2.SelectedObject;
+            poule.SwitchHomeTeamVisitorTeam(match1);
+            klvv.Evaluate(null);
+            klvv.Changed();
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            poule.OptimizeHomeVisitor(klvv);
         }
     }
 }

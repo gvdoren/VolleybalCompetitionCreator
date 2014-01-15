@@ -11,7 +11,6 @@ namespace VolleybalCompetition_creator
         public string name { get; set; }
         public Dictionary<string, Poule> poules = new Dictionary<string, Poule>();
         public Serie(string name) { this.name = name; }
-        List<Constraint> conflictConstraints = new List<Constraint>();
     }
     
 

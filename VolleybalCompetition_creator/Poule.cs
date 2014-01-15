@@ -15,27 +15,32 @@ namespace VolleybalCompetition_creator
         public List<Match> matches = new List<Match>();
         public bool OptimizeTeamAssignment(Klvv klvv, IProgress intf)
         {
-            if (teams.Count <= 7)
+            if (conflict > 0)
             {
-                klvv.Evaluate(null);
-                int conflict = 0;
-                foreach (Team team in teams)
+                if (teams.Count <= 7)
                 {
-                    conflict += team.conflict;
+                    klvv.Evaluate(null);
+                    int conflictBefore = conflict;
+                    /*int conflict = 0;
+                    foreach (Team team in teams)
+                    {
+                        conflict += team.conflict;
+                    }*/
+                    // iterate on all solutions and evaluate?
+                    int minConflicts = int.MaxValue;
+                    List<Team> result = new List<Team>();
+                    List<Team> temp = new List<Team>(teams);
+                    teams = new List<Team>();
+                    List<Team> best = null;
+                    try
+                    {
+                        GenerateCombination(klvv, temp, ref minConflicts, ref best, intf);
+                    }
+                    catch { }
+                    if (best != null) teams = best; else teams = temp;
+                    OptimizeHomeVisitor(klvv);
+                    return minConflicts < conflictBefore;
                 }
-                // iterate on all solutions and evaluate?
-                int minConflicts = int.MaxValue;
-                List<Team> result = new List<Team>();
-                List<Team> temp = new List<Team>(teams);
-                teams = new List<Team>();
-                List<Team> best = null;
-                try
-                {
-                    GenerateCombination(klvv, temp, ref minConflicts, ref best, intf);
-                }
-                catch { }
-                if (best != null) teams = best; else teams = temp;
-                return minConflicts < conflict;
             }
             return false;
         }
@@ -76,6 +81,39 @@ namespace VolleybalCompetition_creator
                 }
             }
 
+        }
+        public void SwitchHomeTeamVisitorTeam(Match match1)
+        {
+            Match match2 = null;
+            foreach (Match m in matches)
+            {
+                if (m.homeTeam == match1.visitorTeam && m.visitorTeam == match1.homeTeam) match2 = m;
+            }
+            // swap teams
+            match1.homeTeamIndex = match2.homeTeamIndex;
+            match1.visitorTeamIndex = match2.visitorTeamIndex;
+            match2.homeTeamIndex = match1.visitorTeamIndex;
+            match2.visitorTeamIndex = match1.homeTeamIndex;
+        }
+        public void OptimizeHomeVisitor(Klvv klvv)
+        {
+            foreach (Match match in matches)
+            {
+                if (match.conflict > 0)
+                {
+                    int before = conflict;
+                    SwitchHomeTeamVisitorTeam(match);
+                    klvv.Evaluate(this);
+                    int after = conflict;
+                    if (before <= after)
+                    { // switch back
+                        SwitchHomeTeamVisitorTeam(match);
+                        klvv.Evaluate(this);
+                    }
+                }
+            }
+            klvv.Evaluate(null);
+            klvv.Changed();
         }
     }
 }
