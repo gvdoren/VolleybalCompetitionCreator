@@ -8,7 +8,7 @@ namespace VolleybalCompetition_creator
 {
     public class ConstraintAdmin
     {
-        List<Constraint> conflictConstraints = new List<Constraint>();
+        public List<Constraint> conflictConstraints = new List<Constraint>();
         public int conflict { get; set; }
         public void ClearConflicts()
         {
@@ -29,10 +29,11 @@ namespace VolleybalCompetition_creator
         List<Team> teams = new List<Team>();
         public Club club { get; set; }
         public string name { get; set; }
-        public abstract void Evaluate(Klvv klvv, Poule poule);
         public int cost = 1;
         public int conflict = 0;
         public abstract string[] GetTextDescription();
+        public abstract void Evaluate(Klvv klvv, Poule poule);
+        public abstract bool IsMatchRelated(Match match);
     }
     class ConstraintZaal : Constraint
     {
@@ -55,7 +56,7 @@ namespace VolleybalCompetition_creator
                 {
                     foreach (Match match in poule.matches)
                     {
-                        if (match.homeTeam != null && match.homeTeam.club == club)
+                        if (match.homeTeam.club == club)
                         {
                             if (match.Day == DayOfWeek.Saturday && (match.Time < Zatvroeg || match.Time > Zatlaat))
                             {
@@ -98,6 +99,10 @@ namespace VolleybalCompetition_creator
                 result.Add("Alle wedstrijden vallen binnen de tijden");
             }
             return result.ToArray();
+        }
+        public override bool IsMatchRelated(Match match)
+        {
+            return conflictMatches.Contains(match);
         }
     }
     class ConstraintNotAtTheSameTime : Constraint
@@ -171,6 +176,10 @@ namespace VolleybalCompetition_creator
                 result.Add("Geen conflicten");
             }
             return result.ToArray();
+        }
+        public override bool IsMatchRelated(Match match)
+        {
+            return conflictMatches.Contains(match);
         }
     }
 

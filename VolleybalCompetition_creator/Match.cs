@@ -12,7 +12,8 @@ namespace VolleybalCompetition_creator
         {
             get
             {
-                DateTime date = SaturdayInWeek(Year, Week).AddDays(homeTeam.defaultDay == DayOfWeek.Saturday ? 0 : 1);
+                DateTime date= SaturdayInWeek(Year, Week);
+                date = date.AddDays(homeTeam.defaultDay == DayOfWeek.Saturday ? 0 : 1);
                 date = date.AddHours(homeTeam.defaultTime.Hours);
                 date = date.AddMinutes(homeTeam.defaultTime.Minutes);
                 return date;
@@ -35,16 +36,15 @@ namespace VolleybalCompetition_creator
         public Time Time { 
             get 
             {
-                if(homeTeam != null) return homeTeam.defaultTime; 
-                else return Time;
+                return homeTeam.defaultTime; 
             }
             set 
             {
                 time = value;
             } 
         }
-        public Team homeTeam { get { if (homeTeamIndex < poule.teams.Count) return poule.teams[homeTeamIndex]; else return null; } }
-        public Team visitorTeam { get { if (visitorTeamIndex < poule.teams.Count) return poule.teams[visitorTeamIndex]; else return null; } }
+        public Team homeTeam { get { if (homeTeamIndex < poule.teams.Count) return poule.teams[homeTeamIndex]; else return Team.CreateNullTeam(poule); } }
+        public Team visitorTeam { get { if (visitorTeamIndex < poule.teams.Count) return poule.teams[visitorTeamIndex]; else return Team.CreateNullTeam(poule); } }
         public int homeTeamIndex;
         public int visitorTeamIndex;
         public Poule poule;

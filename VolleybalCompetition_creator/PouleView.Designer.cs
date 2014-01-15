@@ -69,6 +69,7 @@
             this.objectListView1.TabIndex = 0;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
+            this.objectListView1.CellClick += new System.EventHandler<BrightIdeasSoftware.CellClickEventArgs>(this.objectListView1_CellClick);
             this.objectListView1.ItemsChanged += new System.EventHandler<BrightIdeasSoftware.ItemsChangedEventArgs>(this.objectListView1_ItemsChanged);
             this.objectListView1.ModelCanDrop += new System.EventHandler<BrightIdeasSoftware.ModelDropEventArgs>(this.objectListView1_ModelCanDrop);
             this.objectListView1.ModelDropped += new System.EventHandler<BrightIdeasSoftware.ModelDropEventArgs>(this.objectListView1_ModelDropped);
@@ -174,6 +175,8 @@
             this.objectListView2.TabIndex = 5;
             this.objectListView2.UseCompatibleStateImageBehavior = false;
             this.objectListView2.View = System.Windows.Forms.View.Details;
+            this.objectListView2.CellClick += new System.EventHandler<BrightIdeasSoftware.CellClickEventArgs>(this.objectListView2_CellClick);
+            this.objectListView2.SelectionChanged += new System.EventHandler(this.objectListView2_SelectionChanged);
             // 
             // olvColumn6
             // 

@@ -52,7 +52,7 @@ namespace VolleybalCompetition_creator
         private void UpdateTabPage1()
         {
             richTextBox1.Clear();
-            this.Text = "Beschikbaarheid zaal - " + constraint.club.name;
+            this.Text = constraint.name + " - " + constraint.club.name;
             foreach (string str in constraint.GetTextDescription())
             {
                 richTextBox1.AppendText(str+Environment.NewLine);

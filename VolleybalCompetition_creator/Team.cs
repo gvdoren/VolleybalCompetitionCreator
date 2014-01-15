@@ -22,5 +22,14 @@ namespace VolleybalCompetition_creator
         {
             return match.homeTeam == this || match.visitorTeam == this;
         }
+        public static Team CreateNullTeam(Poule poule)
+        {
+            Team team = new Team("---",poule);
+            team.defaultDay = DayOfWeek.Saturday;
+            team.defaultTime = new Time(0,0);
+            team.club = Club.CreateNullClub();
+            return team;
+        }
+
     }
 }

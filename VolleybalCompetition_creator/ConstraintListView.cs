@@ -11,7 +11,7 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace VolleybalCompetition_creator
 {
-    public partial class ConstraintListView : DockContent
+    public partial class ConstraintListView : DockContent, IModelFilter
     {
         Klvv klvv;
         GlobalState state;
@@ -21,8 +21,11 @@ namespace VolleybalCompetition_creator
             this.state = state;
             InitializeComponent();
             objectListView1.SetObjects(klvv.constraints);
+            objectListView1.ModelFilter = this;
+            objectListView1.UseFiltering = true;
             UpdateConflictCount();
             klvv.OnMyChange += state_OnMyChange;
+            state.OnMyChange += state_OnMyChange;
             
         }
         public void state_OnMyChange(object source, MyEventArgs e)
@@ -75,5 +78,19 @@ namespace VolleybalCompetition_creator
                 }
             };
         }
+        public bool Filter(object modelObject)
+        {
+            Constraint constraint = (Constraint)modelObject;
+            if (checkBox1.Checked && constraint.conflict == 0) return false;
+            //if (state.showConstraints.Count == 0) return true;
+            return state.showConstraints.Contains(constraint);
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            objectListView1.BuildList(true);
+
+        }
     }
+
 }

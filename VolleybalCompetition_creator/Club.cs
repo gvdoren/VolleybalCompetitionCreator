@@ -14,5 +14,11 @@ namespace VolleybalCompetition_creator
         public List<Serie> series = new List<Serie>();
         public int Id { get; set; }
         public string name { get; set; }
+        public static Club CreateNullClub()
+        {
+            Club club = new Club();
+            club.name = "----";
+            return club;
+        }
     }
 }

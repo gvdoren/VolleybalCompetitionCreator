@@ -73,6 +73,20 @@ namespace VolleybalCompetition_creator
                 }
             };
         }
+
+        private void objectListView1_CellClick(object sender, BrightIdeasSoftware.CellClickEventArgs e)
+        {
+            if (objectListView1.SelectedObjects.Count > 0)
+            {
+                List<Constraint> constraints = new List<Constraint>();
+                foreach (Object obj in objectListView1.SelectedObjects)
+                {
+                    Club club = (Club)obj;
+                    constraints.AddRange(club.conflictConstraints);
+                }
+                state.ShowConstraints(constraints);
+            }
+        }
     }
     internal static class ControlExtensionMethods
     {

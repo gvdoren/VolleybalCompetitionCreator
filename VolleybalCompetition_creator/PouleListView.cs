@@ -115,6 +115,26 @@ namespace VolleybalCompetition_creator
             klvv.Changed();
         }
 
+        private void objectListView1_SelectionChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void objectListView1_CellClick(object sender, CellClickEventArgs e)
+        {
+            if (objectListView1.SelectedObjects.Count > 0)
+            {
+
+                List<Constraint> constraints = new List<Constraint>();
+                foreach (Object obj in objectListView1.SelectedObjects)
+                {
+                    Poule poule = (Poule)obj;
+                    constraints.AddRange(poule.conflictConstraints);
+                }
+                state.ShowConstraints(constraints);
+            }
+        }
+
 
     }
 }

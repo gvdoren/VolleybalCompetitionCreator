@@ -8,6 +8,17 @@ namespace VolleybalCompetition_creator
     public class GlobalState
     {
         public List<Club> selectedClubs = new List<Club>();
+        public List<Constraint> showConstraints = new List<Constraint>();
+        public void ShowConstraints(List<Constraint> constraints)
+        {
+            var areEquivalent = (constraints.Count == showConstraints.Count) && !constraints.Except(showConstraints).Any();
+            if (areEquivalent == false)
+            {
+                showConstraints = constraints;
+                Changed();
+                Console.WriteLine("Show constraints updated");
+            }
+        }
         public event MyEventHandler OnMyChange;
         public void Changed()
         {

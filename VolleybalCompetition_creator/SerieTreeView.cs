@@ -76,7 +76,7 @@ namespace VolleybalCompetition_creator
                         if (state.selectedClubs.Count == 0) return true;
                         foreach (Match match in poule.matches)
                         {
-                            if (match.homeTeam != null && state.selectedClubs.Contains(match.homeTeam.club))
+                            if (state.selectedClubs.Contains(match.homeTeam.club))
                             {
                                 return true;
                             }
