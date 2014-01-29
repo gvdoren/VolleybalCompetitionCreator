@@ -38,6 +38,10 @@ namespace VolleybalCompetition_creator
                 {
                     match.ClearConflicts();
                 }
+                foreach (Weekend weekend in poule.weekends)
+                {
+                    weekend.ClearConflicts();
+                }
             }
             foreach (Serie serie in series.Values)
             {
@@ -157,10 +161,25 @@ namespace VolleybalCompetition_creator
                             Match mat = new Match(datetime, homeTeam,visitorTeam, serie, po);
                             po.matches.Add(mat);
                         }
+                        po.weekends.Sort(delegate(Weekend w1, Weekend w2)
+                        {
+                            int v1 = (w1.Year * 52) + w1.WeekNr;
+                            int v2 = (w2.Year * 52) + w2.WeekNr;
+                            return v1.CompareTo(v2);
+                        });
+                        foreach (Match match in po.matches)
+                        {
+                            match.SetWeekIndex();
+                        }
                         po.matches.Sort(delegate(Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
+                        
                     }
                 }
                 constraints.Add(zaalConstraint);
+            }
+            foreach (Poule poule in this.poules)
+            {
+                constraints.Add(new ConstraintSchemaTooClose(poule));
             }
             // enkele constraints creeren
             Club cl1 = constraints[0].club;

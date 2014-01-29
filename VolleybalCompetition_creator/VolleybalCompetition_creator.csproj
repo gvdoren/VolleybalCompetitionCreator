@@ -158,6 +158,7 @@
     </Compile>
     <Compile Include="Team.cs" />
     <Compile Include="Time.cs" />
+    <Compile Include="Weekend.cs" />
     <EmbeddedResource Include="ClubTreeView.resx">
       <DependentUpon>ClubTreeView.cs</DependentUpon>
     </EmbeddedResource>

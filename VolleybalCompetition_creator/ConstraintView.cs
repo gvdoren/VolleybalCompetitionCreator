@@ -20,6 +20,7 @@ namespace VolleybalCompetition_creator
             InitializeComponent();
             Show("dummy", null);
             klvv.OnMyChange += state_OnMyChange;
+            objectListView1.ShowGroups = false;
             
         }
         public void state_OnMyChange(object source, MyEventArgs e)
@@ -48,18 +49,29 @@ namespace VolleybalCompetition_creator
         private void tabControl1_Selected(object sender, TabControlEventArgs e)
         {
             if (e.TabPage == tabPage1) UpdateTabPage1();
+            if (e.TabPage == tabPage2) UpdateTabPage2();
         }
         private void UpdateTabPage1()
         {
             richTextBox1.Clear();
-            this.Text = constraint.name + " - " + constraint.club.name;
+            this.Text = constraint.Title;
             foreach (string str in constraint.GetTextDescription())
             {
-                richTextBox1.AppendText(str+Environment.NewLine);
+                richTextBox1.AppendText(str + Environment.NewLine);
             }
         }
-
-
+        private void UpdateTabPage2()
+        {
+            objectListView1.SetObjects(constraint.conflictMatches);
+            this.Text = constraint.Title;
+            label1.Text = "Conflict wedstrijden (" + constraint.conflictMatches.Count.ToString() + ")";
+            objectListView1.BuildList(true);
+            richTextBox2.Clear();
+            foreach (string str in constraint.GetTextDescription())
+            {
+                richTextBox2.AppendText(str + Environment.NewLine);
+            }
+        }
     }
 }
 class TablessTabControl : TabControl

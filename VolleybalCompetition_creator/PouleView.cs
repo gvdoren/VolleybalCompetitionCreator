@@ -19,6 +19,10 @@ namespace VolleybalCompetition_creator
         public Poule poule = null;
         SimpleDropSink myDropSink = new SimpleDropSink();
         ProgressDialog diag = new ProgressDialog();
+        Dictionary<Weekend, int> weekmapping = new Dictionary<Weekend, int>();
+        List<Team> selectedTeams = new List<Team>();
+        List<Weekend> selectedWeekends = new List<Weekend>();
+        List<Match> selectedMatches = new List<Match>();
 
         public PouleView(Klvv klvv, GlobalState state, Poule poule)
         {
@@ -31,12 +35,19 @@ namespace VolleybalCompetition_creator
             objectListView1.SetObjects(new List<Team>(poule.teams));
             myDropSink.CanDropBetween = true;
             objectListView1.DropSink = myDropSink;
-            this.objectListView1.FormatRow += objectListView1_FormatRow;
+            //this.objectListView1.FormatRow += objectListView1_FormatRow;
             objectListView1.BuildList();
             objectListView1_SelectionChanged(null, null);
             objectListView1.HideSelection = false;
             objectListView2.ShowGroups = false;
             objectListView2.SetObjects(poule.matches);
+            objectListView2.HideSelection = false;
+            UpdateWeekMapping();
+            objectListView3_SelectionChanged(null, null);
+            objectListView3.FormatRow += objectListView3_FormatRow;
+            objectListView3.ShowGroups = false;
+            objectListView3.HideSelection = false;
+            objectListView3.SetObjects(weekmapping);
             klvv.OnMyChange += state_OnMyChange;
         }
         public void state_OnMyChange(object source, MyEventArgs e)
@@ -46,8 +57,32 @@ namespace VolleybalCompetition_creator
                 this.Invoke(new Action(() => state_OnMyChange(source, e)));
                 return;
             }
+            selectedTeams.Clear();
+            selectedMatches.Clear();
+            selectedWeekends.Clear();
+            foreach (Object obj in objectListView1.SelectedObjects)
+            {
+                selectedTeams.Add((Team)obj);
+            }
             objectListView1.BuildList(true);
+            objectListView1.SelectedObjects = selectedTeams;
+            foreach (Object obj in objectListView2.SelectedObjects)
+            {
+                selectedMatches.Add((Match)obj);
+            }
             objectListView2.BuildList(true);
+            objectListView2.SelectedObjects = selectedMatches;
+            foreach (Object obj in objectListView3.SelectedObjects)
+            {
+                selectedWeekends.Add(((KeyValuePair<Weekend, int>)obj).Key);
+            }
+            UpdateWeekMapping();
+            objectListView3.BuildList(true);
+            foreach(Object obj in objectListView3.Objects)
+            {
+                KeyValuePair<Weekend, int> kvp = (KeyValuePair<Weekend, int>)obj;
+                if(selectedWeekends.Contains(kvp.Key) == true) objectListView3.SelectObject(obj);
+            }
         }
        
 
@@ -221,16 +256,28 @@ namespace VolleybalCompetition_creator
             ProgressDialog diag = new ProgressDialog();
             diag.WorkFunction += OptimizeTeamAssignment;
             diag.CompletionFunction += OptimizeTeamAssignmentCompleted; 
-            diag.Start("Optimizing", null);
+            diag.Start("Optimizing teams", null);
+        }
+        private void OptimizeWeekAssignment(object sender, MyEventArgs e)
+        {
+            IProgress intf = (IProgress)sender;
+            poule.OptimizeWeekends(klvv, intf);
+        }
+        private void OptimizeWeekAssignmentCompleted(object sender, MyEventArgs e)
+        {
+//            UpdateWeekMapping();
+//            objectListView3.SetObjects(weekmapping);
+            klvv.Evaluate(null);
+            klvv.Changed();
         }
         private void OptimizeTeamAssignment(object sender, MyEventArgs e)
         {
             IProgress intf = (IProgress)sender;
-            poule.OptimizeTeamAssignment(klvv,intf);
+            poule.OptimizeTeamAssignment(klvv, intf);
         }
         private void OptimizeTeamAssignmentCompleted(object sender, MyEventArgs e)
         {
-            objectListView1.SetObjects(poule.teams);
+//            objectListView1.SetObjects(poule.teams);
             klvv.Evaluate(null);
             klvv.Changed();
         }
@@ -279,6 +326,72 @@ namespace VolleybalCompetition_creator
         private void button6_Click(object sender, EventArgs e)
         {
             poule.OptimizeHomeVisitor(klvv);
+        }
+
+        private void objectListView3_FormatRow(object sender, FormatRowEventArgs e)
+        {
+            
+            KeyValuePair<Weekend, int> kvp = (KeyValuePair<Weekend, int>)e.Model;
+            if (kvp.Value > 0) e.Item.SubItems[1].Text = "Week " + kvp.Value.ToString();
+            else e.Item.SubItems[1].Text = "---";
+        }
+
+        private void UpdateWeekMapping()
+        {
+            weekmapping.Clear();
+            DateTime start = poule.weekends.Min(w => w.Saturday).AddDays(-7);
+            DateTime end = poule.weekends.Max(w => w.Saturday).AddDays(7);
+            for (DateTime date = start; date < end; date = date.AddDays(7))
+            {
+                Weekend weekend = new Weekend(date);
+                int index = 0;
+                for (int j = 0; j < poule.weekends.Count; j++)
+                {
+                    if (poule.weekends[j].Saturday == date)
+                    {
+                        weekend = poule.weekends[j];
+                        index = j+1;
+                    }
+                }
+                weekmapping.Add(weekend, index);
+            }
+        }
+        private void objectListView3_SelectionChanged(object sender, EventArgs e)
+        {
+            button7.Enabled = (objectListView3.SelectedObjects.Count == 2);
+        }
+        private void Switch1_Click(object sender, EventArgs e)
+        {
+            KeyValuePair<Weekend, int> kvp1 = (KeyValuePair<Weekend, int>)objectListView3.SelectedObjects[0];
+            KeyValuePair<Weekend, int> kvp2 = (KeyValuePair<Weekend, int>)objectListView3.SelectedObjects[1];
+            int index1 = kvp1.Value-1;
+            int index2 = kvp2.Value-1;
+            if (index1 >= 0) poule.weekends[index1] = kvp2.Key;
+            if (index2 >= 0) poule.weekends[index2] = kvp1.Key;
+            UpdateWeekMapping();
+            klvv.Evaluate(null);
+            klvv.Changed();
+        }
+        private void objectListView3_CellClick(object sender, CellClickEventArgs e)
+        {
+            if (objectListView3.SelectedObjects.Count > 0)
+            {
+                List<Constraint> constraints = new List<Constraint>();
+                foreach (Object obj in objectListView3.SelectedObjects)
+                {
+                    KeyValuePair<Weekend, int> kvp = (KeyValuePair<Weekend, int>)obj;
+                    constraints.AddRange(kvp.Key.conflictConstraints);
+                }
+                state.ShowConstraints(constraints);
+            }
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            ProgressDialog diag = new ProgressDialog();
+            diag.WorkFunction += OptimizeWeekAssignment;
+            diag.CompletionFunction += OptimizeWeekAssignmentCompleted;
+            diag.Start("Optimizing weekends", null);
         }
     }
 }

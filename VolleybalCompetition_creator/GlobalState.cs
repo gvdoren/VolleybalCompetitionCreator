@@ -8,6 +8,7 @@ namespace VolleybalCompetition_creator
     public class GlobalState
     {
         public List<Club> selectedClubs = new List<Club>();
+        public Constraint selectedConstraint = null;
         public List<Constraint> showConstraints = new List<Constraint>();
         public void ShowConstraints(List<Constraint> constraints)
         {

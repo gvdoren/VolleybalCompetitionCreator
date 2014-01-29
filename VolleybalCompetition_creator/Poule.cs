@@ -12,8 +12,57 @@ namespace VolleybalCompetition_creator
         public List<Team> teams = new List<Team>();
         public Poule(string name) { this.name = name; }
         public List<Weekend> weekends = new List<Weekend>();
+        public void AddWeekend(int year, int weekNr)
+        {
+            int index = weekends.FindIndex(w => w.WeekNr == weekNr && w.Year == year);
+            if (index < 0)
+            {
+                weekends.Add(new Weekend(year, weekNr));
+            }
+        }
+        public int FindWeekendNrInSchema(int year, int weekNr)
+        {
+            int index = weekends.FindIndex(w => w.WeekNr == weekNr && w.Year == year);
+            return index;
+        }
         public List<Match> matches = new List<Match>();
-        public bool OptimizeTeamAssignment(Klvv klvv, IProgress intf)
+        public void OptimizeWeekends(Klvv klvv, IProgress intf)
+        {
+            if (conflict > 0)
+            {
+                List<Weekend> result = new List<Weekend>(weekends);
+                int minConflict = conflict;
+                for (int i = 0; i < weekends.Count; i++)
+                {
+                    intf.Progress(i, weekends.Count);
+                    for (int j = 0; j < weekends.Count; j++)
+                    {
+                        Swap(weekends, i, j);
+                        klvv.Evaluate(this);
+                        if (conflict < minConflict)
+                        {
+                            result = new List<Weekend>(weekends);
+                            minConflict = conflict;
+                        }
+                        Swap(weekends, i, j);
+                    }
+                    weekends = new List<Weekend>(result);
+                }
+                klvv.Evaluate(null);
+                klvv.Changed();
+            }
+        }
+        private void Swap(List<Weekend> list, int i, int j)
+        {
+            Weekend ti = list[i];
+            Weekend tj = list[j];
+            list.RemoveAt(i);
+            list.Insert(i, tj);
+            list.RemoveAt(j);
+            list.Insert(j, ti);
+        }
+
+        public void OptimizeTeamAssignment(Klvv klvv, IProgress intf)
         {
             if (conflict > 0)
             {
@@ -38,11 +87,40 @@ namespace VolleybalCompetition_creator
                     }
                     catch { }
                     if (best != null) teams = best; else teams = temp;
-                    OptimizeHomeVisitor(klvv);
-                    return minConflicts < conflictBefore;
+                }
+                else // semi-optimisation.
+                {
+                    List<Team> result = new List<Team>(teams);
+                    int minConflict = conflict;
+                    for (int i = 0; i < teams.Count; i++)
+                    {
+                        intf.Progress(i, teams.Count);
+                        for (int j = 0; j < teams.Count; j++)
+                        {
+                            Swap(teams, i, j);
+                            klvv.Evaluate(this);
+                            if (conflict < minConflict)
+                            {
+                                result = new List<Team>(teams);
+                                minConflict = conflict;
+                            }
+                            Swap(teams, i, j);
+                        }
+                        teams = new List<Team>(result);
+                    }
+                    klvv.Evaluate(null);
+                    klvv.Changed();
                 }
             }
-            return false;
+        }
+        private void Swap(List<Team> list, int i, int j)
+        {
+            Team ti = list[i];
+            Team tj = list[j];
+            list.RemoveAt(i);
+            list.Insert(i,tj);
+            list.RemoveAt(j);
+            list.Insert(j,ti);
         }
         private void GenerateCombination(Klvv klvv, List<Team> remainingTeams, ref int minConflicts, ref List<Team> best, IProgress intf)
         {
@@ -64,11 +142,6 @@ namespace VolleybalCompetition_creator
             else
             {
                 klvv.Evaluate(this);
-                int conflict = 0;
-                foreach (Team team in teams)
-                {
-                    conflict += team.conflict;
-                }
                 if (conflict < minConflicts)
                 {
                     minConflicts = conflict;

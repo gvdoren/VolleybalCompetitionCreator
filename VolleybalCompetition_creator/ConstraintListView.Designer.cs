@@ -50,12 +50,15 @@
             this.olvColumn2,
             this.olvColumn3});
             this.objectListView1.FullRowSelect = true;
+            this.objectListView1.HideSelection = false;
             this.objectListView1.Location = new System.Drawing.Point(-1, 25);
             this.objectListView1.Name = "objectListView1";
             this.objectListView1.Size = new System.Drawing.Size(287, 208);
             this.objectListView1.TabIndex = 0;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
+            this.objectListView1.SelectionChanged += new System.EventHandler(this.objectListView1_SelectionChanged);
+            this.objectListView1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.objectListView1_MouseClick);
             this.objectListView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.objectListView1_MouseDoubleClick);
             // 
             // olvColumn1
@@ -63,7 +66,7 @@
             this.olvColumn1.AspectName = "name";
             this.olvColumn1.CellPadding = null;
             this.olvColumn1.FillsFreeSpace = true;
-            this.olvColumn1.MaximumWidth = 150;
+            this.olvColumn1.MaximumWidth = 300;
             this.olvColumn1.Text = "Constraint";
             // 
             // olvColumn2
@@ -78,7 +81,8 @@
             // 
             this.olvColumn3.AspectName = "conflict";
             this.olvColumn3.CellPadding = null;
-            this.olvColumn3.Text = "conflict-level";
+            this.olvColumn3.MaximumWidth = 80;
+            this.olvColumn3.Text = "conflict";
             // 
             // label1
             // 

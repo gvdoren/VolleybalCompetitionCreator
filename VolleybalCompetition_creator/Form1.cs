@@ -16,7 +16,7 @@ namespace VolleybalCompetition_creator
         GlobalState state = new GlobalState();
         public Form1()
         {
-            Match.Test();
+            //Weekend.Test();
             InitializeComponent();
             this.WindowState = FormWindowState.Maximized;
             ClubView clubview = new ClubView(klvv,state);

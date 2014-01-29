@@ -6,15 +6,6 @@ using System.Diagnostics;
 
 namespace VolleybalCompetition_creator
 {
-    public class Weekend
-    {
-        DateTime date;
-        public Weekend(string datestr)
-        {
-            //date = DateTime.Parse(datestr);
-            date = DateTime.ParseExact(datestr, "yyyy-MM-dd",null);
-        }
-    }
     public class Annorama
     {
         public List<Weekend> reeks14 = new List<Weekend>();

@@ -104,6 +104,8 @@ namespace VolleybalCompetition_creator
                 IProgress intf = (IProgress)sender;
                 intf.SetText("Optimizing - " + poule.serie.name + poule.name);
                 poule.OptimizeTeamAssignment(klvv,intf);
+                poule.OptimizeHomeVisitor(klvv);
+                poule.OptimizeWeekends(klvv, intf);
                 klvv.Evaluate(null);
                 klvv.Changed();
                 if(intf.Cancelled()) return;
