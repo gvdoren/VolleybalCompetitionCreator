@@ -26,6 +26,14 @@ namespace VolleybalCompetition_creator
             this.Year = date.Year;
             //date = DateTime.Parse(datestr);
         }
+        public static bool operator <(Weekend w1, Weekend w2)
+        {
+            return w1.Year < w2.Year || (w1.Year == w2.Year && w1.WeekNr < w2.WeekNr);
+        }
+        public static bool operator >(Weekend w1, Weekend w2)
+        {
+            return w1.Year > w2.Year || (w1.Year == w2.Year && w1.WeekNr > w2.WeekNr);
+        }
         public Weekend(DateTime date)
         {
             System.Globalization.CultureInfo cul = System.Globalization.CultureInfo.CurrentCulture;
@@ -35,6 +43,10 @@ namespace VolleybalCompetition_creator
                 DayOfWeek.Saturday);
             this.Year = date.Year;
             //date = DateTime.Parse(datestr);
+        }
+        public override string ToString()
+        {
+            return Saturday.ToShortDateString();
         }
         public DateTime Saturday
         {

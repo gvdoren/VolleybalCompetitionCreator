@@ -107,9 +107,9 @@ namespace VolleybalCompetition_creator
                 poule.OptimizeHomeVisitor(klvv);
                 poule.OptimizeWeekends(klvv, intf);
                 klvv.Evaluate(null);
-                klvv.Changed();
                 if(intf.Cancelled()) return;
             }
+            klvv.Changed();
         }
         private void OptimizeTeamAssignmentCompleted(object sender, MyEventArgs e)
         {
@@ -135,6 +135,13 @@ namespace VolleybalCompetition_creator
                 }
                 state.ShowConstraints(constraints);
             }
+        }
+
+        private void PouleListView_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            state.OnMyChange -= new MyEventHandler(state_OnMyChange);
+            klvv.OnMyChange -= state_OnMyChange;
+
         }
 
 

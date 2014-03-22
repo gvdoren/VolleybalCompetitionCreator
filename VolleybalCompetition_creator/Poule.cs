@@ -49,7 +49,6 @@ namespace VolleybalCompetition_creator
                     weekends = new List<Weekend>(result);
                 }
                 klvv.Evaluate(null);
-                klvv.Changed();
             }
         }
         private void Swap(List<Weekend> list, int i, int j)
@@ -109,7 +108,6 @@ namespace VolleybalCompetition_creator
                         teams = new List<Team>(result);
                     }
                     klvv.Evaluate(null);
-                    klvv.Changed();
                 }
             }
         }
@@ -186,7 +184,6 @@ namespace VolleybalCompetition_creator
                 }
             }
             klvv.Evaluate(null);
-            klvv.Changed();
         }
     }
 }

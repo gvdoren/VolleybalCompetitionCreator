@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
+using BrightIdeasSoftware;
 
 namespace VolleybalCompetition_creator
 {
@@ -18,8 +19,11 @@ namespace VolleybalCompetition_creator
         {
             //Weekend.Test();
             InitializeComponent();
+            // reading club-constraints
+
+
             this.WindowState = FormWindowState.Maximized;
-            ClubView clubview = new ClubView(klvv,state);
+            ClubListView clubview = new ClubListView(klvv,state);
             clubview.ShowHint = DockState.DockLeft;
             clubview.Show(dockPanel);
 
@@ -39,6 +43,78 @@ namespace VolleybalCompetition_creator
             constraintListview.ShowHint = DockState.DockRight;
             constraintListview.Show(dockPanel);
 
+        }
+
+        private void clubsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ClubListView clubview = null;
+            foreach (DockContent content in this.dockPanel.Contents)
+            {
+                clubview = content as ClubListView;
+                if (clubview != null)
+                {
+                    clubview.Activate();
+                    return;
+                }
+            }
+            clubview = new ClubListView(klvv, state);
+            clubview.ShowHint = DockState.DockLeft;
+            
+            clubview.Show(this.dockPanel);
+
+        }
+
+        private void seriesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PouleListView pouleListView = null;
+            foreach (DockContent content in this.dockPanel.Contents)
+            {
+                pouleListView = content as PouleListView;
+                if (pouleListView != null)
+                {
+                    pouleListView.Activate();
+                    return;
+                }
+            }
+            pouleListView = new PouleListView(klvv, state);
+            pouleListView.ShowHint = DockState.DockLeft;
+            pouleListView.Show(this.dockPanel);
+
+        }
+
+        private void constraintsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ClubConstraints clubConstraints = null;
+            foreach (DockContent content in this.dockPanel.Contents)
+            {
+                clubConstraints = content as ClubConstraints;
+                if (clubConstraints != null)
+                {
+                    clubConstraints.Activate();
+                    return;
+                }
+            }
+            clubConstraints = new ClubConstraints(klvv, state);
+            clubConstraints.Show(this.dockPanel);
+
+        }
+
+        private void lijstToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ClubListView clubview = null;
+            foreach (DockContent content in this.dockPanel.Contents)
+            {
+                clubview = content as ClubListView;
+                if (clubview != null)
+                {
+                    clubview.Activate();
+                    return;
+                }
+            }
+            clubview = new ClubListView(klvv, state);
+            clubview.ShowHint = DockState.DockLeft;
+
+            clubview.Show(this.dockPanel);
         }
     }
 }

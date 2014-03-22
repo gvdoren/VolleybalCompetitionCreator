@@ -1,6 +1,6 @@
 ﻿namespace VolleybalCompetition_creator
 {
-    partial class ClubView
+    partial class ClubListView
     {
         /// <summary>
         /// Required designer variable.
@@ -73,15 +73,16 @@
             this.olvColumn1.CellPadding = null;
             this.olvColumn1.Text = "Conflicts";
             // 
-            // ClubView
+            // ClubListView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 262);
             this.Controls.Add(this.objectListView1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Name = "ClubView";
-            this.Text = "ClubView";
+            this.Name = "ClubListView";
+            this.Text = "ClubListView";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ClubListView_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).EndInit();
             this.ResumeLayout(false);
 

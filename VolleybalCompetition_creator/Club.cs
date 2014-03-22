@@ -12,13 +12,20 @@ namespace VolleybalCompetition_creator
     {
         public List<Team> teams = new List<Team>();
         public List<Serie> series = new List<Serie>();
+        public List<Sporthal> sporthalls = new List<Sporthal>();
         public int Id { get; set; }
         public string name { get; set; }
+        public bool ConstraintAllInOneWeekend = false;
+        public bool ConstraintNotAtTheSameTime = false;
         public static Club CreateNullClub()
         {
             Club club = new Club();
             club.name = "----";
             return club;
+        }
+        public override string ToString()
+        {
+            return name;
         }
     }
 }

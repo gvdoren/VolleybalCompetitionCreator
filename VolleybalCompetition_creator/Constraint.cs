@@ -30,6 +30,7 @@ namespace VolleybalCompetition_creator
         List<Club> clubs = new List<Club>();
         List<Poule> poules = new List<Poule>();
         List<Team> teams = new List<Team>();
+        public bool VisitorAlso = true;
         public Club club { get; set; }
         public string name { get; set; }
         public int cost = 1;
@@ -49,9 +50,9 @@ namespace VolleybalCompetition_creator
                 matches[i].poule.AddConflict(this);
                 matches[i].poule.serie.AddConflict(this);
                 matches[i].homeTeam.AddConflict(this);
-                matches[i].visitorTeam.AddConflict(this);
+                if (VisitorAlso) matches[i].visitorTeam.AddConflict(this);
                 matches[i].homeTeam.club.AddConflict(this);
-                if (matches[i].homeTeam.club != matches[i].visitorTeam.club) matches[i].visitorTeam.club.AddConflict(this);
+                if (matches[i].homeTeam.club != matches[i].visitorTeam.club && VisitorAlso) matches[i].visitorTeam.club.AddConflict(this);
             }
         }
     }
@@ -184,6 +185,58 @@ namespace VolleybalCompetition_creator
                                 AddConflictMatch(match1, match2);
                             }
                         }
+                    }
+                }
+            }
+        }
+        public override string[] GetTextDescription()
+        {
+            List<string> result = new List<string>();
+            return result.ToArray();
+        }
+    }
+    class ConstraintNotAtWeekendHome : Constraint
+    {
+        public ConstraintNotAtWeekendHome(Team t)
+        {
+            team1 = t;
+            club = team1.club;
+            VisitorAlso = false;
+            name = "Teams spelen in hetzelfde weekend";
+        }
+        public Team team1;
+        public override void Evaluate(Klvv klvv, Poule poule)
+        {
+            if (poule != null && team1.poule != poule) return;
+            conflict = 0;
+            conflictMatches.Clear();
+            if (team1.club.ConstraintNotAtTheSameTime == false) return;
+            Poule poule1 = team1.poule;
+            foreach (Team team2 in team1.NotAtSameWeekend)
+            {
+                Poule poule2 = team2.poule;
+                int i1 = 0;
+                int i2 = 0;
+                while (i1 < poule1.matches.Count && i2 < poule2.matches.Count)
+                {
+                    Match m1 = poule1.matches[i1];
+                    Match m2 = poule2.matches[i2];
+                    if (m1.Weekend<m2.Weekend)
+                    {
+                        i1++;
+                    }
+                    else if (m2.Weekend<m1.Weekend)
+                    {
+                        i2++;
+                    }
+                    else 
+                    {
+                        if(m1.homeTeam == team1 && m2.homeTeam == team2)
+                        {
+                            this.AddConflictMatch(m1, m2);
+                        }
+                        i1++;
+                        i2++;
                     }
                 }
             }

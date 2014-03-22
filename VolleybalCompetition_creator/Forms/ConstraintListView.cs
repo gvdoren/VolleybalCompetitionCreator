@@ -128,6 +128,13 @@ namespace VolleybalCompetition_creator
                 state.selectedConstraint = constraint;
             }
         }
+
+        private void ConstraintListView_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            klvv.OnMyChange -= state_OnMyChange;
+            state.OnMyChange -= state_OnMyChange;
+
+        }
     }
 
 }

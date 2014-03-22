@@ -10,11 +10,11 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace VolleybalCompetition_creator
 {
-    public partial class ClubView : DockContent
+    public partial class ClubListView : DockContent
     {
         Klvv klvv = null;
         GlobalState state;
-        public ClubView(Klvv klvv, GlobalState state)
+        public ClubListView(Klvv klvv, GlobalState state)
         {
             this.klvv = klvv;
             this.state = state;
@@ -51,25 +51,34 @@ namespace VolleybalCompetition_creator
                 Club club = objectListView1.GetModelObject(hit.Item.Index) as Club;
                 if (club != null)
                 {
-                    // check whether the PouleView is already existing
-                    foreach (DockContent content in this.DockPanel.Contents)
+                    int columnIndex = hit.Item.SubItems.IndexOf(hit.SubItem);
+                    if (columnIndex == 1)
                     {
-                        PouleListView poulelistview = content as PouleListView;
-                        if (poulelistview != null)
+                        // check whether the PouleView is already existing
+                        foreach (DockContent content in this.DockPanel.Contents)
                         {
-                            poulelistview.Activate();
-                            state.selectedClubs.Clear();
-                            foreach (Object obj in objectListView1.SelectedObjects)
+                            PouleListView poulelistview = content as PouleListView;
+                            if (poulelistview != null)
                             {
-                                Club club1 = (Club)obj;
-                                state.selectedClubs.Add(club1);
+                                poulelistview.Activate();
+                                state.selectedClubs.Clear();
+                                foreach (Object obj in objectListView1.SelectedObjects)
+                                {
+                                    Club club1 = (Club)obj;
+                                    state.selectedClubs.Add(club1);
+                                }
+                                state.Changed();
+                                return;
                             }
-                            state.Changed();
-                            return;
                         }
+                        PouleListView poulelistView = new PouleListView(klvv, state);
+                        poulelistView.ShowHint = DockState.DockLeft;
+                        poulelistView.Show(this.DockPanel);
                     }
-                    PouleListView poulelistView = new PouleListView(klvv, state);
-                    poulelistView.Show(this.DockPanel);
+                    else
+                    {
+
+                    }
                 }
             };
         }
@@ -86,6 +95,11 @@ namespace VolleybalCompetition_creator
                 }
                 state.ShowConstraints(constraints);
             }
+        }
+
+        private void ClubListView_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            klvv.OnMyChange -= state_OnMyChange;
         }
     }
     internal static class ControlExtensionMethods
