@@ -90,32 +90,6 @@ namespace VolleybalCompetition_creator
             };
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            ProgressDialog diag = new ProgressDialog();
-            diag.WorkFunction += OptimizeTeamAssignment;
-            diag.CompletionFunction += OptimizeTeamAssignmentCompleted; 
-            diag.Start("Optimizing", null);
-        }
-        private void OptimizeTeamAssignment(object sender, MyEventArgs e)
-        {
-            foreach (Poule poule in klvv.poules)
-            {
-                IProgress intf = (IProgress)sender;
-                intf.SetText("Optimizing - " + poule.serie.name + poule.name);
-                poule.OptimizeTeamAssignment(klvv,intf);
-                poule.OptimizeHomeVisitor(klvv);
-                poule.OptimizeWeekends(klvv, intf);
-                klvv.Evaluate(null);
-                if(intf.Cancelled()) return;
-            }
-            klvv.Changed();
-        }
-        private void OptimizeTeamAssignmentCompleted(object sender, MyEventArgs e)
-        {
-            klvv.Evaluate(null);
-            klvv.Changed();
-        }
 
         private void objectListView1_SelectionChanged(object sender, EventArgs e)
         {
@@ -142,6 +116,12 @@ namespace VolleybalCompetition_creator
             state.OnMyChange -= new MyEventHandler(state_OnMyChange);
             klvv.OnMyChange -= state_OnMyChange;
 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            state.selectedClubs.Clear();
+            state.Changed();
         }
 
 

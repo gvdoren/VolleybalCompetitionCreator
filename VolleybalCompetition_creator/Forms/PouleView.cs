@@ -120,6 +120,10 @@ namespace VolleybalCompetition_creator
                         e.SourceListView.RemoveObjects(e.SourceModels);
                         if (e.DropTargetLocation == DropTargetLocation.BelowItem) offset = 1;
                         objectListView1.InsertObjects(e.DropTargetIndex+offset, e.SourceModels);
+                        foreach (Team t in e.SourceModels)
+                        {
+                            t.poule = poule;
+                        } 
                         objectListView1.SelectedIndex = e.DropTargetIndex + offset;
                         objectListView1.BuildList();
                         //objectListView1.SelectedObjects = e.SourceModels;
@@ -155,6 +159,7 @@ namespace VolleybalCompetition_creator
             button1.Enabled = (objectListView1.SelectedObjects.Count == 1);
             button2.Enabled = (objectListView1.SelectedObjects.Count == 1);
             button3.Enabled = (objectListView1.SelectedObjects.Count >= 2);
+            button9.Enabled = (objectListView1.SelectedObjects.Count == 1);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -326,6 +331,7 @@ namespace VolleybalCompetition_creator
         private void button6_Click(object sender, EventArgs e)
         {
             poule.OptimizeHomeVisitor(klvv);
+            klvv.Changed();
         }
 
         private void objectListView3_FormatRow(object sender, FormatRowEventArgs e)
@@ -392,6 +398,44 @@ namespace VolleybalCompetition_creator
             diag.WorkFunction += OptimizeWeekAssignment;
             diag.CompletionFunction += OptimizeWeekAssignmentCompleted;
             diag.Start("Optimizing weekends", null);
+        }
+        Team optimizeTeam = null;
+        private void button9_Click(object sender, EventArgs e)
+        {
+            optimizeTeam = (Team)objectListView1.SelectedObject;
+            ProgressDialog diag = new ProgressDialog();
+            diag.WorkFunction += OptimizeTeam;
+            diag.CompletionFunction += OptimizeCompleted;
+            diag.Start("Optimizing", null);
+        }
+        private void OptimizeTeam(object sender, MyEventArgs e)
+        {
+            IProgress intf = (IProgress)sender;
+            intf.SetText("Optimizing team - ("+optimizeTeam.name+")");
+            poule.OptimizeTeam(klvv,intf,optimizeTeam);
+        }
+        private void OptimizeCompleted(object sender, MyEventArgs e)
+        {
+            klvv.Evaluate(null);
+            klvv.Changed();
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            ProgressDialog diag = new ProgressDialog();
+            diag.WorkFunction += OptimizePoule;
+            diag.CompletionFunction += OptimizeCompleted;
+            diag.Start("Optimizing", null);
+        }
+        private void OptimizePoule(object sender, MyEventArgs e)
+        {
+            IProgress intf = (IProgress)sender;
+            intf.SetText("Optimizing poule - " + poule.serie.name + poule.name);
+            poule.OptimizeTeamAssignment(klvv, intf);
+            poule.OptimizeHomeVisitor(klvv);
+            poule.OptimizeWeekends(klvv, intf);
+            klvv.Evaluate(null);
+            if (intf.Cancelled()) return;
         }
     }
 }

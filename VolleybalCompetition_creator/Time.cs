@@ -9,6 +9,14 @@ namespace VolleybalCompetition_creator
     {
         public int Hours;
         public int Minutes;
+        public string Value
+        {
+            get { return ToString(); }
+            set {
+                Hours = 0;
+            }
+
+        }
         public Time(int hours, int minutes)
         {
             this.Hours = hours;

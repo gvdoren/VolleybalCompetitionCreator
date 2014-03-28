@@ -54,6 +54,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.button7 = new System.Windows.Forms.Button();
             this.button8 = new System.Windows.Forms.Button();
+            this.button9 = new System.Windows.Forms.Button();
+            this.button10 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView3)).BeginInit();
@@ -177,9 +179,9 @@
             this.olvColumn5,
             this.olvColumn8});
             this.objectListView2.FullRowSelect = true;
-            this.objectListView2.Location = new System.Drawing.Point(1, 325);
+            this.objectListView2.Location = new System.Drawing.Point(1, 343);
             this.objectListView2.Name = "objectListView2";
-            this.objectListView2.Size = new System.Drawing.Size(485, 117);
+            this.objectListView2.Size = new System.Drawing.Size(543, 99);
             this.objectListView2.TabIndex = 5;
             this.objectListView2.UseCompatibleStateImageBehavior = false;
             this.objectListView2.View = System.Windows.Forms.View.Details;
@@ -250,7 +252,7 @@
             // 
             this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button5.Enabled = false;
-            this.button5.Location = new System.Drawing.Point(493, 314);
+            this.button5.Location = new System.Drawing.Point(552, 342);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(75, 23);
             this.button5.TabIndex = 7;
@@ -261,7 +263,7 @@
             // button6
             // 
             this.button6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button6.Location = new System.Drawing.Point(492, 343);
+            this.button6.Location = new System.Drawing.Point(551, 371);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(75, 23);
             this.button6.TabIndex = 8;
@@ -337,11 +339,33 @@
             this.button8.UseVisualStyleBackColor = true;
             this.button8.Click += new System.EventHandler(this.button8_Click);
             // 
+            // button9
+            // 
+            this.button9.Location = new System.Drawing.Point(10, 310);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(99, 23);
+            this.button9.TabIndex = 11;
+            this.button9.Text = "Optimize team";
+            this.button9.UseVisualStyleBackColor = true;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
+            // 
+            // button10
+            // 
+            this.button10.Location = new System.Drawing.Point(133, 310);
+            this.button10.Name = "button10";
+            this.button10.Size = new System.Drawing.Size(101, 23);
+            this.button10.TabIndex = 12;
+            this.button10.Text = "Optimize poule";
+            this.button10.UseVisualStyleBackColor = true;
+            this.button10.Click += new System.EventHandler(this.button10_Click);
+            // 
             // PouleView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(576, 441);
+            this.ClientSize = new System.Drawing.Size(634, 441);
+            this.Controls.Add(this.button10);
+            this.Controls.Add(this.button9);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.objectListView3);
             this.Controls.Add(this.button6);
@@ -395,5 +419,7 @@
         private System.Windows.Forms.Button button7;
         private BrightIdeasSoftware.OLVColumn olvColumn10;
         private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.Button button9;
+        private System.Windows.Forms.Button button10;
     }
 }

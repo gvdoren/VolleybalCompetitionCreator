@@ -9,11 +9,13 @@ namespace VolleybalCompetition_creator
     {
         public string name { get; set; }
         public int id { get; set; }
+        public Club club { get; set; }
         public List<DateTime> NotAvailable = new List<DateTime>();
-        public Sporthal(int id, string name)
+        public Sporthal(int id, string name,Club club)
         {
             this.name = name;
             this.id = id;
+            this.club = club;
         }
         public override string ToString()
         {

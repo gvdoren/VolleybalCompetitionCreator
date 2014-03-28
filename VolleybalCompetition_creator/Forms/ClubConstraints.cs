@@ -41,94 +41,11 @@ namespace VolleybalCompetition_creator
             }
         }
 
-        private void UpdateWeekendForm()
-        {
-            radioButton1.Checked = true;
-            radioButton2.Checked = club.ConstraintAllInOneWeekend;
-            radioButton3.Checked = club.ConstraintNotAtTheSameTime;
-            dataGridView1.Columns.Clear();
-            dataGridView1.Rows.Clear();
-            DataGridViewTextBoxColumn col = new DataGridViewTextBoxColumn();
-            col.HeaderText = "Teams";
-            col.Width = 150;
-            dataGridView1.Columns.Add(col);
-
-            for (int i = 0; i < club.teams.Count; i++)
-            {
-                DataGridViewCheckBoxColumn doWork = new DataGridViewCheckBoxColumn();
-                doWork.HeaderText = string.Format("T-{0}", i);
-                doWork.FalseValue = "0";
-                doWork.TrueValue = "1";
-                doWork.Width = 30;
-                dataGridView1.Columns.Add(doWork);
-                dataGridView1.Rows.Add();
-                dataGridView1.Rows[i].Cells[i + 1].Style.BackColor = Color.Gray;
-                dataGridView1.Rows[i].Cells[i + 1].ReadOnly = true;
-            }
-            for (int j = 0; j < club.teams.Count; j++)
-            {
-                dataGridView1.Rows[j].Cells[0].Value = string.Format("{0} - {1}", j, club.teams[j].poule.serie.name);
-                for (int i = 0; i < club.teams.Count; i++)
-                {
-                    DataGridViewCheckBoxCell cell = ((DataGridViewCheckBoxCell)dataGridView1.Rows[j].Cells[i + 1]);
-                    if (i != j)
-                    {
-                        bool value = club.teams[j].NotAtSameWeekend.Contains(club.teams[i]);
-                        if (value)
-                        {
-                            cell.Value = cell.TrueValue;
-                        }
-                        else
-                        {
-                            cell.Value = cell.FalseValue;
-                        }
-                    }
-                    else
-                    {
-                        cell.Value = cell.FalseValue;
-                    }
-                }
-            }
-            dataGridView1.Refresh();
-            klvv.Evaluate(null);
-            state.Changed();
-        }
-
-
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             club = (Club) comboBox1.SelectedItem;
-            UpdateWeekendForm();
             UpdateSporthalForm();
-        }
-
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            dataGridView1.CommitEdit(DataGridViewDataErrorContexts.Commit);
-            klvv.Evaluate(null);
-            state.Changed();
-        }
-
-        private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.ColumnIndex > 0)
-            {
-                ((DataGridViewCheckBoxCell)dataGridView1.Rows[e.ColumnIndex - 1].Cells[e.RowIndex + 1]).Value = ((DataGridViewCheckBoxCell)dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex]).Value;
-                Team team0 = club.teams[e.RowIndex];
-                Team team1 = club.teams[e.ColumnIndex - 1];
-                //bool value = (bool)((DataGridViewCheckBoxCell)dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex]).Value;
-                if (((DataGridViewCheckBoxCell)dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex]).Value == ((DataGridViewCheckBoxCell)dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex]).TrueValue)
-                {
-                    if (team0.NotAtSameWeekend.Contains(team1) == false) team0.NotAtSameWeekend.Add(team1);
-                    if (team1.NotAtSameWeekend.Contains(team0) == false) team1.NotAtSameWeekend.Add(team0);
-                }
-                else
-                {
-                    team0.NotAtSameWeekend.Remove(team1);
-                    team1.NotAtSameWeekend.Remove(team0);
-                }
-            }
-            //DataGridViewCheckBoxCell cb = dataGridView1.
+            UpdateTeamsTab();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -172,11 +89,17 @@ namespace VolleybalCompetition_creator
                 }
             }
         }
+        private void UpdateTeamsTab()
+        {
+            objectListView1.SetObjects(club.teams);
+            objectListView1.BuildList(true);
+        }
         private void dataGridView3_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            dataGridView1.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            dataGridView3.CommitEdit(DataGridViewDataErrorContexts.Commit);
             klvv.Evaluate(null);
-            state.Changed();
+            //state.Changed();
+            klvv.Changed();
         }
 
         private void dataGridView3_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -213,35 +136,11 @@ namespace VolleybalCompetition_creator
             //DataGridViewCheckBoxCell cb = dataGridView1.
         }
 
-        private void radioButton3_CheckedChanged(object sender, EventArgs e)
+        private void objectListView1_ItemsChanged(object sender, ItemsChangedEventArgs e)
         {
-            club.ConstraintNotAtTheSameTime = radioButton3.Checked;
-            if (radioButton3.Checked)
-            {
-                dataGridView1.Enabled = true;
-                dataGridView1.ForeColor = SystemColors.ControlText;
-                dataGridView1.ColumnHeadersDefaultCellStyle.ForeColor = SystemColors.WindowText;
-
-            }
-            else
-            {
-                dataGridView1.Enabled = false;
-                dataGridView1.ForeColor = Color.LightGray;
-                dataGridView1.EnableHeadersVisualStyles = false;
-                dataGridView1.ColumnHeadersDefaultCellStyle.ForeColor = Color.LightGray;
-                dataGridView1.ColumnHeadersDefaultCellStyle.SelectionForeColor = Color.LightGray;
-                //dataGridView1.EnableHeadersVisualStyles = false;
-            }
             klvv.Evaluate(null);
-            state.Changed();
-
+            //state.Changed();
+            klvv.Changed();
         }
-
-        private void radioButton2_CheckedChanged(object sender, EventArgs e)
-        {
-            club.ConstraintAllInOneWeekend = radioButton2.Checked;
-        }
-
-
     }
 }

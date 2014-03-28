@@ -6,6 +6,8 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace VolleybalCompetition_creator
 {
+    public enum TeamGroups {GroupA, GroupB, NoGroup};
+
     public class ConstraintAdmin
     {
         public List<Constraint> conflictConstraints = new List<Constraint>();
@@ -41,6 +43,7 @@ namespace VolleybalCompetition_creator
         public List<Match> conflictMatches = new List<Match>();
         protected void AddConflictMatch(params Match[] matches) 
         {
+            
             for ( int i = 0 ; i < matches.Length ; i++ )
             {
                 conflictMatches.Add(matches[i]);
@@ -58,33 +61,40 @@ namespace VolleybalCompetition_creator
     }
     class ConstraintZaal : Constraint
     {
-        public ConstraintZaal()
+        public Sporthal sporthal;
+        public ConstraintZaal(Sporthal sporthal)
         {
-            name = "Beschikbaarheid zaal";
+            name = "Sporthal niet beschikbaar";
+            this.sporthal = sporthal;
+            club = sporthal.club;
+            VisitorAlso = false;
+            cost = 1;
         }
-        public Time Zatvroeg = new Time(23, 59);
-        public Time Zatlaat = new Time(0,0);
-        public Time Zonvroeg = new Time(23, 59);
-        public Time Zonlaat = new Time(0,0);
         public override void Evaluate(Klvv klvv, Poule p)
         {
             conflict = 0;
             conflictMatches.Clear();
-            foreach (Poule poule in klvv.poules)
+            bool optimize = false;
+            foreach (Sporthal sporthal in club.sporthalls)
             {
-                if (p == null || poule == p)
+                if (sporthal.NotAvailable.Count > 0) optimize = true;
+            }
+            if (optimize)
+            {
+                foreach (Team team in club.teams)
                 {
-                    foreach (Match match in poule.matches)
+                    Poule poule = team.poule;
+                    if (poule.serie.constraintsHold)
                     {
-                        if (match.homeTeam.club == club)
+                        if (p == null || poule == p)
                         {
-                            if (match.Day == DayOfWeek.Saturday && (match.Time < Zatvroeg || match.Time > Zatlaat))
+                            foreach (Match match in poule.matches)
                             {
-                                this.AddConflictMatch(match);
-                            }
-                            if (match.Day == DayOfWeek.Sunday && (match.Time < Zonvroeg || match.Time > Zonlaat))
-                            {
-                                this.AddConflictMatch(match);
+                                DateTime dt = match.datetime.Date;
+                                if (match.homeTeam.sporthal != null && match.homeTeam.sporthal == sporthal && match.homeTeam.sporthal.NotAvailable.Contains(dt) == true)
+                                {
+                                    this.AddConflictMatch(match);
+                                }
                             }
                         }
                     }
@@ -94,60 +104,11 @@ namespace VolleybalCompetition_creator
         public override string[] GetTextDescription()
         {
             List<string> result = new List<string>();
-            if (Zatvroeg < Zatlaat) result.Add("Zaterdag: " + Zatvroeg + " - " + Zatlaat);
-            if (Zonvroeg < Zonlaat) result.Add("Zondag:   " + Zonvroeg + " - " + Zonlaat);
-            return result.ToArray();
-        }
-    }
-    class ConstraintNotAtTheSameTime : Constraint
-    {
-        public ConstraintNotAtTheSameTime()
-        {
-            name = "Teams spelen tegelijk";
-        }
-        public Team team1;
-        public Team team2;
-        public override void Evaluate(Klvv klvv, Poule poule)
-        {
-            if (poule != null && team1.poule != poule && team2.poule != poule) return;
-
-            conflict = 0;
-            conflictMatches.Clear();
-            Poule poule1 = team1.poule;
-            Poule poule2 = team2.poule;
-            int i1 = 0;
-            int i2 = 0;
-            while (i1 < poule1.matches.Count && i2 < poule2.matches.Count)
+            result.Add(sporthal.name + "is niet beschikbaar op: ");
+            foreach (DateTime dt in sporthal.NotAvailable)
             {
-                Match m1 = poule1.matches[i1];
-                Match m2 = poule2.matches[i2];
-                if (team1.IsMatch(m1) == false)
-                {
-                    i1++;
-                }
-                else if (team2.IsMatch(m2) == false)
-                {
-                    i2++;
-                }
-                else if (Overlap(m1, m2))
-                {
-                    this.AddConflictMatch(m1,m2);
-                    i1++;
-                    i2++;
-                }
-                else if (m1.datetime < m2.datetime) i1++; else i2++;
+                result.Add(string.Format("{0} - {1}",dt.DayOfWeek, dt.Date));
             }
-        }
-        private bool Overlap(Match m1, Match m2)
-        {
-            TimeSpan delta = m1.datetime - m2.datetime;
-            int min = (int)delta.TotalMinutes;
-            if (m1.homeTeam.club == m2.homeTeam.club) return Math.Abs(min) < 90;
-            else return Math.Abs(min) < (90 + 90); // extra tijd voor verplaatsing
-        }
-        public override string[] GetTextDescription()
-        {
-            List<string> result = new List<string>();
             return result.ToArray();
         }
     }
@@ -168,21 +129,24 @@ namespace VolleybalCompetition_creator
         }
         public override void Evaluate(Klvv klvv, Poule p)
         {
-            if (p == null || p == poule)
+            conflict = 0;
+            conflictMatches.Clear();
+            if (poule.serie.constraintsHold)
             {
-                conflict = 0;
-                conflictMatches.Clear();
-                for (int m1 = 0; m1 < poule.matches.Count; m1++)
+                if (p == null || p == poule)
                 {
-                    for (int m2 = m1 + 1; m2 < poule.matches.Count; m2++)
+                    for (int m1 = 0; m1 < poule.matches.Count; m1++)
                     {
-                        Match match1 = poule.matches[m1];
-                        Match match2 = poule.matches[m2];
-                        if (match1.homeTeam == match2.visitorTeam && match1.visitorTeam == match2.homeTeam)
+                        for (int m2 = m1 + 1; m2 < poule.matches.Count; m2++)
                         {
-                            if ((match2.datetime - match1.datetime).TotalDays < 10)
+                            Match match1 = poule.matches[m1];
+                            Match match2 = poule.matches[m2];
+                            if (match1.homeTeam == match2.visitorTeam && match1.visitorTeam == match2.homeTeam)
                             {
-                                AddConflictMatch(match1, match2);
+                                if ((match2.datetime - match1.datetime).TotalDays < poule.teams.Count*4)
+                                {
+                                    AddConflictMatch(match1, match2);
+                                }
                             }
                         }
                     }
@@ -202,41 +166,136 @@ namespace VolleybalCompetition_creator
             team1 = t;
             club = team1.club;
             VisitorAlso = false;
-            name = "Teams spelen in hetzelfde weekend";
+            name = "Teams in verschillende groupen spelen op dezelfde dag";
         }
         public Team team1;
         public override void Evaluate(Klvv klvv, Poule poule)
         {
-            if (poule != null && team1.poule != poule) return;
             conflict = 0;
             conflictMatches.Clear();
-            if (team1.club.ConstraintNotAtTheSameTime == false) return;
+            if (poule != null && team1.poule != poule) return;
             Poule poule1 = team1.poule;
-            foreach (Team team2 in team1.NotAtSameWeekend)
+            if (poule1.serie.constraintsHold)
             {
-                Poule poule2 = team2.poule;
-                int i1 = 0;
-                int i2 = 0;
-                while (i1 < poule1.matches.Count && i2 < poule2.matches.Count)
+                foreach (Team team2 in team1.club.teams)
                 {
-                    Match m1 = poule1.matches[i1];
-                    Match m2 = poule2.matches[i2];
-                    if (m1.Weekend<m2.Weekend)
+                    if (team2.poule.serie.constraintsHold)
                     {
-                        i1++;
-                    }
-                    else if (m2.Weekend<m1.Weekend)
-                    {
-                        i2++;
-                    }
-                    else 
-                    {
-                        if(m1.homeTeam == team1 && m2.homeTeam == team2)
+                        if ((team1.group == TeamGroups.GroupA && team2.group == TeamGroups.GroupB) ||
+                           (team1.group == TeamGroups.GroupB && team2.group == TeamGroups.GroupA)
+                            )
                         {
-                            this.AddConflictMatch(m1, m2);
+                            Poule poule2 = team2.poule;
+                            int i1 = 0;
+                            int i2 = 0;
+                            while (i1 < poule1.matches.Count && i2 < poule2.matches.Count)
+                            {
+                                Match m1 = poule1.matches[i1];
+                                Match m2 = poule2.matches[i2];
+                                if (m1.datetime.Date < m2.datetime.Date)
+                                {
+                                    i1++;
+                                }
+                                else if (m2.datetime.Date < m1.datetime.Date)
+                                {
+                                    i2++;
+                                }
+                                else
+                                {
+                                    if (m1.homeTeam == team1 && m2.homeTeam == team2)
+                                    {
+                                        this.AddConflictMatch(m1, m2);
+                                    }
+                                    i1++;
+                                    i2++;
+                                }
+                            }
                         }
-                        i1++;
-                        i2++;
+                    }
+                }
+            }
+        }
+        public override string[] GetTextDescription()
+        {
+            List<string> result = new List<string>();
+            return result.ToArray();
+        }
+    }
+    class ConstraintNotAllInHomeWeekend : Constraint
+    {
+        public ConstraintNotAllInHomeWeekend(Club club)
+        {
+            this.club = club;
+            name = "Niet iedereen in zelfde thuis-weekend";
+            VisitorAlso = false;
+        }
+        public override void Evaluate(Klvv klvv, Poule poule)
+        {
+            // TODO: skip if poule is not related to club.
+            conflict = 0;
+            conflictMatches.Clear();
+            bool A = false;
+            bool B = false;
+            TeamGroups targetGroup = TeamGroups.NoGroup;
+            bool optimize = (poule == null);
+            foreach (Team team in club.teams)
+            {
+                if (team.group == TeamGroups.GroupA) A = true;
+                if (team.group == TeamGroups.GroupB) B = true;
+                if (team.poule == poule) optimize = true;
+            }
+            if (optimize)
+            {
+                if (A == true && B == false)
+                {
+                    targetGroup = TeamGroups.GroupA;
+                }
+                if (A == false && B == true)
+                {
+                    targetGroup = TeamGroups.GroupB;
+                }
+                if (targetGroup != TeamGroups.NoGroup)
+                {
+                    SortedList<DateTime, List<Match>> CountPerWeekend = new SortedList<DateTime, List<Match>>();
+                    foreach (Team team in club.teams)
+                    {
+                        if (team.poule.serie.constraintsHold)
+                        {
+                            if (team.group == targetGroup)
+                            {
+                                Poule po = team.poule;
+                                foreach (Match match in po.matches)
+                                {
+                                    DateTime we = match.Weekend.Saturday;
+                                    if (CountPerWeekend.ContainsKey(we) == false) CountPerWeekend.Add(we, new List<Match>());
+                                    if (match.homeTeam.club == club) CountPerWeekend[we].Add(match);
+                                }
+                            }
+                        }
+                    }
+                    List<List<Match>> sortedCounts = CountPerWeekend.Values.ToList();
+                    sortedCounts.Sort(delegate(List<Match> l1, List<Match> l2) 
+                    {
+                        // ensure that the series that cannot be optimized weight more in selecting the weekends
+                        int l1count = l1.Count;
+                        foreach (Match match in l1)
+                        {
+                            if (match.poule.serie.optimizable == false) l1count += 10;
+                        }
+                        int l2count = l2.Count;
+                        foreach (Match match in l2)
+                        {
+                            if (match.poule.serie.optimizable == false) l2count += 10;
+                        }
+                        return l1count.CompareTo(l2count); 
+                    });
+                    for (int i = 0; i < sortedCounts.Count / 2; i++)
+                    {
+                        foreach (Match match in sortedCounts[i])
+                        {
+                            this.AddConflictMatch(match);
+                        }
+                        if (sortedCounts[i].Count > 0) this.conflict++;
                     }
                 }
             }

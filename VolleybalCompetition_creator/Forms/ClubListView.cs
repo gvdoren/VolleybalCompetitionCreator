@@ -21,6 +21,7 @@ namespace VolleybalCompetition_creator
             InitializeComponent();
             objectListView1.SetObjects(klvv.clubs);
             klvv.OnMyChange += state_OnMyChange;
+            //state.OnMyChange += state_OnMyChange;
             
         }
         public void state_OnMyChange(object source, MyEventArgs e)
@@ -30,7 +31,7 @@ namespace VolleybalCompetition_creator
                 this.Invoke(new Action(() => state_OnMyChange(source, e)));
                 return;
             }
-            objectListView1.BuildList(true);
+            objectListView1.BuildList(false);
         }
 
         private void objectListView1_SelectedIndexChanged(object sender, EventArgs e)
@@ -100,6 +101,7 @@ namespace VolleybalCompetition_creator
         private void ClubListView_FormClosed(object sender, FormClosedEventArgs e)
         {
             klvv.OnMyChange -= state_OnMyChange;
+            state.OnMyChange -= state_OnMyChange;
         }
     }
     internal static class ControlExtensionMethods

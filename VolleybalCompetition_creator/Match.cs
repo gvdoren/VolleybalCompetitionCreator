@@ -64,6 +64,10 @@ namespace VolleybalCompetition_creator
             this.Time = new Time(datetime);
             this.homeTeamIndex = poule.teams.FindIndex(t => t == homeTeam);
             this.visitorTeamIndex = poule.teams.FindIndex(t => t == visitorTeam);
+            if (visitorTeamIndex < 0)
+            {
+                Console.WriteLine("Negative");
+            }
             this.serie = serie;
             this.poule = poule;
             poule.AddWeekend(tempYear, tempWeek);

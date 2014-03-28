@@ -116,6 +116,23 @@ namespace VolleybalCompetition_creator
 
             clubview.Show(this.dockPanel);
         }
+
+        private void optimizeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OptimizeForm optimizeForm = null;
+            foreach (DockContent content in this.dockPanel.Contents)
+            {
+                optimizeForm = content as OptimizeForm;
+                if (optimizeForm != null)
+                {
+                    optimizeForm.Activate();
+                    return;
+                }
+            }
+            optimizeForm = new OptimizeForm(klvv, state);
+            optimizeForm.Show(this.dockPanel);
+
+        }
     }
 }
 

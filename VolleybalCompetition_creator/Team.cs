@@ -7,9 +7,11 @@ namespace VolleybalCompetition_creator
 {
     public class Team: ConstraintAdmin
     {
+        public TeamGroups group { get; set; }
         public int Id { get; set; }
         public string name { get; set; }
         public Club club { get; set; }
+        public Sporthal sporthal { get; set; }
         public Poule poule = null;
         public string seriePouleName { get { return poule.serie.name + poule.name; } }
         public Time defaultTime;
@@ -21,6 +23,8 @@ namespace VolleybalCompetition_creator
             this.Id = Id;
             this.name = name;
             this.poule = poule;
+            this.sporthal = null;
+            this.group = TeamGroups.NoGroup;
         }
         public bool IsMatch(Match match)
         {
@@ -34,6 +38,8 @@ namespace VolleybalCompetition_creator
             team.club = Club.CreateNullClub();
             return team;
         }
+
+        public List<DateTime> plannedMatches = new List<DateTime>();
 
     }
 }
