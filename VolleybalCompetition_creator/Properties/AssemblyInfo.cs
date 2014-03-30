@@ -5,10 +5,10 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("VolleybalCompetition_creator")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Volleybal competitie creatie tool")]
+[assembly: AssemblyDescription("Dit tool maakt het mogelijk een competitie te creeeren waarbij rekening gehouden wordt met de wensen van de clubs (zaalbeschikbaarheid, uit/thuis, ploegen die samen spelen of juist niet, ...)")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Giel van Doren (Giel@van.doren.be)")]
 [assembly: AssemblyProduct("VolleybalCompetition_creator")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]

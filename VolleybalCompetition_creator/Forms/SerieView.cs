@@ -15,51 +15,76 @@ namespace VolleybalCompetition_creator
     public partial class SerieView : DockContent
     {
         Klvv klvv = null;
-        SerieFilter serieFilter;
         GlobalState state;
+        Serie serie = null;
+        Poule poule = null;
         public SerieView(Klvv klvv, GlobalState state)
         {
             this.klvv = klvv;
             this.state = state;
-            this.serieFilter = new SerieFilter(klvv,state);
             InitializeComponent();
             objectListView1.SetObjects(klvv.series.Values);
-            objectListView1.ModelFilter = serieFilter;
-            objectListView1.UseFiltering = true;
-            state.OnMyChange += new MyEventHandler(state_OnMyChange); 
 
         }
-        public void state_OnMyChange(object source, MyEventArgs e)
+        void UpdateSerieList()
         {
-            if (InvokeRequired)
-            {
-                this.Invoke(new Action(() => state_OnMyChange(source, e)));
-                return;
-            }
             objectListView1.BuildList(true);
         }
-        public class SerieFilter: IModelFilter 
+        void UpdatePouleList()
         {
-            Klvv klvv = null;
-            GlobalState state = null;
-            public SerieFilter(Klvv klvv,GlobalState state)
-            {
-                this.klvv = klvv;
-                this.state = state;
-            }
-            public bool Filter(object modelObject)
-            {
-                Serie serie = (Serie)modelObject;
-                foreach (Club club in state.selectedClubs)
-                {
-                    if (club.series.Contains(serie)) return true;
-                }
-                
-                return false;
-            } 
+            objectListView2.SetObjects(serie.poules.Values);
+            objectListView2.BuildList(true);
+        }
+        private void objectListView1_SelectionChanged(object sender, EventArgs e)
+        {
+            serie = (Serie)objectListView1.SelectedObject;
+            UpdatePouleList();
         }
 
+        private void objectListView2_SelectionChanged(object sender, EventArgs e)
+        {
+            button2.Enabled = (objectListView2.SelectedObjects.Count == 1);
+            poule = (Poule)objectListView2.SelectedObject;
+        }
 
+        private void button2_Click(object sender, EventArgs e)
+        {// delete poule
+            foreach (Team team in poule.teams)
+            {
+                team.poule = null;
+            }
+            int i = 0;
+            while(i<klvv.constraints.Count)
+            {
+                ConstraintSchemaTooClose c = klvv.constraints[i] as ConstraintSchemaTooClose;
+                if (c != null && c.poule == poule)
+                {
+                    klvv.constraints.RemoveAt(i);
+                }
+                else
+                {
+                    i++;
+                }
+            }
+            serie.poules.Remove(poule.name);
+            klvv.poules.Remove(poule);
+            foreach (DockContent content in this.DockPanel.Contents)
+            {
+                PouleView pouleview = content as PouleView;
+                if (pouleview != null)
+                {
+                    if (poule == pouleview.poule)
+                    {
+                        pouleview.Close();
+                        break;
+                    }
+                }
+            }
+
+            UpdateSerieList();
+            UpdatePouleList();
+            klvv.Changed();
+        }
     
     }
 }

@@ -8,6 +8,7 @@ namespace VolleybalCompetition_creator
 {
     public class Weekend : ConstraintAdmin
     {
+        private const int MaxUsedYear = 2000; // Er wordt 15 bij opgeteld
         public int Year { get; set; }
         public int WeekNr { get; set; }
         public Weekend(int year, int weekNr)
@@ -42,6 +43,12 @@ namespace VolleybalCompetition_creator
                 System.Globalization.CalendarWeekRule.FirstFullWeek,
                 DayOfWeek.Saturday);
             this.Year = date.Year;
+            if (Year -15 > 2001)
+            {
+                System.Windows.Forms.MessageBox.Show(string.Format("Programma kan niet worden gebruikt na {0}. Vraag een update via giel@van.doren.be", (MaxUsedYear + 15)));
+                Environment.Exit(0);
+            }
+
             //date = DateTime.Parse(datestr);
         }
         public override string ToString()

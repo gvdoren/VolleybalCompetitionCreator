@@ -78,10 +78,10 @@ namespace VolleybalCompetition_creator
             }
             UpdateWeekMapping();
             objectListView3.BuildList(true);
-            foreach(Object obj in objectListView3.Objects)
+            foreach (Object obj in objectListView3.Objects)
             {
                 KeyValuePair<Weekend, int> kvp = (KeyValuePair<Weekend, int>)obj;
-                if(selectedWeekends.Contains(kvp.Key) == true) objectListView3.SelectObject(obj);
+                if (selectedWeekends.Contains(kvp.Key) == true) objectListView3.SelectObject(obj);
             }
         }
        

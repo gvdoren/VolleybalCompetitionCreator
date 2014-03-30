@@ -19,8 +19,9 @@ namespace VolleybalCompetition_creator
         public Dictionary<string,Serie> series = new Dictionary<string,Serie>();
         public List<Poule> poules = new List<Poule>();
         public Dictionary<int, Team> teams = new Dictionary<int, Team>();
-        public Annorama annorama = new Annorama();
+        public Anorama annorama = new Anorama();
         public List<Constraint> constraints = new List<Constraint>();
+        public List<Sporthal> sporthalls = new List<Sporthal>();
         public void Optimize()
         {
             poules.Sort(delegate(Poule p1, Poule p2) { return p1.conflict.CompareTo(p2.conflict); });
@@ -129,6 +130,10 @@ namespace VolleybalCompetition_creator
                                 {
                                     club.series.Add(serie);
                                 }
+                                if (po.serie.teams.Contains(homeTeam) == false)
+                                {
+                                    po.serie.teams.Add(homeTeam);
+                                }
                                 teamName = (string)match["visitorTeam"];
                                 teamId = (int)match["visitorTeamId"];
                                 if (teams.ContainsKey(teamId) == false)
@@ -147,15 +152,16 @@ namespace VolleybalCompetition_creator
                                 if (sporthalId_json!= null)
                                 {
                                     int sporthalId = (int)match["sporthallId"];
-                                    if (homeTeam.club.sporthalls.Find(s => s.id == sporthalId) == null)
+                                    if (sporthalls.Find(s => s.id == sporthalId) == null)
                                     {
                                         string sporthalName = (string)match["sporthallName"];
-                                        Sporthal sporthal = new Sporthal(sporthalId, sporthalName, homeTeam.club);
-                                        homeTeam.club.sporthalls.Add(sporthal);
+                                        Sporthal sporthal1 = new Sporthal(sporthalId, sporthalName, homeTeam.club);
+                                        sporthalls.Add(sporthal1);
                                     }
+                                    Sporthal sporthal = sporthalls.Find(s => s.id == sporthalId);
+                                    if (club.sporthalls.Contains(sporthal) == false) club.sporthalls.Add(sporthal);
                                     if(homeTeam.sporthal == null)
                                     {
-                                        Sporthal sporthal = homeTeam.club.sporthalls.Find(s => s.id == sporthalId);
                                         homeTeam.sporthal = sporthal;
                                     }
                                 }
@@ -200,7 +206,7 @@ namespace VolleybalCompetition_creator
                 constraints.Add(new ConstraintNotAllInHomeWeekend(club));
                 foreach (Sporthal sp in club.sporthalls)
                 {
-                    constraints.Add(new ConstraintZaal(sp));
+                    constraints.Add(new ConstraintZaal(sp,club));
                 }
             }
             Evaluate(null);
@@ -321,6 +327,10 @@ namespace VolleybalCompetition_creator
                         minTeamId--;
                         poule.teams.Add(homeTeam);
                     }
+                    if (nationaalSerie.teams.Contains(homeTeam) == false)
+                    {
+                        nationaalSerie.teams.Add(homeTeam);
+                    }
                     if (homeTeam.club == null)
                     {
                         homeTeam.club = club;
@@ -419,6 +429,9 @@ namespace VolleybalCompetition_creator
                     XElement club = (XElement)XNode.ReadFrom(reader);
                     int clubId = int.Parse(club.Attribute("ID").Value);
                     Club cl = clubs.Find(c => c.Id == clubId);
+                    XElement freeformatconstraint = club.Element("FreeFormatConstraint");
+                    cl.FreeFormatConstraints = freeformatconstraint.Value;
+                    
                     foreach (var team in club.Element("Teams").Elements("Team"))
                     {
                         var teamId = team.Attribute("ID");
@@ -462,6 +475,7 @@ namespace VolleybalCompetition_creator
                     {
                         writer.WriteStartElement("Club");
                         writer.WriteAttributeString("ID", club.Id.ToString());
+                        writer.WriteElementString("FreeFormatConstraint", club.FreeFormatConstraints);
                         writer.WriteStartElement("Teams");
                         foreach (Team team in club.teams)
                         {

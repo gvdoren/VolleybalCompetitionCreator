@@ -36,6 +36,10 @@ namespace VolleybalCompetition_creator
                 this.Invoke(new Action(() => state_OnMyChange(source, e)));
                 return;
             }
+            /*if (klvv.poules.Count != objectListView1.Items.Count)
+            {
+                objectListView1.SetObjects(klvv.poules);
+            }*/
             objectListView1.BuildList(true);
             Refresh();
         }

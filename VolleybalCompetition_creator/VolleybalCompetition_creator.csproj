@@ -86,8 +86,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Annorama.cs" />
+    <Compile Include="Anorama.cs" />
     <Compile Include="Club.cs" />
+    <Compile Include="Forms\AboutBox1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AboutBox1.Designer.cs">
+      <DependentUpon>AboutBox1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\AnoramaView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AnoramaView.Designer.cs">
+      <DependentUpon>AnoramaView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ClubConstraints.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -118,6 +130,12 @@
     </Compile>
     <Compile Include="Forms\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\InputForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\InputForm.Designer.cs">
+      <DependentUpon>InputForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\OptimizeForm.cs">
       <SubType>Form</SubType>
@@ -167,6 +185,12 @@
     <Compile Include="Time.cs" />
     <Compile Include="Weekend.cs" />
     <Content Include="ToDo.txt" />
+    <EmbeddedResource Include="Forms\AboutBox1.resx">
+      <DependentUpon>AboutBox1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AnoramaView.resx">
+      <DependentUpon>AnoramaView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\ClubConstraints.resx">
       <DependentUpon>ClubConstraints.cs</DependentUpon>
     </EmbeddedResource>
@@ -181,6 +205,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\InputForm.resx">
+      <DependentUpon>InputForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OptimizeForm.resx">
       <DependentUpon>OptimizeForm.cs</DependentUpon>

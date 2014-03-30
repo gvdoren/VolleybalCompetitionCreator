@@ -62,11 +62,11 @@ namespace VolleybalCompetition_creator
     class ConstraintZaal : Constraint
     {
         public Sporthal sporthal;
-        public ConstraintZaal(Sporthal sporthal)
+        public ConstraintZaal(Sporthal sporthal,Club club)
         {
             name = "Sporthal niet beschikbaar";
             this.sporthal = sporthal;
-            club = sporthal.club;
+            this.club = club;
             VisitorAlso = false;
             cost = 1;
         }
@@ -114,7 +114,7 @@ namespace VolleybalCompetition_creator
     }
     class ConstraintSchemaTooClose : Constraint
     {
-        Poule poule;
+        public Poule poule;
         public override string Title
         {
             get

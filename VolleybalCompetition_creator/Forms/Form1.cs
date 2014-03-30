@@ -82,23 +82,6 @@ namespace VolleybalCompetition_creator
 
         }
 
-        private void constraintsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ClubConstraints clubConstraints = null;
-            foreach (DockContent content in this.dockPanel.Contents)
-            {
-                clubConstraints = content as ClubConstraints;
-                if (clubConstraints != null)
-                {
-                    clubConstraints.Activate();
-                    return;
-                }
-            }
-            clubConstraints = new ClubConstraints(klvv, state);
-            clubConstraints.Show(this.dockPanel);
-
-        }
-
         private void lijstToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ClubListView clubview = null;
@@ -132,6 +115,61 @@ namespace VolleybalCompetition_creator
             optimizeForm = new OptimizeForm(klvv, state);
             optimizeForm.Show(this.dockPanel);
 
+        }
+
+        private void anoramaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AnoramaView anorama = null;
+            foreach (DockContent content in this.dockPanel.Contents)
+            {
+                anorama = content as AnoramaView;
+                if (anorama != null)
+                {
+                    anorama.Activate();
+                    return;
+                }
+            }
+            anorama = new AnoramaView(klvv, state);
+            anorama.Show(this.dockPanel);
+
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AboutBox1 about = new AboutBox1();
+            about.Show();
+        }
+
+        private void inschrijvingenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            InschrijvingenView clubConstraints = null;
+            foreach (DockContent content in this.dockPanel.Contents)
+            {
+                clubConstraints = content as InschrijvingenView;
+                if (clubConstraints != null)
+                {
+                    clubConstraints.Activate();
+                    return;
+                }
+            }
+            clubConstraints = new InschrijvingenView(klvv, state);
+            clubConstraints.Show(this.dockPanel);
+        }
+
+        private void seriesToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            SerieView serieView = null;
+            foreach (DockContent content in this.dockPanel.Contents)
+            {
+                serieView = content as SerieView;
+                if (serieView != null)
+                {
+                    serieView.Activate();
+                    return;
+                }
+            }
+            serieView = new SerieView(klvv, state);
+            serieView.Show(this.dockPanel);
         }
     }
 }

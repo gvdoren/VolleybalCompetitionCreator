@@ -12,14 +12,15 @@ using System.Xml;
 
 namespace VolleybalCompetition_creator
 {
-    public partial class ClubConstraints : DockContent
+    public partial class InschrijvingenView : DockContent
     {
         Klvv klvv = null;
         GlobalState state;
         Club club;
         Sporthal sporthal;
-        public ClubConstraints(Klvv klvv, GlobalState state)
+        public InschrijvingenView(Klvv klvv, GlobalState state)
         {
+            this.Text = "Inschrijvingen";
             this.klvv = klvv;
             this.state = state;
             InitializeComponent();
@@ -40,12 +41,17 @@ namespace VolleybalCompetition_creator
 
             }
         }
+        private void UpdateFreeFormatTab()
+        {
+            textBox1.Text = club.FreeFormatConstraints;
+        }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             club = (Club) comboBox1.SelectedItem;
             UpdateSporthalForm();
             UpdateTeamsTab();
+            UpdateFreeFormatTab();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -141,6 +147,11 @@ namespace VolleybalCompetition_creator
             klvv.Evaluate(null);
             //state.Changed();
             klvv.Changed();
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            club.FreeFormatConstraints = textBox1.Text;
         }
     }
 }
