@@ -8,6 +8,8 @@ namespace VolleybalCompetition_creator
     public class Sporthal
     {
         public string name { get; set; }
+        public double lat { get; set; }
+        public double lng { get; set; }
         public int id { get; set; }
         public List<DateTime> NotAvailable = new List<DateTime>();
         public SortedList<int, int> distance = new SortedList<int, int>();
@@ -22,7 +24,7 @@ namespace VolleybalCompetition_creator
         }
         public int Distance(Sporthal sporthal)
         {
-            if (distance.ContainsKey(sporthal.id)) return distance[sporthal.id];
+            if (sporthal != null && distance.ContainsKey(sporthal.id)) return distance[sporthal.id];
             return 0;
         }
     }

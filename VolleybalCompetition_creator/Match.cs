@@ -72,6 +72,17 @@ namespace VolleybalCompetition_creator
             this.poule = poule;
             poule.AddWeekend(tempYear, tempWeek);
         }
+        public Match(int weekIndex, int homeTeam, int visitorTeam, Serie serie, Poule poule)
+        {
+            this.weekIndex = weekIndex;
+            this.homeTeamIndex = homeTeam;
+            this.visitorTeamIndex = visitorTeam;
+            this.serie = serie;
+            this.poule = poule;
+        }
+
+        
+        
         public void SetWeekIndex()
         {
             weekIndex = poule.FindWeekendNrInSchema(tempYear, tempWeek);

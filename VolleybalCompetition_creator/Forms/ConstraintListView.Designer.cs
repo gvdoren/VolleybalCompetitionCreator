@@ -115,7 +115,7 @@
             this.Controls.Add(this.objectListView1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "ConstraintListView";
-            this.Text = "ConstraintListView";
+            this.Text = "Constraints";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ConstraintListView_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).EndInit();
             this.ResumeLayout(false);

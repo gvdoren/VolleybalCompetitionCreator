@@ -42,8 +42,14 @@ namespace VolleybalCompetition_creator
             ConstraintListView constraintListview = new ConstraintListView(klvv, state);
             constraintListview.ShowHint = DockState.DockRight;
             constraintListview.Show(dockPanel);
+            List<string> ListTeam = new List<string>();
+            for (int i = 0; i < 11; i++)
+            {
+                ListTeam.Add(string.Format("Team {0}",i+1));
+            }
 
         }
+
 
         private void clubsToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -170,6 +176,23 @@ namespace VolleybalCompetition_creator
             }
             serieView = new SerieView(klvv, state);
             serieView.Show(this.dockPanel);
+        }
+
+        private void constraintsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ConstraintListView constraintView = null;
+            foreach (DockContent content in this.dockPanel.Contents)
+            {
+                constraintView = content as ConstraintListView;
+                if (constraintView != null)
+                {
+                    constraintView.Activate();
+                    return;
+                }
+            }
+            constraintView = new ConstraintListView(klvv, state);
+            constraintView.ShowHint = DockState.DockRight;
+            constraintView.Show(this.dockPanel);
         }
     }
 }

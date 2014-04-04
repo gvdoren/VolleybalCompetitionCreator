@@ -11,6 +11,7 @@ namespace VolleybalCompetition_creator
         public string name { get; set; }
         public List<Team> teams = new List<Team>();
         public Poule(string name) { this.name = name; }
+        public string fullName { get { return serie.name + name; ;} }
         public List<Weekend> weekends = new List<Weekend>();
         public void AddWeekend(int year, int weekNr)
         {
@@ -20,6 +21,23 @@ namespace VolleybalCompetition_creator
                 weekends.Add(new Weekend(year, weekNr));
             }
         }
+        public int CalculateDistances(Team t1)
+        {
+            int distance = 0;
+            if (t1.sporthal != null)
+            {
+                foreach (Team t2 in teams)
+                {
+                    distance += t1.sporthal.Distance(t2.sporthal);
+                }
+            }
+            if (teams.Count > 1)
+            {
+                distance = (distance / (teams.Count - 1));
+            }
+            return distance;
+        }
+        
         public int FindWeekendNrInSchema(int year, int weekNr)
         {
             int index = weekends.FindIndex(w => w.WeekNr == weekNr && w.Year == year);
@@ -298,11 +316,14 @@ namespace VolleybalCompetition_creator
                 {
                     if (m.homeTeam == match1.visitorTeam && m.visitorTeam == match1.homeTeam) match2 = m;
                 }
-                // swap teams
-                match1.homeTeamIndex = match2.homeTeamIndex;
-                match1.visitorTeamIndex = match2.visitorTeamIndex;
-                match2.homeTeamIndex = match1.visitorTeamIndex;
-                match2.visitorTeamIndex = match1.homeTeamIndex;
+                if (match2 != null)
+                {
+                    // swap teams
+                    match1.homeTeamIndex = match2.homeTeamIndex;
+                    match1.visitorTeamIndex = match2.visitorTeamIndex;
+                    match2.homeTeamIndex = match1.visitorTeamIndex;
+                    match2.visitorTeamIndex = match1.homeTeamIndex;
+                }
             }
         }
         public void OptimizeHomeVisitor(Klvv klvv)
@@ -325,6 +346,81 @@ namespace VolleybalCompetition_creator
                     }
                 }
                 klvv.Evaluate(null);
+            }
+        }
+        public void CreateMatches(int teamCount)
+        {
+            matches.Clear();
+            if (teamCount % 2 == 1) teamCount++;
+            List<int> allTeams = new List<int>();
+            for (int i = 0; i < teamCount; i++)
+            {
+                allTeams.Add(i);
+            }
+            int numDays = allTeams.Count() - 1;
+            int halfsize = allTeams.Count() / 2;
+
+            List<int> temp = new List<int>();
+            List<int> teams = new List<int>();
+
+            teams.AddRange(allTeams);
+            temp.AddRange(allTeams);
+            teams.RemoveAt(0);
+
+            int teamSize = teams.Count;
+
+            for (int day = 0; day < numDays * 2; day++)
+            {
+                //Calculate1stRound(day);
+                if (day % 2 == 0)
+                {
+                    Console.Write(String.Format("\n\nDay {0}\n", (day + 1)));
+
+                    int teamIdx = day % teamSize;
+
+                    Console.Write(String.Format("{0} vs {1}\n", teams[teamIdx], temp[0]));
+                    Match m1 = new Match(day, teams[teamIdx], temp[0], serie, this);
+                    matches.Add(m1);
+
+
+                    for (int idx = 0; idx < halfsize; idx++)
+                    {
+                        int firstTeam = (day + idx) % teamSize;
+                        int secondTeam = ((day + teamSize) - idx) % teamSize;
+
+                        if (firstTeam != secondTeam)
+                        {
+                            Console.Write(String.Format("{0} vs {1}\n", teams[firstTeam], teams[secondTeam]));
+                            Match m2 = new Match(day, teams[firstTeam], teams[secondTeam], serie, this);
+                            matches.Add(m2);
+                        }
+                    }
+                }
+
+                //Calculate2ndRound(day);
+                if (day % 2 != 0)
+                {
+                    int teamIdx = day % teamSize;
+
+                    Console.Write(String.Format("\n\nDay {0}\n", (day + 1)));
+
+                    Console.Write(String.Format("{0} vs {1}\n", temp[0], teams[teamIdx]));
+                    Match m1 = new Match(day, temp[0],teams[teamIdx], serie, this);
+                    matches.Add(m1);
+
+                    for (int idx = 0; idx < halfsize; idx++)
+                    {
+                        int firstTeam = (day + idx) % teamSize;
+                        int secondTeam = ((day + teamSize) - idx) % teamSize;
+
+                        if (firstTeam != secondTeam)
+                        {
+                            Console.Write(String.Format("{0} vs {1}\n", teams[secondTeam], teams[firstTeam]));
+                            Match m2 = new Match(day, teams[secondTeam], teams[firstTeam], serie, this);
+                            matches.Add(m2);
+                        }
+                    }
+                }
             }
         }
     }

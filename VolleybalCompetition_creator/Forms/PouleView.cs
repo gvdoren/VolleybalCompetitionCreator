@@ -57,6 +57,13 @@ namespace VolleybalCompetition_creator
                 this.Invoke(new Action(() => state_OnMyChange(source, e)));
                 return;
             }
+            // If dynamically the poule is removed.
+            if (klvv.poules.Contains(poule) == false)
+            {
+                Close();
+                return;
+            }
+
             selectedTeams.Clear();
             selectedMatches.Clear();
             selectedWeekends.Clear();

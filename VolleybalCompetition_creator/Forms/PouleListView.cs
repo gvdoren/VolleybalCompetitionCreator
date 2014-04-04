@@ -40,6 +40,7 @@ namespace VolleybalCompetition_creator
             {
                 objectListView1.SetObjects(klvv.poules);
             }*/
+            objectListView1.SetObjects(klvv.poules);
             objectListView1.BuildList(true);
             Refresh();
         }

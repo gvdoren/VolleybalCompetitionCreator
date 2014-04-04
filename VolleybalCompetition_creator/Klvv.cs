@@ -160,7 +160,7 @@ namespace VolleybalCompetition_creator
                                     }
                                     Sporthal sporthal = sporthalls.Find(s => s.id == sporthalId);
                                     if (club.sporthalls.Contains(sporthal) == false) club.sporthalls.Add(sporthal);
-                                    if(homeTeam.sporthal == null)
+                                    if(homeTeam.sporthal == null && sporthal != null)
                                     {
                                         homeTeam.sporthal = sporthal;
                                     }
@@ -186,6 +186,32 @@ namespace VolleybalCompetition_creator
                     }
                 }
             }
+            string json2 = File.ReadAllText(@"../../Data/sporthal_afstanden.json");// local copy
+            JArray afstanden = JArray.Parse(json2);
+            foreach (JObject afstand in afstanden)
+            {
+                int id1 = int.Parse((string)afstand["id1"]);
+                int id2 = int.Parse((string)afstand["id2"]);
+                int distance = int.Parse((string)afstand["afstand"]);
+                Sporthal sporthal = sporthalls.Find(s => s.id == id1);
+                if (sporthal != null) sporthal.distance.Add(id2, distance);
+            }
+            json2 = File.ReadAllText(@"../../Data/sporthallen.json");// local copy
+            JArray sporth = JArray.Parse(json2);
+            foreach (JObject sprth in sporth)
+            {
+                int id = int.Parse((string)sprth["id"]);
+                double lat = double.Parse((string)sprth["lat"], CultureInfo.InvariantCulture);
+                double lng = double.Parse((string)sprth["lng"], CultureInfo.InvariantCulture);
+                Sporthal sporthal = sporthalls.Find(s => s.id == id);
+                if (sporthal != null)
+                {
+                    sporthal.lat = lat;
+                    sporthal.lng = lng;
+                }
+            }
+                
+
             // Lees de 'nationale' poule in. Die voegen we ertussen. Hopelijk matchen de clubnamen.
             ReadVVB();
 
@@ -317,7 +343,7 @@ namespace VolleybalCompetition_creator
                         poule.serie = nationaalSerie;
                         poules.Add(poule);
                     }
-                    poule.serie.constraintsHold = false;
+                    poule.serie.constraintsHold = true;
                     Team homeTeam = poule.teams.Find(t => t.name == thuisploeg);
                     if (homeTeam == null)
                     {

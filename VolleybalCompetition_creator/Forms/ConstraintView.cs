@@ -14,9 +14,11 @@ namespace VolleybalCompetition_creator
     {
         Constraint constraint = null;
         Klvv klvv = null;
+        GlobalState state = null;
         public ConstraintView(Klvv klvv, GlobalState state)
         {
             this.klvv = klvv;
+            this.state = state;
             InitializeComponent();
             Show("dummy", null);
             klvv.OnMyChange += state_OnMyChange;
@@ -71,6 +73,35 @@ namespace VolleybalCompetition_creator
             {
                 richTextBox2.AppendText(str + Environment.NewLine);
             }
+        }
+
+        private void objectListView1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            ListViewHitTestInfo hit = objectListView1.HitTest(e.Location);
+            if (hit.Item != null)
+            {
+                Match match = objectListView1.GetModelObject(hit.Item.Index) as Match;
+                if (match != null && match.poule != null)
+                {
+                    // check whether the PouleView is already existing
+                    foreach (DockContent content in this.DockPanel.Contents)
+                    {
+                        PouleView pouleview = content as PouleView;
+                        if (pouleview != null)
+                        {
+                            if (match.poule == pouleview.poule)
+                            {
+                                pouleview.Activate();
+                                return;
+                            }
+                        }
+                    }
+                    PouleView pouleView = new PouleView(klvv, state, match.poule);
+                    pouleView.Show(this.DockPanel);
+                }
+            }
+
+
         }
     }
 }

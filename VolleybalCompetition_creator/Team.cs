@@ -18,6 +18,12 @@ namespace VolleybalCompetition_creator
         public List<Team> NotAtSameWeekend = new List<Team>();
         public DayOfWeek defaultDay = DayOfWeek.Monday; // initial value since monday is never the default
         public int Index { get { return 1+poule.teams.FindIndex(t => t == this); } }
+        public int AvgDistance { 
+            get{
+                if (poule != null) return poule.CalculateDistances(this);
+                else return 0;
+            }
+        }
         public Team(int Id, string name, Poule poule) 
         {
             this.Id = Id;

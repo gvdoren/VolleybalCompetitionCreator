@@ -46,16 +46,19 @@ namespace VolleybalCompetition_creator
             
             for ( int i = 0 ; i < matches.Length ; i++ )
             {
-                conflictMatches.Add(matches[i]);
-                conflict += cost;
-                matches[i].AddConflict(this);
-                matches[i].Weekend.AddConflict(this);
-                matches[i].poule.AddConflict(this);
-                matches[i].poule.serie.AddConflict(this);
-                matches[i].homeTeam.AddConflict(this);
-                if (VisitorAlso) matches[i].visitorTeam.AddConflict(this);
-                matches[i].homeTeam.club.AddConflict(this);
-                if (matches[i].homeTeam.club != matches[i].visitorTeam.club && VisitorAlso) matches[i].visitorTeam.club.AddConflict(this);
+                if (matches[i].visitorTeam.name != "---")
+                {
+                    conflictMatches.Add(matches[i]);
+                    conflict += cost;
+                    matches[i].AddConflict(this);
+                    matches[i].Weekend.AddConflict(this);
+                    matches[i].poule.AddConflict(this);
+                    matches[i].poule.serie.AddConflict(this);
+                    matches[i].homeTeam.AddConflict(this);
+                    if (VisitorAlso) matches[i].visitorTeam.AddConflict(this);
+                    matches[i].homeTeam.club.AddConflict(this);
+                    if (matches[i].homeTeam.club != matches[i].visitorTeam.club && VisitorAlso) matches[i].visitorTeam.club.AddConflict(this);
+                }
             }
         }
     }

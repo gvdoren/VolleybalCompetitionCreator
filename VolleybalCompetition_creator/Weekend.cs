@@ -19,13 +19,25 @@ namespace VolleybalCompetition_creator
         public Weekend(string datestr)
         {
             DateTime date = DateTime.ParseExact(datestr, "yyyy-MM-dd", null);
+            CreateWeekend(date);
+        }
+        public Weekend(DateTime date)
+        {
+            CreateWeekend(date);
+        }
+        private void CreateWeekend(DateTime date)
+        {
             System.Globalization.CultureInfo cul = System.Globalization.CultureInfo.CurrentCulture;
             this.WeekNr = cul.Calendar.GetWeekOfYear(
                 date,
                 System.Globalization.CalendarWeekRule.FirstFullWeek,
                 DayOfWeek.Saturday);
             this.Year = date.Year;
-            //date = DateTime.Parse(datestr);
+            if (Year - 15 > 2001)
+            {
+                System.Windows.Forms.MessageBox.Show(string.Format("Programma kan niet worden gebruikt na {0}. Vraag een update via giel@van.doren.be", (MaxUsedYear + 15)));
+                Environment.Exit(0);
+            }
         }
         public static bool operator <(Weekend w1, Weekend w2)
         {
@@ -34,22 +46,6 @@ namespace VolleybalCompetition_creator
         public static bool operator >(Weekend w1, Weekend w2)
         {
             return w1.Year > w2.Year || (w1.Year == w2.Year && w1.WeekNr > w2.WeekNr);
-        }
-        public Weekend(DateTime date)
-        {
-            System.Globalization.CultureInfo cul = System.Globalization.CultureInfo.CurrentCulture;
-            this.WeekNr = cul.Calendar.GetWeekOfYear(
-                date,
-                System.Globalization.CalendarWeekRule.FirstFullWeek,
-                DayOfWeek.Saturday);
-            this.Year = date.Year;
-            if (Year -15 > 2001)
-            {
-                System.Windows.Forms.MessageBox.Show(string.Format("Programma kan niet worden gebruikt na {0}. Vraag een update via giel@van.doren.be", (MaxUsedYear + 15)));
-                Environment.Exit(0);
-            }
-
-            //date = DateTime.Parse(datestr);
         }
         public override string ToString()
         {

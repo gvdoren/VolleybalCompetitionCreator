@@ -13,7 +13,6 @@ namespace VolleybalCompetition_creator
         public const int MaxReeksen = 10;
         public Weekend weekend;
         public bool[] reeksen = new bool[MaxReeksen];
-        public bool reeks0 { get { return reeksen[0]; } set { reeksen[0] = value; } }
         public AnoramaWeekend(Weekend we)
         {
             this.weekend = we;
@@ -49,6 +48,11 @@ namespace VolleybalCompetition_creator
                 weekend = new Weekend(weekend.Saturday.AddDays(7));
             }
             title = string.Format("Anorama Seizoen {0}-{1}", year, year + 1);
+        }
+        public List<Weekend> GetReeks(string name)
+        {
+            List<AnoramaWeekend> we = weekends.FindAll((w => w.reeksen[reeksen.FindIndex(n => n == name)] == true));
+            return we.Select(w => w.weekend).ToList();
         }
         public void CreateReeks(string name)
         {

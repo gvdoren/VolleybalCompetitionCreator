@@ -2,5 +2,5 @@
 
 
 - Clubs die sporthal delen kun je niet uitdrukken
-- Immutable poules (matches) moeten zwaarder meewegen met 'thuis-spelen' (of die in de nationale ploeg zitten).
-- Dropping a team must also change its poule
+- Aantal teams & selectie in Anorama. Koppelen? Ja
+- Check dat alle teams voldoende matchen spelen (ook check van tool zelf).
