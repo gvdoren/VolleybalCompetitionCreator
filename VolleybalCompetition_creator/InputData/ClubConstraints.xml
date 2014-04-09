@@ -1,0 +1,2157 @@
+﻿<Clubs>
+  <Club ID="11">
+    <FreeFormatConstraint>xxx1</FreeFormatConstraint>
+    <Teams>
+      <Team Name="Avoc Achel B" ID="92" SerieId="2" Group="GroupA" SporthalId="22" />
+      <Team Name="Avoc Achel A" ID="93" SerieId="3" Group="GroupB" SporthalId="22" />
+      <Team Name="Avoc Achel B" ID="94" SerieId="5" Group="GroupA" SporthalId="22" />
+      <Team Name="Avoc Achel C" ID="95" SerieId="6" Group="GroupA" SporthalId="22" />
+      <Team Name="Avoc Achel C" ID="96" SerieId="7" Group="GroupA" SporthalId="22" />
+      <Team Name="Avoc Achel" ID="97" SerieId="8" Group="GroupB" SporthalId="22" />
+      <Team Name="Avoc Achel" ID="98" SerieId="9" Group="GroupA" SporthalId="22" />
+      <Team Name="Avoc Achel" ID="99" SerieId="10" Group="GroupA" SporthalId="22" />
+      <Team Name="Avoc Achel" ID="100" SerieId="11" Group="GroupA" SporthalId="22" />
+      <Team Name="Avoc Achel" ID="101" SerieId="13" Group="GroupA" SporthalId="22" />
+      <Team Name="Avoc Achel" ID="102" SerieId="15" Group="NoGroup" SporthalId="22" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="22">
+        <NotAvailable>
+          <Date>31-8-2013</Date>
+          <Date>8-9-2013</Date>
+        </NotAvailable>
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="43">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="Axor Bocholt A" ID="334" SerieId="5" Group="GroupA" SporthalId="73" />
+      <Team Name="Axor Bocholt B" ID="335" SerieId="7" Group="NoGroup" SporthalId="73" />
+      <Team Name="Axor Bocholt" ID="336" SerieId="8" Group="NoGroup" SporthalId="73" />
+      <Team Name="Axor Bocholt" ID="337" SerieId="11" Group="NoGroup" SporthalId="73" />
+      <Team Name="Axor Bocholt A" ID="338" SerieId="13" Group="NoGroup" SporthalId="73" />
+      <Team Name="Axor Bocholt B" ID="339" SerieId="13" Group="NoGroup" SporthalId="73" />
+      <Team Name="Axor Bocholt" ID="340" SerieId="15" Group="NoGroup" SporthalId="73" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="73">
+        <NotAvailable>
+          <Date>2-11-2013</Date>
+          <Date>11-1-2014</Date>
+          <Date>1-2-2014</Date>
+        </NotAvailable>
+      </Sporthall>
+      <Sporthall ID="75">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="30">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="Bepavoc Beringen" ID="231" SerieId="1" Group="GroupA" SporthalId="54" />
+      <Team Name="Bepavoc Beringen B" ID="232" SerieId="3" Group="GroupA" SporthalId="54" />
+      <Team Name="Bepavoc Beringen C" ID="233" SerieId="5" Group="GroupA" SporthalId="54" />
+      <Team Name="Bepavoc Beringen D" ID="234" SerieId="7" Group="GroupA" SporthalId="54" />
+      <Team Name="Bepavoc Beringen" ID="235" SerieId="13" Group="GroupA" SporthalId="54" />
+      <Team Name="Bepavoc Beringen" ID="236" SerieId="15" Group="GroupA" SporthalId="54" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="54">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="32">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="Bevo Geetbets B" ID="242" SerieId="2" Group="GroupB" SporthalId="94" />
+      <Team Name="Bevo Geetbets A" ID="243" SerieId="3" Group="GroupB" SporthalId="94" />
+      <Team Name="Bevo Geetbets C" ID="244" SerieId="4" Group="GroupA" SporthalId="94" />
+      <Team Name="Bevo Geetbets" ID="245" SerieId="8" Group="GroupB" SporthalId="94" />
+      <Team Name="Bevo Geetbets" ID="246" SerieId="9" Group="GroupA" SporthalId="94" />
+      <Team Name="Bevo Geetbets" ID="247" SerieId="11" Group="GroupB" SporthalId="94" />
+      <Team Name="Bevo Geetbets" ID="248" SerieId="12" Group="GroupA" SporthalId="94" />
+      <Team Name="Bevo Geetbets A" ID="249" SerieId="13" Group="GroupB" SporthalId="94" />
+      <Team Name="Bevo Geetbets B" ID="250" SerieId="13" Group="GroupB" SporthalId="94" />
+      <Team Name="Bevo Geetbets" ID="251" SerieId="16" Group="GroupA" SporthalId="94" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="94">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="1">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="Brabo Bree" ID="1" SerieId="7" Group="GroupA" SporthalId="1" />
+      <Team Name="Brabo Bree" ID="2" SerieId="11" Group="GroupA" SporthalId="1" />
+      <Team Name="Brabo Bree" ID="3" SerieId="13" Group="GroupA" SporthalId="1" />
+      <Team Name="Brabo Bree" ID="4" SerieId="15" Group="GroupB" SporthalId="1" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="1">
+        <NotAvailable>
+          <Date>15-9-2013</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>22-3-2014</Date>
+          <Date>23-3-2014</Date>
+          <Date>5-4-2014</Date>
+          <Date>6-4-2014</Date>
+          <Date>19-4-2014</Date>
+        </NotAvailable>
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="47">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="Cristal Alken Jeval B" ID="365" SerieId="1" Group="NoGroup" SporthalId="79" />
+      <Team Name="Cristal Alken Jeval C" ID="366" SerieId="5" Group="NoGroup" SporthalId="79" />
+      <Team Name="Cristal Alken Jeval D" ID="367" SerieId="7" Group="NoGroup" SporthalId="79" />
+      <Team Name="Cristal Alken Jeval F" ID="368" SerieId="8" Group="NoGroup" SporthalId="79" />
+      <Team Name="Cristal Alken Jeval G" ID="369" SerieId="8" Group="NoGroup" SporthalId="79" />
+      <Team Name="Cristal Alken Jeval H" ID="370" SerieId="11" Group="NoGroup" SporthalId="79" />
+      <Team Name="Cristal Alken Jeval I" ID="371" SerieId="11" Group="NoGroup" SporthalId="79" />
+      <Team Name="Cristal Alken Jeval J" ID="372" SerieId="13" Group="NoGroup" SporthalId="79" />
+      <Team Name="Cristal Alken Jeval E" ID="373" SerieId="15" Group="NoGroup" SporthalId="79" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="79">
+        <NotAvailable>
+          <Date>14-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>12-10-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>26-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>9-11-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>23-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>21-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>4-1-2014</Date>
+          <Date>5-1-2014</Date>
+          <Date>18-1-2014</Date>
+          <Date>19-1-2014</Date>
+          <Date>1-2-2014</Date>
+          <Date>2-2-2014</Date>
+          <Date>15-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>29-3-2014</Date>
+          <Date>30-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+          <Date>26-4-2014</Date>
+          <Date>27-4-2014</Date>
+        </NotAvailable>
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="18">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="Datovoc Tongeren B" ID="142" SerieId="3" Group="GroupA" SporthalId="33" />
+      <Team Name="Datovoc Tongeren C" ID="143" SerieId="7" Group="NoGroup" SporthalId="33" />
+      <Team Name="Datovoc Tongeren B" ID="144" SerieId="8" Group="NoGroup" SporthalId="32" />
+      <Team Name="Datovoc Tongeren A" ID="145" SerieId="8" Group="NoGroup" SporthalId="33" />
+      <Team Name="Datovoc Tongeren" ID="146" SerieId="11" Group="NoGroup" SporthalId="33" />
+      <Team Name="Datovoc Tongeren" ID="147" SerieId="13" Group="NoGroup" SporthalId="33" />
+      <Team Name="Datovoc Tongeren" ID="148" SerieId="14" Group="NoGroup" SporthalId="33" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="33">
+        <NotAvailable />
+      </Sporthall>
+      <Sporthall ID="32">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="42">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="Davost St.-Truiden A" ID="327" SerieId="3" Group="GroupA" SporthalId="72" />
+      <Team Name="Davost St.-Truiden B" ID="328" SerieId="7" Group="GroupA" SporthalId="72" />
+      <Team Name="Davost St.-Truiden" ID="329" SerieId="8" Group="GroupA" SporthalId="72" />
+      <Team Name="Davost St.-Truiden A" ID="330" SerieId="11" Group="GroupA" SporthalId="72" />
+      <Team Name="Davost St.-Truiden B" ID="331" SerieId="11" Group="GroupA" SporthalId="72" />
+      <Team Name="Davost St.-Truiden" ID="332" SerieId="13" Group="GroupA" SporthalId="72" />
+      <Team Name="Davost St.-Truiden" ID="333" SerieId="15" Group="GroupA" SporthalId="72" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="72">
+        <NotAvailable>
+          <Date>8-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>12-1-2014</Date>
+          <Date>26-1-2014</Date>
+          <Date>9-2-2014</Date>
+          <Date>23-2-2014</Date>
+          <Date>9-3-2014</Date>
+          <Date>23-3-2014</Date>
+          <Date>6-4-2014</Date>
+          <Date>20-4-2014</Date>
+        </NotAvailable>
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="46">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="Dievoc Diepenbeek B" ID="356" SerieId="3" Group="GroupA" SporthalId="9" />
+      <Team Name="Dievoc Diepenbeek C" ID="357" SerieId="5" Group="NoGroup" SporthalId="9" />
+      <Team Name="Dievoc Diepenbeek E" ID="358" SerieId="7" Group="NoGroup" SporthalId="9" />
+      <Team Name="Dievoc Diepenbeek D" ID="359" SerieId="7" Group="NoGroup" SporthalId="9" />
+      <Team Name="Dievoc Diepenbeek B" ID="360" SerieId="8" Group="NoGroup" SporthalId="9" />
+      <Team Name="Dievoc Diepenbeek A" ID="361" SerieId="8" Group="NoGroup" SporthalId="9" />
+      <Team Name="Dievoc Diepenbeek" ID="362" SerieId="13" Group="NoGroup" SporthalId="9" />
+      <Team Name="Dievoc Diepenbeek" ID="363" SerieId="15" Group="GroupA" SporthalId="9" />
+      <Team Name="Dievoc Diepenbeek A" ID="364" SerieId="15" Group="GroupB" SporthalId="9" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="9">
+        <NotAvailable>
+          <Date>14-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>26-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>9-11-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>23-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>21-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>4-1-2014</Date>
+          <Date>5-1-2014</Date>
+          <Date>18-1-2014</Date>
+          <Date>19-1-2014</Date>
+          <Date>1-2-2014</Date>
+          <Date>2-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>29-3-2014</Date>
+          <Date>30-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+          <Date>26-4-2014</Date>
+          <Date>27-4-2014</Date>
+          <Date>15-2-2014</Date>
+          <Date>14-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>26-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>9-11-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>23-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>21-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>4-1-2014</Date>
+          <Date>5-1-2014</Date>
+          <Date>18-1-2014</Date>
+          <Date>19-1-2014</Date>
+          <Date>1-2-2014</Date>
+          <Date>2-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>29-3-2014</Date>
+          <Date>30-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+          <Date>26-4-2014</Date>
+          <Date>27-4-2014</Date>
+          <Date>15-2-2014</Date>
+          <Date>14-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>26-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>9-11-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>23-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>21-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>4-1-2014</Date>
+          <Date>5-1-2014</Date>
+          <Date>18-1-2014</Date>
+          <Date>19-1-2014</Date>
+          <Date>1-2-2014</Date>
+          <Date>2-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>29-3-2014</Date>
+          <Date>30-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+          <Date>26-4-2014</Date>
+          <Date>27-4-2014</Date>
+          <Date>15-2-2014</Date>
+          <Date>14-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>26-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>9-11-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>23-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>21-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>4-1-2014</Date>
+          <Date>5-1-2014</Date>
+          <Date>18-1-2014</Date>
+          <Date>19-1-2014</Date>
+          <Date>1-2-2014</Date>
+          <Date>2-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>29-3-2014</Date>
+          <Date>30-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+          <Date>26-4-2014</Date>
+          <Date>27-4-2014</Date>
+          <Date>15-2-2014</Date>
+          <Date>14-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>26-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>9-11-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>23-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>21-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>4-1-2014</Date>
+          <Date>5-1-2014</Date>
+          <Date>18-1-2014</Date>
+          <Date>19-1-2014</Date>
+          <Date>1-2-2014</Date>
+          <Date>2-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>29-3-2014</Date>
+          <Date>30-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+          <Date>26-4-2014</Date>
+          <Date>27-4-2014</Date>
+          <Date>15-2-2014</Date>
+          <Date>14-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>26-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>9-11-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>23-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>21-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>4-1-2014</Date>
+          <Date>5-1-2014</Date>
+          <Date>18-1-2014</Date>
+          <Date>19-1-2014</Date>
+          <Date>1-2-2014</Date>
+          <Date>2-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>29-3-2014</Date>
+          <Date>30-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+          <Date>26-4-2014</Date>
+          <Date>27-4-2014</Date>
+          <Date>15-2-2014</Date>
+          <Date>14-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>26-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>9-11-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>23-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>21-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>4-1-2014</Date>
+          <Date>5-1-2014</Date>
+          <Date>18-1-2014</Date>
+          <Date>19-1-2014</Date>
+          <Date>1-2-2014</Date>
+          <Date>2-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>29-3-2014</Date>
+          <Date>30-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+          <Date>26-4-2014</Date>
+          <Date>27-4-2014</Date>
+          <Date>15-2-2014</Date>
+          <Date>14-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>26-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>9-11-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>23-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>21-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>4-1-2014</Date>
+          <Date>5-1-2014</Date>
+          <Date>18-1-2014</Date>
+          <Date>19-1-2014</Date>
+          <Date>1-2-2014</Date>
+          <Date>2-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>29-3-2014</Date>
+          <Date>30-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+          <Date>26-4-2014</Date>
+          <Date>27-4-2014</Date>
+          <Date>15-2-2014</Date>
+          <Date>14-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>26-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>9-11-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>23-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>21-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>4-1-2014</Date>
+          <Date>5-1-2014</Date>
+          <Date>18-1-2014</Date>
+          <Date>19-1-2014</Date>
+          <Date>1-2-2014</Date>
+          <Date>2-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>29-3-2014</Date>
+          <Date>30-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+          <Date>26-4-2014</Date>
+          <Date>27-4-2014</Date>
+          <Date>15-2-2014</Date>
+          <Date>14-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>26-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>9-11-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>23-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>21-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>4-1-2014</Date>
+          <Date>5-1-2014</Date>
+          <Date>18-1-2014</Date>
+          <Date>19-1-2014</Date>
+          <Date>1-2-2014</Date>
+          <Date>2-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>29-3-2014</Date>
+          <Date>30-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+          <Date>26-4-2014</Date>
+          <Date>27-4-2014</Date>
+          <Date>15-2-2014</Date>
+          <Date>14-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>26-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>9-11-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>23-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>21-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>4-1-2014</Date>
+          <Date>5-1-2014</Date>
+          <Date>18-1-2014</Date>
+          <Date>19-1-2014</Date>
+          <Date>1-2-2014</Date>
+          <Date>2-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>29-3-2014</Date>
+          <Date>30-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+          <Date>26-4-2014</Date>
+          <Date>27-4-2014</Date>
+          <Date>15-2-2014</Date>
+          <Date>14-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>26-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>9-11-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>23-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>21-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>4-1-2014</Date>
+          <Date>5-1-2014</Date>
+          <Date>18-1-2014</Date>
+          <Date>19-1-2014</Date>
+          <Date>1-2-2014</Date>
+          <Date>2-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>29-3-2014</Date>
+          <Date>30-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+          <Date>26-4-2014</Date>
+          <Date>27-4-2014</Date>
+          <Date>15-2-2014</Date>
+          <Date>14-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>26-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>9-11-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>23-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>21-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>4-1-2014</Date>
+          <Date>5-1-2014</Date>
+          <Date>18-1-2014</Date>
+          <Date>19-1-2014</Date>
+          <Date>1-2-2014</Date>
+          <Date>2-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>29-3-2014</Date>
+          <Date>30-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+          <Date>26-4-2014</Date>
+          <Date>27-4-2014</Date>
+          <Date>15-2-2014</Date>
+          <Date>14-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>26-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>9-11-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>23-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>21-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>4-1-2014</Date>
+          <Date>5-1-2014</Date>
+          <Date>18-1-2014</Date>
+          <Date>19-1-2014</Date>
+          <Date>1-2-2014</Date>
+          <Date>2-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>29-3-2014</Date>
+          <Date>30-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+          <Date>26-4-2014</Date>
+          <Date>27-4-2014</Date>
+          <Date>15-2-2014</Date>
+          <Date>14-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>26-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>9-11-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>23-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>21-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>4-1-2014</Date>
+          <Date>5-1-2014</Date>
+          <Date>18-1-2014</Date>
+          <Date>19-1-2014</Date>
+          <Date>1-2-2014</Date>
+          <Date>2-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>29-3-2014</Date>
+          <Date>30-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+          <Date>26-4-2014</Date>
+          <Date>27-4-2014</Date>
+          <Date>15-2-2014</Date>
+          <Date>14-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>26-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>9-11-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>23-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>21-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>4-1-2014</Date>
+          <Date>5-1-2014</Date>
+          <Date>18-1-2014</Date>
+          <Date>19-1-2014</Date>
+          <Date>1-2-2014</Date>
+          <Date>2-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>29-3-2014</Date>
+          <Date>30-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+          <Date>26-4-2014</Date>
+          <Date>27-4-2014</Date>
+          <Date>15-2-2014</Date>
+        </NotAvailable>
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="37">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="DV Hasselt A" ID="279" SerieId="1" Group="GroupA" SporthalId="19" />
+      <Team Name="DV Hasselt B" ID="280" SerieId="5" Group="GroupA" SporthalId="19" />
+      <Team Name="DV Hasselt C" ID="281" SerieId="7" Group="GroupA" SporthalId="19" />
+      <Team Name="DV Hasselt A" ID="282" SerieId="8" Group="GroupA" SporthalId="19" />
+      <Team Name="DV Hasselt C" ID="283" SerieId="8" Group="GroupA" SporthalId="17" />
+      <Team Name="DV Hasselt B" ID="284" SerieId="8" Group="GroupA" SporthalId="19" />
+      <Team Name="DV Hasselt" ID="285" SerieId="11" Group="GroupA" SporthalId="19" />
+      <Team Name="DV Hasselt" ID="286" SerieId="13" Group="GroupA" SporthalId="19" />
+      <Team Name="DV Hasselt A" ID="287" SerieId="14" Group="GroupA" SporthalId="19" />
+      <Team Name="DV Hasselt C" ID="288" SerieId="15" Group="GroupA" SporthalId="19" />
+      <Team Name="DV Hasselt B" ID="289" SerieId="15" Group="GroupA" SporthalId="17" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="19">
+        <NotAvailable>
+          <Date>12-10-2013</Date>
+          <Date>12-10-2013</Date>
+          <Date>12-10-2013</Date>
+          <Date>12-10-2013</Date>
+          <Date>12-10-2013</Date>
+          <Date>12-10-2013</Date>
+          <Date>12-10-2013</Date>
+          <Date>12-10-2013</Date>
+          <Date>12-10-2013</Date>
+          <Date>12-10-2013</Date>
+          <Date>12-10-2013</Date>
+          <Date>12-10-2013</Date>
+          <Date>12-10-2013</Date>
+          <Date>12-10-2013</Date>
+          <Date>12-10-2013</Date>
+          <Date>12-10-2013</Date>
+        </NotAvailable>
+      </Sporthall>
+      <Sporthall ID="17">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="23">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="Elvoc Elen" ID="187" SerieId="3" Group="GroupA" SporthalId="42" />
+      <Team Name="Elvoc Elen" ID="188" SerieId="8" Group="GroupA" SporthalId="42" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="42">
+        <NotAvailable>
+          <Date>2-3-2014</Date>
+        </NotAvailable>
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="24">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="Fit VBC Ham A" ID="190" SerieId="3" Group="GroupA" SporthalId="43" />
+      <Team Name="Fit VBC Ham" ID="191" SerieId="4" Group="GroupA" SporthalId="43" />
+      <Team Name="Fit VBC Ham B" ID="192" SerieId="7" Group="GroupA" SporthalId="43" />
+      <Team Name="Fit VBC Ham A" ID="193" SerieId="8" Group="GroupA" SporthalId="43" />
+      <Team Name="Fit VBC Ham" ID="195" SerieId="11" Group="GroupA" SporthalId="43" />
+      <Team Name="Fit VBC Ham" ID="196" SerieId="12" Group="GroupA" SporthalId="43" />
+      <Team Name="Fit VBC Ham" ID="197" SerieId="13" Group="GroupA" SporthalId="43" />
+      <Team Name="Fit VBC Ham A" ID="198" SerieId="14" Group="GroupA" SporthalId="43" />
+      <Team Name="Fit VBC Ham B" ID="199" SerieId="15" Group="GroupA" SporthalId="43" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="43">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="5">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="GEMS Diepenbeek A" ID="40" SerieId="4" Group="GroupA" SporthalId="9" />
+      <Team Name="GEMS Diepenbeek" ID="42" SerieId="9" Group="GroupB" SporthalId="9" />
+      <Team Name="GEMS Diepenbeek" ID="43" SerieId="10" Group="GroupB" SporthalId="9" />
+      <Team Name="GEMS Diepenbeek" ID="44" SerieId="12" Group="GroupB" SporthalId="9" />
+      <Team Name="GEMS Diepenbeek" ID="45" SerieId="16" Group="GroupA" SporthalId="9" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="9">
+        <NotAvailable>
+          <Date>14-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>26-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>9-11-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>23-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>21-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>4-1-2014</Date>
+          <Date>5-1-2014</Date>
+          <Date>18-1-2014</Date>
+          <Date>19-1-2014</Date>
+          <Date>1-2-2014</Date>
+          <Date>2-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>29-3-2014</Date>
+          <Date>30-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+          <Date>26-4-2014</Date>
+          <Date>27-4-2014</Date>
+          <Date>15-2-2014</Date>
+          <Date>14-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>26-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>9-11-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>23-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>21-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>4-1-2014</Date>
+          <Date>5-1-2014</Date>
+          <Date>18-1-2014</Date>
+          <Date>19-1-2014</Date>
+          <Date>1-2-2014</Date>
+          <Date>2-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>29-3-2014</Date>
+          <Date>30-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+          <Date>26-4-2014</Date>
+          <Date>27-4-2014</Date>
+          <Date>15-2-2014</Date>
+          <Date>14-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>26-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>9-11-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>23-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>21-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>4-1-2014</Date>
+          <Date>5-1-2014</Date>
+          <Date>18-1-2014</Date>
+          <Date>19-1-2014</Date>
+          <Date>1-2-2014</Date>
+          <Date>2-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>29-3-2014</Date>
+          <Date>30-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+          <Date>26-4-2014</Date>
+          <Date>27-4-2014</Date>
+          <Date>15-2-2014</Date>
+          <Date>14-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>26-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>9-11-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>23-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>21-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>4-1-2014</Date>
+          <Date>5-1-2014</Date>
+          <Date>18-1-2014</Date>
+          <Date>19-1-2014</Date>
+          <Date>1-2-2014</Date>
+          <Date>2-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>29-3-2014</Date>
+          <Date>30-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+          <Date>26-4-2014</Date>
+          <Date>27-4-2014</Date>
+          <Date>15-2-2014</Date>
+          <Date>14-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>26-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>9-11-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>23-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>21-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>4-1-2014</Date>
+          <Date>5-1-2014</Date>
+          <Date>18-1-2014</Date>
+          <Date>19-1-2014</Date>
+          <Date>1-2-2014</Date>
+          <Date>2-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>29-3-2014</Date>
+          <Date>30-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+          <Date>26-4-2014</Date>
+          <Date>27-4-2014</Date>
+          <Date>15-2-2014</Date>
+          <Date>14-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>26-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>9-11-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>23-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>21-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>4-1-2014</Date>
+          <Date>5-1-2014</Date>
+          <Date>18-1-2014</Date>
+          <Date>19-1-2014</Date>
+          <Date>1-2-2014</Date>
+          <Date>2-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>29-3-2014</Date>
+          <Date>30-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+          <Date>26-4-2014</Date>
+          <Date>27-4-2014</Date>
+          <Date>15-2-2014</Date>
+          <Date>14-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>26-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>9-11-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>23-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>21-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>4-1-2014</Date>
+          <Date>5-1-2014</Date>
+          <Date>18-1-2014</Date>
+          <Date>19-1-2014</Date>
+          <Date>1-2-2014</Date>
+          <Date>2-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>29-3-2014</Date>
+          <Date>30-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+          <Date>26-4-2014</Date>
+          <Date>27-4-2014</Date>
+          <Date>15-2-2014</Date>
+          <Date>14-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>26-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>9-11-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>23-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>21-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>4-1-2014</Date>
+          <Date>5-1-2014</Date>
+          <Date>18-1-2014</Date>
+          <Date>19-1-2014</Date>
+          <Date>1-2-2014</Date>
+          <Date>2-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>29-3-2014</Date>
+          <Date>30-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+          <Date>26-4-2014</Date>
+          <Date>27-4-2014</Date>
+          <Date>15-2-2014</Date>
+          <Date>14-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>26-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>9-11-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>23-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>21-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>4-1-2014</Date>
+          <Date>5-1-2014</Date>
+          <Date>18-1-2014</Date>
+          <Date>19-1-2014</Date>
+          <Date>1-2-2014</Date>
+          <Date>2-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>29-3-2014</Date>
+          <Date>30-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+          <Date>26-4-2014</Date>
+          <Date>27-4-2014</Date>
+          <Date>15-2-2014</Date>
+          <Date>14-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>26-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>9-11-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>23-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>21-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>4-1-2014</Date>
+          <Date>5-1-2014</Date>
+          <Date>18-1-2014</Date>
+          <Date>19-1-2014</Date>
+          <Date>1-2-2014</Date>
+          <Date>2-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>29-3-2014</Date>
+          <Date>30-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+          <Date>26-4-2014</Date>
+          <Date>27-4-2014</Date>
+          <Date>15-2-2014</Date>
+          <Date>14-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>26-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>9-11-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>23-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>21-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>4-1-2014</Date>
+          <Date>5-1-2014</Date>
+          <Date>18-1-2014</Date>
+          <Date>19-1-2014</Date>
+          <Date>1-2-2014</Date>
+          <Date>2-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>29-3-2014</Date>
+          <Date>30-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+          <Date>26-4-2014</Date>
+          <Date>27-4-2014</Date>
+          <Date>15-2-2014</Date>
+          <Date>14-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>26-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>9-11-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>23-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>21-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>4-1-2014</Date>
+          <Date>5-1-2014</Date>
+          <Date>18-1-2014</Date>
+          <Date>19-1-2014</Date>
+          <Date>1-2-2014</Date>
+          <Date>2-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>29-3-2014</Date>
+          <Date>30-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+          <Date>26-4-2014</Date>
+          <Date>27-4-2014</Date>
+          <Date>15-2-2014</Date>
+          <Date>14-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>26-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>9-11-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>23-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>21-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>4-1-2014</Date>
+          <Date>5-1-2014</Date>
+          <Date>18-1-2014</Date>
+          <Date>19-1-2014</Date>
+          <Date>1-2-2014</Date>
+          <Date>2-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>29-3-2014</Date>
+          <Date>30-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+          <Date>26-4-2014</Date>
+          <Date>27-4-2014</Date>
+          <Date>15-2-2014</Date>
+          <Date>14-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>26-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>9-11-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>23-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>21-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>4-1-2014</Date>
+          <Date>5-1-2014</Date>
+          <Date>18-1-2014</Date>
+          <Date>19-1-2014</Date>
+          <Date>1-2-2014</Date>
+          <Date>2-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>29-3-2014</Date>
+          <Date>30-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+          <Date>26-4-2014</Date>
+          <Date>27-4-2014</Date>
+          <Date>15-2-2014</Date>
+          <Date>14-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>26-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>9-11-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>23-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>21-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>4-1-2014</Date>
+          <Date>5-1-2014</Date>
+          <Date>18-1-2014</Date>
+          <Date>19-1-2014</Date>
+          <Date>1-2-2014</Date>
+          <Date>2-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>29-3-2014</Date>
+          <Date>30-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+          <Date>26-4-2014</Date>
+          <Date>27-4-2014</Date>
+          <Date>15-2-2014</Date>
+          <Date>14-9-2013</Date>
+          <Date>15-9-2013</Date>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>13-10-2013</Date>
+          <Date>26-10-2013</Date>
+          <Date>27-10-2013</Date>
+          <Date>9-11-2013</Date>
+          <Date>10-11-2013</Date>
+          <Date>23-11-2013</Date>
+          <Date>24-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>21-12-2013</Date>
+          <Date>22-12-2013</Date>
+          <Date>4-1-2014</Date>
+          <Date>5-1-2014</Date>
+          <Date>18-1-2014</Date>
+          <Date>19-1-2014</Date>
+          <Date>1-2-2014</Date>
+          <Date>2-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+          <Date>29-3-2014</Date>
+          <Date>30-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+          <Date>26-4-2014</Date>
+          <Date>27-4-2014</Date>
+          <Date>15-2-2014</Date>
+        </NotAvailable>
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="14">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="Havo Hamont *" ID="128" SerieId="4" Group="NoGroup" SporthalId="23" />
+      <Team Name="Havo Hamont" ID="129" SerieId="5" Group="NoGroup" SporthalId="23" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="23">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="27">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="He-Voc Hechtel-Eksel A" ID="211" SerieId="1" Group="GroupA" SporthalId="48" />
+      <Team Name="He-Voc Hechtel-Eksel A" ID="212" SerieId="2" Group="GroupA" SporthalId="48" />
+      <Team Name="He-Voc Hechtel-Eksel B" ID="213" SerieId="5" Group="GroupA" SporthalId="48" />
+      <Team Name="He-Voc Hechtel-Eksel B" ID="214" SerieId="6" Group="GroupA" SporthalId="48" />
+      <Team Name="He-Voc Hechtel-Eksel C" ID="215" SerieId="7" Group="GroupA" SporthalId="48" />
+      <Team Name="He-Voc Hechtel-Eksel B" ID="216" SerieId="8" Group="GroupA" SporthalId="48" />
+      <Team Name="He-Voc Hechtel-Eksel A" ID="217" SerieId="8" Group="GroupA" SporthalId="48" />
+      <Team Name="He-Voc Hechtel-Eksel A" ID="218" SerieId="11" Group="GroupA" SporthalId="48" />
+      <Team Name="He-Voc Hechtel-Eksel B" ID="219" SerieId="11" Group="GroupA" SporthalId="48" />
+      <Team Name="He-Voc Hechtel-Eksel A" ID="220" SerieId="13" Group="GroupA" SporthalId="48" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="48">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="15">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="Hoevoc Hoeselt" ID="130" SerieId="2" Group="NoGroup" SporthalId="27" />
+      <Team Name="Hoevoc Hoeselt" ID="131" SerieId="9" Group="NoGroup" SporthalId="27" />
+      <Team Name="Hoevoc Hoeselt" ID="132" SerieId="10" Group="NoGroup" SporthalId="27" />
+      <Team Name="Hoevoc Hoeselt" ID="133" SerieId="12" Group="NoGroup" SporthalId="27" />
+      <Team Name="Hoevoc Hoeselt" ID="134" SerieId="16" Group="NoGroup" SporthalId="27" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="27">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="7">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="HVC Helchteren A" ID="51" SerieId="1" Group="GroupA" SporthalId="11" />
+      <Team Name="HVC Helchteren B" ID="52" SerieId="5" Group="GroupA" SporthalId="11" />
+      <Team Name="HVC Helchteren C" ID="53" SerieId="7" Group="GroupA" SporthalId="11" />
+      <Team Name="HVC Helchteren" ID="54" SerieId="8" Group="GroupA" SporthalId="11" />
+      <Team Name="HVC Helchteren A" ID="56" SerieId="13" Group="GroupA" SporthalId="11" />
+      <Team Name="HVC Helchteren B" ID="57" SerieId="13" Group="GroupA" SporthalId="11" />
+      <Team Name="HVC Helchteren" ID="58" SerieId="14" Group="GroupA" SporthalId="11" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="11">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="26">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="Inter Smeermaas A" ID="207" SerieId="3" Group="GroupA" SporthalId="47" />
+      <Team Name="Inter Smeermaas B" ID="208" SerieId="7" Group="GroupB" SporthalId="47" />
+      <Team Name="Inter Smeermaas" ID="209" SerieId="8" Group="GroupA" SporthalId="47" />
+      <Team Name="Inter Smeermaas" ID="210" SerieId="10" Group="GroupB" SporthalId="47" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="47">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="48">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="Jaraco As B" ID="374" SerieId="3" Group="GroupA" SporthalId="81" />
+      <Team Name="Jaraco As C" ID="375" SerieId="5" Group="GroupA" SporthalId="81" />
+      <Team Name="Jaraco As D" ID="376" SerieId="7" Group="GroupA" SporthalId="81" />
+      <Team Name="Jaraco As" ID="377" SerieId="8" Group="GroupA" SporthalId="81" />
+      <Team Name="Jaraco As" ID="378" SerieId="11" Group="GroupA" SporthalId="81" />
+      <Team Name="Jaraco As B" ID="379" SerieId="13" Group="GroupA" SporthalId="81" />
+      <Team Name="Jaraco As A" ID="380" SerieId="13" Group="GroupA" SporthalId="81" />
+      <Team Name="Jaraco As" ID="381" SerieId="15" Group="GroupA" SporthalId="81" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="81">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="41">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="Kevoc Kessenich" ID="322" SerieId="7" Group="GroupA" SporthalId="70" />
+      <Team Name="Kevoc Kessenich" ID="323" SerieId="8" Group="GroupA" SporthalId="70" />
+      <Team Name="Kevoc Kessenich" ID="324" SerieId="11" Group="GroupB" SporthalId="70" />
+      <Team Name="Kevoc Kessenich" ID="325" SerieId="13" Group="GroupB" SporthalId="70" />
+      <Team Name="Kevoc Kessenich" ID="326" SerieId="15" Group="GroupA" SporthalId="70" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="70">
+        <NotAvailable>
+          <Date>15-2-2014</Date>
+          <Date>22-2-2014</Date>
+        </NotAvailable>
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="33">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="Kivoc Kinrooi" ID="252" SerieId="4" Group="GroupA" SporthalId="92" />
+      <Team Name="Kivoc Kinrooi" ID="253" SerieId="7" Group="GroupB" SporthalId="92" />
+      <Team Name="Kivoc Kinrooi B" ID="255" SerieId="10" Group="GroupA" SporthalId="92" />
+      <Team Name="Kivoc Kinrooi A" ID="256" SerieId="10" Group="GroupA" SporthalId="92" />
+      <Team Name="Kivoc Kinrooi A" ID="257" SerieId="11" Group="GroupB" SporthalId="92" />
+      <Team Name="Kivoc Kinrooi B" ID="258" SerieId="11" Group="GroupB" SporthalId="92" />
+      <Team Name="Kivoc Kinrooi" ID="259" SerieId="16" Group="NoGroup" SporthalId="92" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="92">
+        <NotAvailable>
+          <Date>16-11-2013</Date>
+          <Date>17-11-2013</Date>
+          <Date>11-1-2014</Date>
+          <Date>12-1-2014</Date>
+        </NotAvailable>
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="38">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="Kivola Riemst B" ID="290" SerieId="1" Group="GroupB" SporthalId="65" />
+      <Team Name="Kivola Riemst A" ID="291" SerieId="2" Group="GroupA" SporthalId="65" />
+      <Team Name="Kivola Riemst C" ID="292" SerieId="3" Group="GroupA" SporthalId="66" />
+      <Team Name="Kivola Riemst B" ID="293" SerieId="4" Group="GroupB" SporthalId="65" />
+      <Team Name="Kivola Riemst D" ID="294" SerieId="5" Group="GroupA" SporthalId="66" />
+      <Team Name="Kivola Riemst E" ID="295" SerieId="7" Group="GroupA" SporthalId="66" />
+      <Team Name="Kivola Riemst" ID="296" SerieId="8" Group="NoGroup" SporthalId="66" />
+      <Team Name="Kivola Riemst" ID="297" SerieId="9" Group="GroupB" SporthalId="66" />
+      <Team Name="Kivola Riemst" ID="298" SerieId="10" Group="GroupB" SporthalId="66" />
+      <Team Name="Kivola Riemst B" ID="299" SerieId="11" Group="NoGroup" SporthalId="66" />
+      <Team Name="Kivola Riemst A" ID="300" SerieId="11" Group="NoGroup" SporthalId="66" />
+      <Team Name="Kivola Riemst C" ID="301" SerieId="11" Group="NoGroup" SporthalId="66" />
+      <Team Name="Kivola Riemst" ID="302" SerieId="12" Group="GroupB" SporthalId="66" />
+      <Team Name="Kivola Riemst" ID="303" SerieId="13" Group="NoGroup"  SporthalId="66"/>
+      <Team Name="Kivola Riemst" ID="304" SerieId="15" Group="NoGroup" SporthalId="65" />
+      <Team Name="Kivola Riemst" ID="305" SerieId="16" Group="GroupA" SporthalId="65" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="65">
+        <NotAvailable />
+      </Sporthall>
+      <Sporthall ID="66">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="6">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="Kovok Kortessem" ID="46" SerieId="5" Group="GroupA" SporthalId="10" />
+      <Team Name="Kovok Kortessem" ID="47" SerieId="8" Group="GroupA" SporthalId="10" />
+      <Team Name="Kovok Kortessem A" ID="48" SerieId="11" Group="GroupA" SporthalId="10" />
+      <Team Name="Kovok Kortessem B" ID="49" SerieId="11" Group="GroupA" SporthalId="10" />
+      <Team Name="Kovok Kortessem" ID="50" SerieId="13" Group="GroupA" SporthalId="10" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="10">
+        <NotAvailable>
+          <Date>8-9-2013</Date>
+          <Date>7-9-2013</Date>
+          <Date>21-9-2013</Date>
+          <Date>22-9-2013</Date>
+          <Date>5-10-2013</Date>
+          <Date>6-10-2013</Date>
+          <Date>19-10-2013</Date>
+          <Date>20-10-2013</Date>
+          <Date>2-11-2013</Date>
+          <Date>3-11-2013</Date>
+          <Date>16-11-2013</Date>
+          <Date>17-11-2013</Date>
+          <Date>30-11-2013</Date>
+          <Date>1-12-2013</Date>
+          <Date>14-12-2013</Date>
+          <Date>15-12-2013</Date>
+          <Date>28-12-2013</Date>
+          <Date>29-12-2013</Date>
+          <Date>11-1-2014</Date>
+          <Date>12-1-2014</Date>
+          <Date>25-1-2014</Date>
+          <Date>26-1-2014</Date>
+          <Date>8-2-2014</Date>
+          <Date>9-2-2014</Date>
+          <Date>22-2-2014</Date>
+          <Date>23-2-2014</Date>
+          <Date>8-3-2014</Date>
+          <Date>9-3-2014</Date>
+          <Date>22-3-2014</Date>
+          <Date>23-3-2014</Date>
+          <Date>5-4-2014</Date>
+          <Date>6-4-2014</Date>
+          <Date>19-4-2014</Date>
+          <Date>20-4-2014</Date>
+        </NotAvailable>
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="36">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="Kuvoc Kuringen A" ID="275" SerieId="3" Group="NoGroup" SporthalId="18" />
+      <Team Name="Kuvoc Kuringen" ID="278" SerieId="11" Group="NoGroup" SporthalId="18" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="18">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="2">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="KVC Racing Genk C" ID="5" SerieId="4" Group="GroupA" SporthalId="3" />
+      <Team Name="KVC Racing Genk A" ID="6" SerieId="5" Group="GroupB" SporthalId="3" />
+      <Team Name="KVC Racing Genk B" ID="7" SerieId="7" Group="GroupB" SporthalId="3" />
+      <Team Name="KVC Racing Genk A" ID="8" SerieId="8" Group="GroupB" SporthalId="3" />
+      <Team Name="KVC Racing Genk A" ID="9" SerieId="9" Group="GroupA" SporthalId="3" />
+      <Team Name="KVC Racing Genk" ID="10" SerieId="10" Group="GroupA" SporthalId="3" />
+      <Team Name="KVC Racing Genk A" ID="11" SerieId="11" Group="GroupB" SporthalId="3" />
+      <Team Name="KVC Racing Genk B" ID="12" SerieId="11" Group="GroupB" SporthalId="3" />
+      <Team Name="KVC Racing Genk C" ID="13" SerieId="11" Group="GroupB" SporthalId="3" />
+      <Team Name="KVC Racing Genk B" ID="14" SerieId="12" Group="GroupA" SporthalId="3" />
+      <Team Name="KVC Racing Genk" ID="15" SerieId="12" Group="GroupA" SporthalId="3" />
+      <Team Name="KVC Racing Genk A" ID="16" SerieId="13" Group="GroupB" SporthalId="3" />
+      <Team Name="KVC Racing Genk B" ID="18" SerieId="13" Group="GroupB" SporthalId="3" />
+      <Team Name="KVC Racing Genk C" ID="17" SerieId="13" Group="GroupB" SporthalId="3" />
+      <Team Name="KVC Racing Genk B" ID="19" SerieId="15" Group="GroupB" SporthalId="3" />
+      <Team Name="KVC Racing Genk A" ID="20" SerieId="15" Group="GroupB" SporthalId="3" />
+      <Team Name="KVC Racing Genk" ID="21" SerieId="16" Group="GroupA" SporthalId="3" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="3">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="13">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="Lovoc Lommel A" ID="117" SerieId="3" Group="GroupA" SporthalId="25" />
+      <Team Name="Lovoc Lommel B" ID="118" SerieId="4" Group="GroupB" SporthalId="25" />
+      <Team Name="Lovoc Lommel B" ID="119" SerieId="7" Group="GroupA" SporthalId="25" />
+      <Team Name="Lovoc Lommel A" ID="120" SerieId="8" Group="GroupA" SporthalId="25" />
+      <Team Name="Lovoc Lommel B" ID="121" SerieId="8" Group="GroupA" SporthalId="25" />
+      <Team Name="Lovoc Lommel" ID="122" SerieId="9" Group="GroupB" SporthalId="25" />
+      <Team Name="Lovoc Lommel" ID="123" SerieId="10" Group="GroupB" SporthalId="25" />
+      <Team Name="Lovoc Lommel" ID="124" SerieId="11" Group="GroupA" SporthalId="25" />
+      <Team Name="Lovoc Lommel" ID="125" SerieId="13" Group="GroupA" SporthalId="25" />
+      <Team Name="Lovoc Lommel" ID="126" SerieId="15" Group="GroupA" SporthalId="25" />
+      <Team Name="Lovoc Lommel" ID="127" SerieId="16" Group="GroupB" SporthalId="25" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="25">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="8">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="Mavo Dilsen-Stokkem B" ID="59" SerieId="4" Group="GroupA" SporthalId="15" />
+      <Team Name="Mavo Dilsen-StokkemB" ID="60" SerieId="5" Group="GroupA" SporthalId="15" />
+      <Team Name="Mavo Dilsen-Stokkem" ID="61" SerieId="7" Group="GroupB" SporthalId="15" />
+      <Team Name="Mavo Dilsen-Stokkem A" ID="62" SerieId="8" Group="GroupA" SporthalId="14" />
+      <Team Name="Mavo Dilsen-Stokkem" ID="64" SerieId="9" Group="GroupA" SporthalId="14" />
+      <Team Name="Mavo Dilsen-Stokkem" ID="65" SerieId="10" Group="GroupA" SporthalId="15" />
+      <Team Name="Mavo Dilsen-Stokkem A" ID="66" SerieId="11" Group="GroupB" SporthalId="14" />
+      <Team Name="Mavo Dilsen-Stokkem B" ID="67" SerieId="11" Group="GroupA" SporthalId="14" />
+      <Team Name="Mavo Dilsen-Stokkem C" ID="68" SerieId="11" Group="GroupA" SporthalId="14" />
+      <Team Name="Mavo Dilsen-Stokkem B" ID="69" SerieId="13" Group="GroupA" SporthalId="15" />
+      <Team Name="Mavo Dilsen-Stokkem A" ID="70" SerieId="13" Group="GroupA" SporthalId="15" />
+      <Team Name="Mavo Dilsen-Stokkem" ID="71" SerieId="15" Group="GroupB" SporthalId="14" />
+      <Team Name="Mavo Dilsen-Stokkem B" ID="72" SerieId="15" Group="GroupB" SporthalId="15" />
+      <Team Name="Mavo Dilsen-Stokkem" ID="73" SerieId="16" Group="GroupB" SporthalId="15" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="15">
+        <NotAvailable />
+      </Sporthall>
+      <Sporthall ID="14">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="51">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="MVC Molenbeersel" ID="389" SerieId="7" Group="NoGroup" SporthalId="21" />
+      <Team Name="MVC Molenbeersel" ID="390" SerieId="8" Group="NoGroup" SporthalId="21" />
+      <Team Name="MVC Molenbeersel" ID="391" SerieId="11" Group="NoGroup" SporthalId="21" />
+      <Team Name="MVC Molenbeersel" ID="392" SerieId="15" Group="NoGroup" SporthalId="21" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="21">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="28">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="MVC Peer A" ID="221" SerieId="3" Group="GroupA" SporthalId="96" />
+      <Team Name="MVC Peer B" ID="222" SerieId="5" Group="GroupA" SporthalId="96" />
+      <Team Name="MVC Peer" ID="223" SerieId="7" Group="GroupA" SporthalId="96" />
+      <Team Name="MVC Peer" ID="224" SerieId="8" Group="GroupA" SporthalId="96" />
+      <Team Name="MVC Peer" ID="225" SerieId="13" Group="GroupA" SporthalId="96" />
+      <Team Name="MVC Peer" ID="226" SerieId="15" Group="GroupA" SporthalId="96" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="96">
+        <NotAvailable>
+          <Date>28-9-2013</Date>
+          <Date>29-9-2013</Date>
+          <Date>19-10-2013</Date>
+          <Date>20-10-2013</Date>
+          <Date>2-11-2013</Date>
+          <Date>3-11-2013</Date>
+          <Date>16-11-2013</Date>
+          <Date>17-11-2013</Date>
+          <Date>7-12-2013</Date>
+          <Date>8-12-2013</Date>
+          <Date>11-1-2014</Date>
+          <Date>12-1-2014</Date>
+          <Date>25-1-2014</Date>
+          <Date>26-1-2014</Date>
+          <Date>15-2-2014</Date>
+          <Date>16-2-2014</Date>
+          <Date>1-3-2014</Date>
+          <Date>2-3-2014</Date>
+          <Date>22-3-2014</Date>
+          <Date>23-3-2014</Date>
+          <Date>12-4-2014</Date>
+          <Date>13-4-2014</Date>
+        </NotAvailable>
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="4">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="Noliko Maaseik A" ID="25" SerieId="1" Group="GroupA" SporthalId="8" />
+      <Team Name="Noliko Maaseik C" ID="26" SerieId="2" Group="GroupB" SporthalId="8" />
+      <Team Name="Noliko Maaseik B" ID="27" SerieId="5" Group="GroupB" SporthalId="8" />
+      <Team Name="Noliko Maaseik D" ID="28" SerieId="6" Group="GroupB" SporthalId="8" />
+      <Team Name="Noliko Maaseik C" ID="29" SerieId="7" Group="GroupB" SporthalId="8" />
+      <Team Name="Noliko Maaseik" ID="30" SerieId="8" Group="GroupB" SporthalId="8" />
+      <Team Name="Noliko Maaseik A" ID="31" SerieId="9" Group="GroupA" SporthalId="8" />
+      <Team Name="Noliko Maaseik B" ID="32" SerieId="9" Group="GroupA" SporthalId="8" />
+      <Team Name="Noliko Maaseik A" ID="33" SerieId="10" Group="GroupA" SporthalId="8" />
+      <Team Name="Noliko Maaseik B" ID="34" SerieId="10" Group="GroupA" SporthalId="8" />
+      <Team Name="Noliko Maaseik A" ID="35" SerieId="11" Group="GroupB" SporthalId="8" />
+      <Team Name="Noliko Maaseik" ID="36" SerieId="12" Group="GroupA" SporthalId="8" />
+      <Team Name="Noliko Maaseik A" ID="37" SerieId="13" Group="GroupB" SporthalId="8" />
+      <Team Name="Noliko Maaseik A" ID="38" SerieId="15" Group="GroupA" SporthalId="8" />
+      <Team Name="Noliko Maaseik A" ID="39" SerieId="16" Group="GroupB" SporthalId="8" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="8">
+        <NotAvailable>
+          <Date>21-12-2013</Date>
+        </NotAvailable>
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="35">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="Govoc Ophoven-Geistingen A" ID="269" SerieId="3" Group="GroupA" SporthalId="61" />
+      <Team Name="Govoc Ophoven-Geistingen" ID="270" SerieId="6" Group="NoGroup" SporthalId="62" />
+      <Team Name="Govoc Ophoven-Geistingen B" ID="271" SerieId="7" Group="GroupB" SporthalId="61" />
+      <Team Name="Govoc Ophoven-Geistingen C" ID="272" SerieId="7" Group="NoGroup" SporthalId="62" />
+      <Team Name="Govoc Ophoven-Geistingen" ID="273" SerieId="8" Group="NoGroup" SporthalId="61" />
+      <Team Name="Govoc Ophoven-Geistingen" ID="274" SerieId="15" Group="GroupA" SporthalId="61" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="61">
+        <NotAvailable />
+      </Sporthall>
+      <Sporthall ID="62">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="34">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="Roveka Stevoort A" ID="260" SerieId="1" Group="NoGroup" SporthalId="60" />
+      <Team Name="Roveka Stevoort B" ID="261" SerieId="3" Group="NoGroup" SporthalId="60" />
+      <Team Name="Roveka Stevoort" ID="262" SerieId="4" Group="NoGroup" SporthalId="60" />
+      <Team Name="Roveka Stevoort C" ID="263" SerieId="7" Group="NoGroup" SporthalId="60" />
+      <Team Name="Roveka Stevoort" ID="264" SerieId="8" Group="NoGroup" SporthalId="60" />
+      <Team Name="Roveka Stevoort A" ID="265" SerieId="11" Group="NoGroup" SporthalId="60" />
+      <Team Name="Roveka Stevoort B" ID="266" SerieId="11" Group="NoGroup" SporthalId="60" />
+      <Team Name="Roveka Stevoort" ID="413" SerieId="13" Group="NoGroup" SporthalId="60" />
+      <Team Name="Roveka Stevoort A" ID="267" SerieId="14" Group="NoGroup" SporthalId="60" />
+      <Team Name="Roveka Stevoort B" ID="268" SerieId="15" Group="NoGroup" SporthalId="60" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="60">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="40">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="Schovoc Beverst A" ID="311" SerieId="1" Group="GroupA" SporthalId="69" />
+      <Team Name="Schovoc Beverst A" ID="312" SerieId="2" Group="GroupA" SporthalId="69" />
+      <Team Name="Schovoc Beverst B" ID="313" SerieId="4" Group="GroupB" SporthalId="69" />
+      <Team Name="Schovoc Beverst B" ID="314" SerieId="5" Group="GroupB" SporthalId="69" />
+      <Team Name="Schovoc Beverst C" ID="315" SerieId="7" Group="GroupA" SporthalId="69" />
+      <Team Name="Schovoc Beverst B" ID="316" SerieId="8" Group="GroupA" SporthalId="69" />
+      <Team Name="Schovoc Beverst A" ID="317" SerieId="8" Group="GroupB" SporthalId="69" />
+      <Team Name="Schovoc Beverst" ID="318" SerieId="11" Group="GroupB" SporthalId="69" />
+      <Team Name="Schovoc Beverst B" ID="319" SerieId="13" Group="GroupA" SporthalId="69" />
+      <Team Name="Schovoc Beverst A" ID="320" SerieId="13" Group="GroupA" SporthalId="69" />
+      <Team Name="Schovoc Beverst" ID="321" SerieId="14" Group="GroupB" SporthalId="69" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="69">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="12">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="Sparvoc Lanaken A" ID="103" SerieId="1" Group="GroupB" SporthalId="24" />
+      <Team Name="Sparvoc Lanaken B" ID="104" SerieId="2" Group="GroupA" SporthalId="24" />
+      <Team Name="Sparvoc Lanaken B" ID="105" SerieId="3" Group="GroupA" SporthalId="24" />
+      <Team Name="Sparvoc Lanaken C" ID="106" SerieId="5" Group="GroupB" SporthalId="24" />
+      <Team Name="Sparvoc Lanaken A" ID="107" SerieId="8" Group="GroupA" SporthalId="24" />
+      <Team Name="Sparvoc Lanaken B" ID="108" SerieId="8" Group="GroupA" SporthalId="24" />
+      <Team Name="Sparvoc Lanaken" ID="109" SerieId="9" Group="GroupB" SporthalId="24" />
+      <Team Name="Sparvoc Lanaken" ID="110" SerieId="10" Group="GroupA" SporthalId="24" />
+      <Team Name="Sparvoc Lanaken B" ID="111" SerieId="11" Group="GroupA" SporthalId="24" />
+      <Team Name="Sparvoc Lanaken A" ID="112" SerieId="11" Group="GroupA" SporthalId="24" />
+      <Team Name="Sparvoc Lanaken C" ID="113" SerieId="11" Group="GroupA" SporthalId="24" />
+      <Team Name="Sparvoc Lanaken" ID="114" SerieId="12" Group="GroupB" SporthalId="24" />
+      <Team Name="Sparvoc Lanaken" ID="115" SerieId="13" Group="GroupB" SporthalId="24" />
+      <Team Name="Sparvoc Lanaken" ID="116" SerieId="16" Group="GroupB" SporthalId="24" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="24">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="22">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="STALVOC Beverlo B" ID="171" SerieId="3" Group="GroupA" SporthalId="95" />
+      <Team Name="STALVOC Beverlo B" ID="172" SerieId="4" Group="GroupB" SporthalId="95" />
+      <Team Name="STALVOC Beverlo C *" ID="173" SerieId="4" Group="GroupA" SporthalId="95" />
+      <Team Name="STALVOC Beverlo C" ID="174" SerieId="7" Group="GroupB" SporthalId="95" />
+      <Team Name="STALVOC Beverlo A" ID="175" SerieId="8" Group="GroupA" SporthalId="95" />
+      <Team Name="STALVOC Beverlo B" ID="176" SerieId="8" Group="GroupA" SporthalId="95" />
+      <Team Name="STALVOC Beverlo A" ID="177" SerieId="9" Group="GroupA" SporthalId="95" />
+      <Team Name="STALVOC Beverlo B" ID="178" SerieId="9" Group="GroupA" SporthalId="95" />
+      <Team Name="STALVOC Beverlo" ID="179" SerieId="10" Group="GroupB" SporthalId="95" />
+      <Team Name="STALVOC Beverlo A" ID="180" SerieId="11" Group="GroupB" SporthalId="95" />
+      <Team Name="STALVOC Beverlo B" ID="181" SerieId="11" Group="GroupA" SporthalId="95" />
+      <Team Name="STALVOC Beverlo B" ID="183" SerieId="13" Group="GroupA" SporthalId="95" />
+      <Team Name="STALVOC Beverlo A" ID="182" SerieId="13" Group="GroupB" SporthalId="95" />
+      <Team Name="STALVOC Beverlo A" ID="184" SerieId="14" Group="GroupB" SporthalId="95" />
+      <Team Name="STALVOC Beverlo B" ID="185" SerieId="15" Group="GroupB" SporthalId="95" />
+      <Team Name="STALVOC Beverlo" ID="186" SerieId="16" Group="GroupA" SporthalId="95" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="95">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="16">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="Tamera Lummen" ID="135" SerieId="7" Group="GroupA" SporthalId="28" />
+      <Team Name="Tamera Lummen" ID="136" SerieId="8" Group="GroupB" SporthalId="29" />
+      <Team Name="Tamera Lummen" ID="137" SerieId="11" Group="GroupB" SporthalId="29" />
+      <Team Name="Tamera Lummen B" ID="138" SerieId="12" Group="GroupA" SporthalId="29" />
+      <Team Name="Tamera Lummen A" ID="139" SerieId="12" Group="GroupB" SporthalId="29" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="28">
+        <NotAvailable />
+      </Sporthall>
+      <Sporthall ID="29">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="31">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="Tesvoc Tessenderlo" ID="237" SerieId="9" Group="GroupA" SporthalId="56" />
+      <Team Name="Tesvoc Tessenderlo" ID="238" SerieId="10" Group="GroupA" SporthalId="56" />
+      <Team Name="Tesvoc Tessenderlo" ID="239" SerieId="11" Group="GroupA" SporthalId="56" />
+      <Team Name="Tesvoc Tessenderlo" ID="240" SerieId="13" Group="GroupA" SporthalId="56" />
+      <Team Name="Tesvoc Tessenderlo *" ID="241" SerieId="15" Group="GroupA" SporthalId="56" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="56">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="10">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="VC Tongerlo A" ID="78" SerieId="3" Group="GroupA" SporthalId="20" />
+      <Team Name="VC Tongerlo B" ID="79" SerieId="3" Group="GroupA" SporthalId="20" />
+      <Team Name="VC Tongerlo" ID="80" SerieId="4" Group="GroupB" SporthalId="20" />
+      <Team Name="VC Tongerlo C" ID="81" SerieId="5" Group="GroupB" SporthalId="20" />
+      <Team Name="VC Tongerlo D" ID="82" SerieId="7" Group="NoGroup" SporthalId="20" />
+      <Team Name="VC Tongerlo" ID="84" SerieId="8" Group="NoGroup" SporthalId="20" />
+      <Team Name="VC Tongerlo" ID="85" SerieId="10" Group="GroupB" SporthalId="20" />
+      <Team Name="VC Tongerlo" ID="86" SerieId="11" Group="GroupB" SporthalId="20" />
+      <Team Name="VC Tongerlo" ID="87" SerieId="12" Group="GroupB" SporthalId="20" />
+      <Team Name="VC Tongerlo B" ID="89" SerieId="13" Group="GroupA" SporthalId="20" />
+      <Team Name="VC Tongerlo A" ID="88" SerieId="13" Group="GroupA" SporthalId="20" />
+      <Team Name="VC Tongerlo" ID="90" SerieId="15" Group="NoGroup" SporthalId="20" />
+      <Team Name="VC Tongerlo" ID="91" SerieId="16" Group="NoGroup" SporthalId="20" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="20">
+        <NotAvailable>
+          <Date>15-3-2014</Date>
+          <Date>16-3-2014</Date>
+        </NotAvailable>
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="39">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="Topsport Davozon" ID="306" SerieId="3" Group="NoGroup" SporthalId="67" />
+      <Team Name="Topsport Davozon" ID="307" SerieId="8" Group="NoGroup" SporthalId="67" />
+      <Team Name="Topsport Davozon A" ID="308" SerieId="11" Group="NoGroup" SporthalId="67" />
+      <Team Name="Topsport Davozon B" ID="309" SerieId="11" Group="NoGroup" SporthalId="67" />
+      <Team Name="Topsport Davozon" ID="310" SerieId="15" Group="NoGroup" SporthalId="67" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="67">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="21">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="Uvoc Uikhoven B" ID="164" SerieId="1" Group="GroupB" SporthalId="40" />
+      <Team Name="Uvoc Uikhoven C" ID="165" SerieId="5" Group="GroupB" SporthalId="40" />
+      <Team Name="Uvoc Uikhoven" ID="166" SerieId="8" Group="GroupB" SporthalId="40" />
+      <Team Name="Uvoc Uikhoven" ID="167" SerieId="9" Group="GroupA" SporthalId="40" />
+      <Team Name="Uvoc Uikhoven" ID="168" SerieId="11" Group="GroupB" SporthalId="40" />
+      <Team Name="Uvoc Uikhoven" ID="169" SerieId="12" Group="GroupA" SporthalId="40" />
+      <Team Name="Uvoc Uikhoven" ID="170" SerieId="15" Group="GroupA" SporthalId="40" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="40">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="49">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="VC Helios Zonhoven A" ID="382" SerieId="2" Group="GroupA" SporthalId="83" />
+      <Team Name="VC Helios Zonhoven B" ID="383" SerieId="4" Group="GroupA" SporthalId="83" />
+      <Team Name="VC Helios Zonhoven C" ID="384" SerieId="6" Group="GroupA" SporthalId="83" />
+      <Team Name="VC Helios Zonhoven" ID="385" SerieId="12" Group="GroupA" SporthalId="83" />
+      <Team Name="VC Helios Zonhoven B" ID="386" SerieId="12" Group="GroupB" SporthalId="83" />
+      <Team Name="VC Helios Zonhoven" ID="387" SerieId="16" Group="GroupA" SporthalId="83" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="83">
+        <NotAvailable>
+          <Date>5-4-2014</Date>
+          <Date>6-4-2014</Date>
+        </NotAvailable>
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="19">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="VC Overpelt A" ID="149" SerieId="2" Group="NoGroup" SporthalId="34" />
+      <Team Name="VC Overpelt A" ID="150" SerieId="3" Group="GroupA" SporthalId="34" />
+      <Team Name="VC Overpelt B" ID="151" SerieId="4" Group="NoGroup" SporthalId="34" />
+      <Team Name="VC Overpelt B" ID="152" SerieId="7" Group="NoGroup" SporthalId="34" />
+      <Team Name="VC Overpelt C" ID="153" SerieId="7" Group="GroupA" SporthalId="34" />
+      <Team Name="VC Overpelt" ID="154" SerieId="8" Group="NoGroup" SporthalId="34" />
+      <Team Name="VC Overpelt" ID="155" SerieId="11" Group="NoGroup" SporthalId="34" />
+      <Team Name="VC Overpelt" ID="156" SerieId="12" Group="NoGroup" SporthalId="34" />
+      <Team Name="VC Overpelt" ID="157" SerieId="13" Group="NoGroup" SporthalId="34" />
+      <Team Name="VC Overpelt" ID="158" SerieId="15" Group="NoGroup" SporthalId="34" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="34">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="29">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="VC Zutendaal" ID="227" SerieId="7" Group="GroupA" SporthalId="52" />
+      <Team Name="VC Zutendaal" ID="228" SerieId="8" Group="GroupA" SporthalId="52" />
+      <Team Name="VC Zutendaal" ID="229" SerieId="11" Group="GroupA" SporthalId="52" />
+      <Team Name="VC Zutendaal" ID="230" SerieId="15" Group="GroupA" SporthalId="52" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="52">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="44">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="VCK Bolderberg A" ID="341" SerieId="3" Group="GroupB" SporthalId="76" />
+      <Team Name="VCK Bolderberg" ID="342" SerieId="8" Group="GroupA" SporthalId="76" />
+      <Team Name="VCK Bolderberg" ID="343" SerieId="9" Group="GroupB" SporthalId="76" />
+      <Team Name="VCK Bolderberg" ID="344" SerieId="10" Group="GroupA" SporthalId="76" />
+      <Team Name="VCK Bolderberg" ID="345" SerieId="11" Group="GroupA" SporthalId="76" />
+      <Team Name="VCK Bolderberg" ID="346" SerieId="15" Group="GroupB" SporthalId="76" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="76">
+        <NotAvailable>
+          <Date>15-2-2014</Date>
+        </NotAvailable>
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="17">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="Vocelli Ellikom A" ID="140" SerieId="11" Group="NoGroup" SporthalId="31" />
+      <Team Name="Vocelli Ellikom B" ID="141" SerieId="11" Group="NoGroup" SporthalId="31" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="31">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="20">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="VC Herk-de-Stad A" ID="159" SerieId="4" Group="NoGroup" SporthalId="91" />
+      <Team Name="VC Herk-de-Stad B" ID="160" SerieId="6" Group="NoGroup" SporthalId="91" />
+      <Team Name="VC Herk-de-Stad A" ID="161" SerieId="10" Group="NoGroup" SporthalId="91" />
+      <Team Name="VC Herk-de-Stad B" ID="162" SerieId="10" Group="NoGroup" SporthalId="91" />
+      <Team Name="VC Herk-de-Stad" ID="163" SerieId="12" Group="NoGroup" SporthalId="91" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="91">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="45">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="VTO Opglabbeek A" ID="347" SerieId="1" Group="GroupA" SporthalId="77" />
+      <Team Name="VTO Opglabbeek" ID="348" SerieId="6" Group="GroupA" SporthalId="77" />
+      <Team Name="VTO Opglabbeek B" ID="349" SerieId="7" Group="GroupA" SporthalId="77" />
+      <Team Name="VTO Opglabbeek C" ID="350" SerieId="7" Group="GroupB" SporthalId="77" />
+      <Team Name="VTO Opglabbeek" ID="351" SerieId="8" Group="NoGroup" SporthalId="77" />
+      <Team Name="VTO Opglabbeek" ID="352" SerieId="10" Group="NoGroup" SporthalId="77" />
+      <Team Name="VTO Opglabbeek" ID="353" SerieId="11" Group="NoGroup" SporthalId="77" />
+      <Team Name="VTO Opglabbeek" ID="354" SerieId="15" Group="GroupB" SporthalId="77" />
+      <Team Name="VTO Opglabbeek" ID="355" SerieId="16" Group="NoGroup" SporthalId="77" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="77">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="9">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="VTI Blok Hasselt B" ID="74" SerieId="2" Group="GroupA" SporthalId="19" />
+      <Team Name="VTI Blok Hasselt C" ID="75" SerieId="6" Group="GroupA" SporthalId="19" />
+      <Team Name="VTI Blok Hasselt" ID="76" SerieId="9" Group="GroupA" SporthalId="19" />
+      <Team Name="VTI Blok Hasselt" ID="77" SerieId="10" Group="GroupA" SporthalId="19" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="19">
+        <NotAvailable>
+          <Date>12-10-2013</Date>
+          <Date>12-10-2013</Date>
+          <Date>12-10-2013</Date>
+          <Date>12-10-2013</Date>
+          <Date>12-10-2013</Date>
+          <Date>12-10-2013</Date>
+          <Date>12-10-2013</Date>
+          <Date>12-10-2013</Date>
+          <Date>12-10-2013</Date>
+          <Date>12-10-2013</Date>
+          <Date>12-10-2013</Date>
+          <Date>12-10-2013</Date>
+          <Date>12-10-2013</Date>
+          <Date>12-10-2013</Date>
+          <Date>12-10-2013</Date>
+          <Date>12-10-2013</Date>
+        </NotAvailable>
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="3">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="KWU-VEM" ID="23" SerieId="11" Group="NoGroup" SporthalId="5" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="5">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="25">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="Wevoc Wellen" ID="200" SerieId="2" Group="GroupA" SporthalId="46" />
+      <Team Name="Wevoc Wellen B" ID="201" SerieId="5" Group="GroupA" SporthalId="46" />
+      <Team Name="Wevoc Wellen C" ID="202" SerieId="7" Group="GroupB" SporthalId="45" />
+      <Team Name="Wevoc Wellen" ID="203" SerieId="8" Group="GroupB" SporthalId="45" />
+      <Team Name="Wevoc Wellen B" ID="205" SerieId="13" Group="GroupB" SporthalId="45" />
+      <Team Name="Wevoc Wellen C" ID="204" SerieId="13" Group="GroupB" SporthalId="45" />
+      <Team Name="Wevoc Wellen A" ID="206" SerieId="13" Group="GroupB" SporthalId="45" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="46">
+        <NotAvailable />
+      </Sporthall>
+      <Sporthall ID="45">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+  <Club ID="50">
+    <FreeFormatConstraint />
+    <Teams>
+      <Team Name="Zuid-Limburg-Tongeren" ID="388" SerieId="7" Group="NoGroup" SporthalId="33" />
+    </Teams>
+    <Sporthalls>
+      <Sporthall ID="33">
+        <NotAvailable />
+      </Sporthall>
+    </Sporthalls>
+  </Club>
+</Clubs>

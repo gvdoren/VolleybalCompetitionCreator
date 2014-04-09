@@ -32,6 +32,7 @@ namespace VolleybalCompetition_creator
                 this.Invoke(new Action(() => state_OnMyChange(source, e)));
                 return;
             }
+            lock (klvv) ;
             int i = this.tabControl1.SelectedIndex;
             this.tabControl1.SelectTab(0);
             this.tabControl1.SelectTab(i);

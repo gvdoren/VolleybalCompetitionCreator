@@ -13,6 +13,7 @@ namespace VolleybalCompetition_creator
         public List<Team> teams = new List<Team>();
         public List<Serie> series = new List<Serie>();
         public List<Sporthal> sporthalls = new List<Sporthal>();
+        public Club groupingWithClub = null;
         public string FreeFormatConstraints = "";
         public int Id { get; set; }
         public string name { get; set; }
@@ -23,6 +24,9 @@ namespace VolleybalCompetition_creator
             Club club = new Club();
             club.name = "----";
             return club;
+        }
+        public Club()
+        {
         }
         public override string ToString()
         {

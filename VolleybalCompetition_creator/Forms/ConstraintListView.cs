@@ -35,6 +35,7 @@ namespace VolleybalCompetition_creator
                 this.Invoke(new Action(() => state_OnMyChange(source, e)));
                 return;
             }
+            lock (klvv) ;
             objectListView1.BuildList(true);
             objectListView1.SelectObject(state.selectedConstraint);
             UpdateConflictCount();

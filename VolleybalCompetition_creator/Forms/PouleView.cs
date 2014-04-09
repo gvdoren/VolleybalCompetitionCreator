@@ -57,6 +57,7 @@ namespace VolleybalCompetition_creator
                 this.Invoke(new Action(() => state_OnMyChange(source, e)));
                 return;
             }
+            lock (klvv) ;
             // If dynamically the poule is removed.
             if (klvv.poules.Contains(poule) == false)
             {

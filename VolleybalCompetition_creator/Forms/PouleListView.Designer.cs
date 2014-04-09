@@ -46,6 +46,7 @@
             this.olvColumn2,
             this.olvColumn3});
             this.objectListView1.FullRowSelect = true;
+            this.objectListView1.HideSelection = false;
             this.objectListView1.Location = new System.Drawing.Point(0, -1);
             this.objectListView1.Name = "objectListView1";
             this.objectListView1.ShowGroups = false;
@@ -72,7 +73,6 @@
             this.olvColumn3.FillsFreeSpace = true;
             this.olvColumn3.MinimumWidth = 60;
             this.olvColumn3.Text = "Conflicts";
-            this.olvColumn3.Width = 50;
             // 
             // button1
             // 

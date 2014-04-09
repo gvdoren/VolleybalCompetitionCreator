@@ -28,19 +28,20 @@ namespace VolleybalCompetition_creator
             this.klvv = klvv;
             this.state = state;
             InitializeComponent();
-            objectListView1.SetObjects(klvv.series.Values);
+            objectListView1.SetObjects(klvv.series);
             foreach (string reeks in klvv.annorama.reeksen)
             {
                 comboBox1.Items.Add(reeks);
             }
             if (comboBox1.Items.Count > 0) comboBox1.SelectedIndex = 0;
             klvv.OnMyChange += state_OnMyChange;
-            firstHalf = File.ReadAllText(@"../../Data/html_first.html");
-            secondHalf = File.ReadAllText(@"../../Data/html_second.html");
+            firstHalf = File.ReadAllText(@"Data/html_first.html");
+            secondHalf = File.ReadAllText(@"Data/html_second.html");
             UpdateWebBrowser();
         }
         public void state_OnMyChange(object source, MyEventArgs e)
         {
+            lock (klvv) ;
             UpdateSerieList();
             UpdatePouleList();
             UpdateTeamList();
@@ -294,7 +295,7 @@ namespace VolleybalCompetition_creator
 
         private void button5_Click(object sender, EventArgs e)
         {
-            foreach(Serie serie in klvv.series.Values)
+            foreach(Serie serie in klvv.series)
             {
                 if (serie.optimizable)
                 {

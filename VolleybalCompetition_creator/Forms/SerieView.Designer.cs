@@ -220,7 +220,7 @@
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(120, 23);
             this.button4.TabIndex = 7;
-            this.button4.Text = "Optimize Team";
+            this.button4.Text = "Optimize Distance";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
@@ -275,7 +275,7 @@
             this.Controls.Add(this.objectListView1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "SerieView";
-            this.Text = "SerieView";
+            this.Text = "Poule manager";
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView3)).EndInit();

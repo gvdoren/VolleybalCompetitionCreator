@@ -46,6 +46,7 @@
             this.olvColumn1});
             this.objectListView1.FullRowSelect = true;
             this.objectListView1.HasCollapsibleGroups = false;
+            this.objectListView1.HideSelection = false;
             this.objectListView1.Location = new System.Drawing.Point(1, 1);
             this.objectListView1.Name = "objectListView1";
             this.objectListView1.Size = new System.Drawing.Size(282, 260);

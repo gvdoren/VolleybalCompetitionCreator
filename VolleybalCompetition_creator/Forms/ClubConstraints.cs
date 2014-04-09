@@ -24,6 +24,12 @@ namespace VolleybalCompetition_creator
             this.klvv = klvv;
             this.state = state;
             InitializeComponent();
+            comboBox2.Items.Add("Not shared");
+            foreach (Club cl in klvv.clubs)
+            {
+                comboBox2.Items.Add(cl);
+            }
+            comboBox2.SelectedIndex = 0;
             foreach (Club cl in klvv.clubs)
             {
                 comboBox1.Items.Add(cl);
@@ -99,6 +105,8 @@ namespace VolleybalCompetition_creator
         {
             objectListView1.SetObjects(club.teams);
             objectListView1.BuildList(true);
+            if (club.groupingWithClub == null) comboBox2.SelectedIndex = 0;
+            else comboBox2.SelectedItem = club.groupingWithClub;
         }
         private void dataGridView3_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -152,6 +160,25 @@ namespace VolleybalCompetition_creator
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             club.FreeFormatConstraints = textBox1.Text;
+        }
+
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (club != null)
+            {
+                if (comboBox2.SelectedIndex == 0)
+                {
+                    if (club.groupingWithClub != null) club.groupingWithClub.groupingWithClub = null;
+                    club.groupingWithClub = null;
+                }
+                else
+                {
+                    club.groupingWithClub = (Club)comboBox2.SelectedItem;
+                    club.groupingWithClub.groupingWithClub = club;
+                }
+                klvv.Evaluate(null);
+                klvv.Changed();
+            }
         }
     }
 }

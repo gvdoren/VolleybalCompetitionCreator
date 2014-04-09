@@ -28,37 +28,41 @@
         /// </summary>
         private void InitializeComponent()
         {
-            WeifenLuo.WinFormsUI.Docking.DockPanelSkin dockPanelSkin4 = new WeifenLuo.WinFormsUI.Docking.DockPanelSkin();
-            WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin autoHideStripSkin4 = new WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient10 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient22 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin dockPaneStripSkin4 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient dockPaneStripGradient4 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient23 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient11 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient24 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient dockPaneStripToolWindowGradient4 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient25 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient26 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient12 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient27 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient28 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPanelSkin dockPanelSkin15 = new WeifenLuo.WinFormsUI.Docking.DockPanelSkin();
+            WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin autoHideStripSkin15 = new WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient43 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient99 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin dockPaneStripSkin15 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient dockPaneStripGradient15 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient100 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient44 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient101 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient dockPaneStripToolWindowGradient15 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient102 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient103 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient45 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient104 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient105 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.invoerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.inschrijvingenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clubsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.seriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.invoerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.anoramaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.inschrijvingenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.seriesToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.constraintsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optimizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.constraintsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.externalCompetitionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.sporthallsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.registrationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.manageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.anoramaToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.poulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.subscriptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.vVBCompetitionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.kLVVCompetitionToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.reportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.perTypeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.perClubToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -71,58 +75,59 @@
             this.dockPanel.Location = new System.Drawing.Point(0, 27);
             this.dockPanel.Name = "dockPanel";
             this.dockPanel.Size = new System.Drawing.Size(640, 238);
-            dockPanelGradient10.EndColor = System.Drawing.SystemColors.ControlLight;
-            dockPanelGradient10.StartColor = System.Drawing.SystemColors.ControlLight;
-            autoHideStripSkin4.DockStripGradient = dockPanelGradient10;
-            tabGradient22.EndColor = System.Drawing.SystemColors.Control;
-            tabGradient22.StartColor = System.Drawing.SystemColors.Control;
-            tabGradient22.TextColor = System.Drawing.SystemColors.ControlDarkDark;
-            autoHideStripSkin4.TabGradient = tabGradient22;
-            autoHideStripSkin4.TextFont = new System.Drawing.Font("Segoe UI", 9F);
-            dockPanelSkin4.AutoHideStripSkin = autoHideStripSkin4;
-            tabGradient23.EndColor = System.Drawing.SystemColors.ControlLightLight;
-            tabGradient23.StartColor = System.Drawing.SystemColors.ControlLightLight;
-            tabGradient23.TextColor = System.Drawing.SystemColors.ControlText;
-            dockPaneStripGradient4.ActiveTabGradient = tabGradient23;
-            dockPanelGradient11.EndColor = System.Drawing.SystemColors.Control;
-            dockPanelGradient11.StartColor = System.Drawing.SystemColors.Control;
-            dockPaneStripGradient4.DockStripGradient = dockPanelGradient11;
-            tabGradient24.EndColor = System.Drawing.SystemColors.ControlLight;
-            tabGradient24.StartColor = System.Drawing.SystemColors.ControlLight;
-            tabGradient24.TextColor = System.Drawing.SystemColors.ControlText;
-            dockPaneStripGradient4.InactiveTabGradient = tabGradient24;
-            dockPaneStripSkin4.DocumentGradient = dockPaneStripGradient4;
-            dockPaneStripSkin4.TextFont = new System.Drawing.Font("Segoe UI", 9F);
-            tabGradient25.EndColor = System.Drawing.SystemColors.ActiveCaption;
-            tabGradient25.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient25.StartColor = System.Drawing.SystemColors.GradientActiveCaption;
-            tabGradient25.TextColor = System.Drawing.SystemColors.ActiveCaptionText;
-            dockPaneStripToolWindowGradient4.ActiveCaptionGradient = tabGradient25;
-            tabGradient26.EndColor = System.Drawing.SystemColors.Control;
-            tabGradient26.StartColor = System.Drawing.SystemColors.Control;
-            tabGradient26.TextColor = System.Drawing.SystemColors.ControlText;
-            dockPaneStripToolWindowGradient4.ActiveTabGradient = tabGradient26;
-            dockPanelGradient12.EndColor = System.Drawing.SystemColors.ControlLight;
-            dockPanelGradient12.StartColor = System.Drawing.SystemColors.ControlLight;
-            dockPaneStripToolWindowGradient4.DockStripGradient = dockPanelGradient12;
-            tabGradient27.EndColor = System.Drawing.SystemColors.InactiveCaption;
-            tabGradient27.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient27.StartColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            tabGradient27.TextColor = System.Drawing.SystemColors.InactiveCaptionText;
-            dockPaneStripToolWindowGradient4.InactiveCaptionGradient = tabGradient27;
-            tabGradient28.EndColor = System.Drawing.Color.Transparent;
-            tabGradient28.StartColor = System.Drawing.Color.Transparent;
-            tabGradient28.TextColor = System.Drawing.SystemColors.ControlDarkDark;
-            dockPaneStripToolWindowGradient4.InactiveTabGradient = tabGradient28;
-            dockPaneStripSkin4.ToolWindowGradient = dockPaneStripToolWindowGradient4;
-            dockPanelSkin4.DockPaneStripSkin = dockPaneStripSkin4;
-            this.dockPanel.Skin = dockPanelSkin4;
+            dockPanelGradient43.EndColor = System.Drawing.SystemColors.ControlLight;
+            dockPanelGradient43.StartColor = System.Drawing.SystemColors.ControlLight;
+            autoHideStripSkin15.DockStripGradient = dockPanelGradient43;
+            tabGradient99.EndColor = System.Drawing.SystemColors.Control;
+            tabGradient99.StartColor = System.Drawing.SystemColors.Control;
+            tabGradient99.TextColor = System.Drawing.SystemColors.ControlDarkDark;
+            autoHideStripSkin15.TabGradient = tabGradient99;
+            autoHideStripSkin15.TextFont = new System.Drawing.Font("Segoe UI", 9F);
+            dockPanelSkin15.AutoHideStripSkin = autoHideStripSkin15;
+            tabGradient100.EndColor = System.Drawing.SystemColors.ControlLightLight;
+            tabGradient100.StartColor = System.Drawing.SystemColors.ControlLightLight;
+            tabGradient100.TextColor = System.Drawing.SystemColors.ControlText;
+            dockPaneStripGradient15.ActiveTabGradient = tabGradient100;
+            dockPanelGradient44.EndColor = System.Drawing.SystemColors.Control;
+            dockPanelGradient44.StartColor = System.Drawing.SystemColors.Control;
+            dockPaneStripGradient15.DockStripGradient = dockPanelGradient44;
+            tabGradient101.EndColor = System.Drawing.SystemColors.ControlLight;
+            tabGradient101.StartColor = System.Drawing.SystemColors.ControlLight;
+            tabGradient101.TextColor = System.Drawing.SystemColors.ControlText;
+            dockPaneStripGradient15.InactiveTabGradient = tabGradient101;
+            dockPaneStripSkin15.DocumentGradient = dockPaneStripGradient15;
+            dockPaneStripSkin15.TextFont = new System.Drawing.Font("Segoe UI", 9F);
+            tabGradient102.EndColor = System.Drawing.SystemColors.ActiveCaption;
+            tabGradient102.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
+            tabGradient102.StartColor = System.Drawing.SystemColors.GradientActiveCaption;
+            tabGradient102.TextColor = System.Drawing.SystemColors.ActiveCaptionText;
+            dockPaneStripToolWindowGradient15.ActiveCaptionGradient = tabGradient102;
+            tabGradient103.EndColor = System.Drawing.SystemColors.Control;
+            tabGradient103.StartColor = System.Drawing.SystemColors.Control;
+            tabGradient103.TextColor = System.Drawing.SystemColors.ControlText;
+            dockPaneStripToolWindowGradient15.ActiveTabGradient = tabGradient103;
+            dockPanelGradient45.EndColor = System.Drawing.SystemColors.ControlLight;
+            dockPanelGradient45.StartColor = System.Drawing.SystemColors.ControlLight;
+            dockPaneStripToolWindowGradient15.DockStripGradient = dockPanelGradient45;
+            tabGradient104.EndColor = System.Drawing.SystemColors.InactiveCaption;
+            tabGradient104.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
+            tabGradient104.StartColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            tabGradient104.TextColor = System.Drawing.SystemColors.InactiveCaptionText;
+            dockPaneStripToolWindowGradient15.InactiveCaptionGradient = tabGradient104;
+            tabGradient105.EndColor = System.Drawing.Color.Transparent;
+            tabGradient105.StartColor = System.Drawing.Color.Transparent;
+            tabGradient105.TextColor = System.Drawing.SystemColors.ControlDarkDark;
+            dockPaneStripToolWindowGradient15.InactiveTabGradient = tabGradient105;
+            dockPaneStripSkin15.ToolWindowGradient = dockPaneStripToolWindowGradient15;
+            dockPanelSkin15.DockPaneStripSkin = dockPaneStripSkin15;
+            this.dockPanel.Skin = dockPanelSkin15;
             this.dockPanel.TabIndex = 0;
             // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.invoerToolStripMenuItem,
+            this.manageToolStripMenuItem,
             this.viewsToolStripMenuItem,
             this.aboutToolStripMenuItem,
             this.optimizeToolStripMenuItem});
@@ -132,12 +137,30 @@
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
+            // invoerToolStripMenuItem
+            // 
+            this.invoerToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.inschrijvingenToolStripMenuItem,
+            this.vVBCompetitionToolStripMenuItem,
+            this.kLVVCompetitionToolStripMenuItem1});
+            this.invoerToolStripMenuItem.Name = "invoerToolStripMenuItem";
+            this.invoerToolStripMenuItem.Size = new System.Drawing.Size(45, 20);
+            this.invoerToolStripMenuItem.Text = "Load";
+            // 
+            // inschrijvingenToolStripMenuItem
+            // 
+            this.inschrijvingenToolStripMenuItem.Name = "inschrijvingenToolStripMenuItem";
+            this.inschrijvingenToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.inschrijvingenToolStripMenuItem.Text = "Club subscriptions";
+            this.inschrijvingenToolStripMenuItem.Click += new System.EventHandler(this.inschrijvingenToolStripMenuItem_Click);
+            // 
             // viewsToolStripMenuItem
             // 
             this.viewsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.clubsToolStripMenuItem,
             this.seriesToolStripMenuItem,
-            this.constraintsToolStripMenuItem});
+            this.constraintsToolStripMenuItem,
+            this.reportToolStripMenuItem});
             this.viewsToolStripMenuItem.Name = "viewsToolStripMenuItem";
             this.viewsToolStripMenuItem.Size = new System.Drawing.Size(66, 20);
             this.viewsToolStripMenuItem.Text = "Conflicts";
@@ -145,48 +168,23 @@
             // clubsToolStripMenuItem
             // 
             this.clubsToolStripMenuItem.Name = "clubsToolStripMenuItem";
-            this.clubsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.clubsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.clubsToolStripMenuItem.Text = "Clubs";
             this.clubsToolStripMenuItem.Click += new System.EventHandler(this.clubsToolStripMenuItem_Click);
             // 
             // seriesToolStripMenuItem
             // 
             this.seriesToolStripMenuItem.Name = "seriesToolStripMenuItem";
-            this.seriesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.seriesToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.seriesToolStripMenuItem.Text = "Poules";
             this.seriesToolStripMenuItem.Click += new System.EventHandler(this.seriesToolStripMenuItem_Click);
             // 
-            // invoerToolStripMenuItem
+            // constraintsToolStripMenuItem
             // 
-            this.invoerToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.anoramaToolStripMenuItem,
-            this.inschrijvingenToolStripMenuItem,
-            this.seriesToolStripMenuItem1,
-            this.importToolStripMenuItem});
-            this.invoerToolStripMenuItem.Name = "invoerToolStripMenuItem";
-            this.invoerToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
-            this.invoerToolStripMenuItem.Text = "Input";
-            // 
-            // anoramaToolStripMenuItem
-            // 
-            this.anoramaToolStripMenuItem.Name = "anoramaToolStripMenuItem";
-            this.anoramaToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.anoramaToolStripMenuItem.Text = "Anorama";
-            this.anoramaToolStripMenuItem.Click += new System.EventHandler(this.anoramaToolStripMenuItem_Click);
-            // 
-            // inschrijvingenToolStripMenuItem
-            // 
-            this.inschrijvingenToolStripMenuItem.Name = "inschrijvingenToolStripMenuItem";
-            this.inschrijvingenToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.inschrijvingenToolStripMenuItem.Text = "Teams";
-            this.inschrijvingenToolStripMenuItem.Click += new System.EventHandler(this.inschrijvingenToolStripMenuItem_Click);
-            // 
-            // seriesToolStripMenuItem1
-            // 
-            this.seriesToolStripMenuItem1.Name = "seriesToolStripMenuItem1";
-            this.seriesToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
-            this.seriesToolStripMenuItem1.Text = "Poules";
-            this.seriesToolStripMenuItem1.Click += new System.EventHandler(this.seriesToolStripMenuItem1_Click);
+            this.constraintsToolStripMenuItem.Name = "constraintsToolStripMenuItem";
+            this.constraintsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.constraintsToolStripMenuItem.Text = "Constraints";
+            this.constraintsToolStripMenuItem.Click += new System.EventHandler(this.constraintsToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
             // 
@@ -203,40 +201,74 @@
             this.optimizeToolStripMenuItem.Text = "Optimize";
             this.optimizeToolStripMenuItem.Click += new System.EventHandler(this.optimizeToolStripMenuItem_Click);
             // 
-            // constraintsToolStripMenuItem
+            // manageToolStripMenuItem
             // 
-            this.constraintsToolStripMenuItem.Name = "constraintsToolStripMenuItem";
-            this.constraintsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.constraintsToolStripMenuItem.Text = "Constraints";
-            this.constraintsToolStripMenuItem.Click += new System.EventHandler(this.constraintsToolStripMenuItem_Click);
+            this.manageToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.anoramaToolStripMenuItem1,
+            this.poulesToolStripMenuItem,
+            this.subscriptionsToolStripMenuItem});
+            this.manageToolStripMenuItem.Name = "manageToolStripMenuItem";
+            this.manageToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+            this.manageToolStripMenuItem.Text = "Edit";
             // 
-            // importToolStripMenuItem
+            // anoramaToolStripMenuItem1
             // 
-            this.importToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.externalCompetitionToolStripMenuItem,
-            this.sporthallsToolStripMenuItem,
-            this.registrationsToolStripMenuItem});
-            this.importToolStripMenuItem.Name = "importToolStripMenuItem";
-            this.importToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.importToolStripMenuItem.Text = "Import";
+            this.anoramaToolStripMenuItem1.Name = "anoramaToolStripMenuItem1";
+            this.anoramaToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.anoramaToolStripMenuItem1.Text = "Anorama";
+            this.anoramaToolStripMenuItem1.Click += new System.EventHandler(this.anoramaToolStripMenuItem1_Click);
             // 
-            // externalCompetitionToolStripMenuItem
+            // poulesToolStripMenuItem
             // 
-            this.externalCompetitionToolStripMenuItem.Name = "externalCompetitionToolStripMenuItem";
-            this.externalCompetitionToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-            this.externalCompetitionToolStripMenuItem.Text = "External competition";
+            this.poulesToolStripMenuItem.Name = "poulesToolStripMenuItem";
+            this.poulesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.poulesToolStripMenuItem.Text = "Poules";
+            this.poulesToolStripMenuItem.Click += new System.EventHandler(this.poulesToolStripMenuItem_Click);
             // 
-            // sporthallsToolStripMenuItem
+            // subscriptionsToolStripMenuItem
             // 
-            this.sporthallsToolStripMenuItem.Name = "sporthallsToolStripMenuItem";
-            this.sporthallsToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-            this.sporthallsToolStripMenuItem.Text = "Sporthalls";
+            this.subscriptionsToolStripMenuItem.Name = "subscriptionsToolStripMenuItem";
+            this.subscriptionsToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.subscriptionsToolStripMenuItem.Text = "Club Subscriptions";
+            this.subscriptionsToolStripMenuItem.Click += new System.EventHandler(this.subscriptionsToolStripMenuItem_Click);
             // 
-            // registrationsToolStripMenuItem
+            // vVBCompetitionToolStripMenuItem
             // 
-            this.registrationsToolStripMenuItem.Name = "registrationsToolStripMenuItem";
-            this.registrationsToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-            this.registrationsToolStripMenuItem.Text = "Teams";
+            this.vVBCompetitionToolStripMenuItem.Name = "vVBCompetitionToolStripMenuItem";
+            this.vVBCompetitionToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.vVBCompetitionToolStripMenuItem.Text = "VVB competition";
+            this.vVBCompetitionToolStripMenuItem.Click += new System.EventHandler(this.vVBCompetitionToolStripMenuItem_Click);
+            // 
+            // kLVVCompetitionToolStripMenuItem1
+            // 
+            this.kLVVCompetitionToolStripMenuItem1.Name = "kLVVCompetitionToolStripMenuItem1";
+            this.kLVVCompetitionToolStripMenuItem1.Size = new System.Drawing.Size(172, 22);
+            this.kLVVCompetitionToolStripMenuItem1.Text = "KLVV competition";
+            this.kLVVCompetitionToolStripMenuItem1.Click += new System.EventHandler(this.kLVVCompetitionToolStripMenuItem1_Click);
+            // 
+            // reportToolStripMenuItem
+            // 
+            this.reportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.perTypeToolStripMenuItem,
+            this.perClubToolStripMenuItem});
+            this.reportToolStripMenuItem.Name = "reportToolStripMenuItem";
+            this.reportToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.reportToolStripMenuItem.Text = "Report";
+            this.reportToolStripMenuItem.Click += new System.EventHandler(this.reportToolStripMenuItem_Click);
+            // 
+            // perTypeToolStripMenuItem
+            // 
+            this.perTypeToolStripMenuItem.Name = "perTypeToolStripMenuItem";
+            this.perTypeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.perTypeToolStripMenuItem.Text = "Per type";
+            this.perTypeToolStripMenuItem.Click += new System.EventHandler(this.perTypeToolStripMenuItem_Click);
+            // 
+            // perClubToolStripMenuItem
+            // 
+            this.perClubToolStripMenuItem.Name = "perClubToolStripMenuItem";
+            this.perClubToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.perClubToolStripMenuItem.Text = "Per club";
+            this.perClubToolStripMenuItem.Click += new System.EventHandler(this.perClubToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -264,15 +296,19 @@
         private System.Windows.Forms.ToolStripMenuItem seriesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem optimizeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem invoerToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem anoramaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem inschrijvingenToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem seriesToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem constraintsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem importToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem externalCompetitionToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem sporthallsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem registrationsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem manageToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem anoramaToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem poulesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem subscriptionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem vVBCompetitionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem kLVVCompetitionToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem reportToolStripMenuItem;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.ToolStripMenuItem perTypeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem perClubToolStripMenuItem;
     }
 }
 

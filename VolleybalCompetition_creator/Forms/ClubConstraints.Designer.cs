@@ -38,12 +38,15 @@
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label4 = new System.Windows.Forms.Label();
+            this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.objectListView1 = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn5 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn6 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -158,6 +161,8 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.label4);
+            this.tabPage3.Controls.Add(this.comboBox2);
             this.tabPage3.Controls.Add(this.objectListView1);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
@@ -167,6 +172,24 @@
             this.tabPage3.Text = "Teams";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(8, 11);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(369, 13);
+            this.label4.TabIndex = 2;
+            this.label4.Text = "Groups are defined together with another Club (e.g. when sharing a sporthal):";
+            // 
+            // comboBox2
+            // 
+            this.comboBox2.FormattingEnabled = true;
+            this.comboBox2.Location = new System.Drawing.Point(7, 30);
+            this.comboBox2.Name = "comboBox2";
+            this.comboBox2.Size = new System.Drawing.Size(356, 21);
+            this.comboBox2.TabIndex = 1;
+            this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
+            // 
             // objectListView1
             // 
             this.objectListView1.AllColumns.Add(this.olvColumn1);
@@ -174,21 +197,24 @@
             this.objectListView1.AllColumns.Add(this.olvColumn4);
             this.objectListView1.AllColumns.Add(this.olvColumn3);
             this.objectListView1.AllColumns.Add(this.olvColumn5);
-            this.objectListView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)));
+            this.objectListView1.AllColumns.Add(this.olvColumn6);
+            this.objectListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.objectListView1.CellEditActivation = BrightIdeasSoftware.ObjectListView.CellEditActivateMode.SingleClick;
             this.objectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumn1,
             this.olvColumn2,
             this.olvColumn4,
             this.olvColumn3,
-            this.olvColumn5});
+            this.olvColumn5,
+            this.olvColumn6});
             this.objectListView1.GridLines = true;
             this.objectListView1.HasCollapsibleGroups = false;
-            this.objectListView1.Location = new System.Drawing.Point(8, 7);
+            this.objectListView1.Location = new System.Drawing.Point(3, 70);
             this.objectListView1.Name = "objectListView1";
             this.objectListView1.ShowGroups = false;
-            this.objectListView1.Size = new System.Drawing.Size(389, 458);
+            this.objectListView1.Size = new System.Drawing.Size(935, 398);
             this.objectListView1.TabIndex = 0;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
@@ -196,10 +222,10 @@
             // 
             // olvColumn1
             // 
-            this.olvColumn1.AspectName = "seriePouleName";
+            this.olvColumn1.AspectName = "serie.name";
             this.olvColumn1.CellPadding = null;
             this.olvColumn1.IsEditable = false;
-            this.olvColumn1.Text = "Serie - Poule";
+            this.olvColumn1.Text = "Serie";
             // 
             // olvColumn2
             // 
@@ -227,6 +253,14 @@
             this.olvColumn5.AspectName = "defaultTime";
             this.olvColumn5.CellPadding = null;
             this.olvColumn5.Text = "Tijd";
+            // 
+            // olvColumn6
+            // 
+            this.olvColumn6.AspectName = "sporthal.name";
+            this.olvColumn6.CellPadding = null;
+            this.olvColumn6.FillsFreeSpace = true;
+            this.olvColumn6.Text = "Sporthal";
+            this.olvColumn6.Width = 100;
             // 
             // tabPage2
             // 
@@ -293,7 +327,7 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // ClubConstraints
+            // InschrijvingenView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -302,7 +336,7 @@
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.tabControl1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Name = "ClubConstraints";
+            this.Name = "InschrijvingenView";
             this.Text = "ClubConstraints";
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
@@ -310,6 +344,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
@@ -341,5 +376,8 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBox1;
+        private BrightIdeasSoftware.OLVColumn olvColumn6;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ComboBox comboBox2;
     }
 }

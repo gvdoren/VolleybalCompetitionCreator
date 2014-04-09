@@ -40,6 +40,7 @@ namespace VolleybalCompetition_creator
             {
                 objectListView1.SetObjects(klvv.poules);
             }*/
+            lock (klvv) ;
             objectListView1.SetObjects(klvv.poules);
             objectListView1.BuildList(true);
             Refresh();
@@ -57,9 +58,9 @@ namespace VolleybalCompetition_creator
             {
                 Poule poule = (Poule)modelObject;
                 if (state.selectedClubs.Count == 0) return true;
-                foreach (Match match in poule.matches)
+                foreach (Team team in poule.teams)
                 {
-                    if (state.selectedClubs.Contains(match.homeTeam.club))
+                    if (state.selectedClubs.Contains(team.club))
                     {
                         return true;
                     }

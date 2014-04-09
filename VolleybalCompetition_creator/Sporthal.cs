@@ -13,7 +13,8 @@ namespace VolleybalCompetition_creator
         public int id { get; set; }
         public List<DateTime> NotAvailable = new List<DateTime>();
         public SortedList<int, int> distance = new SortedList<int, int>();
-        public Sporthal(int id, string name,Club club)
+        public List<Club> clubs = new List<Club>();
+        public Sporthal(int id, string name)
         {
             this.name = name;
             this.id = id;
