@@ -41,6 +41,11 @@ namespace VolleybalCompetition_creator
         }
         public void state_OnMyChange(object source, MyEventArgs e)
         {
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action(() => state_OnMyChange(source, e)));
+                return;
+            }
             lock (klvv) ;
             UpdateSerieList();
             UpdatePouleList();
@@ -183,6 +188,8 @@ namespace VolleybalCompetition_creator
 
             UpdateSerieList();
             UpdatePouleList();
+            klvv.RenewConstraints();
+            klvv.Evaluate(null);
             klvv.Changed();
         }
 
@@ -209,6 +216,8 @@ namespace VolleybalCompetition_creator
                 int teamCount = int.Parse(comboBox1.SelectedItem.ToString());
                 poule.CreateMatches(teamCount);
                 klvv.poules.Add(poule);
+                klvv.RenewConstraints();
+                klvv.Evaluate(null);
                 klvv.Changed();
             }
         }
@@ -224,6 +233,8 @@ namespace VolleybalCompetition_creator
                 }
                 team.poule = poule;
             }
+            klvv.RenewConstraints();
+            klvv.Evaluate(null);
             klvv.Changed();
         }
 
@@ -290,6 +301,8 @@ namespace VolleybalCompetition_creator
                     
                 }
             }
+            klvv.RenewConstraints();
+            klvv.Evaluate(null);
             klvv.Changed();
         }
 
@@ -304,6 +317,10 @@ namespace VolleybalCompetition_creator
                         int teamCount = poule.teams.Count;
                         while (teamCount != 6 && teamCount != 10 && teamCount != 12 && teamCount != 14) teamCount++;
                         List<Weekend> weekends = klvv.annorama.GetReeks(teamCount.ToString());
+                        if (weekends.Count < (teamCount - 1) * 2)
+                        {
+                            System.Windows.Forms.MessageBox.Show("Number of weekends not sufficient for number of teams");
+                        }
                         poule.weekends.Clear();
                         foreach (Weekend we in weekends)
                         {
@@ -311,6 +328,8 @@ namespace VolleybalCompetition_creator
                         }
                         poule.matches.Clear();
                         poule.CreateMatches(teamCount);
+                        klvv.RenewConstraints();
+                        klvv.Evaluate(null);
                         klvv.Changed();
 
                     }

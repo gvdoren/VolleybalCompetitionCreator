@@ -50,22 +50,20 @@ namespace VolleybalCompetition_creator
         public List<Match> conflictMatches = new List<Match>();
         protected void AddConflictMatch(params Match[] matches) 
         {
-            
-            for ( int i = 0 ; i < matches.Length ; i++ )
+
+            for (int i = 0; i < matches.Length; i++)
             {
-                if (matches[i].visitorTeam.name != "---")
-                {
-                    conflictMatches.Add(matches[i]);
-                    conflict += cost;
-                    matches[i].AddConflict(this);
-                    matches[i].Weekend.AddConflict(this);
-                    matches[i].poule.AddConflict(this);
-                    matches[i].poule.serie.AddConflict(this);
-                    matches[i].homeTeam.AddConflict(this);
-                    if (VisitorAlso) matches[i].visitorTeam.AddConflict(this);
-                    matches[i].homeTeam.club.AddConflict(this);
-                    if (matches[i].homeTeam.club != matches[i].visitorTeam.club && VisitorAlso) matches[i].visitorTeam.club.AddConflict(this);
-                }
+                conflictMatches.Add(matches[i]);
+                conflict += cost;
+                matches[i].AddConflict(this);
+                matches[i].Weekend.AddConflict(this);
+                matches[i].poule.AddConflict(this);
+                matches[i].poule.serie.AddConflict(this);
+                matches[i].homeTeam.AddConflict(this);
+                if (VisitorAlso) matches[i].visitorTeam.AddConflict(this);
+                matches[i].homeTeam.club.AddConflict(this);
+                if (matches[i].homeTeam.club != matches[i].visitorTeam.club && VisitorAlso) matches[i].visitorTeam.club.AddConflict(this);
+
             }
         }
     }
@@ -101,7 +99,10 @@ namespace VolleybalCompetition_creator
                             foreach (Match match in poule.matches)
                             {
                                 DateTime dt = match.datetime.Date;
-                                if (match.homeTeam.sporthal != null && match.homeTeam.sporthal == sporthal && match.homeTeam.sporthal.NotAvailable.Contains(dt) == true)
+                                if (match.homeTeam.sporthal != null && 
+                                    match.homeTeam.sporthal == sporthal && 
+                                    match.homeTeam.sporthal.NotAvailable.Contains(dt) == true &&
+                                    match.visitorTeam.name != "---")
                                 {
                                     this.AddConflictMatch(match);
                                 }
@@ -151,7 +152,10 @@ namespace VolleybalCompetition_creator
                         {
                             Match match1 = poule.matches[m1];
                             Match match2 = poule.matches[m2];
-                            if (match1.homeTeam == match2.visitorTeam && match1.visitorTeam == match2.homeTeam)
+                            if (match1.homeTeam == match2.visitorTeam && 
+                                match1.visitorTeam == match2.homeTeam &&
+                                match1.homeTeam.name != "---" &&
+                                match1.visitorTeam.name != "---")
                             {
                                 if ((match2.datetime - match1.datetime).TotalDays < poule.teams.Count*4)
                                 {
@@ -182,7 +186,8 @@ namespace VolleybalCompetition_creator
         public override void Evaluate(Klvv klvv, Poule poule)
         {
             List<Team> listTeams = new List<Team>(team1.club.teams);
-            if (club.groupingWithClub != null) listTeams.AddRange(club.groupingWithClub.teams);
+            if (club.groupingWithClub != null) 
+                listTeams.AddRange(club.groupingWithClub.teams);
             conflict = 0;
             conflictMatches.Clear();
             if (poule != null && team1.poule != poule) return;
@@ -191,8 +196,11 @@ namespace VolleybalCompetition_creator
             {
                 if (poule1.serie.constraintsHold)
                 {
+                    List<Match> team1Matches = team1.poule.matches.FindAll(m => m.homeTeam == team1);
+                    team1Matches.Sort(delegate(Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
                     foreach (Team team2 in listTeams)
                     {
+                    
                         if (team2.poule != null)
                         {
                             if (team2.poule.serie.constraintsHold)
@@ -201,13 +209,18 @@ namespace VolleybalCompetition_creator
                                    (team1.group == TeamGroups.GroupB && team2.group == TeamGroups.GroupA)
                                     )
                                 {
+                                    List<Match> team2Matches = team2.poule.matches.FindAll(m => m.homeTeam == team2);
+                                    team2Matches.Sort(delegate(Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
+
                                     Poule poule2 = team2.poule;
                                     int i1 = 0;
                                     int i2 = 0;
-                                    while (i1 < poule1.matches.Count && i2 < poule2.matches.Count)
+
+
+                                    while (i1 < team1Matches.Count && i2 < team2Matches.Count)
                                     {
-                                        Match m1 = poule1.matches[i1];
-                                        Match m2 = poule2.matches[i2];
+                                        Match m1 = team1Matches[i1];
+                                        Match m2 = team2Matches[i2];
                                         if (m1.datetime.Date < m2.datetime.Date)
                                         {
                                             i1++;
@@ -216,9 +229,9 @@ namespace VolleybalCompetition_creator
                                         {
                                             i2++;
                                         }
-                                        else
+                                        else 
                                         {
-                                            if (m1.homeTeam == team1 && m2.homeTeam == team2)
+                                            if (m1.visitorTeam.name != "---" && m2.visitorTeam.name != "---")
                                             {
                                                 this.AddConflictMatch(m1, m2);
                                             }

@@ -51,6 +51,7 @@ namespace VolleybalCompetition_creator
 
         private void tabControl1_Selected(object sender, TabControlEventArgs e)
         {
+            lock (klvv) ;
             if (e.TabPage == tabPage1) UpdateTabPage1();
             if (e.TabPage == tabPage2) UpdateTabPage2();
         }

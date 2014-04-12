@@ -67,6 +67,7 @@ namespace VolleybalCompetition_creator
                                     minConflict = conflict;
                                 }
                                 Swap(weekends, i, j);
+
                             }
                             weekends = new List<Weekend>(result);
                         }
