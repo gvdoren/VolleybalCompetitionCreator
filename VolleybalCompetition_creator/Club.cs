@@ -11,7 +11,6 @@ namespace VolleybalCompetition_creator
     public class Club: ConstraintAdmin
     {
         public List<Team> teams = new List<Team>();
-        public List<Serie> series = new List<Serie>();
         public List<Sporthal> sporthalls = new List<Sporthal>();
         public Club groupingWithClub = null;
         public string FreeFormatConstraints = "";
@@ -19,6 +18,7 @@ namespace VolleybalCompetition_creator
         public string name { get; set; }
         public bool ConstraintAllInOneWeekend = false;
         public bool ConstraintNotAtTheSameTime = false;
+        public bool Dirty = true;
         public static Club CreateNullClub()
         {
             Club club = new Club();

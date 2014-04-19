@@ -27,6 +27,12 @@ namespace VolleybalCompetition_creator
         }
         public void state_OnMyChange(object source, MyEventArgs e)
         {
+            if (e.klvv != null)
+            {
+                klvv.OnMyChange -= state_OnMyChange;
+                klvv = e.klvv;
+                klvv.OnMyChange += state_OnMyChange;
+            }
             if (InvokeRequired)
             {
                 this.Invoke(new Action(() => state_OnMyChange(source, e)));
@@ -51,29 +57,42 @@ namespace VolleybalCompetition_creator
 
         private void tabControl1_Selected(object sender, TabControlEventArgs e)
         {
-            lock (klvv) ;
-            if (e.TabPage == tabPage1) UpdateTabPage1();
-            if (e.TabPage == tabPage2) UpdateTabPage2();
+            try
+            {
+                lock (klvv) ;
+                if (e.TabPage == tabPage1) UpdateTabPage1();
+                if (e.TabPage == tabPage2) UpdateTabPage2();
+            }
+            catch { }
         }
         private void UpdateTabPage1()
         {
             richTextBox1.Clear();
-            this.Text = constraint.Title;
-            foreach (string str in constraint.GetTextDescription())
+            if (constraint != null)
             {
-                richTextBox1.AppendText(str + Environment.NewLine);
+                this.Text = constraint.Title;
+                foreach (string str in constraint.GetTextDescription())
+                {
+                    richTextBox1.AppendText(str + Environment.NewLine);
+                }
             }
         }
         private void UpdateTabPage2()
         {
-            objectListView1.SetObjects(constraint.conflictMatches);
-            this.Text = constraint.Title;
-            label1.Text = "Conflict wedstrijden (" + constraint.conflictMatches.Count.ToString() + ")";
-            objectListView1.BuildList(true);
-            richTextBox2.Clear();
-            foreach (string str in constraint.GetTextDescription())
+            objectListView1.ClearObjects();
+            label1.Text = "";
+            this.Text = "No conflicts selected";
+            if (constraint != null)
             {
-                richTextBox2.AppendText(str + Environment.NewLine);
+                objectListView1.Objects = constraint.conflictMatches;
+                this.Text = constraint.Title;
+                label1.Text = "Conflict wedstrijden (" + constraint.conflictMatches.Count.ToString() + ")";
+                objectListView1.BuildList(false);
+                richTextBox2.Clear();
+                foreach (string str in constraint.GetTextDescription())
+                {
+                    richTextBox2.AppendText(str + Environment.NewLine);
+                }
             }
         }
 

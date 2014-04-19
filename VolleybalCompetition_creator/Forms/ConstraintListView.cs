@@ -30,14 +30,34 @@ namespace VolleybalCompetition_creator
         }
         public void state_OnMyChange(object source, MyEventArgs e)
         {
+            if (e.klvv != null)
+            {
+                klvv.OnMyChange -= state_OnMyChange;
+                klvv = e.klvv;
+                klvv.OnMyChange += state_OnMyChange;
+            }
             if (InvokeRequired)
             {
                 this.Invoke(new Action(() => state_OnMyChange(source, e)));
                 return;
             }
             lock (klvv) ;
-            objectListView1.BuildList(true);
-            objectListView1.SelectObject(state.selectedConstraint);
+            if (state.showConstraints.Contains(state.selectedConstraint) == false)
+            {
+                if (state.showConstraints.Count > 0)
+                {
+
+                    state.selectedConstraint = state.showConstraints[0];
+                    objectListView1.SelectObject(state.selectedConstraint);
+                }
+                else
+                {
+                    state.selectedConstraint = null;
+                    objectListView1.SelectedObjects.Clear();
+                }
+            }
+            objectListView1.BuildList(false);
+            objectListView1_SelectionChanged(null, null);
             UpdateConflictCount();
          }
         private void UpdateConflictCount()
@@ -105,29 +125,27 @@ namespace VolleybalCompetition_creator
         {
             ConstraintView constraintView = null;
             Constraint constraint = objectListView1.SelectedObject as Constraint;
-            if (constraint != null)
+            //this.DockPanel.
+            // check whether the PouleView is already existing
+            foreach (DockContent content in this.DockPanel.Contents)
             {
-                //this.DockPanel.
-                // check whether the PouleView is already existing
-                foreach (DockContent content in this.DockPanel.Contents)
+                ConstraintView temp = content as ConstraintView;
+                if (temp != null)
                 {
-                    ConstraintView temp = content as ConstraintView;
-                    if (temp != null)
-                    {
-                        constraintView = temp;
-                        constraintView.Activate();
+                    constraintView = temp;
+                    constraintView.Activate();
 
-                    }
                 }
-                if (constraintView == null)
-                {
-                    constraintView = new ConstraintView(klvv, state);
-                    constraintView.Show(Pane, DockAlignment.Bottom, 0.45);
-                }
-                // Show the correct constraint
-                constraintView.Show("matchView", constraint);
-                state.selectedConstraint = constraint;
             }
+            if (constraintView == null)
+            {
+                constraintView = new ConstraintView(klvv, state);
+                constraintView.Show(Pane, DockAlignment.Bottom, 0.45);
+            }
+            // Show the correct constraint
+            constraintView.Show("matchView", constraint);
+            state.selectedConstraint = constraint;
+
         }
 
         private void ConstraintListView_FormClosed(object sender, FormClosedEventArgs e)

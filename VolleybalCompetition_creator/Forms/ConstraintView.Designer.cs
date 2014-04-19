@@ -44,6 +44,7 @@
             this.olvColumn5 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn6 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn7 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn8 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -149,6 +150,7 @@
             this.objectListView1.AllColumns.Add(this.olvColumn5);
             this.objectListView1.AllColumns.Add(this.olvColumn6);
             this.objectListView1.AllColumns.Add(this.olvColumn7);
+            this.objectListView1.AllColumns.Add(this.olvColumn8);
             this.objectListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
@@ -159,11 +161,13 @@
             this.olvColumn4,
             this.olvColumn5,
             this.olvColumn6,
-            this.olvColumn7});
+            this.olvColumn7,
+            this.olvColumn8});
             this.objectListView1.FullRowSelect = true;
             this.objectListView1.Location = new System.Drawing.Point(0, 20);
             this.objectListView1.Name = "objectListView1";
             this.objectListView1.Size = new System.Drawing.Size(279, 142);
+            this.objectListView1.SortGroupItemsByPrimaryColumn = false;
             this.objectListView1.TabIndex = 0;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
@@ -224,6 +228,12 @@
             this.olvColumn7.Text = "Poule";
             this.olvColumn7.Width = 30;
             // 
+            // olvColumn8
+            // 
+            this.olvColumn8.AspectName = "homeTeam.group";
+            this.olvColumn8.CellPadding = null;
+            this.olvColumn8.Text = "Group";
+            // 
             // ConstraintView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -260,6 +270,7 @@
         private BrightIdeasSoftware.OLVColumn olvColumn7;
         private System.Windows.Forms.RichTextBox richTextBox2;
         private System.Windows.Forms.Label label2;
+        private BrightIdeasSoftware.OLVColumn olvColumn8;
 
     }
 }

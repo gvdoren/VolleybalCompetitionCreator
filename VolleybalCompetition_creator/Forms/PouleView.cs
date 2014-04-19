@@ -52,6 +52,12 @@ namespace VolleybalCompetition_creator
         }
         public void state_OnMyChange(object source, MyEventArgs e)
         {
+            if (e.klvv != null)
+            {
+                klvv.OnMyChange -= state_OnMyChange;
+                klvv = e.klvv;
+                klvv.OnMyChange += state_OnMyChange;
+            }
             if (InvokeRequired)
             {
                 this.Invoke(new Action(() => state_OnMyChange(source, e)));
@@ -78,6 +84,7 @@ namespace VolleybalCompetition_creator
             {
                 selectedMatches.Add((Match)obj);
             }
+            objectListView2.Objects = poule.matches;
             objectListView2.BuildList(true);
             objectListView2.SelectedObjects = selectedMatches;
             foreach (Object obj in objectListView3.SelectedObjects)
@@ -94,68 +101,6 @@ namespace VolleybalCompetition_creator
         }
        
 
-        private void objectListView1_ModelCanDrop(object sender, BrightIdeasSoftware.ModelDropEventArgs e)
-        {
-            e.Effect = DragDropEffects.None;
-            if (e.SourceModels.Count >= 1)
-            {
-                Team team = e.SourceModels[0] as Team;
-                if (team != null)
-                {
-                    if (team.poule.serie == poule.serie)
-                    {
-                        e.Effect = DragDropEffects.Move;
-                    }
-                    else
-                    {
-                        e.InfoMessage = "Een team kan alleen naar een poule van dezelfde reeks worden gesleept";
-                    }
-                }
-            }
-
-        }
-
-        private void objectListView1_ModelDropped(object sender, BrightIdeasSoftware.ModelDropEventArgs e)
-        {
-            if (e.SourceModels.Count >= 1)
-            {
-                Team team = e.SourceModels[0] as Team;
-                if (team != null)
-                {
-                    if (e.DropTargetIndex>=0)
-                    {
-                        int offset = 0;
-                        e.SourceListView.RemoveObjects(e.SourceModels);
-                        if (e.DropTargetLocation == DropTargetLocation.BelowItem) offset = 1;
-                        objectListView1.InsertObjects(e.DropTargetIndex+offset, e.SourceModels);
-                        foreach (Team t in e.SourceModels)
-                        {
-                            t.poule = poule;
-                        } 
-                        objectListView1.SelectedIndex = e.DropTargetIndex + offset;
-                        objectListView1.BuildList();
-                        //objectListView1.SelectedObjects = e.SourceModels;
-                        if (e.SourceListView != objectListView1)
-                        {
-                            // remove the team from another poule in the series
-                            foreach (Poule p in poule.serie.poules.Values)
-                            {
-                                if (p != poule)
-                                {
-                                    foreach(Team t in e.SourceModels)
-                                    {
-                                        p.teams.Remove(t);
-                                    }
-                                }
-                            }
-                        }
-                        updateMatches();
-                    }
-                }
-            }
-
-            
-        }
 
         private void objectListView1_FormatRow(object sender, FormatRowEventArgs e)
         {
@@ -174,89 +119,71 @@ namespace VolleybalCompetition_creator
         {
             if (objectListView1.SelectedIndex > 0)
             {
-                int index = objectListView1.SelectedIndex - 1;
-                Object obj = objectListView1.SelectedObject;
-                objectListView1.RemoveObject(obj);
-                List<Object> list = new List<object>();
-                list.Add(obj);
-                objectListView1.InsertObjects(index, list);
-                objectListView1.SelectObject(obj);
+                Team team1 = (Team) objectListView1.SelectedObject;
+                int index = objectListView1.GetDisplayOrderOfItemIndex(objectListView1.SelectedItem.Index);
+                OLVListItem next = objectListView1.GetNthItemInDisplayOrder(index - 1);
+                Team team2 = (Team) next.RowObject;
+                SwitchTeamList(team1, team2);
+                objectListView1.SetObjects(poule.teams);
+                objectListView1.SelectObject(team1);
                 updateMatches();
             }
         }
-
         private void button2_Click(object sender, EventArgs e)
         {
             if (objectListView1.SelectedIndex < objectListView1.GetItemCount())
             {
-                int index = objectListView1.SelectedIndex + 1;
-                Object obj = objectListView1.SelectedObject;
-                objectListView1.RemoveObject(obj);
-                List<Object> list = new List<object>();
-                list.Add(obj);
-                objectListView1.InsertObjects(index, list);
-                objectListView1.SelectObject(obj);
+                Team team1 = (Team)objectListView1.SelectedObject;
+                int index = objectListView1.GetDisplayOrderOfItemIndex(objectListView1.SelectedItem.Index);
+                OLVListItem next = objectListView1.GetNthItemInDisplayOrder(index + 1);
+                Team team2 = (Team)next.RowObject;
+                SwitchTeamList(team1, team2);
+                objectListView1.SetObjects(poule.teams);
+                objectListView1.SelectObject(team1);
                 updateMatches();
             }
 
         }
-
+        private void SwitchTeamList(Team t1, Team t2)
+        {
+            List<Team> newList = new List<Team>();
+            foreach (Team t in poule.teams)
+            {
+                if (t == t1)
+                {
+                    newList.Add(t2);
+                }
+                else if (t == t2)
+                {
+                    newList.Add(t1);
+                }
+                else
+                {
+                    newList.Add(t);
+                }
+            }
+            poule.teams = newList;
+        }
         private void Switch_Click(object sender, EventArgs e)
         {
-            List<int> indices = new List<int>();
-            foreach (int index in objectListView1.SelectedIndices) indices.Add(index);
-            List<Object> selected = new List<Object>();
-            foreach (Object obj in objectListView1.SelectedObjects)
-            {
-                selected.Add(obj);
-            }
-            objectListView1.RemoveObjects(objectListView1.SelectedObjects);
-            int i=-1;
-            foreach (int index in indices)
-            {
-                List<Object> list = new List<object>();
-                list.Add(selected[(selected.Count+i) % selected.Count]);
-                objectListView1.InsertObjects(index, list);
-                i++;
-            }
-            objectListView1.SelectedObjects = selected;
+            Team team1 = (Team) objectListView1.SelectedObjects[0];
+            Team team2 = (Team) objectListView1.SelectedObjects[1];
+            SwitchTeamList(team1, team2);
+            objectListView1.SetObjects(poule.teams);
+            List<Team> teams = new List<Team>();
+            teams.Add(team1);
+            teams.Add(team2);
+            objectListView1.SelectObjects(teams);
             updateMatches();
         }
 
         void updateMatches()
         {
-            poule.teams.Clear();
-            foreach (Object obj1 in objectListView1.Objects)
-            {
-                poule.teams.Add((Team)obj1);
-            }
-            /*Console.WriteLine("Start Evaluate");
-            foreach (Team team in poule.teams)
-            {
-                Console.WriteLine("{0} -> {1}",team.name,team.conflict);
-            }
-             * */
             klvv.Evaluate(null);
             klvv.Changed();
-
-            /*Console.WriteLine("After Evaluate");
-            foreach (Team team in poule.teams)
-            {
-                Console.WriteLine("{0} -> {1}", team.name, team.conflict);
-            }
-             * */
+            objectListView1.Objects = poule.matches;
             objectListView2.BuildList();
             objectListView2.Refresh();
-        }
-
-        private void objectListView1_ItemsChanged(object sender, ItemsChangedEventArgs e)
-        {
-            //updateMatches();
-        }
-
-        private void objectListView1_DragDrop(object sender, DragEventArgs e)
-        {
-            updateMatches();
         }
 
         private void PouleView_FormClosing(object sender, FormClosingEventArgs e)
@@ -274,6 +201,7 @@ namespace VolleybalCompetition_creator
         private void OptimizeWeekAssignment(object sender, MyEventArgs e)
         {
             IProgress intf = (IProgress)sender;
+            poule.SnapShot(klvv);
             poule.OptimizeWeekends(klvv, intf);
         }
         private void OptimizeWeekAssignmentCompleted(object sender, MyEventArgs e)
@@ -286,6 +214,7 @@ namespace VolleybalCompetition_creator
         private void OptimizeTeamAssignment(object sender, MyEventArgs e)
         {
             IProgress intf = (IProgress)sender;
+            poule.SnapShot(klvv);
             poule.OptimizeTeamAssignment(klvv, intf);
         }
         private void OptimizeTeamAssignmentCompleted(object sender, MyEventArgs e)
@@ -338,6 +267,7 @@ namespace VolleybalCompetition_creator
 
         private void button6_Click(object sender, EventArgs e)
         {
+            poule.SnapShot(klvv);
             poule.OptimizeHomeVisitor(klvv);
             klvv.Changed();
         }
@@ -420,7 +350,8 @@ namespace VolleybalCompetition_creator
         {
             IProgress intf = (IProgress)sender;
             intf.SetText("Optimizing team - ("+optimizeTeam.name+")");
-            poule.OptimizeTeam(klvv,intf,optimizeTeam);
+            poule.SnapShot(klvv);
+            poule.OptimizeTeam(klvv, intf, optimizeTeam);
         }
         private void OptimizeCompleted(object sender, MyEventArgs e)
         {
@@ -439,6 +370,7 @@ namespace VolleybalCompetition_creator
         {
             IProgress intf = (IProgress)sender;
             intf.SetText("Optimizing poule - " + poule.serie.name + poule.name);
+            poule.SnapShot(klvv);
             poule.OptimizeTeamAssignment(klvv, intf);
             poule.OptimizeHomeVisitor(klvv);
             poule.OptimizeWeekends(klvv, intf);

@@ -50,9 +50,13 @@ namespace VolleybalCompetition_creator
         public Weekend Weekend { get { return poule.weekends[weekIndex]; } }
         public int homeTeamIndex;
         public int visitorTeamIndex;
-        public int weekIndex;
+        public int weekIndex = -1;
         public Poule poule;
         public Serie serie;
+        public bool RealMatch()
+        {
+            return homeTeam.name != "---" && visitorTeam.name != "---";
+        }
         public Match(DateTime datetime, Team homeTeam, Team visitorTeam, Serie serie, Poule poule)
         {
             System.Globalization.CultureInfo cul = System.Globalization.CultureInfo.CurrentCulture;
@@ -80,12 +84,24 @@ namespace VolleybalCompetition_creator
             this.serie = serie;
             this.poule = poule;
         }
+        public Match(Match match)
+        {
+            this.weekIndex = match.weekIndex;
+            this.homeTeamIndex = match.homeTeamIndex;
+            this.visitorTeamIndex = match.visitorTeamIndex;
+            this.serie = match.serie;
+            this.poule = match.poule;
+            this.conflict = match.conflict;
+            this.tempWeek = match.tempWeek;
+            this.tempYear = match.tempYear;
+            this.time = match.time;
+        }
 
         
         
         public void SetWeekIndex()
         {
-            weekIndex = poule.FindWeekendNrInSchema(tempYear, tempWeek);
+            if(weekIndex<0) weekIndex = poule.FindWeekendNrInSchema(tempYear, tempWeek);
         }
     }
 }

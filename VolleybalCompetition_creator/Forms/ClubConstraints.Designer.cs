@@ -108,7 +108,6 @@
             this.dataGridView3.Size = new System.Drawing.Size(332, 317);
             this.dataGridView3.TabIndex = 4;
             this.dataGridView3.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView3_CellContentClick);
-            this.dataGridView3.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView3_CellValueChanged);
             // 
             // Column2
             // 

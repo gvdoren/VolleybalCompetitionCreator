@@ -79,7 +79,7 @@
             // 
             // olvColumn3
             // 
-            this.olvColumn3.AspectName = "conflict";
+            this.olvColumn3.AspectName = "conflictMatches.Count";
             this.olvColumn3.CellPadding = null;
             this.olvColumn3.MaximumWidth = 80;
             this.olvColumn3.Text = "conflict";

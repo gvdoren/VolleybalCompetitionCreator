@@ -26,18 +26,27 @@ namespace VolleybalCompetition_creator
             //call it then you need to update:
             if (OnMyChange != null)
             {
-                MyEventArgs e = new MyEventArgs();
+                MyEventArgs e = new MyEventArgs(null);
                 //e.EventInfo = content;
                 OnMyChange(this, e);
             }
+        }
+        public void Clear()
+        {
+            selectedClubs = new List<Club>();
+            selectedConstraint = null;
+            showConstraints = new List<Constraint>();
+            Changed();
         }
     }
     public delegate void MyEventHandler(object source, MyEventArgs e);
 
     public class MyEventArgs : EventArgs
     {
-        public MyEventArgs()
+        public Klvv klvv;
+        public MyEventArgs(Klvv klvv)
         {
+            this.klvv = klvv;
         }
     }
 }

@@ -82,11 +82,7 @@
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
             this.objectListView1.CellClick += new System.EventHandler<BrightIdeasSoftware.CellClickEventArgs>(this.objectListView1_CellClick);
-            this.objectListView1.ItemsChanged += new System.EventHandler<BrightIdeasSoftware.ItemsChangedEventArgs>(this.objectListView1_ItemsChanged);
-            this.objectListView1.ModelCanDrop += new System.EventHandler<BrightIdeasSoftware.ModelDropEventArgs>(this.objectListView1_ModelCanDrop);
-            this.objectListView1.ModelDropped += new System.EventHandler<BrightIdeasSoftware.ModelDropEventArgs>(this.objectListView1_ModelDropped);
             this.objectListView1.SelectionChanged += new System.EventHandler(this.objectListView1_SelectionChanged);
-            this.objectListView1.DragDrop += new System.Windows.Forms.DragEventHandler(this.objectListView1_DragDrop);
             // 
             // invisible
             // 

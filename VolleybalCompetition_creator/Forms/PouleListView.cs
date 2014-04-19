@@ -31,6 +31,12 @@ namespace VolleybalCompetition_creator
         }
         public void state_OnMyChange(object source, MyEventArgs e)
         {
+            if (e.klvv != null)
+            {
+                klvv.OnMyChange -= state_OnMyChange;
+                klvv = e.klvv;
+                klvv.OnMyChange += state_OnMyChange;
+            }
             if (InvokeRequired)
             {
                 this.Invoke(new Action(() => state_OnMyChange(source, e)));

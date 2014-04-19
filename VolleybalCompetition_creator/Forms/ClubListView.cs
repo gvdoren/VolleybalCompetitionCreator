@@ -26,13 +26,20 @@ namespace VolleybalCompetition_creator
         }
         public void state_OnMyChange(object source, MyEventArgs e)
         {
+            if (e.klvv != null)
+            {
+                klvv.OnMyChange -= state_OnMyChange;
+                klvv = e.klvv;
+                klvv.OnMyChange += state_OnMyChange;
+                objectListView1.SetObjects(klvv.clubs);
+            }
             if (InvokeRequired)
             {
                 this.Invoke(new Action(() => state_OnMyChange(source, e)));
                 return;
             }
             lock (klvv) ;
-            objectListView1.BuildList(false);
+            objectListView1.BuildList(true);
         }
 
         private void objectListView1_SelectedIndexChanged(object sender, EventArgs e)

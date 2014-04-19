@@ -62,7 +62,11 @@ namespace VolleybalCompetition_creator
 
         private void button1_Click(object sender, EventArgs e)
         {
-            klvv.WriteClubConstraints();
+            XmlWriter writer = XmlWriter.Create("InputData\\ClubConstraints.xml");
+            writer.WriteStartDocument();
+            klvv.WriteClubConstraints(writer);
+            writer.WriteEndDocument();
+            writer.Close();
         }
 
         private void dataGridView2_SelectionChanged(object sender, EventArgs e)
@@ -99,6 +103,7 @@ namespace VolleybalCompetition_creator
                     Weekend w = new Weekend(current);
                     dataGridView3.Rows.Add(w, sporthal.NotAvailable.Contains(w.Saturday) == false, sporthal.NotAvailable.Contains(w.Sunday) == false);
                 }
+                
             }
         }
         private void UpdateTeamsTab()
@@ -110,7 +115,43 @@ namespace VolleybalCompetition_creator
         }
         private void dataGridView3_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+            /*
+            this.dataGridView3.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView3_CellValueChanged);
             dataGridView3.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            this.dataGridView3.CellValueChanged -= new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView3_CellValueChanged);
+             * */
+            if (e.ColumnIndex > 0 && e.RowIndex >= 0)
+            {
+                DataGridViewRow row = dataGridView3.Rows[e.RowIndex];
+                Weekend w = (Weekend)row.Cells[0].Value;
+                DataGridViewCheckBoxCell cell = (DataGridViewCheckBoxCell)row.Cells[e.ColumnIndex];
+                cell.TrueValue = true;
+                cell.FalseValue = false;
+                if (e.ColumnIndex == 1)
+                {
+                    if (((bool)cell.EditedFormattedValue) == true)
+                    {
+                        sporthal.NotAvailable.Remove(w.Saturday);
+                    }
+                    else
+                    {
+                        if (sporthal.NotAvailable.Contains(w.Saturday) == false) sporthal.NotAvailable.Add(w.Saturday);
+                    }
+                }
+                else
+                {
+                    if (((bool)cell.EditedFormattedValue) == true)
+                    {
+                        sporthal.NotAvailable.Remove(w.Sunday);
+                    }
+                    else
+                    {
+                        if (sporthal.NotAvailable.Contains(w.Sunday) == false) sporthal.NotAvailable.Add(w.Sunday);
+                    }
+
+                }
+            }
+ 
             klvv.Evaluate(null);
             //state.Changed();
             klvv.Changed();
@@ -123,9 +164,11 @@ namespace VolleybalCompetition_creator
                 DataGridViewRow row = dataGridView3.Rows[e.RowIndex];
                 Weekend w = (Weekend)row.Cells[0].Value;
                 DataGridViewCheckBoxCell cell = (DataGridViewCheckBoxCell)row.Cells[e.ColumnIndex];
+                cell.TrueValue = true;
+                cell.FalseValue = false;
                 if (e.ColumnIndex == 1)
                 {
-                    if (cell.Value == cell.TrueValue)
+                    if (((bool)cell.Value) == true)
                     {
                         sporthal.NotAvailable.Remove(w.Saturday);
                     }
@@ -136,7 +179,7 @@ namespace VolleybalCompetition_creator
                 }
                 else
                 {
-                    if (cell.Value == cell.TrueValue)
+                    if (((bool)cell.Value) == true)
                     {
                         sporthal.NotAvailable.Remove(w.Sunday);
                     }
