@@ -376,7 +376,7 @@ namespace VolleybalCompetition_creator
             {
                 writer.WriteStartElement("Poule");
                 writer.WriteAttributeString("Name", poule.name);
-                writer.WriteAttributeString("SerieId", poule.serie.id.ToString());
+                writer.WriteAttributeString("SerieSortId", poule.serie.id.ToString());
                 writer.WriteAttributeString("SerieName", poule.serie.name);
 
                 writer.WriteStartElement("Teams");
@@ -384,7 +384,7 @@ namespace VolleybalCompetition_creator
                 {
                     writer.WriteStartElement("Team");
                     writer.WriteAttributeString("Name", team.name);
-                    writer.WriteAttributeString("ID", team.Id.ToString());
+                    writer.WriteAttributeString("Id", team.Id.ToString());
                     writer.WriteEndElement();
                 }
                 writer.WriteEndElement();
@@ -426,12 +426,12 @@ namespace VolleybalCompetition_creator
         {
             XDocument doc = XDocument.Load(openFileDialog1.FileName);
             XElement competition = doc.Element("Competition");
-            klvv.ImportTeamSubscriptions(competition);
+            klvv.ImportTeamSubscriptions(competition.Element("Clubs"));
             foreach (XElement poule in competition.Element("Poules").Elements("Poule"))
             {
                 string PouleName = poule.Attribute("Name").Value;
                 string SerieName = poule.Attribute("SerieName").Value;
-                int SerieId = int.Parse(poule.Attribute("SerieId").Value);
+                int SerieId = int.Parse(poule.Attribute("SerieSortId").Value);
                 Serie serie = klvv.series.Find(s => s.id == SerieId && s.name == SerieName);
                 Poule po = klvv.poules.Find(p => p.serie == serie && p.name == PouleName);
                 if (po == null)
@@ -443,8 +443,8 @@ namespace VolleybalCompetition_creator
                 }
                 foreach (XElement team in poule.Element("Teams").Elements("Team"))
                 {
-                    int teamId = int.Parse(team.Attribute("ID").Value);
-                    string teamName = team.Attribute("Name").Value;
+                    int teamId = int.Parse(team.Attribute("Id").Value);
+                    string teamName = team.Attribute("TeamName").Value;
                     Team te = klvv.teams.Find(t => t.Id == teamId && t.name == teamName);
                     te.poule = po;
                     po.teams.Add(te);
@@ -479,11 +479,11 @@ namespace VolleybalCompetition_creator
 
         private void subscriptionsToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            klvv.ImportTeamSubscriptions(XDocument.Load("InputData\\ClubConstraints.xml").Root);
+            string MyDocuments = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            klvv.ImportTeamSubscriptions(XDocument.Load(MyDocuments + "\\ClubRegistrations.xml").Root);
             klvv.RenewConstraints();
             klvv.Evaluate(null);
             klvv.Changed();
-
         }
 
         private void kLVVCompetitionToolStripMenuItem_Click_1(object sender, EventArgs e)
@@ -507,6 +507,26 @@ namespace VolleybalCompetition_creator
         private void saveToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             WriteProject(klvv.fileName);
+        }
+
+        private void kLVVTeamSubscriptionsklvvbeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string MyDocuments = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            //klvv.ImportTeamSubscriptions(XDocument.Load(MyDocuments + "\\registrationsXML.php").Root);
+            klvv.ImportTeamSubscriptions(XDocument.Load("http://klvv.be/server/restricted/registrations/registrationsXML.php").Root);
+            klvv.RenewConstraints();
+            klvv.Evaluate(null);
+            klvv.Changed();
+        }
+
+        private void clubRegistrationsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string MyDocuments = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            XmlWriter writer = XmlWriter.Create(MyDocuments+"\\ClubRegistrations.xml");
+            writer.WriteStartDocument();
+            klvv.WriteClubConstraints(writer);
+            writer.WriteEndDocument();
+            writer.Close();
         }
     }
 }

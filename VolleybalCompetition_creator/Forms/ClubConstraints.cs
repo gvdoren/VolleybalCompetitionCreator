@@ -30,11 +30,8 @@ namespace VolleybalCompetition_creator
                 comboBox2.Items.Add(cl);
             }
             comboBox2.SelectedIndex = 0;
-            foreach (Club cl in klvv.clubs)
-            {
-                comboBox1.Items.Add(cl);
-            }
-            comboBox1.SelectedIndex = 0;
+            state.OnMyChange += new MyEventHandler(state_OnMyChange);
+            //klvv.OnMyChange += state_OnMyChange;
         }
 
 
@@ -51,22 +48,29 @@ namespace VolleybalCompetition_creator
         {
             textBox1.Text = club.FreeFormatConstraints;
         }
-
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        public void state_OnMyChange(object source, MyEventArgs e)
         {
-            club = (Club) comboBox1.SelectedItem;
-            UpdateSporthalForm();
-            UpdateTeamsTab();
-            UpdateFreeFormatTab();
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            XmlWriter writer = XmlWriter.Create("InputData\\ClubConstraints.xml");
-            writer.WriteStartDocument();
-            klvv.WriteClubConstraints(writer);
-            writer.WriteEndDocument();
-            writer.Close();
+            if (e.klvv != null)
+            {
+                klvv.OnMyChange -= state_OnMyChange;
+                klvv = e.klvv;
+                klvv.OnMyChange += state_OnMyChange;
+            }
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action(() => state_OnMyChange(source, e)));
+                return;
+            }
+            lock (klvv) ;
+            if (state.selectedClubs.Count > 0 && state.selectedClubs[0] != club)
+            {
+                club = state.selectedClubs[0];
+                Text = "Club-registration: " + club.name;
+            
+                UpdateSporthalForm();
+                UpdateTeamsTab();
+                UpdateFreeFormatTab();
+            }
         }
 
         private void dataGridView2_SelectionChanged(object sender, EventArgs e)
@@ -223,5 +227,12 @@ namespace VolleybalCompetition_creator
                 klvv.Changed();
             }
         }
+        private void ClubConstraints_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            state.OnMyChange -= new MyEventHandler(state_OnMyChange);
+            //klvv.OnMyChange -= state_OnMyChange;
+
+        }
+
     }
 }

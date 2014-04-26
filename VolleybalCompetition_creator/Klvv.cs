@@ -507,13 +507,14 @@ namespace VolleybalCompetition_creator
 
         public void ImportTeamSubscriptions(XElement doc)
         {
-            foreach (XElement club in doc.Element("Clubs").Elements("Club"))
+            foreach (XElement club in doc.Elements("Club"))
             {
-                int clubId = int.Parse(club.Attribute("ID").Value);
-                string clubName = club.Attribute("Name").Value;
-                //if (clubId > 0)
+                int clubId = int.Parse(club.Attribute("Id").Value);
+                Club cl;
+                if (clubId == -1)
                 {
-                    Club cl = clubs.Find(c => c.Id == clubId && c.name == clubName);
+                    string clubName = club.Attribute("Name").Value;
+                    cl = clubs.Find(c => c.Id == clubId && c.name == clubName);
                     if (cl == null)
                     {
                         cl = new Club();
@@ -521,6 +522,12 @@ namespace VolleybalCompetition_creator
                         cl.Id = clubId;
                         clubs.Add(cl);
                     }
+                }
+                else
+                {
+                    cl = clubs.Find(c => c.Id == clubId);
+                }
+                {
                     XAttribute attr = club.Attribute("LinkedClub");
                     if (attr != null)
                     {
@@ -541,15 +548,24 @@ namespace VolleybalCompetition_creator
                     {
                         foreach (var sporthal in club.Element("Sporthalls").Elements("Sporthall"))
                         {
-                            var sporthallId = sporthal.Attribute("ID");
-                            string sporthallName = sporthal.Attribute("Name").Value;
+                            var sporthallId = sporthal.Attribute("Id");
                             int id = int.Parse(sporthallId.Value);
-                            Sporthal sp = sporthalls.Find(t => t.id == id && t.name == sporthallName);
-                            if (sp == null)
+                            Sporthal sp;
+                            if (id == -1)
                             {
-                                sp = new Sporthal(-1, sporthallName);
-                                sporthalls.Add(sp);
+                                string sporthallName = sporthal.Attribute("Name").Value;
+                                sp = sporthalls.Find(t => t.id == id && t.name == sporthallName);
+                                if (sp == null)
+                                {
+                                    sp = new Sporthal(-1, sporthallName);
+                                    sporthalls.Add(sp);
+                                }
                             }
+                            else
+                            {
+                                sp = sporthalls.Find(t => t.id == id);
+                            }
+                            
                             foreach (var date in sporthal.Element("NotAvailable").Elements("Date"))
                             {
                                 DateTime dt = DateTime.Parse(date.Value.ToString());
@@ -562,11 +578,11 @@ namespace VolleybalCompetition_creator
 
                     foreach (var team in club.Element("Teams").Elements("Team"))
                     {
-                        var teamId = team.Attribute("ID");
+                        var teamId = team.Attribute("Id");
                         int id = int.Parse(teamId.Value);
-                        string serieIdstr = team.Attribute("SerieId").Value;
+                        string serieIdstr = team.Attribute("SerieSortId").Value;
                         int serieId = int.Parse(serieIdstr);
-                        string teamName = team.Attribute("Name").Value;
+                        string teamName = team.Attribute("TeamName").Value;
                         Serie serie = series.Find(s => s.id == serieId);
                         if (serie == null)
                         {
@@ -575,21 +591,31 @@ namespace VolleybalCompetition_creator
                         }
                         // Search both on name & id, since the national Id's are not unique.
                         Team te = cl.teams.Find(t => t.Id == id && t.name == teamName && t.serie == serie);
-                        int sporthalId = int.Parse(team.Attribute("SporthalId").Value);
-                        string sporthalName = team.Attribute("SporthalName").Value;
-                        Sporthal sporthall = sporthalls.Find(sp => sp.id == sporthalId && sp.name == sporthalName);
+                        int sporthalId = int.Parse(team.Attribute("SporthallId").Value);
+                        Sporthal sporthall;
+                        if (sporthalId == -1)
+                        {
+                            string sporthalName = team.Attribute("SporthallName").Value;
+                            sporthall = sporthalls.Find(sp => sp.id == sporthalId && sp.name == sporthalName);
+                        }
+                        else
+                        {
+                            sporthall = sporthalls.Find(sp => sp.id == sporthalId);
+                        }
+                        if (sporthall == null)
+                        {
+                            int x = 0;
+                        } 
                         if (sporthall != null && sporthall.clubs.Contains(cl) == false)
                         {
                             sporthall.clubs.Add(cl);
                         }
-                        if (sporthall == null)
-                        {
-                            int x=0;
-                        }
                         if (te == null)
                         {
-                            DayOfWeek day = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), team.Attribute("Day").Value);
-                            Time time = new Time(DateTime.Parse(team.Attribute("Time").Value));
+                            string DayString = team.Attribute("Day").Value;
+                            if(DayString == "7") DayString = "0";
+                            DayOfWeek day = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), DayString);
+                            Time time = new Time(DateTime.Parse(team.Attribute("StartTime").Value));
                             te = new Team(id, teamName, null, serie);
                             te.sporthal = sporthall;
                             te.defaultDay = day;
@@ -604,8 +630,10 @@ namespace VolleybalCompetition_creator
                             if (te.poule != null) te.poule.teams.Remove(te);
                             te.poule = null;
                         }
-                        var teamGroup = team.Attribute("Group");
-                        te.group = (TeamGroups)Enum.Parse(typeof(TeamGroups), teamGroup.Value);
+                        string teamGroup = team.Attribute("Group").Value;
+                        te.group = TeamGroups.NoGroup;
+                        if (teamGroup == "A") te.group = TeamGroups.GroupA;
+                        if (teamGroup == "B") te.group = TeamGroups.GroupB;
                     }
                 }
             }
@@ -620,7 +648,7 @@ namespace VolleybalCompetition_creator
                 //if (club.Id > 0)
                 {
                     writer.WriteStartElement("Club");
-                    writer.WriteAttributeString("ID", club.Id.ToString());
+                    writer.WriteAttributeString("Id", club.Id.ToString());
                     writer.WriteAttributeString("Name", club.name);
                     if (club.groupingWithClub != null) writer.WriteAttributeString("LinkedClub", club.groupingWithClub.Id.ToString());
                     writer.WriteElementString("FreeFormatConstraint", club.FreeFormatConstraints);
@@ -628,7 +656,7 @@ namespace VolleybalCompetition_creator
                     foreach (Sporthal sporthal in club.sporthalls)
                     {
                         writer.WriteStartElement("Sporthall");
-                        writer.WriteAttributeString("ID", sporthal.id.ToString());
+                        writer.WriteAttributeString("Id", sporthal.id.ToString());
                         writer.WriteAttributeString("Name", sporthal.name);
                         writer.WriteStartElement("NotAvailable");
                         foreach (DateTime date in sporthal.NotAvailable)
@@ -645,15 +673,18 @@ namespace VolleybalCompetition_creator
                     writer.WriteStartElement("Teams");
                     foreach (Team team in club.teams)
                     {
+                        string groupLetter = "0";
+                        if (team.group == TeamGroups.GroupA) groupLetter = "A";
+                        if (team.group == TeamGroups.GroupB) groupLetter = "B";
                         writer.WriteStartElement("Team");
-                        writer.WriteAttributeString("Name", team.name);
-                        writer.WriteAttributeString("ID", team.Id.ToString());
-                        writer.WriteAttributeString("Time", team.defaultTime.ToString());
+                        writer.WriteAttributeString("TeamName", team.name);
+                        writer.WriteAttributeString("Id", team.Id.ToString());
+                        writer.WriteAttributeString("StartTime", team.defaultTime.ToString());
                         writer.WriteAttributeString("Day", team.defaultDay.ToString());
-                        writer.WriteAttributeString("SerieId", team.serie.id.ToString());
-                        writer.WriteAttributeString("Group", team.group.ToString());
-                        writer.WriteAttributeString("SporthalId", team.sporthal.id.ToString());
-                        writer.WriteAttributeString("SporthalName", team.sporthal.name);
+                        writer.WriteAttributeString("SerieSortId", team.serie.id.ToString());
+                        writer.WriteAttributeString("Group", groupLetter);
+                        writer.WriteAttributeString("SporthallId", team.sporthal.id.ToString());
+                        writer.WriteAttributeString("SporthallName", team.sporthal.name);
                         writer.WriteEndElement();
                     }
                     writer.WriteEndElement();
@@ -662,18 +693,6 @@ namespace VolleybalCompetition_creator
             }
             writer.WriteEndElement();
         }
-
-        public void SaveFullCompetition(string filename)
-        {
-            XmlWriter writer = XmlWriter.Create(filename);
-            writer.WriteStartDocument();
-            writer.WriteStartElement("Competition");
-            WriteClubConstraints(writer);
-            writer.WriteEndElement();
-            writer.WriteEndDocument();
-            writer.Close();
-        }
-
 
     }
 }
