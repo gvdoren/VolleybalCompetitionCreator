@@ -11,9 +11,7 @@ namespace VolleybalCompetition_creator
         public double lat { get; set; }
         public double lng { get; set; }
         public int id { get; set; }
-        public List<DateTime> NotAvailable = new List<DateTime>();
         public SortedList<int, int> distance = new SortedList<int, int>();
-        public List<Club> clubs = new List<Club>();
         public Sporthal(int id, string name)
         {
             this.name = name;
@@ -27,6 +25,25 @@ namespace VolleybalCompetition_creator
         {
             if (sporthal != null && distance.ContainsKey(sporthal.id)) return distance[sporthal.id];
             return 0;
+        }
+    }
+
+    public class SporthallClub
+    {
+        public Sporthal sporthall;
+        public string name { get { return sporthall.name; } }
+        public int id { get { return sporthall.id; } }
+        public double lat { get { return sporthall.lat; } }
+        public double lng { get { return sporthall.lng; } }
+        public List<DateTime> NotAvailable = new List<DateTime>();
+        public override string ToString()
+        {
+            return name;
+        }
+        public SporthallClub(Sporthal sporthall)
+        {
+            this.sporthall = sporthall;
+
         }
     }
 }

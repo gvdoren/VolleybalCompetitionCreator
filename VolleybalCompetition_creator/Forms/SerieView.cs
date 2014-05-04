@@ -120,14 +120,14 @@ namespace VolleybalCompetition_creator
                             letter = t.poule.name;
                         }
                         double lat = t.sporthal.lat;
-                        double shift = 0.005 * (sl.Count(s => s == t.sporthal));
+                        double shift = 0.005 * (sl.Count(s => s == t.sporthal.sporthall));
                         double lng = t.sporthal.lng;
                         lat += shift;
                         lng += shift*4;
                         if (first == false) markers += ',';
                         markers += string.Format("['{0}',{1},{2},'{3}']\n", t.name, lat.ToString(CultureInfo.InvariantCulture), lng.ToString(CultureInfo.InvariantCulture), letter);
                         first = false;
-                        sl.Add(t.sporthal);
+                        sl.Add(t.sporthal.sporthall);
                     }
                 }
                 DisplayHtml(firstHalf + markers + secondHalf);

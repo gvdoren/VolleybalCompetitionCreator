@@ -64,8 +64,15 @@ namespace VolleybalCompetition_creator
                     matches[i].poule.serie.AddConflict(this);
                     matches[i].homeTeam.AddConflict(this);
                     if (VisitorAlso) matches[i].visitorTeam.AddConflict(this);
-                    matches[i].homeTeam.club.AddConflict(this);
-                    if (matches[i].homeTeam.club != matches[i].visitorTeam.club && VisitorAlso) matches[i].visitorTeam.club.AddConflict(this);
+                    if (club != null)
+                    {
+                        club.AddConflict(this);
+                    }
+                    else
+                    {
+                        matches[i].homeTeam.club.AddConflict(this);
+                        if (matches[i].homeTeam.club != matches[i].visitorTeam.club) matches[i].visitorTeam.club.AddConflict(this);
+                    }
                 }
 
             }
@@ -77,8 +84,8 @@ namespace VolleybalCompetition_creator
     }
     class ConstraintZaal : Constraint
     {
-        public Sporthal sporthal;
-        public ConstraintZaal(Sporthal sporthal,Club club)
+        public SporthallClub sporthal;
+        public ConstraintZaal(SporthallClub sporthal,Club club)
         {
             name = "Sporthal niet beschikbaar";
             this.sporthal = sporthal;
@@ -91,7 +98,7 @@ namespace VolleybalCompetition_creator
             conflict = 0;
             conflictMatches.Clear();
             bool optimize = false;
-            foreach (Sporthal sporthal in club.sporthalls)
+            foreach (SporthallClub sporthal in club.sporthalls)
             {
                 if (sporthal.NotAvailable.Count > 0) optimize = true;
             }
@@ -522,5 +529,99 @@ namespace VolleybalCompetition_creator
             return result.ToArray();
         }
     }
+
+
+    class ConstraintNotAtSameTime : Constraint
+    {
+        public ConstraintNotAtSameTime(Club cl)
+        {
+            club = cl;
+            VisitorAlso = false;
+            name = "Teams spelen op hetzelfde uur";
+        }
+        public override void Evaluate(Klvv klvv, Poule poule)
+        {
+            conflict = 0;
+            conflictMatches.Clear();
+            foreach (Team team1 in club.teams)
+            {
+                Poule poule1 = team1.poule;
+                if (poule1 != null && team1.NotAtSameTime != null)
+                {
+                    if (poule == null || poule == poule1)
+                    {
+                        if (poule1.serie.constraintsHold)
+                        {
+                            List<Match> team1Matches = team1.poule.matches.FindAll(m => m.homeTeam == team1 || m.visitorTeam == team1);
+                            team1Matches.Sort(delegate(Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
+                            Team team2 = team1.NotAtSameTime;
+                            if (team2.poule != null)
+                            {
+                                if (team2.poule.serie.constraintsHold)
+                                {
+                                    List<Match> team2Matches = team2.poule.matches.FindAll(m => m.homeTeam == team2 || m.visitorTeam == team2);
+                                    team2Matches.Sort(delegate(Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
+
+                                    Poule poule2 = team2.poule;
+                                    int i1 = 0;
+                                    int i2 = 0;
+
+
+                                    while (i1 < team1Matches.Count && i2 < team2Matches.Count)
+                                    {
+                                        Match m1 = team1Matches[i1];
+                                        Match m2 = team2Matches[i2];
+                                        if (m1.datetime.Date < m2.datetime.Date || m1.visitorTeam.club == m1.homeTeam.club)
+                                        {
+                                            i1++;
+                                        }
+                                        else if (m2.datetime.Date < m1.datetime.Date || m2.visitorTeam.club == m2.homeTeam.club)
+                                        {
+                                            i2++;
+                                        }
+                                        else
+                                        {
+                                            if (m1.RealMatch() && m2.RealMatch())
+                                            {
+                                                double delta = 1.99; // normale lengte wedstrijd
+                                                if(m1.homeTeam.club != m2.homeTeam.club) delta+=1.5; // extra reistijd
+                                                DateTime st1 = m1.datetime;
+                                                DateTime en1 = st1.AddHours(delta);
+                                                if (m1.serie.Reserve())
+                                                {
+                                                    st1 = st1.AddHours(-2); // reserve wedstrijd
+                                                }
+                                                DateTime st2 = m2.datetime;
+                                                DateTime en2 = st2.AddHours(delta);
+                                                if (m2.serie.Reserve())
+                                                {
+                                                    st2 = st2.AddHours(-2); // reserve wedstrijd
+                                                }
+                                                if (st1 <= en2 && en1 >= st2)
+                                                {
+                                                    this.AddConflictMatch(m1, m2);
+                                                }
+                                            }
+                                            i1++;
+                                            i2++;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                 }
+            }
+        }
+        public override string[] GetTextDescription()
+        {
+            List<string> result = new List<string>();
+            return result.ToArray();
+        }
+    }
+
+
+
+
 
 }

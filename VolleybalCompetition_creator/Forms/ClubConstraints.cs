@@ -17,7 +17,7 @@ namespace VolleybalCompetition_creator
         Klvv klvv = null;
         GlobalState state;
         Club club;
-        Sporthal sporthal;
+        SporthallClub sporthal;
         public InschrijvingenView(Klvv klvv, GlobalState state)
         {
             this.Text = "Inschrijvingen";
@@ -38,7 +38,7 @@ namespace VolleybalCompetition_creator
         private void UpdateSporthalForm()
         {
             dataGridView2.Rows.Clear();
-            foreach (Sporthal sporthal in club.sporthalls)
+            foreach (SporthallClub sporthal in club.sporthalls)
             {
                 dataGridView2.Rows.Add(sporthal);
 
@@ -77,7 +77,7 @@ namespace VolleybalCompetition_creator
         {
             if (dataGridView2.SelectedRows.Count > 0)
             {
-                sporthal = (Sporthal)dataGridView2.SelectedRows[0].Cells[0].Value;
+                sporthal = (SporthallClub)dataGridView2.SelectedRows[0].Cells[0].Value;
                 dataGridView3.Enabled = true;
             }
             else

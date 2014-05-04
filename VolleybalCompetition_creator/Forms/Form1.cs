@@ -383,7 +383,7 @@ namespace VolleybalCompetition_creator
                 foreach (Team team in poule.teams)
                 {
                     writer.WriteStartElement("Team");
-                    writer.WriteAttributeString("Name", team.name);
+                    writer.WriteAttributeString("TeamName", team.name);
                     writer.WriteAttributeString("Id", team.Id.ToString());
                     writer.WriteEndElement();
                 }

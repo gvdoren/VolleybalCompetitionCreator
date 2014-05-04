@@ -41,12 +41,14 @@
             this.label4 = new System.Windows.Forms.Label();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.objectListView1 = new BrightIdeasSoftware.ObjectListView();
+            this.olvColumn0 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn5 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn6 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn7 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -189,23 +191,27 @@
             // 
             // objectListView1
             // 
+            this.objectListView1.AllColumns.Add(this.olvColumn0);
             this.objectListView1.AllColumns.Add(this.olvColumn1);
             this.objectListView1.AllColumns.Add(this.olvColumn2);
             this.objectListView1.AllColumns.Add(this.olvColumn4);
             this.objectListView1.AllColumns.Add(this.olvColumn3);
             this.objectListView1.AllColumns.Add(this.olvColumn5);
             this.objectListView1.AllColumns.Add(this.olvColumn6);
+            this.objectListView1.AllColumns.Add(this.olvColumn7);
             this.objectListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.objectListView1.CellEditActivation = BrightIdeasSoftware.ObjectListView.CellEditActivateMode.SingleClick;
             this.objectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.olvColumn0,
             this.olvColumn1,
             this.olvColumn2,
             this.olvColumn4,
             this.olvColumn3,
             this.olvColumn5,
-            this.olvColumn6});
+            this.olvColumn6,
+            this.olvColumn7});
             this.objectListView1.GridLines = true;
             this.objectListView1.HasCollapsibleGroups = false;
             this.objectListView1.Location = new System.Drawing.Point(3, 70);
@@ -216,6 +222,12 @@
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
             this.objectListView1.ItemsChanged += new System.EventHandler<BrightIdeasSoftware.ItemsChangedEventArgs>(this.objectListView1_ItemsChanged);
+            // 
+            // olvColumn0
+            // 
+            this.olvColumn0.AspectName = "Id";
+            this.olvColumn0.CellPadding = null;
+            this.olvColumn0.Text = "Id";
             // 
             // olvColumn1
             // 
@@ -259,6 +271,12 @@
             this.olvColumn6.Text = "Sporthal";
             this.olvColumn6.Width = 100;
             // 
+            // olvColumn7
+            // 
+            this.olvColumn7.AspectName = "NotAtSameTimeId";
+            this.olvColumn7.CellPadding = null;
+            this.olvColumn7.Text = "Not at same time with:";
+            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.label3);
@@ -267,7 +285,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(949, 471);
+            this.tabPage2.Size = new System.Drawing.Size(949, 514);
             this.tabPage2.TabIndex = 3;
             this.tabPage2.Text = "Opmerkingen";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -353,5 +371,7 @@
         private BrightIdeasSoftware.OLVColumn olvColumn6;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox comboBox2;
+        private BrightIdeasSoftware.OLVColumn olvColumn7;
+        private BrightIdeasSoftware.OLVColumn olvColumn0;
     }
 }

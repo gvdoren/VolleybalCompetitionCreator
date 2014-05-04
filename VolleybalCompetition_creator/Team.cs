@@ -11,12 +11,37 @@ namespace VolleybalCompetition_creator
         public int Id { get; set; }
         public string name { get; set; }
         public Club club { get; set; }
-        public Sporthal sporthal { get; set; }
+        public SporthallClub sporthal { get; set; }
         public Poule poule = null;
         public Serie serie = null;
         public string seriePouleName { get { return poule.serie.name + poule.name; } }
         public Time defaultTime;
-        public List<Team> NotAtSameWeekend = new List<Team>();
+        public int NotAtSameTimeId_int = -2;
+        public string NotAtSameTimeId
+        {
+            get
+            {
+                if (NotAtSameTimeId_int >= -1) return NotAtSameTime.serieTeamName;
+                else return "";
+            }
+            set
+            {
+                int id;
+                bool success = int.TryParse(value, out id);
+                if (success)
+                {
+                    NotAtSameTimeId_int = id;
+                    NotAtSameTime = club.teams.Find(t => t.Id == id);
+                }
+                else
+                {
+                    NotAtSameTimeId_int = -2;
+                    NotAtSameTime = null;
+                }
+            }
+        }
+        public Team NotAtSameTime = null;
+        public string serieTeamName { get { return serie.name + " - " + name; } }
         public DayOfWeek defaultDay = DayOfWeek.Monday; // initial value since monday is never the default
         public int Index 
         { 
@@ -35,6 +60,7 @@ namespace VolleybalCompetition_creator
         }
         public Team(int Id, string name, Poule poule, Serie serie) 
         {
+            //this.NotAtSameTime = this;
             this.Id = Id;
             this.name = name;
             this.poule = poule;

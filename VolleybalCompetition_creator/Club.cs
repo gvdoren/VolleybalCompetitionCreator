@@ -11,7 +11,7 @@ namespace VolleybalCompetition_creator
     public class Club: ConstraintAdmin
     {
         public List<Team> teams = new List<Team>();
-        public List<Sporthal> sporthalls = new List<Sporthal>();
+        public List<SporthallClub> sporthalls = new List<SporthallClub>();
         public Club groupingWithClub = null;
         public string FreeFormatConstraints = "";
         public int Id { get; set; }

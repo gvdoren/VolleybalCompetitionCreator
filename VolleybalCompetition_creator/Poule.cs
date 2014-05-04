@@ -34,7 +34,7 @@ namespace VolleybalCompetition_creator
             {
                 foreach (Team t2 in teams)
                 {
-                    distance += t1.sporthal.Distance(t2.sporthal);
+                    distance += t1.sporthal.sporthall.Distance(t2.sporthal.sporthall);
                 }
             }
             if (teams.Count > 1)
