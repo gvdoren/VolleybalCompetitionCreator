@@ -48,6 +48,17 @@ namespace VolleybalCompetition_creator
         public Team homeTeam { get { if (homeTeamIndex < poule.teams.Count) return poule.teams[homeTeamIndex]; else return Team.CreateNullTeam(poule); } }
         public Team visitorTeam { get { if (visitorTeamIndex < poule.teams.Count) return poule.teams[visitorTeamIndex]; else return Team.CreateNullTeam(poule); } }
         public Weekend Weekend { get { return poule.weekends[weekIndex]; } }
+        public bool Optimizable
+        {
+            get
+            {
+                bool result = true;
+                if (homeTeam != null && homeTeam.Optimizable == false) result = false;
+                if (visitorTeam != null && visitorTeam.Optimizable == false) result = false;
+                return result;
+            }
+        }
+
         public int homeTeamIndex;
         public int visitorTeamIndex;
         public int weekIndex = -1;

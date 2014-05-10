@@ -50,7 +50,6 @@ namespace VolleybalCompetition_creator
         public List<Match> conflictMatches = new List<Match>();
         protected void AddConflictMatch(params Match[] matches) 
         {
-
             for (int i = 0; i < matches.Length; i++)
             {
                 if (matches[i].serie.optimizable) conflict += cost;
@@ -232,14 +231,93 @@ namespace VolleybalCompetition_creator
                         {
                             foreach (Match match in poule.matches)
                             {
-                                if(match.homeTeam == t) AddConflictMatch(match);
+                                if (match.homeTeam == t) AddConflictMatch(match);
                             }
-                        } 
+                        }
                         if (VisitorMatches[t.Id] != poule.teams.Count - 1)
                         {
                             foreach (Match match in poule.matches)
                             {
                                 if (match.visitorTeam == t) AddConflictMatch(match);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        public override string[] GetTextDescription()
+        {
+            List<string> result = new List<string>();
+            return result.ToArray();
+        }
+    }
+    class ConstraintPouleFixedNumber : Constraint
+    {
+        public Poule poule;
+        public override string Title
+        {
+            get
+            {
+                return name + " - " + poule.name + poule.serie.name;
+            }
+        }
+        public ConstraintPouleFixedNumber(Poule poule)
+        {
+            name = "Poule - Team staat niet op juiste positie in schema";
+            this.poule = poule;
+            this.cost = 1000;
+        }
+        public override void Evaluate(Klvv klvv, Poule p)
+        {
+            conflict = 0;
+            conflictMatches.Clear();
+            if (p == null || p == poule)
+            {
+                if (klvv.fixedSchema == true)
+                {
+                    bool fixedSchemaPoule = false;
+                    int i = 1;
+                    foreach (Team team in poule.teams)
+                    {
+                        if (team.FixedSchema)
+                        {
+                            fixedSchemaPoule = true;
+                            if (team.FixedSchemaNumber != i)
+                            {
+                                List<Match> matches = poule.matches.FindAll(m => m.homeTeam == team || m.visitorTeam == team);
+                                foreach (Match m in matches)
+                                {
+                                    AddConflictMatch(m);
+                                    poule.conflict += cost;
+                                    conflict += cost;
+                                }
+                            }
+                        }
+                        i++;
+                    }
+                    i = 1;
+                    if (fixedSchemaPoule)
+                    {
+                        List<Weekend> anoramaWeekends = klvv.annorama.GetReeks(poule.AnoramaSize().ToString());
+                        if (anoramaWeekends.Count != poule.weekends.Count)
+                        {
+                            conflict += cost;
+                            poule.conflict += cost;
+                        }
+                        else
+                        {
+                            for (i = 0; i < poule.weekends.Count; i++)
+                            {
+                                if (poule.weekends[i].Saturday != anoramaWeekends[i].Saturday)
+                                {
+                                    List<Match> matches = poule.matches.FindAll(m => m.Weekend.Saturday == poule.weekends[i].Saturday);
+                                    foreach (Match m in matches)
+                                    {
+                                        AddConflictMatch(m);
+                                        conflict += cost;
+                                        poule.weekends[i].conflict += cost;
+                                    }
+                                }
                             }
                         }
                     }

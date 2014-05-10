@@ -16,6 +16,9 @@ namespace VolleybalCompetition_creator
         public Serie serie = null;
         public string seriePouleName { get { return poule.serie.name + poule.name; } }
         public Time defaultTime;
+        public bool Optimizable { get { return FixedSchema == false; } }
+        public int FixedSchemaNumber = 0;
+        public bool FixedSchema { get { return FixedSchemaNumber > 0; } }
         public int NotAtSameTimeId_int = -2;
         public string NotAtSameTimeId
         {

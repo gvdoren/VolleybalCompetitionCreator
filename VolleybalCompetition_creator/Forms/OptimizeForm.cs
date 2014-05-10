@@ -272,7 +272,7 @@ namespace VolleybalCompetition_creator
                     List<Match> focusMatches = new List<Match>(matchesDate.FindAll(m => m.homeTeam.group == focusGroup));
                     foreach (Match match in focusMatches)
                     {
-                        match.poule.SwitchHomeTeamVisitorTeam(match);
+                        match.poule.SwitchHomeTeamVisitorTeam(klvv,match);
                     }
                     klvv.Evaluate(null);
                     bool undo = false;
@@ -288,13 +288,13 @@ namespace VolleybalCompetition_creator
                         // undo change since it was not succesfull
                         foreach (Match match in focusMatches)
                         {
-                            match.poule.SwitchHomeTeamVisitorTeam(match);
+                            match.poule.SwitchHomeTeamVisitorTeam(klvv,match);
                         }
                         focusGroup = Acount >= Bcount ? TeamGroups.GroupA : TeamGroups.GroupB;
                         focusMatches = new List<Match>(matchesDate.FindAll(m => m.homeTeam.group == focusGroup));
                         foreach (Match match in focusMatches)
                         {
-                            match.poule.SwitchHomeTeamVisitorTeam(match);
+                            match.poule.SwitchHomeTeamVisitorTeam(klvv,match);
                         }
                         klvv.Evaluate(null);
                         undo = false;
@@ -310,7 +310,7 @@ namespace VolleybalCompetition_creator
                             // undo change since it was not succesfull
                             foreach (Match match in focusMatches)
                             {
-                                match.poule.SwitchHomeTeamVisitorTeam(match);
+                                match.poule.SwitchHomeTeamVisitorTeam(klvv,match);
                             }
                             givenUp.Add(date);
                             klvv.Evaluate(null);
@@ -320,11 +320,11 @@ namespace VolleybalCompetition_creator
                                 {
                                     done.Add(match);
                                     int before = constraint.conflictMatches.Count;
-                                    match.poule.SwitchHomeTeamVisitorTeam(match);
+                                    match.poule.SwitchHomeTeamVisitorTeam(klvv,match);
                                     klvv.Evaluate(null);
                                     if (before < constraint.conflictMatches.Count)
                                     {
-                                        match.poule.SwitchHomeTeamVisitorTeam(match);
+                                        match.poule.SwitchHomeTeamVisitorTeam(klvv,match);
                                         klvv.Evaluate(null);
                                     }
                                 }
@@ -339,6 +339,11 @@ namespace VolleybalCompetition_creator
         private void checkBox2_CheckedChanged(object sender, EventArgs e)
         {
             klvv.slow = checkBox2.Checked;
+        }
+
+        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        {
+            klvv.fixedSchema = checkBox3.Checked;
         }
 
     }

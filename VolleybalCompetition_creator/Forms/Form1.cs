@@ -16,13 +16,14 @@ namespace VolleybalCompetition_creator
 {
     public partial class Form1 : Form
     {
-        Klvv klvv = new Klvv();
+        Klvv klvv = null;
         GlobalState state = new GlobalState();
         public Form1()
         {
             //Weekend.Test();
             InitializeComponent();
             // reading club-constraints
+            klvv = new Klvv();
 
 
             this.WindowState = FormWindowState.Maximized;

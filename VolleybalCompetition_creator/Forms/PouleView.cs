@@ -181,7 +181,7 @@ namespace VolleybalCompetition_creator
         {
             klvv.Evaluate(null);
             klvv.Changed();
-            objectListView1.Objects = poule.matches;
+            objectListView2.Objects = poule.matches;
             objectListView2.BuildList();
             objectListView2.Refresh();
         }
@@ -260,7 +260,7 @@ namespace VolleybalCompetition_creator
         private void button5_Click(object sender, EventArgs e)
         {
             Match match1 = (Match)objectListView2.SelectedObject;
-            poule.SwitchHomeTeamVisitorTeam(match1);
+            poule.SwitchHomeTeamVisitorTeam(klvv,match1);
             klvv.Evaluate(null);
             klvv.Changed();
         }

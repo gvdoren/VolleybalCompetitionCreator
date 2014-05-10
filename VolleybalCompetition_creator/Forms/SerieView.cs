@@ -220,7 +220,7 @@ namespace VolleybalCompetition_creator
                 }
                 serie.poules.Add(poule.name, poule);
                 int teamCount = int.Parse(comboBox1.SelectedItem.ToString());
-                poule.CreateMatches(teamCount);
+                poule.CreateMatchesFromSchemaFiles(teamCount);
                 klvv.poules.Add(poule);
                 klvv.RenewConstraints();
                 klvv.Evaluate(null);
@@ -333,7 +333,7 @@ namespace VolleybalCompetition_creator
                             poule.weekends.Add(new Weekend(we.Saturday));
                         }
                         poule.matches.Clear();
-                        poule.CreateMatches(teamCount);
+                        poule.CreateMatchesFromSchemaFiles(teamCount);
                         klvv.RenewConstraints();
                         klvv.Evaluate(null);
                         klvv.Changed();

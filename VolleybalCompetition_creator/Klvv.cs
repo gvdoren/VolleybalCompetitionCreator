@@ -17,6 +17,7 @@ namespace VolleybalCompetition_creator
     {
         public string fileName = "Competition.xml";
         public bool slow = false;
+        public bool fixedSchema = true;
         public List<Club> clubs;
         public List<Serie> series = new List<Serie>();
         public List<Poule> poules = new List<Poule>();
@@ -81,12 +82,15 @@ namespace VolleybalCompetition_creator
         }
         public Klvv()
         {
+            //System.Windows.Forms.MessageBox.Show("KLVV initialized" + System.Windows.Forms.Application.StartupPath);
             Serie nationaalSerie = new Serie(-1, "Nationaal");
             nationaalSerie.optimizable = false;
             series.Add(nationaalSerie);
 
             // Read series
-            string classes_json = File.ReadAllText(@"InputData/series.json"); // local copy
+            //System.Windows.Forms.MessageBox.Show("KLVV reading series");
+            string classes_json = new WebClient().DownloadString("http://klvv.be/server/series.php?season=2014-2015&trophy=false");
+            //string classes_json = File.ReadAllText(System.Windows.Forms.Application.StartupPath + @"/InputData/series.json"); // local copy
             JArray classesObjects = JArray.Parse(classes_json);
             foreach (JObject classesObject in classesObjects)
             {
@@ -98,7 +102,8 @@ namespace VolleybalCompetition_creator
                 }
             }
             // read sporthalls
-            string sporthalls_json = File.ReadAllText(@"InputData/sporthalls.json"); // local copy
+            //System.Windows.Forms.MessageBox.Show("KLVV reading sporthalls");
+            string sporthalls_json = File.ReadAllText(System.Windows.Forms.Application.StartupPath + @"/InputData/sporthalls.json"); // local copy
             JArray sporthallObjects = JArray.Parse(sporthalls_json);
             foreach (JObject sporthallObject in sporthallObjects)
             {
@@ -106,7 +111,8 @@ namespace VolleybalCompetition_creator
                 sporthalls.Add(newSporthal);
             }
             // lat & lng for each sporthal (must be included in the sporthalls.json
-            string latlng_json = File.ReadAllText(@"InputData/sporthallen.json");// local copy
+            //System.Windows.Forms.MessageBox.Show("KLVV reading sporthalls - lat & lng");
+            string latlng_json = File.ReadAllText(System.Windows.Forms.Application.StartupPath + @"/InputData/sporthallen.json");// local copy
             JArray latlngObjects = JArray.Parse(latlng_json);
             foreach (JObject latlngObject in latlngObjects)
             {
@@ -121,7 +127,8 @@ namespace VolleybalCompetition_creator
                 }
             }
             // read distances between sporthalls
-            string json2 = File.ReadAllText(@"InputData/sporthal_afstanden.json");// local copy
+            //System.Windows.Forms.MessageBox.Show("KLVV reading sporthalls - distances");
+            string json2 = File.ReadAllText(System.Windows.Forms.Application.StartupPath + @"/InputData/sporthal_afstanden.json");// local copy
             JArray afstanden = JArray.Parse(json2);
             foreach (JObject afstand in afstanden)
             {
@@ -133,7 +140,7 @@ namespace VolleybalCompetition_creator
             }
             // Read clubs
             //var json = new WebClient().DownloadString("http://klvv.be/server/clubs.php");
-            string json = File.ReadAllText(@"InputData/clubs.json"); // local copy
+            string json = File.ReadAllText(System.Windows.Forms.Application.StartupPath + @"/InputData/clubs.json"); // local copy
             clubs = JsonConvert.DeserializeObject<List<Club>>(json);
 
             
@@ -156,7 +163,8 @@ namespace VolleybalCompetition_creator
             foreach (Poule poule in this.poules)
             {
                 constraints.Add(new ConstraintSchemaTooClose(poule));
-                constraints.Add(new ConstraintPouleInconsistent(poule));
+                constraints.Add(new ConstraintPouleInconsistent(poule)); 
+                constraints.Add(new ConstraintPouleFixedNumber(poule));
                 
             }
 
@@ -648,6 +656,12 @@ namespace VolleybalCompetition_creator
                             int idNot = int.Parse(attrNot.Value);
                             te.NotAtSameTimeId_int = idNot;
                         }
+                        attrNot = team.Attribute("FixedSchemaIndex");
+                        if (attrNot != null)
+                        {
+                            int idFix = int.Parse(attrNot.Value);
+                            te.FixedSchemaNumber = idFix;
+                        }
                     }
                     foreach (Team te in cl.teams)
                     {
@@ -707,6 +721,7 @@ namespace VolleybalCompetition_creator
                         writer.WriteAttributeString("Group", groupLetter);
                         writer.WriteAttributeString("SporthallId", team.sporthal.id.ToString());
                         writer.WriteAttributeString("SporthallName", team.sporthal.name);
+                        if (team.FixedSchema) writer.WriteAttributeString("FixedSchemaIndex", team.FixedSchemaNumber.ToString());
                         if (team.NotAtSameTime != null) writer.WriteAttributeString("NotAtSameTime", team.NotAtSameTime.Id.ToString());
                         writer.WriteEndElement();
                     }

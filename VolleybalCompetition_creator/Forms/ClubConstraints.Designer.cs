@@ -53,6 +53,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.olvColumn8 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
@@ -198,6 +199,7 @@
             this.objectListView1.AllColumns.Add(this.olvColumn3);
             this.objectListView1.AllColumns.Add(this.olvColumn5);
             this.objectListView1.AllColumns.Add(this.olvColumn6);
+            this.objectListView1.AllColumns.Add(this.olvColumn8);
             this.objectListView1.AllColumns.Add(this.olvColumn7);
             this.objectListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
@@ -211,6 +213,7 @@
             this.olvColumn3,
             this.olvColumn5,
             this.olvColumn6,
+            this.olvColumn8,
             this.olvColumn7});
             this.objectListView1.GridLines = true;
             this.objectListView1.HasCollapsibleGroups = false;
@@ -275,6 +278,7 @@
             // 
             this.olvColumn7.AspectName = "NotAtSameTimeId";
             this.olvColumn7.CellPadding = null;
+            this.olvColumn7.DisplayIndex = 7;
             this.olvColumn7.Text = "Not at same time with:";
             // 
             // tabPage2
@@ -321,6 +325,13 @@
             this.textBox1.Size = new System.Drawing.Size(934, 398);
             this.textBox1.TabIndex = 0;
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            // 
+            // olvColumn8
+            // 
+            this.olvColumn8.AspectName = "FixedSchemaNumber";
+            this.olvColumn8.CellPadding = null;
+            this.olvColumn8.DisplayIndex = 8;
+            this.olvColumn8.Text = "Fixed-Schema";
             // 
             // InschrijvingenView
             // 
@@ -373,5 +384,6 @@
         private System.Windows.Forms.ComboBox comboBox2;
         private BrightIdeasSoftware.OLVColumn olvColumn7;
         private BrightIdeasSoftware.OLVColumn olvColumn0;
+        private BrightIdeasSoftware.OLVColumn olvColumn8;
     }
 }

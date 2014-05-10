@@ -99,8 +99,8 @@ namespace VolleybalCompetition_creator
                 dataGridView3.Visible = true;
                 label1.Visible = true;
                 label1.Text = string.Format("Sporthal '{0}' is beschikbaar op:", sporthal.name);
-                DateTime begin = new DateTime(2013, 9, 1);
-                DateTime end = new DateTime(2014, 5, 1);
+                DateTime begin = new DateTime(2014, 9, 1);
+                DateTime end = new DateTime(2015, 5, 1);
                 dataGridView3.Rows.Clear();
                 for (DateTime current = begin; current < end; current = current.AddDays(7))
                 {

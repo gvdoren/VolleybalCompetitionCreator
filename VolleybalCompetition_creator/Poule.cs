@@ -18,6 +18,16 @@ namespace VolleybalCompetition_creator
         public List<Team> teams = new List<Team>();
         public Poule(string name) { this.name = name; }
         public string fullName { get { return serie.name + name; ;} }
+        public int AnoramaSize()
+        {
+            if (teams.Count <= 4) return 4;
+            if (teams.Count <= 6) return 6;
+            if (teams.Count <= 8) return 8;
+            if (teams.Count <= 10) return 10;
+            if (teams.Count <= 12) return 12;
+            if (teams.Count <= 14) return 14;
+            return 0;
+        }
         public List<Weekend> weekends = new List<Weekend>();
         public void AddWeekend(int year, int weekNr)
         {
@@ -82,10 +92,13 @@ namespace VolleybalCompetition_creator
                             intf.Progress(i, weekends.Count);
                             for (int j = i+1; j < weekends.Count / 2; j++)
                             {
-                                Swap(weekends, i, j);
-                                klvv.Evaluate(this);
-                                SnapShotIfImproved(klvv);
-                                Swap(weekends, i, j);
+                                //if (i != j)
+                                {
+                                    Swap(weekends, i, j);
+                                    klvv.Evaluate(this);
+                                    SnapShotIfImproved(klvv);
+                                    Swap(weekends, i, j);
+                                }
 
                             }
                             weekends = resultWeekends;
@@ -95,10 +108,13 @@ namespace VolleybalCompetition_creator
                             intf.Progress(i, weekends.Count);
                             for (int j = i+1; j < weekends.Count; j++)
                             {
-                                Swap(weekends, i, j);
-                                klvv.Evaluate(this);
-                                SnapShotIfImproved(klvv);
-                                Swap(weekends, i, j);
+                                //if (i != j)
+                                {
+                                    Swap(weekends, i, j);
+                                    klvv.Evaluate(this);
+                                    SnapShotIfImproved(klvv);
+                                    Swap(weekends, i, j);
+                                }
                             }
                             weekends = resultWeekends;
                         }
@@ -317,9 +333,9 @@ namespace VolleybalCompetition_creator
             }
 
         }
-        public void SwitchHomeTeamVisitorTeam(Match match)
+        public void SwitchHomeTeamVisitorTeam(Klvv klvv, Match match)
         {
-            if (serie.optimizable)
+            if (serie.optimizable && (klvv.fixedSchema == false || match.Optimizable))
             {
                 Match match2 = null;
                 Match match1 = null;
@@ -348,7 +364,7 @@ namespace VolleybalCompetition_creator
                     if (match.conflict > 0)
                     {
                         int before = minConflicts;
-                        SwitchHomeTeamVisitorTeam(match);
+                        SwitchHomeTeamVisitorTeam(klvv,match);
                         klvv.Evaluate(this);
                         if (conflict < minConflicts)
                         {
@@ -356,7 +372,7 @@ namespace VolleybalCompetition_creator
                         }
                         if (before <= minConflicts)
                         { // switch back
-                            SwitchHomeTeamVisitorTeam(match);
+                            SwitchHomeTeamVisitorTeam(klvv,match);
                             //klvv.Evaluate(this);
                         }
                     }
@@ -365,6 +381,33 @@ namespace VolleybalCompetition_creator
                 klvv.Evaluate(null);
             }
         }
+        public void CreateMatchesFromSchemaFiles(int teamCount)
+        {
+            try
+            {
+                string[] lines = System.IO.File.ReadAllLines(System.Windows.Forms.Application.StartupPath + @"/InputData/" + string.Format("Schema{0}.csv", teamCount));
+                int reqMatches = teamCount * (teamCount - 1);
+                if (lines.Length != reqMatches)
+                {
+                    System.Windows.Forms.MessageBox.Show(string.Format("Schema{0}.csv does not have the correct number of lines. {1} iso {2}", teamCount, lines.Length,reqMatches));
+                }
+                char[] delimiters = new char[] { ',', ';' };
+                foreach (string line in lines)
+                {
+                    string[] var = line.Split(delimiters);
+                    int day = int.Parse(var[0])-1; // internal administration starts at 0, schema files start at 1
+                    int team1 = int.Parse(var[1])-1;
+                    int team2 = int.Parse(var[2])-1;
+                    Match m2 = new Match(day, team1, team2, serie, this);
+                    matches.Add(m2);
+                }
+            }
+            catch
+            {
+                System.Windows.Forms.MessageBox.Show(string.Format("No schema available for {0} teams",teamCount));
+            }
+        }
+
         public void CreateMatches(int teamCount)
         {
             matches.Clear();
