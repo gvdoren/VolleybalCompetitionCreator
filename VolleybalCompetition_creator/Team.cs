@@ -7,6 +7,8 @@ namespace VolleybalCompetition_creator
 {
     public class Team: ConstraintAdmin
     {
+        public enum WeekendRestrictionEnum { Even, Odd, All };
+        public WeekendRestrictionEnum EvenOdd = WeekendRestrictionEnum.All;
         public TeamGroups group { get; set; }
         public int Id { get; set; }
         public string name { get; set; }
@@ -20,6 +22,7 @@ namespace VolleybalCompetition_creator
         public int FixedSchemaNumber = 0;
         public bool FixedSchema { get { return FixedSchemaNumber > 0; } }
         public int NotAtSameTimeId_int = -2;
+        public string email;
         public string NotAtSameTimeId
         {
             get

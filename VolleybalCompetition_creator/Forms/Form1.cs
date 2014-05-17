@@ -20,11 +20,12 @@ namespace VolleybalCompetition_creator
         GlobalState state = new GlobalState();
         public Form1()
         {
+            //Weekend.Show();
             //Weekend.Test();
             InitializeComponent();
             // reading club-constraints
-            klvv = new Klvv();
-
+            klvv = new Klvv(DateTime.Now.Year);
+            Text = string.Format("Volleyball competition creation tool ({0})", klvv.year);
 
             this.WindowState = FormWindowState.Maximized;
             ClubListView clubview = new ClubListView(klvv,state);
@@ -281,7 +282,7 @@ namespace VolleybalCompetition_creator
             string title = "";
             foreach (Club club in klvv.clubs)
             {
-                if (club.conflict > 0)
+                if (club.conflict_cost > 0)
                 {
                     writer.WriteLine("{0}", club.name);
                     club.conflictConstraints.Sort(delegate(Constraint c1, Constraint c2) { return c1.Title.CompareTo(c2.Title); });
@@ -314,7 +315,9 @@ namespace VolleybalCompetition_creator
 
         private void perClubToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-             saveFileDialog1.FileName = "CompetitionPerClub.txt";
+            DateTime now = DateTime.Now;
+            saveFileDialog1.FileName = string.Format("CompetitionPerClub{0:00}{1:00}{2:00}_{3:00}{4:00}.csv",now.Year,now.Month,now.Day,now.Hour,now.Minute);
+            saveFileDialog1.Filter = "Comma-separated (*.csv)|*.csv";
             saveFileDialog1.InitialDirectory = Environment.SpecialFolder.MyDocuments.ToString();
             saveFileDialog1.FileOk += new CancelEventHandler(saveFileDialog1_FileOk2);
             saveFileDialog1.ShowDialog();
@@ -346,8 +349,13 @@ namespace VolleybalCompetition_creator
                     if (match.RealMatch())
                     {
                         string constraint = " - ";
-                        if (match.conflict > 0) constraint = " * ";
-                        writer.WriteLine("{5},{0},{1},{2},{3},{4}", match.datetime, match.poule.fullName, match.homeTeam.name, match.visitorTeam.name, match.homeTeam.group.ToString(), constraint);
+                        if (match.conflict_cost > 0) constraint = " * ";
+                        string conflicts = "";
+                        foreach (Constraint constr in match.conflictConstraints)
+                        {
+                            conflicts += constr.name + ",";
+                        }
+                        writer.WriteLine("{5},{0},{1},{2},{3},{4},{6}", match.datetime, match.poule.fullName, match.homeTeam.name, match.visitorTeam.name, match.homeTeam.group.ToString(), constraint,conflicts);
                     }
                 }
             }
@@ -356,7 +364,7 @@ namespace VolleybalCompetition_creator
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            saveFileDialog1.FileName = "FullCompetition.xml";
+            saveFileDialog1.FileName = string.Format("FullCompetition{0}.xml",klvv.year);
             saveFileDialog1.InitialDirectory = Environment.SpecialFolder.MyDocuments.ToString();
             saveFileDialog1.FileOk += new CancelEventHandler(saveFileDialog1_FileOk3);
             saveFileDialog1.ShowDialog();
@@ -371,6 +379,9 @@ namespace VolleybalCompetition_creator
             XmlWriter writer = XmlWriter.Create(fileName);
             writer.WriteStartDocument();
             writer.WriteStartElement("Competition");
+            writer.WriteStartElement("Settings");
+            writer.WriteElementString("Year", klvv.year.ToString());
+            writer.WriteEndElement();
             klvv.WriteClubConstraints(writer);
             writer.WriteStartElement("Poules");
             foreach (Poule poule in klvv.poules)
@@ -427,26 +438,29 @@ namespace VolleybalCompetition_creator
         {
             XDocument doc = XDocument.Load(openFileDialog1.FileName);
             XElement competition = doc.Element("Competition");
-            klvv.ImportTeamSubscriptions(competition.Element("Clubs"));
+            XElement settings = competition.Element("Settings");
+            int year = int.Parse(settings.Element("Year").Value);
+            Klvv klvvnew = new Klvv(year);
+            klvvnew.ImportTeamSubscriptions(competition.Element("Clubs"));
             foreach (XElement poule in competition.Element("Poules").Elements("Poule"))
             {
                 string PouleName = poule.Attribute("Name").Value;
                 string SerieName = poule.Attribute("SerieName").Value;
                 int SerieId = int.Parse(poule.Attribute("SerieSortId").Value);
-                Serie serie = klvv.series.Find(s => s.id == SerieId && s.name == SerieName);
-                Poule po = klvv.poules.Find(p => p.serie == serie && p.name == PouleName);
+                Serie serie = klvvnew.series.Find(s => s.id == SerieId && s.name == SerieName);
+                Poule po = klvvnew.poules.Find(p => p.serie == serie && p.name == PouleName);
                 if (po == null)
                 {
                     po = new Poule(PouleName);
                     po.serie = serie;
                     serie.poules.Add(po.name, po);
-                    klvv.poules.Add(po);
+                    klvvnew.poules.Add(po);
                 }
                 foreach (XElement team in poule.Element("Teams").Elements("Team"))
                 {
                     int teamId = int.Parse(team.Attribute("Id").Value);
                     string teamName = team.Attribute("TeamName").Value;
-                    Team te = klvv.teams.Find(t => t.Id == teamId && t.name == teamName);
+                    Team te = klvvnew.teams.Find(t => t.Id == teamId && t.name == teamName);
                     te.poule = po;
                     po.teams.Add(te);
                 }
@@ -463,10 +477,14 @@ namespace VolleybalCompetition_creator
                     po.matches.Add(new Match(weekIndex, homeTeam, visitorTeam, serie, po));
                 }
             }
-            klvv.fileName = openFileDialog1.FileName;
-            klvv.RenewConstraints();
+            klvvnew.fileName = openFileDialog1.FileName;
+            klvvnew.RenewConstraints();
+            klvv.Changed(klvvnew);
+            klvv = klvvnew;
             klvv.Evaluate(null);
             klvv.Changed();
+            state.Clear();
+            Text = string.Format("Volleyball competition creation tool ({0})", klvv.year);
         }
 
         private void vVBCompetitionToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -497,12 +515,26 @@ namespace VolleybalCompetition_creator
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Klvv newKlvv = new Klvv();
-            klvv.Changed(newKlvv);
-            klvv = newKlvv;
-            klvv.Evaluate(null);
-            klvv.Changed();
-            state.Clear();
+            InputForm form = new InputForm("Creeer een nieuw seizoen", "Geef een jaartal");
+            form.ShowDialog();
+            if (form.Result)
+            {
+                int year;
+                bool ok = int.TryParse(form.GetInputString(), out year);
+                if (ok)
+                {
+
+                    Klvv newKlvv = new Klvv(year);
+                    klvv.Changed(newKlvv);
+                    klvv = newKlvv;
+                    klvv.Evaluate(null);
+                    klvv.Changed();
+                    state.Clear();
+                    Text = string.Format("Volleyball competition creation tool ({0})", klvv.year);
+
+                }
+            }
+
         }
 
         private void saveToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -529,6 +561,30 @@ namespace VolleybalCompetition_creator
             writer.WriteEndDocument();
             writer.Close();
         }
+
+        private void competitionxmlForKlvvsiteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DateTime now = DateTime.Now;
+            saveFileDialog1.FileName = string.Format("ExportToKlvv{0:00}{1:00}{2:00}_{3:00}{4:00}.xml", now.Year, now.Month, now.Day, now.Hour, now.Minute);
+            saveFileDialog1.Filter = "Xml (*.xml)|*.xml";
+            saveFileDialog1.InitialDirectory = Environment.SpecialFolder.MyDocuments.ToString();
+            saveFileDialog1.FileOk += new CancelEventHandler(saveFileDialog1_FileOk4);
+            saveFileDialog1.ShowDialog();
+        }
+        public void saveFileDialog1_FileOk4(object sender, CancelEventArgs e)
+        {
+            string MyDocuments = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            XmlWriter writer = XmlWriter.Create(saveFileDialog1.FileName);
+            writer.WriteStartDocument();
+            writer.WriteStartElement("Competition");
+            klvv.WritePoules(writer);
+            klvv.WriteTeams(writer);
+            klvv.WriteMatches(writer);
+            writer.WriteEndElement();
+            writer.WriteEndDocument();
+            writer.Close();
+        }
+
     }
 }
 

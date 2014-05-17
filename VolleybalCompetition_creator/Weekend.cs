@@ -16,6 +16,7 @@ namespace VolleybalCompetition_creator
             this.Year = year;
             this.WeekNr = weekNr;
         }
+        public bool Even { get { return WeekNr % 2 == 0; } }
         public Weekend(string datestr)
         {
             DateTime date = DateTime.ParseExact(datestr, "yyyy-MM-dd", null);
@@ -96,6 +97,24 @@ namespace VolleybalCompetition_creator
                     }
                 }
             }
+        }
+        public static void Show()
+        {
+            for (int i = 0; i < 300; i++)
+            {
+                DateTime day = DateTime.Now.AddDays(i);
+                if (day.DayOfWeek == DayOfWeek.Saturday)
+                {
+                    System.Globalization.CultureInfo cul = System.Globalization.CultureInfo.CurrentCulture;
+                    int Weeknr = cul.Calendar.GetWeekOfYear(
+                        day,
+                        System.Globalization.CalendarWeekRule.FirstFullWeek,
+                        DayOfWeek.Saturday);
+                    Console.WriteLine("{0} - {1}", day.ToString(),Weeknr);
+                    
+                }
+            }
+
         }
 
     }

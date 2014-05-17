@@ -103,6 +103,7 @@ namespace VolleybalCompetition_creator
             this.serie = match.serie;
             this.poule = match.poule;
             this.conflict = match.conflict;
+            this.conflict_cost = match.conflict_cost;
             this.tempWeek = match.tempWeek;
             this.tempYear = match.tempYear;
             this.time = match.time;

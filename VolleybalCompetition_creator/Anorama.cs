@@ -25,15 +25,15 @@ namespace VolleybalCompetition_creator
         public string title;
         public List<AnoramaWeekend> weekends = new List<AnoramaWeekend>();
         public List<string> reeksen = new List<string>();
-        public Anorama()
+        public Anorama(int year)
         {
             try
             {
-                ReadXML();
+                ReadXML(year);
             }
             catch
             {
-                CreateAnorama(2013);
+                CreateAnorama(year);
             }
         }
         public void CreateAnorama(int year)
@@ -48,6 +48,12 @@ namespace VolleybalCompetition_creator
                 weekend = new Weekend(weekend.Saturday.AddDays(7));
             }
             title = string.Format("Anorama Seizoen {0}-{1}", year, year + 1);
+            CreateReeks("14");
+            CreateReeks("12");
+            CreateReeks("10");
+            CreateReeks("8");
+            CreateReeks("6");
+            CreateReeks("4");
         }
         public List<Weekend> GetReeks(string name)
         {
@@ -58,9 +64,10 @@ namespace VolleybalCompetition_creator
         {
             reeksen.Add(name);
         }
-        public void WriteXML()
+        public void WriteXML(int year)
         {
-            using (XmlWriter writer = XmlWriter.Create("C:\\Users\\Giel1.Giel_laptop.001\\Documents\\Anorama.xml"))
+            string MyDocuments = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            using (XmlWriter writer = XmlWriter.Create(string.Format("{0}\\Anorama{1}.xml", MyDocuments, year)))
             {
                 writer.WriteStartDocument();
                 writer.WriteStartElement("Anorama");
@@ -91,9 +98,10 @@ namespace VolleybalCompetition_creator
             }
 
         }
-        public void ReadXML()
+        public void ReadXML(int year)
         {
-            XElement Anorama = XElement.Load("C:\\Users\\Giel1.Giel_laptop.001\\Documents\\Anorama.xml");
+            string MyDocuments = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            XElement Anorama = XElement.Load(string.Format("{0}\\Anorama{1}.xml",MyDocuments , year));
             title = Anorama.Attribute("Title").Value;
             IEnumerable<XElement> Reeksen = Anorama.Element("Reeksen").Elements("Reeks");
             foreach (XElement reeks in Reeksen)

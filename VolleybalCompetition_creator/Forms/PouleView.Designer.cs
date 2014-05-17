@@ -56,6 +56,7 @@
             this.button8 = new System.Windows.Forms.Button();
             this.button9 = new System.Windows.Forms.Button();
             this.button10 = new System.Windows.Forms.Button();
+            this.olvColumn11 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView3)).BeginInit();
@@ -164,6 +165,7 @@
             this.objectListView2.AllColumns.Add(this.olvColumn4);
             this.objectListView2.AllColumns.Add(this.olvColumn5);
             this.objectListView2.AllColumns.Add(this.olvColumn8);
+            this.objectListView2.AllColumns.Add(this.olvColumn11);
             this.objectListView2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
@@ -173,7 +175,8 @@
             this.olvColumn9,
             this.olvColumn4,
             this.olvColumn5,
-            this.olvColumn8});
+            this.olvColumn8,
+            this.olvColumn11});
             this.objectListView2.FullRowSelect = true;
             this.objectListView2.Location = new System.Drawing.Point(1, 343);
             this.objectListView2.Name = "objectListView2";
@@ -355,6 +358,12 @@
             this.button10.UseVisualStyleBackColor = true;
             this.button10.Click += new System.EventHandler(this.button10_Click);
             // 
+            // olvColumn11
+            // 
+            this.olvColumn11.AspectName = "Weekend.Even";
+            this.olvColumn11.CellPadding = null;
+            this.olvColumn11.Text = "Even";
+            // 
             // PouleView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -417,5 +426,6 @@
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.Button button9;
         private System.Windows.Forms.Button button10;
+        private BrightIdeasSoftware.OLVColumn olvColumn11;
     }
 }

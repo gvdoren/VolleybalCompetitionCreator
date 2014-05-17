@@ -42,6 +42,8 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.domainUpDown1 = new System.Windows.Forms.DomainUpDown();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -200,11 +202,41 @@
             this.checkBox3.UseVisualStyleBackColor = true;
             this.checkBox3.CheckedChanged += new System.EventHandler(this.checkBox3_CheckedChanged);
             // 
+            // domainUpDown1
+            // 
+            this.domainUpDown1.Items.Add("1");
+            this.domainUpDown1.Items.Add("2");
+            this.domainUpDown1.Items.Add("3");
+            this.domainUpDown1.Items.Add("4");
+            this.domainUpDown1.Items.Add("5");
+            this.domainUpDown1.Items.Add("6");
+            this.domainUpDown1.Items.Add("7");
+            this.domainUpDown1.Items.Add("8");
+            this.domainUpDown1.Items.Add("9");
+            this.domainUpDown1.Items.Add("10");
+            this.domainUpDown1.Location = new System.Drawing.Point(589, 96);
+            this.domainUpDown1.Name = "domainUpDown1";
+            this.domainUpDown1.Size = new System.Drawing.Size(61, 20);
+            this.domainUpDown1.TabIndex = 11;
+            this.domainUpDown1.Text = "domainUpDown1";
+            this.domainUpDown1.TextChanged += new System.EventHandler(this.domainUpDown1_TextChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(547, 100);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(24, 13);
+            this.label1.TabIndex = 12;
+            this.label1.Text = "AB:";
+            // 
             // OptimizeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(662, 383);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.domainUpDown1);
             this.Controls.Add(this.checkBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -238,5 +270,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.CheckBox checkBox3;
+        private System.Windows.Forms.DomainUpDown domainUpDown1;
+        private System.Windows.Forms.Label label1;
     }
 }

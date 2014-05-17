@@ -1,0 +1,722 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
+  <asmv1:assemblyIdentity name="VolleybalCompetition_creator.exe" version="1.0.0.56" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="x86" type="win32" />
+  <description asmv2:publisher="VolleybalCompetition_creator" asmv2:product="VolleybalCompetition_creator" xmlns="urn:schemas-microsoft-com:asm.v1" />
+  <application />
+  <entryPoint>
+    <assemblyIdentity name="VolleybalCompetition_creator" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
+    <commandLine file="VolleybalCompetition_creator.exe" parameters="" />
+  </entryPoint>
+  <co.v1:useManifestForTrust xmlns="urn:schemas-microsoft-com:asm.v1" />
+  <trustInfo>
+    <security>
+      <applicationRequestMinimum>
+        <PermissionSet version="1" class="System.Security.NamedPermissionSet" Name="LocalIntranet" Description="Default rights given to applications on the local intranet" Unrestricted="true" ID="Custom" SameSite="site" />
+        <defaultAssemblyRequest permissionSetReference="Custom" />
+      </applicationRequestMinimum>
+      <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
+        <!-- UAC Manifest Options
+            If you want to change the Windows User Account Control level replace the 
+            requestedExecutionLevel node with one of the following.
+
+        <requestedExecutionLevel  level="asInvoker" uiAccess="false" />
+        <requestedExecutionLevel  level="requireAdministrator" uiAccess="false" />
+        <requestedExecutionLevel  level="highestAvailable" uiAccess="false" />
+
+            Specifying requestedExecutionLevel node will disable file and registry virtualization.
+            If you want to utilize File and Registry Virtualization for backward 
+            compatibility then delete the requestedExecutionLevel node.
+        -->
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+  <dependency>
+    <dependentOS>
+      <osVersionInfo>
+        <os majorVersion="5" minorVersion="1" buildNumber="2600" servicePackMajor="0" />
+      </osVersionInfo>
+    </dependentOS>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Microsoft.Windows.CommonLanguageRuntime" version="4.0.30319.0" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Newtonsoft.Json.dll" size="456192">
+      <assemblyIdentity name="Newtonsoft.Json" version="4.5.0.0" publicKeyToken="30AD4FE6B2A6AEED" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <dsig:DigestValue>jFKgouWBUSf5DIULnmf4GXXM0n0=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ObjectListView.dll" size="453632">
+      <assemblyIdentity name="ObjectListView" version="2.5.1.21301" publicKeyToken="B1C5BF581481BCD4" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <dsig:DigestValue>s8LcZuA+17xSyGKD2nb4py+wzk4=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="VolleybalCompetition_creator.exe" size="193536">
+      <assemblyIdentity name="VolleybalCompetition_creator" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <dsig:DigestValue>f6QZS8VM1MvQxvI2djyv/OSSuaA=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="WeifenLuo.WinFormsUI.Docking.dll" size="428032">
+      <assemblyIdentity name="WeifenLuo.WinFormsUI.Docking" version="2.9.0.0" publicKeyToken="5CDED1A1A0A7B481" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <dsig:DigestValue>j10+NvPMxaocrliyv4guACu7kZk=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <file name="data\html_first.html" size="304">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>0w5PvVRyLKDX/28HXSzNyv1Ck0Q=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="data\html_second.html" size="1064">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>mW3glO501enbH8v/eBW8013ZA1M=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\Anorama.xml" size="5971" writeableType="applicationData">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>3oy/yIs972KANanJPaUAK0d92pY=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\ClubConstraints.xml" size="63962" writeableType="applicationData">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>vANrAITgKRkhzKmEPd3YYw8xzME=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches1.json" size="39890">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>J/aM7NTUTEy0cM5BVomwmCodzs4=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches10.json" size="119312">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>Fk4nGY96KER0Q494KpljaRSUzAk=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches11.json" size="107882">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>A8N8nUadQQHI7b0bs0XXBxs2Tqk=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches12.json" size="136078">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>4mG74j3Zn0YzmzLveEPgohqlISA=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches13.json" size="109371">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>KjCJuIin4JPld7w6xmu8Y4bvf2c=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches14.json" size="17826">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>0rrvYm5UF1vW6HKeGAjZDbH5tSo=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches15.json" size="47309">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>clwAPgo/VV+ffPegSlC2+/leE48=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches16.json" size="56079">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>0Qdk/f1WguA3/fNkzApk5iYaJKo=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches17.json" size="18978">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>TrGtMk4JfMEMBrPeM96Ocs3A0jk=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches18.json" size="65351">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>M4ZzNQZhP8LN43c1RVh9lt8wu9E=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches19.json" size="107780">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>jSXPt2F7CM83EJlEtlz4U2kwe7M=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches2.json" size="159622">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>6nlY1Lm+/WEiHXk71o3y3JlDw0s=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches20.json" size="36309">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>crs3oFU62usfiC/TmmzMCVEyHLM=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches21.json" size="69480">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>PkUfQa7A+QZaQgHZoFabaFoDphQ=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches22.json" size="148672">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>+In1imHNkGkNpF8uVyZM+Dz3Y7w=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches23.json" size="17674">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>VKG18avSxR6/f6cklBmrlEOP6/I=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches24.json" size="81814">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>Ud+DI80Qn8C2d9Mybt6/N+EeXmw=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches25.json" size="70752">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>fOEwL+rcfBeGDimNojmeBdil2hw=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches26.json" size="39278">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>/6noRNA3RC2EBxn10OibCNomKCQ=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches27.json" size="94944">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>pymUsGle4diHjGegOAO27Ow9Ptw=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches28.json" size="48720">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>KeUAaIfXsq4781UhZYjPOOrjwpQ=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches29.json" size="39119">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>mj1fHZbLW8OvhX/gwFF2DnK1dYQ=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches3.json" size="11459">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>EdNu7sh7gv3xN0pld93yzuGYYRs=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches30.json" size="64077">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>RwMJCIl+g/96eN5rXXWPobYBOts=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches31.json" size="42287">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>9C2QlGcJa13K7BgjTyORG2Fm674=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches32.json" size="89673">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>EgshlIbt1qWCurBo9ovVxUB17WA=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches33.json" size="54727">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>S4WQIBqcBV0FgIXbNA+6YZO3xbk=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches34.json" size="92552">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>oBXaIg16yxstAekj/Q/epuBK2G0=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches35.json" size="60927">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>SWt8em+tZEB+rNf1qPe4IjNAoyY=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches36.json" size="17104">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>rBX3wAnQtzUZjVAjQ7izgbZrNeM=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches37.json" size="100140">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>9gdFuCnzK7TMuEOo3UbaDz0qQUs=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches38.json" size="162551">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>g9PSejxb9ItiW/lVaQ9JQCIMgSc=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches39.json" size="53595">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>/oMnQzg/dT71/KGjHnXEDh+sixw=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches4.json" size="139786">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>DPO0tdZxH1uJCPXYWALBKixLCDw=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches40.json" size="103315">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>JyIbl88cv4TKx/hTgHcBDH8COpg=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches41.json" size="45809">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>QEzhrjNqkIUXe+nr4nCMtzJ1SU4=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches42.json" size="67543">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>G6T/mUXWWL2yxlpRSIuFo16TEpQ=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches43.json" size="74308">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>Wz10ENZNDlgjcmaWjJi+alXON5k=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches44.json" size="58902">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>HFlrn/gjUsvTYZnCeoLzCMn1buM=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches45.json" size="81401">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>PG7DA0Dhe5c/O+viLkt5zgGppXY=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches46.json" size="90505">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>1LrvfWXaF84NPYx+FUAkbh4iVNY=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches47.json" size="87332">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>lHs2evogXf2anqAHt8qaspzcZSY=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches48.json" size="77405">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>N26XsZFWpXXt+VCZJL2b05g4FDc=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches49.json" size="57262">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>WGPZ6r9xE2MRHaV7wt0fOm0+v6I=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches5.json" size="40915">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>sTFuI2HgugjF+dvu04+QzuMFE2I=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches50.json" size="10414">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>shLgBArQ43lSuGHg1zE4JccIM14=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches51.json" size="47699">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>tit/QuEyciPdeN/2fqnUbcT67lo=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches6.json" size="47461">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>240+ggCEueChDr51SPIhomOwjWU=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches7.json" size="65765">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>TAf75br7RjYZSgnvVl9F34c6CHA=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches8.json" size="126571">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>D8kLCaVG/WOR3gpQrm3j07xpPpc=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubmatches9.json" size="37931">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>RlnS/qiyUYzgjwdFV1ycIbfZq4k=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\clubs.json" size="2572">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>XOiElfLV0kbz7YZBnHb1iOAU2CI=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\Schema10.csv" size="693">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>TlP2bdyDPNdVqpFPwt5cJtDGRQc=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\Schema12.csv" size="1068">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>swtAWIOCXRl2E+pwf2wyC/Rjn+E=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\Schema14.csv" size="1523">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>ZyL4pP75qKDh9Bm//Cf8rkZW9II=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\Schema4.csv" size="84">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>1EPfU2GSXGwT1ABc6VIKNTsdXs4=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\Schema6.csv" size="213">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>vffNPLAiFQXXhQUb9W6gTfpDE0g=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\Schema8.csv" size="412">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>j7w87jfYyWCkJVj4IpPquj+Rdbg=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\series.json" size="4860">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>o/oxSlY75R8TEnlqnQl13cfD5bI=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\sporthal_afstanden.json" size="275549">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>qyIEt1KFu2L8FfwGE9ve0abGL3s=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\sporthallen.json" size="29847">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>8sxaTJBB3+7i7b4QS9oWFDdkVxk=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\sporthalls.json" size="24565">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>REYj7JKXZlKNIZ+OkDFeqfgdBqA=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="InputData\VVBWedstrijden.xml" size="924523" writeableType="applicationData">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>G25p4FXxdZ4mvFir5FVbjG/c+KM=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="ToDo.txt" size="324">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>sKGzKt9f9nf8jHz5u45OR2LK8uo=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="VolleybalCompetition_creator.exe.config" size="144">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>cpzNzlRjZspwKGLNlX6RAlU3880=</dsig:DigestValue>
+    </hash>
+  </file>
+  <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
+    <application>
+      <!-- A list of all Windows versions that this application is designed to work with. Windows will automatically select the most compatible environment.-->
+      <!-- If your application is designed to work with Windows 7, uncomment the following supportedOS node-->
+      <!--<supportedOS Id="{35138b9a-5d96-4fbd-8e2d-a2440225f93a}"/>-->
+    </application>
+  </compatibility>
+</asmv1:assembly>

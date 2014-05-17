@@ -47,30 +47,20 @@ namespace VolleybalCompetition_creator
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            InputForm form = new InputForm("Creeer een Anorama", "Geef een jaartal");
-            form.ShowDialog();
-            if (form.Result)
+            DialogResult dialogResult = MessageBox.Show("Bij het creeren van een nieuwe anorama gaat de oude verloren. Wil je dit?", "Nieuwe anorama", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
             {
-                int year;
-                bool ok = int.TryParse(form.GetInputString(), out year);
-                if (ok)
-                {
-                    DialogResult dialogResult = MessageBox.Show("Bij het creeren van een nieuwe anorama gaat de oude verloren. Wil je dit?", "Nieuwe anorama", MessageBoxButtons.YesNo);
-                    if (dialogResult == DialogResult.Yes)
-                    {
-                        klvv.annorama.CreateAnorama(year);
-                        klvv.annorama.WriteXML();
-                    }
-                    UpdateForm();
-                }
+                klvv.annorama.CreateAnorama(klvv.year);
+                klvv.annorama.WriteXML(klvv.year);
             }
+            UpdateForm();
         }
 
         private void objectListView1_SubItemChecking_1(object sender, SubItemCheckingEventArgs e)
         {
             AnoramaWeekend weekend = (AnoramaWeekend)e.RowObject;
             weekend.reeksen[e.Column.Index-1] = (e.NewValue == CheckState.Checked); 
-            klvv.annorama.WriteXML();
+            klvv.annorama.WriteXML(klvv.year);
 
         }
 
@@ -82,7 +72,7 @@ namespace VolleybalCompetition_creator
             {
                 klvv.annorama.CreateReeks(form.GetInputString());
                 UpdateForm();
-                klvv.annorama.WriteXML();
+                klvv.annorama.WriteXML(klvv.year);
             }
 
         }

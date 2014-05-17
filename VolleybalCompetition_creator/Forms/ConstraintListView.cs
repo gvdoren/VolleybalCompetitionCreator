@@ -34,6 +34,7 @@ namespace VolleybalCompetition_creator
             {
                 klvv.OnMyChange -= state_OnMyChange;
                 klvv = e.klvv;
+                objectListView1.SetObjects(klvv.constraints);
                 klvv.OnMyChange += state_OnMyChange;
             }
             if (InvokeRequired)
@@ -41,7 +42,7 @@ namespace VolleybalCompetition_creator
                 this.Invoke(new Action(() => state_OnMyChange(source, e)));
                 return;
             }
-            lock (klvv) ;
+            lock (klvv);
             if (state.showConstraints.Contains(state.selectedConstraint) == false)
             {
                 if (state.showConstraints.Count > 0)
@@ -153,6 +154,12 @@ namespace VolleybalCompetition_creator
             klvv.OnMyChange -= state_OnMyChange;
             state.OnMyChange -= state_OnMyChange;
 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            klvv.Evaluate(null);
+            klvv.Changed();
         }
     }
 

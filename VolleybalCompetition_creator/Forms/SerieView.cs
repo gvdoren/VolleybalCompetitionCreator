@@ -38,6 +38,7 @@ namespace VolleybalCompetition_creator
             firstHalf = File.ReadAllText(@"Data/html_first.html");
             secondHalf = File.ReadAllText(@"Data/html_second.html");
             UpdateWebBrowser();
+            UpdatePouleList();
         }
         public void state_OnMyChange(object source, MyEventArgs e)
         {
@@ -144,8 +145,9 @@ namespace VolleybalCompetition_creator
 
         private void objectListView2_SelectionChanged(object sender, EventArgs e)
         {
-            button2.Enabled = (objectListView2.SelectedObjects.Count == 1);
+            button2.Enabled = (objectListView2.SelectedObjects.Count >= 1);
             button3.Enabled = (objectListView2.SelectedObjects.Count == 1 && objectListView3.SelectedObjects.Count>0);
+            button5.Enabled = (objectListView2.SelectedObjects.Count >= 1);
             poule = (Poule)objectListView2.SelectedObject;
         }
         private void objectListView3_SelectionChanged(object sender, EventArgs e)
@@ -160,11 +162,8 @@ namespace VolleybalCompetition_creator
 
         private void button2_Click(object sender, EventArgs e)
         {// delete poule
-            foreach (Team team in poule.teams)
-            {
-                team.poule = null;
-            }
-            int i = 0;
+            
+            /*int i = 0;
             while(i<klvv.constraints.Count)
             {
                 ConstraintSchemaTooClose c = klvv.constraints[i] as ConstraintSchemaTooClose;
@@ -176,9 +175,16 @@ namespace VolleybalCompetition_creator
                 {
                     i++;
                 }
+            }*/
+            foreach (Poule p in objectListView2.SelectedObjects)
+            {
+                foreach (Team team in p.teams)
+                {
+                    team.poule = null;
+                }
+                serie.poules.Remove(p.name);
+                klvv.poules.Remove(p);
             }
-            serie.poules.Remove(poule.name);
-            klvv.poules.Remove(poule);
             /*foreach (DockContent content in this.DockPanel.Contents)
             {
                 PouleView pouleview = content as PouleView;
@@ -318,14 +324,18 @@ namespace VolleybalCompetition_creator
             {
                 if (serie.optimizable)
                 {
-                    foreach (Poule poule in serie.poules.Values)
+                    foreach (Poule poule in objectListView2.SelectedObjects)
                     {
                         int teamCount = poule.teams.Count;
                         while (teamCount != 6 && teamCount != 10 && teamCount != 12 && teamCount != 14) teamCount++;
                         List<Weekend> weekends = klvv.annorama.GetReeks(teamCount.ToString());
                         if (weekends.Count < (teamCount - 1) * 2)
                         {
-                            System.Windows.Forms.MessageBox.Show("Number of weekends not sufficient for number of teams");
+                            System.Windows.Forms.MessageBox.Show(string.Format("Number of weekends in anorama ({0}) not sufficient for schema ({1})", weekends.Count, (teamCount - 1) * 2));
+                        }
+                        if (weekends.Count != (teamCount - 1) * 2)
+                        {
+                            System.Windows.Forms.MessageBox.Show(string.Format("Number of weekends in anorama ({0}) do not match with schema ({1})", weekends.Count, (teamCount - 1) * 2));
                         }
                         poule.weekends.Clear();
                         foreach (Weekend we in weekends)

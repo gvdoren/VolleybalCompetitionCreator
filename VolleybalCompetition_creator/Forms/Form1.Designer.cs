@@ -51,9 +51,10 @@
             this.saveToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.subscriptionsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.kLVVCompetitionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.vVBCompetitionToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.subscriptionsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.kLVVTeamSubscriptionsklvvbeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportCompetitionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.perClubToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.manageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -71,8 +72,7 @@
             this.optimizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.kLVVTeamSubscriptionsklvvbeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.clubRegistrationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.competitionxmlForKlvvsiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -201,6 +201,20 @@
             this.importToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
             this.importToolStripMenuItem.Text = "Import";
             // 
+            // kLVVCompetitionToolStripMenuItem
+            // 
+            this.kLVVCompetitionToolStripMenuItem.Name = "kLVVCompetitionToolStripMenuItem";
+            this.kLVVCompetitionToolStripMenuItem.Size = new System.Drawing.Size(424, 22);
+            this.kLVVCompetitionToolStripMenuItem.Text = "KLVV competition";
+            this.kLVVCompetitionToolStripMenuItem.Click += new System.EventHandler(this.kLVVCompetitionToolStripMenuItem_Click_1);
+            // 
+            // vVBCompetitionToolStripMenuItem1
+            // 
+            this.vVBCompetitionToolStripMenuItem1.Name = "vVBCompetitionToolStripMenuItem1";
+            this.vVBCompetitionToolStripMenuItem1.Size = new System.Drawing.Size(424, 22);
+            this.vVBCompetitionToolStripMenuItem1.Text = "VVB competition";
+            this.vVBCompetitionToolStripMenuItem1.Click += new System.EventHandler(this.vVBCompetitionToolStripMenuItem1_Click);
+            // 
             // subscriptionsToolStripMenuItem1
             // 
             this.subscriptionsToolStripMenuItem1.Name = "subscriptionsToolStripMenuItem1";
@@ -208,25 +222,18 @@
             this.subscriptionsToolStripMenuItem1.Text = "KLVV Registrations";
             this.subscriptionsToolStripMenuItem1.Click += new System.EventHandler(this.subscriptionsToolStripMenuItem1_Click);
             // 
-            // kLVVCompetitionToolStripMenuItem
+            // kLVVTeamSubscriptionsklvvbeToolStripMenuItem
             // 
-            this.kLVVCompetitionToolStripMenuItem.Name = "kLVVCompetitionToolStripMenuItem";
-            this.kLVVCompetitionToolStripMenuItem.Size = new System.Drawing.Size(256, 22);
-            this.kLVVCompetitionToolStripMenuItem.Text = "KLVV competition";
-            this.kLVVCompetitionToolStripMenuItem.Click += new System.EventHandler(this.kLVVCompetitionToolStripMenuItem_Click_1);
-            // 
-            // vVBCompetitionToolStripMenuItem1
-            // 
-            this.vVBCompetitionToolStripMenuItem1.Name = "vVBCompetitionToolStripMenuItem1";
-            this.vVBCompetitionToolStripMenuItem1.Size = new System.Drawing.Size(256, 22);
-            this.vVBCompetitionToolStripMenuItem1.Text = "VVB competition";
-            this.vVBCompetitionToolStripMenuItem1.Click += new System.EventHandler(this.vVBCompetitionToolStripMenuItem1_Click);
+            this.kLVVTeamSubscriptionsklvvbeToolStripMenuItem.Name = "kLVVTeamSubscriptionsklvvbeToolStripMenuItem";
+            this.kLVVTeamSubscriptionsklvvbeToolStripMenuItem.Size = new System.Drawing.Size(424, 22);
+            this.kLVVTeamSubscriptionsklvvbeToolStripMenuItem.Text = "http://klvv.be/server/restricted/registrations/registrationsXML.php";
+            this.kLVVTeamSubscriptionsklvvbeToolStripMenuItem.Click += new System.EventHandler(this.kLVVTeamSubscriptionsklvvbeToolStripMenuItem_Click);
             // 
             // exportCompetitionToolStripMenuItem
             // 
             this.exportCompetitionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.perClubToolStripMenuItem1,
-            this.clubRegistrationsToolStripMenuItem});
+            this.competitionxmlForKlvvsiteToolStripMenuItem});
             this.exportCompetitionToolStripMenuItem.Name = "exportCompetitionToolStripMenuItem";
             this.exportCompetitionToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
             this.exportCompetitionToolStripMenuItem.Text = "Export Competition";
@@ -234,8 +241,8 @@
             // perClubToolStripMenuItem1
             // 
             this.perClubToolStripMenuItem1.Name = "perClubToolStripMenuItem1";
-            this.perClubToolStripMenuItem1.Size = new System.Drawing.Size(119, 22);
-            this.perClubToolStripMenuItem1.Text = "Per Club";
+            this.perClubToolStripMenuItem1.Size = new System.Drawing.Size(247, 22);
+            this.perClubToolStripMenuItem1.Text = "Per Club (.csv)";
             this.perClubToolStripMenuItem1.Click += new System.EventHandler(this.perClubToolStripMenuItem1_Click);
             // 
             // manageToolStripMenuItem
@@ -251,14 +258,14 @@
             // anoramaToolStripMenuItem1
             // 
             this.anoramaToolStripMenuItem1.Name = "anoramaToolStripMenuItem1";
-            this.anoramaToolStripMenuItem1.Size = new System.Drawing.Size(173, 22);
+            this.anoramaToolStripMenuItem1.Size = new System.Drawing.Size(170, 22);
             this.anoramaToolStripMenuItem1.Text = "Anorama";
             this.anoramaToolStripMenuItem1.Click += new System.EventHandler(this.anoramaToolStripMenuItem1_Click);
             // 
             // poulesToolStripMenuItem
             // 
             this.poulesToolStripMenuItem.Name = "poulesToolStripMenuItem";
-            this.poulesToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.poulesToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.poulesToolStripMenuItem.Text = "Poules";
             this.poulesToolStripMenuItem.Click += new System.EventHandler(this.poulesToolStripMenuItem_Click);
             // 
@@ -283,21 +290,21 @@
             // clubsToolStripMenuItem
             // 
             this.clubsToolStripMenuItem.Name = "clubsToolStripMenuItem";
-            this.clubsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.clubsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.clubsToolStripMenuItem.Text = "Clubs";
             this.clubsToolStripMenuItem.Click += new System.EventHandler(this.clubsToolStripMenuItem_Click);
             // 
             // seriesToolStripMenuItem
             // 
             this.seriesToolStripMenuItem.Name = "seriesToolStripMenuItem";
-            this.seriesToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.seriesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.seriesToolStripMenuItem.Text = "Poules";
             this.seriesToolStripMenuItem.Click += new System.EventHandler(this.seriesToolStripMenuItem_Click);
             // 
             // constraintsToolStripMenuItem
             // 
             this.constraintsToolStripMenuItem.Name = "constraintsToolStripMenuItem";
-            this.constraintsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.constraintsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.constraintsToolStripMenuItem.Text = "Constraints";
             this.constraintsToolStripMenuItem.Click += new System.EventHandler(this.constraintsToolStripMenuItem_Click);
             // 
@@ -307,7 +314,7 @@
             this.perTypeToolStripMenuItem,
             this.perClubToolStripMenuItem});
             this.reportToolStripMenuItem.Name = "reportToolStripMenuItem";
-            this.reportToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.reportToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.reportToolStripMenuItem.Text = "Report";
             this.reportToolStripMenuItem.Click += new System.EventHandler(this.reportToolStripMenuItem_Click);
             // 
@@ -344,19 +351,12 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // kLVVTeamSubscriptionsklvvbeToolStripMenuItem
+            // competitionxmlForKlvvsiteToolStripMenuItem
             // 
-            this.kLVVTeamSubscriptionsklvvbeToolStripMenuItem.Name = "kLVVTeamSubscriptionsklvvbeToolStripMenuItem";
-            this.kLVVTeamSubscriptionsklvvbeToolStripMenuItem.Size = new System.Drawing.Size(424, 22);
-            this.kLVVTeamSubscriptionsklvvbeToolStripMenuItem.Text = "http://klvv.be/server/restricted/registrations/registrationsXML.php";
-            this.kLVVTeamSubscriptionsklvvbeToolStripMenuItem.Click += new System.EventHandler(this.kLVVTeamSubscriptionsklvvbeToolStripMenuItem_Click);
-            // 
-            // clubRegistrationsToolStripMenuItem
-            // 
-            this.clubRegistrationsToolStripMenuItem.Name = "clubRegistrationsToolStripMenuItem";
-            this.clubRegistrationsToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
-            this.clubRegistrationsToolStripMenuItem.Text = "Club Registrations";
-            this.clubRegistrationsToolStripMenuItem.Click += new System.EventHandler(this.clubRegistrationsToolStripMenuItem_Click);
+            this.competitionxmlForKlvvsiteToolStripMenuItem.Name = "competitionxmlForKlvvsiteToolStripMenuItem";
+            this.competitionxmlForKlvvsiteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.competitionxmlForKlvvsiteToolStripMenuItem.Text = "Klvv-site (.xml)";
+            this.competitionxmlForKlvvsiteToolStripMenuItem.Click += new System.EventHandler(this.competitionxmlForKlvvsiteToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -406,7 +406,7 @@
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem kLVVTeamSubscriptionsklvvbeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem clubRegistrationsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem competitionxmlForKlvvsiteToolStripMenuItem;
     }
 }
 

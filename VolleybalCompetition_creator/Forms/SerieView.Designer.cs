@@ -103,7 +103,6 @@
             this.objectListView2.FullRowSelect = true;
             this.objectListView2.HideSelection = false;
             this.objectListView2.Location = new System.Drawing.Point(245, 13);
-            this.objectListView2.MultiSelect = false;
             this.objectListView2.Name = "objectListView2";
             this.objectListView2.ShowGroups = false;
             this.objectListView2.Size = new System.Drawing.Size(121, 261);
@@ -202,7 +201,7 @@
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(120, 23);
             this.button3.TabIndex = 5;
-            this.button3.Text = "Assign Team";
+            this.button3.Text = "Assign Team(s)";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
@@ -253,7 +252,7 @@
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(118, 23);
             this.button5.TabIndex = 10;
-            this.button5.Text = "reset Serie";
+            this.button5.Text = "Reset Poule-Schema";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 

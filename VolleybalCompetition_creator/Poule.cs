@@ -82,7 +82,7 @@ namespace VolleybalCompetition_creator
             MakeDirty();
             if (serie.optimizable)
             {
-                if (conflict > 0)
+                if (conflict_cost > 0)
                 {
                     if (weekends.Count > 12)
                     {
@@ -163,7 +163,7 @@ namespace VolleybalCompetition_creator
                 }
             } else
             {
-                if (conflict < minConflicts || klvv.slow)
+                if (conflict_cost < minConflicts || klvv.slow)
                 {
                     snapshot = true;
                 }
@@ -173,7 +173,7 @@ namespace VolleybalCompetition_creator
                 resultTeams = new List<Team>(teams);
                 resultWeekends = new List<Weekend>(weekends);
                 resultMatches = CopyMatches();
-                minConflicts = conflict; 
+                minConflicts = conflict_cost; 
             }
         }
         public void SnapShot(Klvv klvv)
@@ -182,7 +182,7 @@ namespace VolleybalCompetition_creator
             resultTeams = new List<Team>(teams);
             resultWeekends = new List<Weekend>(weekends);
             resultMatches = CopyMatches();
-            minConflicts = conflict;
+            minConflicts = conflict_cost;
         }
 
         private void Swap(List<Weekend> list, int i, int j)
@@ -231,7 +231,7 @@ namespace VolleybalCompetition_creator
             MakeDirty();
             if (serie.optimizable)
             {
-                if (conflict > 0)
+                if (conflict_cost > 0)
                 {
                     int teamindex = teams.FindIndex(t => t == team);
                     for (int i = 0; i < teams.Count; i++)
@@ -264,7 +264,7 @@ namespace VolleybalCompetition_creator
             MakeDirty();
             if (serie.optimizable)
             {
-                if (conflict > 0)
+                if (conflict_cost > 0)
                 {
                     if (teams.Count <= 7)
                     {
@@ -361,12 +361,12 @@ namespace VolleybalCompetition_creator
             {
                 foreach (Match match in matches)
                 {
-                    if (match.conflict > 0)
+                    if (match.conflict_cost > 0)
                     {
                         int before = minConflicts;
                         SwitchHomeTeamVisitorTeam(klvv,match);
                         klvv.Evaluate(this);
-                        if (conflict < minConflicts)
+                        if (conflict_cost < minConflicts)
                         {
                             SnapShotIfImproved(klvv);
                         }

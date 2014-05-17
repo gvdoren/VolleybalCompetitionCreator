@@ -22,6 +22,7 @@ namespace VolleybalCompetition_creator
             this.state = state;
             InitializeComponent();
             objectListView1.SetObjects(klvv.series);
+            domainUpDown1.SelectedIndex = 6;
          }
 
         private void objectListView1_SubItemChecking(object sender, SubItemCheckingEventArgs e)
@@ -92,14 +93,14 @@ namespace VolleybalCompetition_creator
                     {
                         foreach (Team team in poule.teams)
                         {
-                            if (team.conflict > 0)
+                            if (team.conflict_cost > 0)
                             {
                                 teamList.Add(team);
                             }
                         }
                     }
                 }
-                teamList.Sort(delegate(Team t1, Team t2) { return t1.conflict.CompareTo(t2.conflict); });
+                teamList.Sort(delegate(Team t1, Team t2) { return t1.conflict_cost.CompareTo(t2.conflict_cost); });
                 teamList.Reverse();
                 foreach (Team team in teamList)
                 {
@@ -134,7 +135,7 @@ namespace VolleybalCompetition_creator
                     {
                         if (team.poule != null && 
                             pouleList.Contains(team.poule) == false && 
-                            team.poule.conflict > 0 &&
+                            team.poule.conflict_cost > 0 &&
                             team.poule.serie.optimizable
                             )
                         {
@@ -179,13 +180,13 @@ namespace VolleybalCompetition_creator
                 {
                     foreach (Team team in club.teams)
                     {
-                        if (team.conflict > 0 && team.poule != null && team.poule.serie.optimizable)
+                        if (team.conflict_cost > 0 && team.poule != null && team.poule.serie.optimizable)
                         {
                             teamList.Add(team);
                         }
                     }
                 }
-                teamList.Sort(delegate(Team t1, Team t2) { return t1.conflict.CompareTo(t2.conflict); });
+                teamList.Sort(delegate(Team t1, Team t2) { return t1.conflict_cost.CompareTo(t2.conflict_cost); });
                 teamList.Reverse();
                 foreach (Team team in teamList)
                 {
@@ -266,9 +267,9 @@ namespace VolleybalCompetition_creator
                     // Try switch
                     // - Team komt niet meer terug in conflicten => solved
                     // - Aantal 
-                    int Acount = matchesDate.Count(m => m.homeTeam.group == TeamGroups.GroupA);
-                    int Bcount = matchesDate.Count(m => m.homeTeam.group == TeamGroups.GroupB);
-                    TeamGroups focusGroup = Acount < Bcount ? TeamGroups.GroupA : TeamGroups.GroupB;
+                    int Acount = matchesDate.Count(m => m.homeTeam.group == TeamGroups.GroupX);
+                    int Bcount = matchesDate.Count(m => m.homeTeam.group == TeamGroups.GroupY);
+                    TeamGroups focusGroup = Acount < Bcount ? TeamGroups.GroupX : TeamGroups.GroupY;
                     List<Match> focusMatches = new List<Match>(matchesDate.FindAll(m => m.homeTeam.group == focusGroup));
                     foreach (Match match in focusMatches)
                     {
@@ -290,7 +291,7 @@ namespace VolleybalCompetition_creator
                         {
                             match.poule.SwitchHomeTeamVisitorTeam(klvv,match);
                         }
-                        focusGroup = Acount >= Bcount ? TeamGroups.GroupA : TeamGroups.GroupB;
+                        focusGroup = Acount >= Bcount ? TeamGroups.GroupX : TeamGroups.GroupY;
                         focusMatches = new List<Match>(matchesDate.FindAll(m => m.homeTeam.group == focusGroup));
                         foreach (Match match in focusMatches)
                         {
@@ -344,6 +345,14 @@ namespace VolleybalCompetition_creator
         private void checkBox3_CheckedChanged(object sender, EventArgs e)
         {
             klvv.fixedSchema = checkBox3.Checked;
+        }
+
+        private void domainUpDown1_TextChanged(object sender, EventArgs e)
+        {
+            klvv.ABdiff = int.Parse(domainUpDown1.Text);
+            klvv.Evaluate(null);
+            klvv.Changed();
+
         }
 
     }

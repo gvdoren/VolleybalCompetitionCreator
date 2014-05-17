@@ -31,6 +31,8 @@ namespace VolleybalCompetition_creator
             }
             comboBox2.SelectedIndex = 0;
             state.OnMyChange += new MyEventHandler(state_OnMyChange);
+            if (state.selectedClubs.Count > 0) SetClub(state.selectedClubs[0]);
+                
             //klvv.OnMyChange += state_OnMyChange;
         }
 
@@ -46,7 +48,15 @@ namespace VolleybalCompetition_creator
         }
         private void UpdateFreeFormatTab()
         {
-            textBox1.Text = club.FreeFormatConstraints;
+            textBox1.Clear();
+            char[] delimiter = { '\n' };
+            string[] parts = club.FreeFormatConstraints.Split(delimiter);
+            foreach (string part in parts)
+            {
+                textBox1.AppendText(part);
+                textBox1.AppendText(Environment.NewLine);
+            }
+            //textBox1.Text = club.FreeFormatConstraints;
         }
         public void state_OnMyChange(object source, MyEventArgs e)
         {
@@ -61,16 +71,19 @@ namespace VolleybalCompetition_creator
                 this.Invoke(new Action(() => state_OnMyChange(source, e)));
                 return;
             }
-            lock (klvv) ;
+            lock (klvv);
             if (state.selectedClubs.Count > 0 && state.selectedClubs[0] != club)
             {
-                club = state.selectedClubs[0];
-                Text = "Club-registration: " + club.name;
-            
-                UpdateSporthalForm();
-                UpdateTeamsTab();
-                UpdateFreeFormatTab();
+                SetClub(state.selectedClubs[0]);
             }
+        }
+        private void SetClub(Club club)
+        {
+            this.club = club;
+            Text = "Club-registration: " + club.name;
+            UpdateSporthalForm();
+            UpdateTeamsTab();
+            UpdateFreeFormatTab();
         }
 
         private void dataGridView2_SelectionChanged(object sender, EventArgs e)
@@ -231,6 +244,19 @@ namespace VolleybalCompetition_creator
         {
             state.OnMyChange -= new MyEventHandler(state_OnMyChange);
             //klvv.OnMyChange -= state_OnMyChange;
+
+        }
+
+        private void objectListView1_CellEditFinishing(object sender, CellEditEventArgs e)
+        {
+            klvv.Evaluate(null);
+            klvv.Changed();
+        }
+
+        private void objectListView1_CellClick(object sender, CellClickEventArgs e)
+        {
+            klvv.Evaluate(null);
+            klvv.Changed();
 
         }
 
