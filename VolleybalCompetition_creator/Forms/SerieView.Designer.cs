@@ -35,6 +35,7 @@
             this.objectListView2 = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn5 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn10 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.objectListView3 = new BrightIdeasSoftware.ObjectListView();
@@ -48,6 +49,7 @@
             this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.button5 = new System.Windows.Forms.Button();
+            this.button6 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView3)).BeginInit();
@@ -97,9 +99,11 @@
             // 
             this.objectListView2.AllColumns.Add(this.olvColumn4);
             this.objectListView2.AllColumns.Add(this.olvColumn5);
+            this.objectListView2.AllColumns.Add(this.olvColumn10);
             this.objectListView2.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumn4,
-            this.olvColumn5});
+            this.olvColumn5,
+            this.olvColumn10});
             this.objectListView2.FullRowSelect = true;
             this.objectListView2.HideSelection = false;
             this.objectListView2.Location = new System.Drawing.Point(245, 13);
@@ -109,6 +113,7 @@
             this.objectListView2.TabIndex = 1;
             this.objectListView2.UseCompatibleStateImageBehavior = false;
             this.objectListView2.View = System.Windows.Forms.View.Details;
+            this.objectListView2.FormatRow += new System.EventHandler<BrightIdeasSoftware.FormatRowEventArgs>(this.objectListView2_FormatRow);
             this.objectListView2.SelectionChanged += new System.EventHandler(this.objectListView2_SelectionChanged);
             // 
             // olvColumn4
@@ -117,12 +122,21 @@
             this.olvColumn4.CellPadding = null;
             this.olvColumn4.FillsFreeSpace = true;
             this.olvColumn4.Text = "Poules";
+            this.olvColumn4.Width = 40;
             // 
             // olvColumn5
             // 
             this.olvColumn5.AspectName = "teams.Count";
             this.olvColumn5.CellPadding = null;
             this.olvColumn5.Text = "Teams";
+            this.olvColumn5.Width = 40;
+            // 
+            // olvColumn10
+            // 
+            this.olvColumn10.AspectName = "maxTeams";
+            this.olvColumn10.CellPadding = null;
+            this.olvColumn10.Text = "Max";
+            this.olvColumn10.Width = 40;
             // 
             // button1
             // 
@@ -166,9 +180,12 @@
             this.objectListView3.ShowGroups = false;
             this.objectListView3.Size = new System.Drawing.Size(419, 594);
             this.objectListView3.TabIndex = 4;
+            this.objectListView3.UseCellFormatEvents = true;
             this.objectListView3.UseCompatibleStateImageBehavior = false;
             this.objectListView3.View = System.Windows.Forms.View.Details;
+            this.objectListView3.FormatCell += new System.EventHandler<BrightIdeasSoftware.FormatCellEventArgs>(this.objectListView3_FormatCell);
             this.objectListView3.SelectionChanged += new System.EventHandler(this.objectListView3_SelectionChanged);
+            this.objectListView3.DoubleClick += new System.EventHandler(this.objectListView3_DoubleClick);
             // 
             // olvColumn6
             // 
@@ -256,11 +273,22 @@
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(373, 243);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(118, 23);
+            this.button6.TabIndex = 11;
+            this.button6.Text = "Automatic Divide";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
+            // 
             // SerieView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(919, 608);
+            this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.webBrowser1);
@@ -306,5 +334,7 @@
         private System.Windows.Forms.WebBrowser webBrowser1;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Button button5;
+        private BrightIdeasSoftware.OLVColumn olvColumn10;
+        private System.Windows.Forms.Button button6;
     }
 }

@@ -66,7 +66,7 @@ namespace VolleybalCompetition_creator
             int conflicts = 0;
             foreach (Constraint constraint in klvv.constraints)
             {
-                conflicts += constraint.conflict;
+                conflicts += constraint.conflict_cost;
             }
             label1.Text = "Conflicts: " + conflicts.ToString();
         }
@@ -111,7 +111,7 @@ namespace VolleybalCompetition_creator
         public bool Filter(object modelObject)
         {
             Constraint constraint = (Constraint)modelObject;
-            if (checkBox1.Checked && constraint.conflict == 0) return false;
+            if (checkBox1.Checked && constraint.conflict_cost == 0) return false;
             //if (state.showConstraints.Count == 0) return true;
             return state.showConstraints.Contains(constraint);
         }

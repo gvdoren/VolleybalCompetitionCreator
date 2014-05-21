@@ -118,7 +118,7 @@ namespace VolleybalCompetition_creator
                 for (DateTime current = begin; current < end; current = current.AddDays(7))
                 {
                     Weekend w = new Weekend(current);
-                    dataGridView3.Rows.Add(w, sporthal.NotAvailable.Contains(w.Saturday) == false, sporthal.NotAvailable.Contains(w.Sunday) == false);
+                    dataGridView3.Rows.Add(w, sporthal.NotAvailable.Contains(w.Saturday) == false, sporthal.NotAvailable.Contains(w.Sunday) == false,w.EvenOdd.ToString());
                 }
                 
             }
@@ -258,6 +258,38 @@ namespace VolleybalCompetition_creator
             klvv.Evaluate(null);
             klvv.Changed();
 
+        }
+
+        private void objectListView1_MouseClick(object sender, MouseEventArgs e)
+        {
+            Point mousePosition = objectListView1.PointToClient(Control.MousePosition);
+            ListViewHitTestInfo hit = objectListView1.HitTest(mousePosition);
+            int columnindex = hit.Item.SubItems.IndexOf(hit.SubItem);
+            Team team = (Team) objectListView1.SelectedObject;
+            if (team != null)
+            {
+                if (columnindex == 0)
+                {
+                    List<Selection> list = new List<Selection>();
+                    Selection def = null;
+                    foreach (Serie serie in klvv.series)
+                    {
+                        Selection sel = new Selection(serie.name, serie);
+                        if (serie == team.serie) def = sel;
+                        list.Add(sel);
+                    }
+                    SelectionDialog diag = new SelectionDialog(list, def);
+                    diag.Text = "Select the serie:";
+                    diag.ShowDialog();
+                    if (diag.Ok)
+                    {
+                        if (team.serie != null) team.serie.teams.Remove(team);
+                        team.serie = (Serie) diag.Selection.obj;
+                        team.serie.teams.Add(team);
+                    }
+                    objectListView1.BuildList(true);
+                }
+            }
         }
 
     }

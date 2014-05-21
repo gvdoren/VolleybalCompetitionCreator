@@ -47,6 +47,7 @@ namespace VolleybalCompetition_creator
             ConstraintListView constraintListview = new ConstraintListView(klvv, state);
             constraintListview.ShowHint = DockState.DockRight;
             constraintListview.Show(dockPanel);
+            dockPanel.DockRightPortion = 500;
             List<string> ListTeam = new List<string>();
             for (int i = 0; i < 11; i++)
             {
@@ -246,7 +247,7 @@ namespace VolleybalCompetition_creator
             klvv.constraints.Sort(delegate(Constraint c1, Constraint c2) { return c1.Title.CompareTo(c2.Title); });
             foreach (Constraint constraint in klvv.constraints)
             {
-                if (constraint.conflict > 0)
+                if (constraint.conflict_cost > 0)
                 {
                     if (constraint.name != name)
                     {
@@ -288,7 +289,7 @@ namespace VolleybalCompetition_creator
                     club.conflictConstraints.Sort(delegate(Constraint c1, Constraint c2) { return c1.Title.CompareTo(c2.Title); });
                     foreach (Constraint constraint in club.conflictConstraints)
                     {
-                        if (constraint.conflict > 0)
+                        if (constraint.conflict_cost > 0)
                         {
                             if (constraint.name != name)
                             {
@@ -390,7 +391,7 @@ namespace VolleybalCompetition_creator
                 writer.WriteAttributeString("Name", poule.name);
                 writer.WriteAttributeString("SerieSortId", poule.serie.id.ToString());
                 writer.WriteAttributeString("SerieName", poule.serie.name);
-
+                writer.WriteAttributeString("MaxTeams", poule.maxTeams.ToString());
                 writer.WriteStartElement("Teams");
                 foreach (Team team in poule.teams)
                 {
@@ -455,6 +456,11 @@ namespace VolleybalCompetition_creator
                     po.serie = serie;
                     serie.poules.Add(po.name, po);
                     klvvnew.poules.Add(po);
+                }
+                XAttribute attr = poule.Attribute("MaxTeams");
+                if (attr != null)
+                {
+                    po.maxTeams = int.Parse(attr.Value);
                 }
                 foreach (XElement team in poule.Element("Teams").Elements("Team"))
                 {

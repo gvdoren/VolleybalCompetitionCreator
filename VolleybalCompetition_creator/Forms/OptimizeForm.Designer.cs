@@ -66,7 +66,7 @@
             this.objectListView1.OwnerDraw = true;
             this.objectListView1.ShowGroups = false;
             this.objectListView1.ShowImagesOnSubItems = true;
-            this.objectListView1.Size = new System.Drawing.Size(184, 358);
+            this.objectListView1.Size = new System.Drawing.Size(223, 358);
             this.objectListView1.TabIndex = 0;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.UseSubItemCheckBoxes = true;
@@ -77,7 +77,6 @@
             // 
             this.olvColumn1.AspectName = "name";
             this.olvColumn1.CellPadding = null;
-            this.olvColumn1.FillsFreeSpace = true;
             this.olvColumn1.Text = "Serie";
             // 
             // olvColumn2
@@ -85,7 +84,10 @@
             this.olvColumn2.AspectName = "optimizable";
             this.olvColumn2.CellPadding = null;
             this.olvColumn2.CheckBoxes = true;
-            this.olvColumn2.Text = "Optimize";
+            this.olvColumn2.FillsFreeSpace = true;
+            this.olvColumn2.MaximumWidth = 100;
+            this.olvColumn2.Text = "Change allowed";
+            this.olvColumn2.Width = 100;
             // 
             // olvColumn3
             // 
@@ -97,6 +99,7 @@
             // 
             // button1
             // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.Location = new System.Drawing.Point(6, 19);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(117, 23);
@@ -107,6 +110,7 @@
             // 
             // button2
             // 
+            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button2.Location = new System.Drawing.Point(6, 49);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(117, 23);
@@ -117,6 +121,7 @@
             // 
             // button3
             // 
+            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button3.Location = new System.Drawing.Point(6, 19);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(135, 23);
@@ -127,6 +132,7 @@
             // 
             // button4
             // 
+            this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button4.Location = new System.Drawing.Point(7, 48);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(134, 23);
@@ -137,8 +143,11 @@
             // 
             // checkBox1
             // 
+            this.checkBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(547, 17);
+            this.checkBox1.Checked = true;
+            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox1.Location = new System.Drawing.Point(274, 260);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(112, 17);
             this.checkBox1.TabIndex = 5;
@@ -147,18 +156,22 @@
             // 
             // button5
             // 
+            this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button5.Location = new System.Drawing.Point(6, 77);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(135, 23);
             this.button5.TabIndex = 6;
-            this.button5.Text = "Optimize AB Group";
+            this.button5.Text = "Optimize XY Group";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // checkBox2
             // 
+            this.checkBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(547, 42);
+            this.checkBox2.Checked = true;
+            this.checkBox2.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox2.Location = new System.Drawing.Point(274, 285);
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(82, 17);
             this.checkBox2.TabIndex = 7;
@@ -168,33 +181,36 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.button1);
             this.groupBox1.Controls.Add(this.button2);
-            this.groupBox1.Location = new System.Drawing.Point(211, 17);
+            this.groupBox1.Location = new System.Drawing.Point(268, 17);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(145, 174);
+            this.groupBox1.Size = new System.Drawing.Size(145, 90);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "All";
             // 
             // groupBox2
             // 
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.button3);
             this.groupBox2.Controls.Add(this.button4);
             this.groupBox2.Controls.Add(this.button5);
-            this.groupBox2.Location = new System.Drawing.Point(374, 17);
+            this.groupBox2.Location = new System.Drawing.Point(268, 119);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(147, 174);
+            this.groupBox2.Size = new System.Drawing.Size(147, 117);
             this.groupBox2.TabIndex = 9;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Selected Clubs";
             // 
             // checkBox3
             // 
+            this.checkBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBox3.AutoSize = true;
             this.checkBox3.Checked = true;
             this.checkBox3.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox3.Location = new System.Drawing.Point(547, 70);
+            this.checkBox3.Location = new System.Drawing.Point(274, 313);
             this.checkBox3.Name = "checkBox3";
             this.checkBox3.Size = new System.Drawing.Size(118, 17);
             this.checkBox3.TabIndex = 10;
@@ -204,6 +220,7 @@
             // 
             // domainUpDown1
             // 
+            this.domainUpDown1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.domainUpDown1.Items.Add("1");
             this.domainUpDown1.Items.Add("2");
             this.domainUpDown1.Items.Add("3");
@@ -214,7 +231,7 @@
             this.domainUpDown1.Items.Add("8");
             this.domainUpDown1.Items.Add("9");
             this.domainUpDown1.Items.Add("10");
-            this.domainUpDown1.Location = new System.Drawing.Point(589, 96);
+            this.domainUpDown1.Location = new System.Drawing.Point(316, 339);
             this.domainUpDown1.Name = "domainUpDown1";
             this.domainUpDown1.Size = new System.Drawing.Size(61, 20);
             this.domainUpDown1.TabIndex = 11;
@@ -223,8 +240,9 @@
             // 
             // label1
             // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(547, 100);
+            this.label1.Location = new System.Drawing.Point(274, 343);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(24, 13);
             this.label1.TabIndex = 12;
@@ -234,7 +252,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(662, 383);
+            this.ClientSize = new System.Drawing.Size(429, 383);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.domainUpDown1);
             this.Controls.Add(this.checkBox3);

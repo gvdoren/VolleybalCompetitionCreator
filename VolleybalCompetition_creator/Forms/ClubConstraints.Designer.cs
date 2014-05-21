@@ -30,17 +30,17 @@
         {
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.objectListView1 = new BrightIdeasSoftware.ObjectListView();
-            this.olvColumn0 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn5 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn6 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn7 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn9 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn8 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn10 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn7 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn0 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
@@ -48,11 +48,11 @@
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label1 = new System.Windows.Forms.Label();
             this.dataGridView3 = new System.Windows.Forms.DataGridView();
-            this.Column4 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.Column3 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage3.SuspendLayout();
+            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column3 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.Column4 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.EvenOdd = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
@@ -110,12 +110,7 @@
             this.objectListView1.CellEditFinishing += new BrightIdeasSoftware.CellEditEventHandler(this.objectListView1_CellEditFinishing);
             this.objectListView1.CellClick += new System.EventHandler<BrightIdeasSoftware.CellClickEventArgs>(this.objectListView1_CellClick);
             this.objectListView1.ItemsChanged += new System.EventHandler<BrightIdeasSoftware.ItemsChangedEventArgs>(this.objectListView1_ItemsChanged);
-            // 
-            // olvColumn0
-            // 
-            this.olvColumn0.AspectName = "Id";
-            this.olvColumn0.CellPadding = null;
-            this.olvColumn0.Text = "Id";
+            this.objectListView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.objectListView1_MouseClick);
             // 
             // olvColumn1
             // 
@@ -159,13 +154,6 @@
             this.olvColumn3.Text = "Group";
             this.olvColumn3.Width = 100;
             // 
-            // olvColumn7
-            // 
-            this.olvColumn7.AspectName = "NotAtSameTimeId";
-            this.olvColumn7.CellPadding = null;
-            this.olvColumn7.FillsFreeSpace = true;
-            this.olvColumn7.Text = "Not at same time with:";
-            // 
             // olvColumn9
             // 
             this.olvColumn9.AspectName = "EvenOdd";
@@ -188,6 +176,22 @@
             this.olvColumn10.FillsFreeSpace = true;
             this.olvColumn10.MinimumWidth = 0;
             this.olvColumn10.Text = "Email";
+            // 
+            // olvColumn7
+            // 
+            this.olvColumn7.AspectName = "NotAtSameTimeId";
+            this.olvColumn7.CellPadding = null;
+            this.olvColumn7.FillsFreeSpace = true;
+            this.olvColumn7.Text = "Not at same time with:";
+            // 
+            // olvColumn0
+            // 
+            this.olvColumn0.AspectName = "Id";
+            this.olvColumn0.CellPadding = null;
+            this.olvColumn0.FillsFreeSpace = true;
+            this.olvColumn0.MaximumWidth = 40;
+            this.olvColumn0.Text = "Id";
+            this.olvColumn0.Width = 40;
             // 
             // comboBox2
             // 
@@ -262,7 +266,8 @@
             this.dataGridView3.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column2,
             this.Column3,
-            this.Column4});
+            this.Column4,
+            this.EvenOdd});
             this.dataGridView3.Location = new System.Drawing.Point(615, 151);
             this.dataGridView3.Name = "dataGridView3";
             this.dataGridView3.RowHeadersVisible = false;
@@ -270,25 +275,6 @@
             this.dataGridView3.TabIndex = 7;
             this.dataGridView3.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView3_CellContentClick);
             this.dataGridView3.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView3_CellValueChanged);
-            // 
-            // Column4
-            // 
-            this.Column4.HeaderText = "Zondag";
-            this.Column4.Name = "Column4";
-            this.Column4.Width = 60;
-            // 
-            // Column3
-            // 
-            this.Column3.HeaderText = "Zaterdag";
-            this.Column3.Name = "Column3";
-            this.Column3.Width = 60;
-            // 
-            // Column2
-            // 
-            this.Column2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Column2.HeaderText = "Weekend";
-            this.Column2.MinimumWidth = 100;
-            this.Column2.Name = "Column2";
             // 
             // tabControl1
             // 
@@ -301,6 +287,30 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(877, 540);
             this.tabControl1.TabIndex = 0;
+            // 
+            // Column2
+            // 
+            this.Column2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Column2.HeaderText = "Weekend";
+            this.Column2.MinimumWidth = 70;
+            this.Column2.Name = "Column2";
+            // 
+            // Column3
+            // 
+            this.Column3.HeaderText = "Zaterdag";
+            this.Column3.Name = "Column3";
+            this.Column3.Width = 60;
+            // 
+            // Column4
+            // 
+            this.Column4.HeaderText = "Zondag";
+            this.Column4.Name = "Column4";
+            this.Column4.Width = 60;
+            // 
+            // EvenOdd
+            // 
+            this.EvenOdd.HeaderText = "EvenOdd";
+            this.EvenOdd.Name = "EvenOdd";
             // 
             // InschrijvingenView
             // 
@@ -318,13 +328,12 @@
             this.Name = "InschrijvingenView";
             this.Text = "ClubConstraints";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ClubConstraints_FormClosed);
-            this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -332,9 +341,6 @@
 
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.DataGridView dataGridView3;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn Column3;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn Column4;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DataGridView dataGridView2;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
@@ -354,6 +360,10 @@
         private BrightIdeasSoftware.OLVColumn olvColumn8;
         private BrightIdeasSoftware.OLVColumn olvColumn10;
         private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn Column3;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn Column4;
+        private System.Windows.Forms.DataGridViewTextBoxColumn EvenOdd;
 
     }
 }

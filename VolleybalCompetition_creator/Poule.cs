@@ -11,8 +11,9 @@ namespace VolleybalCompetition_creator
         List<Team> resultTeams = new List<Team>();
         List<Weekend> resultWeekends = new List<Weekend>();
         List<Match> resultMatches = new List<Match>();
+        List<Constraint> relatedConstraints = new List<Constraint>();
         int minConflicts = 0;
-
+        public int maxTeams = 0;
         public Serie serie = null;
         public string name { get; set; }
         public List<Team> teams = new List<Team>();
@@ -77,6 +78,31 @@ namespace VolleybalCompetition_creator
             }
         }
 
+        public void CalculateRelatedConstraints(Klvv klvv)
+        {
+            relatedConstraints = new List<Constraint>();
+            foreach (Constraint con in klvv.constraints)
+            {
+                if (con.poule == this) relatedConstraints.Add(con);
+            }
+            List<Club> clubs = new List<Club>();
+            List<SporthallClub> sporthalls = new List<SporthallClub>();
+            
+            foreach (Team team in teams)
+            {
+                if (clubs.Contains(team.club) == false) clubs.Add(team.club);
+                foreach(SporthallClub sporthal in team.club.sporthalls)
+                {
+                    if (sporthalls.Contains(sporthal) == false) sporthalls.Add(sporthal);
+                }
+            }
+            foreach (Constraint con in klvv.constraints)
+            {
+                if (clubs.Contains(con.club) || con.poule == this || sporthalls.Contains(con.sporthal)) relatedConstraints.Add(con);
+            }
+
+        }
+
         public void OptimizeWeekends(Klvv klvv, IProgress intf)
         {
             MakeDirty();
@@ -84,7 +110,7 @@ namespace VolleybalCompetition_creator
             {
                 if (conflict_cost > 0)
                 {
-                    if (weekends.Count > 12)
+                    if (weekends.Count > 1)//12)
                     {
                         List<Weekend> result = new List<Weekend>(weekends);
                         for (int i = 0; i < weekends.Count / 2; i++)
@@ -163,7 +189,7 @@ namespace VolleybalCompetition_creator
                 }
             } else
             {
-                if (conflict_cost < minConflicts || klvv.slow)
+                if (conflict_cost < minConflicts)
                 {
                     snapshot = true;
                 }
@@ -266,7 +292,7 @@ namespace VolleybalCompetition_creator
             {
                 if (conflict_cost > 0)
                 {
-                    if (teams.Count <= 7)
+                    if (teams.Count <= 6)
                     {
                         List<Team> temp = new List<Team>(teams);
                         teams = new List<Team>();
@@ -401,6 +427,7 @@ namespace VolleybalCompetition_creator
                     Match m2 = new Match(day, team1, team2, serie, this);
                     matches.Add(m2);
                 }
+                maxTeams = teamCount;
             }
             catch
             {
@@ -412,6 +439,7 @@ namespace VolleybalCompetition_creator
         {
             matches.Clear();
             if (teamCount % 2 == 1) teamCount++;
+            maxTeams = teamCount;
             List<int> allTeams = new List<int>();
             for (int i = 0; i < teamCount; i++)
             {

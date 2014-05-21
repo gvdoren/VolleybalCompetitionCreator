@@ -37,9 +37,10 @@ namespace VolleybalCompetition_creator
         List<Team> teams = new List<Team>();
         public bool VisitorAlso = true;
         public Club club { get; set; }
+        public Poule poule = null;
         public string name { get; set; }
         public int cost = 1;
-        public int conflict = 0;
+        public int conflict_cost = 0;
         public abstract string[] GetTextDescription();
         public abstract void Evaluate(Klvv klvv, Poule poule);
         public virtual string Title 
@@ -55,8 +56,8 @@ namespace VolleybalCompetition_creator
         {
             for (int i = 0; i < matches.Length; i++)
             {
-                if (matches[i].serie.optimizable) conflict += cost;
-                else conflict += 10;
+                if (matches[i].serie.optimizable) conflict_cost += cost;
+                else conflict_cost += 10;
                 if (conflictMatches.Contains(matches[i]) == false)
                 {
                     conflictMatches.Add(matches[i]);
@@ -97,7 +98,7 @@ namespace VolleybalCompetition_creator
         }
         public override void Evaluate(Klvv klvv, Poule p)
         {
-            conflict = 0;
+            conflict_cost = 0;
             conflictMatches.Clear();
             bool optimize = false;
             foreach (SporthallClub sporthal in club.sporthalls)
@@ -142,7 +143,6 @@ namespace VolleybalCompetition_creator
     }
     class ConstraintSchemaTooClose : Constraint
     {
-        public Poule poule;
         public override string Title
         {
             get
@@ -157,7 +157,7 @@ namespace VolleybalCompetition_creator
         }
         public override void Evaluate(Klvv klvv, Poule p)
         {
-            conflict = 0;
+            conflict_cost = 0;
             conflictMatches.Clear();
             if (poule.serie.constraintsHold)
             {
@@ -173,8 +173,12 @@ namespace VolleybalCompetition_creator
                                 match1.visitorTeam == match2.homeTeam &&
                                 match1.RealMatch())
                             {
-                                if ((match2.datetime - match1.datetime).TotalDays < poule.teams.Count * 4)
+                                double days = (match2.datetime - match1.datetime).TotalDays;
+                                double mindays = (poule.weekends.Count * 7) / 4;
+                                days = mindays-days;
+                                if (days>0)
                                 {
+                                    cost = (int)days;
                                     AddConflictMatch(match1, match2);
                                 }
                             }
@@ -191,7 +195,6 @@ namespace VolleybalCompetition_creator
     }
     class ConstraintPouleInconsistent : Constraint
     {
-        public Poule poule;
         public override string Title
         {
             get
@@ -206,7 +209,7 @@ namespace VolleybalCompetition_creator
         }
         public override void Evaluate(Klvv klvv, Poule p)
         {
-            conflict = 0;
+            conflict_cost = 0;
             conflictMatches.Clear();
             if (poule.serie.constraintsHold && poule.serie.name != "Nationaal")
             {
@@ -256,7 +259,6 @@ namespace VolleybalCompetition_creator
     }
     class ConstraintPouleTwoTeamsOfSameClub : Constraint
     {
-        public Poule poule;
         public override string Title
         {
             get
@@ -273,7 +275,7 @@ namespace VolleybalCompetition_creator
         }
         public override void Evaluate(Klvv klvv, Poule p)
         {
-            conflict = 0;
+            conflict_cost = 0;
             conflictMatches.Clear();
             if (poule.serie.constraintsHold && poule.serie.name != "Nationaal")
             {
@@ -322,7 +324,6 @@ namespace VolleybalCompetition_creator
     }
     class ConstraintPouleFixedNumber : Constraint
     {
-        public Poule poule;
         public override string Title
         {
             get
@@ -338,7 +339,7 @@ namespace VolleybalCompetition_creator
         }
         public override void Evaluate(Klvv klvv, Poule p)
         {
-            conflict = 0;
+            conflict_cost = 0;
             conflictMatches.Clear();
             if (p == null || p == poule)
             {
@@ -368,7 +369,7 @@ namespace VolleybalCompetition_creator
                         List<Weekend> anoramaWeekends = klvv.annorama.GetReeks(poule.AnoramaSize().ToString());
                         if (anoramaWeekends.Count != poule.weekends.Count)
                         {
-                            this.conflict += 1;
+                            this.conflict_cost += 1;
                             poule.conflict_cost += cost;
                         }
                         else
@@ -397,7 +398,6 @@ namespace VolleybalCompetition_creator
     }
     class ConstraintPouleOddEvenWeek : Constraint
     {
-        public Poule poule;
         public override string Title
         {
             get
@@ -414,7 +414,7 @@ namespace VolleybalCompetition_creator
         }
         public override void Evaluate(Klvv klvv, Poule p)
         {
-            conflict = 0;
+            conflict_cost = 0;
             conflictMatches.Clear();
             if (p == null || p == poule)
             {
@@ -435,6 +435,110 @@ namespace VolleybalCompetition_creator
             return result.ToArray();
         }
     }
+    class ConstraintNotAtWeekendHome_old : Constraint
+    {
+        public ConstraintNotAtWeekendHome_old(Club cl)
+        {
+            club = cl;
+            VisitorAlso = false;
+            name = "Teams in verschillende groupen spelen op dezelfde dag";
+        }
+        public override void Evaluate(Klvv klvv, Poule poule)
+        {
+            conflict_cost = 0;
+            conflictMatches.Clear();
+            foreach (SporthallClub sp in club.sporthalls)
+            {
+                Sporthal sporthal = sp.sporthall;
+                List<Team> listTeams = new List<Team>(club.teams.FindAll(t => t.sporthal.sporthall == sporthal));
+                if (club.groupingWithClub != null)
+                    listTeams.AddRange(club.groupingWithClub.teams.FindAll(t => t.sporthal.sporthall == sporthal));
+                for (int i = 0; i < listTeams.Count; i++)
+                {
+                    Team team1 = listTeams[i];
+                    Poule poule1 = team1.poule;
+                    if (poule1 != null)
+                    {
+                        if (poule == null || poule == poule1)
+                        {
+                            if (poule1.serie.constraintsHold)
+                            {
+                                List<Match> team1Matches = team1.poule.matches.FindAll(m => m.homeTeam == team1);
+                                team1Matches.Sort(delegate(Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
+                                for (int j = i + 1; j < listTeams.Count; j++)
+                                {
+                                    Team team2 = listTeams[j];
+                                    if (team2.poule != null)
+                                    {
+                                        if (team2.poule.serie.constraintsHold)
+                                        {
+                                            if ((team1.group == TeamGroups.GroupX && team2.group == TeamGroups.GroupY) ||
+                                               (team1.group == TeamGroups.GroupY && team2.group == TeamGroups.GroupX)
+                                                )
+                                            {
+                                                List<Match> team2Matches = team2.poule.matches.FindAll(m => m.homeTeam == team2);
+                                                team2Matches.Sort(delegate(Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
+
+                                                Poule poule2 = team2.poule;
+                                                int i1 = 0;
+                                                int i2 = 0;
+
+
+                                                while (i1 < team1Matches.Count && i2 < team2Matches.Count)
+                                                {
+                                                    Match m1 = team1Matches[i1];
+                                                    Match m2 = team2Matches[i2];
+                                                    if (m1.datetime.Date < m2.datetime.Date || m1.visitorTeam.club == m1.homeTeam.club)
+                                                    {
+                                                        i1++;
+                                                    }
+                                                    else if (m2.datetime.Date < m1.datetime.Date || m2.visitorTeam.club == m2.homeTeam.club)
+                                                    {
+                                                        i2++;
+                                                    }
+                                                    else
+                                                    {
+                                                        if (m1.RealMatch() && m2.RealMatch())
+                                                        {
+                                                            DateTime st1 = m1.datetime;
+                                                            DateTime en1 = st1.AddHours(2);
+                                                            st1 = st1.AddHours(-klvv.ABdiff);
+                                                            if (m1.serie.Reserve())
+                                                            {
+                                                                st1 = st1.AddHours(-2);
+                                                            }
+                                                            DateTime st2 = m2.datetime;
+                                                            DateTime en2 = st2.AddHours(2);
+                                                            st2 = st2.AddHours(-klvv.ABdiff);
+                                                            if (m2.serie.Reserve())
+                                                            {
+                                                                st2 = st2.AddHours(-2);
+                                                            }
+                                                            if (m1.homeTeam.club != m2.homeTeam.club || (st1 <= en2 && en1 >= st2))
+                                                            {
+                                                                this.AddConflictMatch(m1, m2);
+                                                            }
+                                                        }
+                                                        i1++;
+                                                        i2++;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        public override string[] GetTextDescription()
+        {
+            List<string> result = new List<string>();
+            return result.ToArray();
+        }
+    }
     class ConstraintNotAtWeekendHome : Constraint
     {
         public ConstraintNotAtWeekendHome(Club cl)
@@ -445,87 +549,56 @@ namespace VolleybalCompetition_creator
         }
         public override void Evaluate(Klvv klvv, Poule poule)
         {
-            List<Team> listTeams = new List<Team>(club.teams);
-            if (club.groupingWithClub != null) 
-                listTeams.AddRange(club.groupingWithClub.teams);
-            conflict = 0;
+            conflict_cost = 0;
             conflictMatches.Clear();
-            for(int i=0;i<listTeams.Count;i++)
+            foreach (SporthallClub sp in club.sporthalls)
             {
-                Team team1 = listTeams[i];
-                Poule poule1 = team1.poule;
-                if (poule1 != null)
+                List<Match> all_matches = new List<Match>();
+                Sporthal sporthal = sp.sporthall;
+                List<Team> listTeams = new List<Team>(club.teams.FindAll(t => t.sporthal.sporthall == sporthal));
+                if (club.groupingWithClub != null)
+                    listTeams.AddRange(club.groupingWithClub.teams.FindAll(t => t.sporthal.sporthall == sporthal));
+                for (int i = 0; i < listTeams.Count; i++)
                 {
-                    if (poule == null || poule == poule1)
+                    Team team1 = listTeams[i];
+                    Poule poule1 = team1.poule;
+                    if (poule1 != null)
                     {
-                        if (poule1.serie.constraintsHold)
+                        if (poule == null || poule == poule1)
                         {
-                            List<Match> team1Matches = team1.poule.matches.FindAll(m => m.homeTeam == team1);
-                            team1Matches.Sort(delegate(Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
-                            for(int j=i+1;j<listTeams.Count;j++)
+                            if (poule1.serie.constraintsHold)
                             {
-                                Team team2 = listTeams[j];
-                                if (team2.poule != null)
-                                {
-                                    if (team2.poule.serie.constraintsHold)
-                                    {
-                                        if ((team1.group == TeamGroups.GroupX && team2.group == TeamGroups.GroupY) ||
-                                           (team1.group == TeamGroups.GroupY && team2.group == TeamGroups.GroupX)
-                                            )
-                                        {
-                                            List<Match> team2Matches = team2.poule.matches.FindAll(m => m.homeTeam == team2);
-                                            team2Matches.Sort(delegate(Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
-
-                                            Poule poule2 = team2.poule;
-                                            int i1 = 0;
-                                            int i2 = 0;
-
-
-                                            while (i1 < team1Matches.Count && i2 < team2Matches.Count)
-                                            {
-                                                Match m1 = team1Matches[i1];
-                                                Match m2 = team2Matches[i2];
-                                                if (m1.datetime.Date < m2.datetime.Date || m1.visitorTeam.club == m1.homeTeam.club)
-                                                {
-                                                    i1++;
-                                                }
-                                                else if (m2.datetime.Date < m1.datetime.Date || m2.visitorTeam.club == m2.homeTeam.club)
-                                                {
-                                                    i2++;
-                                                }
-                                                else
-                                                {
-                                                    if (m1.RealMatch() && m2.RealMatch())
-                                                    {
-                                                        DateTime st1 = m1.datetime;
-                                                        DateTime en1 = st1.AddHours(2);
-                                                        st1 = st1.AddHours(-klvv.ABdiff);
-                                                        if(m1.serie.Reserve())
-                                                        {
-                                                            st1 = st1.AddHours(-2);
-                                                        }
-                                                        DateTime st2 = m2.datetime;
-                                                        DateTime en2 = st2.AddHours(2);
-                                                        st2 = st2.AddHours(-klvv.ABdiff);
-                                                        if (m2.serie.Reserve())
-                                                        {
-                                                            st2 = st2.AddHours(-2);
-                                                        }
-                                                        if (m1.homeTeam.club != m2.homeTeam.club || (st1<= en2 && en1 >= st2))
-                                                        {
-                                                            this.AddConflictMatch(m1, m2);
-                                                        }
-                                                    }
-                                                    i1++;
-                                                    i2++;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                                all_matches.AddRange(team1.poule.matches.FindAll(m => m.homeTeam == team1 && m.RealMatch() && m.homeTeam.group!= TeamGroups.NoGroup));
                             }
                         }
                     }
+                }
+                all_matches.Sort(delegate(Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
+                int s = 0;
+                while(s<all_matches.Count)
+                {
+                    DateTime date = all_matches[s].datetime.Date;
+                    int e=s;
+                    while(e<all_matches.Count && all_matches[e].datetime.Date == date) e++;
+                    int cX = 0;
+                    int cY = 0;
+                    for(int j=s;j<e;j++)
+                    {
+                        Match m = all_matches[j];
+                        if(m.homeTeam.group == TeamGroups.GroupX && (m.visitorTeam.club != club || m.visitorTeam.group == TeamGroups.GroupX)) cX++;
+                        if(m.homeTeam.group == TeamGroups.GroupY && (m.visitorTeam.club != club || m.visitorTeam.group == TeamGroups.GroupY)) cY++;
+                    }
+                    if(cX>0 && cY>0)
+                    {
+                        cost = Math.Min(cX, cY);
+                        for(int j=s;j<e;j++)
+                        {
+                            Match m = all_matches[j];
+                            AddConflictMatch(m);
+                        }
+                        
+                    }
+                    s = e;
                 }
             }
         }
@@ -549,7 +622,7 @@ namespace VolleybalCompetition_creator
             if (club.groupingWithClub != null) listTeams.AddRange(club.groupingWithClub.teams);
             
             // TODO: skip if poule is not related to club.
-            conflict = 0;
+            conflict_cost = 0;
             conflictMatches.Clear();
             bool A = false;
             bool B = false;
@@ -615,7 +688,7 @@ namespace VolleybalCompetition_creator
                         {
                             this.AddConflictMatch(match);
                         }
-                        if (sortedCounts[i].Count > 0) this.conflict++;
+                        if (sortedCounts[i].Count > 0) this.conflict_cost++;
                     }
                 }
             }
@@ -638,7 +711,7 @@ namespace VolleybalCompetition_creator
         }
         public override void Evaluate(Klvv klvv, Poule poule)
         {
-            conflict = 0;
+            conflict_cost = 0;
             conflictMatches.Clear();
             foreach (Team team1 in club.teams)
             {

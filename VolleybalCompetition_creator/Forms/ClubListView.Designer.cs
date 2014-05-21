@@ -31,6 +31,7 @@
             this.objectListView1 = new BrightIdeasSoftware.ObjectListView();
             this.FirstColumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -38,12 +39,14 @@
             // 
             this.objectListView1.AllColumns.Add(this.FirstColumn);
             this.objectListView1.AllColumns.Add(this.olvColumn1);
+            this.objectListView1.AllColumns.Add(this.olvColumn2);
             this.objectListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.objectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.FirstColumn,
-            this.olvColumn1});
+            this.olvColumn1,
+            this.olvColumn2});
             this.objectListView1.FullRowSelect = true;
             this.objectListView1.HasCollapsibleGroups = false;
             this.objectListView1.HideSelection = false;
@@ -63,6 +66,7 @@
             this.FirstColumn.AspectName = "name";
             this.FirstColumn.CellPadding = null;
             this.FirstColumn.FillsFreeSpace = true;
+            this.FirstColumn.MaximumWidth = 500;
             this.FirstColumn.MinimumWidth = 60;
             this.FirstColumn.Text = "Club";
             this.FirstColumn.UseInitialLetterForGroup = true;
@@ -73,6 +77,12 @@
             this.olvColumn1.AspectName = "conflict";
             this.olvColumn1.CellPadding = null;
             this.olvColumn1.Text = "Conflicts";
+            // 
+            // olvColumn2
+            // 
+            this.olvColumn2.AspectName = "teams.Count";
+            this.olvColumn2.CellPadding = null;
+            this.olvColumn2.Text = "Teams";
             // 
             // ClubListView
             // 
@@ -94,5 +104,6 @@
         private BrightIdeasSoftware.ObjectListView objectListView1;
         private BrightIdeasSoftware.OLVColumn FirstColumn;
         private BrightIdeasSoftware.OLVColumn olvColumn1;
+        private BrightIdeasSoftware.OLVColumn olvColumn2;
     }
 }

@@ -252,7 +252,9 @@ namespace VolleybalCompetition_creator
 
         private void button4_Click(object sender, EventArgs e)
         {
-            foreach(Team team in teams)
+            List<Team> tms = teams;
+            if (tms.Count == 0) tms = poule.teams;
+            foreach(Team team in tms)
             {
                 int minDistance = team.poule.CalculateDistances(team);
                 Poule currentPoule = team.poule;
@@ -264,7 +266,7 @@ namespace VolleybalCompetition_creator
                     {
                         foreach (Team t in p.teams)
                         {
-                            if (t.club == team.club) allowed=false;
+                            if (t!=team && t.club == team.club) allowed=false;// ander team zit al in poule
                         }
                     }
                     if (allowed)
@@ -356,6 +358,96 @@ namespace VolleybalCompetition_creator
         private void SerieView_FormClosed(object sender, FormClosedEventArgs e)
         {
             klvv.OnMyChange -= state_OnMyChange;
+        }
+
+        private void objectListView3_DoubleClick(object sender, EventArgs e)
+        {
+            Point mousePosition = objectListView3.PointToClient(Control.MousePosition);
+            ListViewHitTestInfo hit = objectListView3.HitTest(mousePosition);
+            int columnindex = hit.Item.SubItems.IndexOf(hit.SubItem);
+            Team team = (Team)objectListView3.SelectedObject;
+            if (team != null)
+            {
+                if (columnindex == 1)
+                {
+                    List<Selection> list = new List<Selection>();
+                    Selection def = null;
+                    foreach (Poule poule in serie.poules.Values)
+                    {
+                        Selection sel = new Selection(poule.name, poule);
+                        if (poule == team.poule) def = sel;
+                        list.Add(sel);
+                    }
+                    list.Add(new Selection("No poule", null));
+                    SelectionDialog diag = new SelectionDialog(list, def);
+                    diag.Text = "Select the poule:";
+                    diag.ShowDialog();
+                    if (diag.Ok)
+                    {
+                        if(poule != null) team.poule.teams.Remove(team);
+                        team.poule = (Poule)diag.Selection.obj;
+                    }
+                    objectListView1.BuildList(true);
+                }
+            }
+
+        }
+
+        private void objectListView2_FormatRow(object sender, FormatRowEventArgs e)
+        {
+            Poule poule = (Poule)e.Model;
+            if (poule.teams.Count >  poule.maxTeams) e.Item.BackColor = Color.Red;
+            if (poule.teams.Count <= poule.maxTeams-2) e.Item.BackColor = Color.Orange;
+        }
+
+        private void objectListView3_FormatCell(object sender, FormatCellEventArgs e)
+        {
+            if (e.ColumnIndex == 1) 
+            { 
+                Team team = (Team)e.Model;
+                if (team.poule == null) e.SubItem.BackColor = Color.Orange; 
+            }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            List<Team> tms = teams;
+            if (tms.Count == 0) tms = serie.teams;
+            // Remove the current assigned poule
+            foreach (Team team in tms)
+            {
+                if (team.poule != null) team.poule.teams.Remove(team);
+                team.poule = null;
+            }            
+            // 
+            tms.Sort(delegate(Team t1, Team t2)
+            {
+                int ct1 = tms.Count(t => t.club == t1.club);
+                int ct2 = tms.Count(t => t.club == t2.club);
+                return ct1.CompareTo(ct2);
+            });
+            List<Poule> tmPoules = new List<Poule>();
+            foreach(Poule p in serie.poules.Values)
+            {
+                tmPoules.Add(p);
+            }
+            tmPoules.Sort(delegate(Poule p1, Poule p2)
+            {
+                int cp1 = (p1.maxTeams - p1.teams.Count);
+                int cp2 = (p1.maxTeams - p2.teams.Count);
+                return cp1.CompareTo(cp2);
+            });
+            int i = 0;
+            foreach (Team team in tms)
+            {
+                Poule po = tmPoules[i % tmPoules.Count];
+                po.teams.Add(team);
+                team.poule = po;
+                i++;
+            }
+            klvv.RenewConstraints();
+            klvv.Evaluate(null);
+            klvv.Changed();
         }
 
     

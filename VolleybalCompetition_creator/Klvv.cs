@@ -78,7 +78,7 @@ namespace VolleybalCompetition_creator
             int conflicts = 0;
             foreach (Constraint constraint in constraints)
             {
-                conflicts += constraint.conflict;
+                conflicts += constraint.conflict_cost;
             }
             return conflicts;
         }
@@ -183,9 +183,9 @@ namespace VolleybalCompetition_creator
                     constraints.Add(new ConstraintZaal(sp, club));
                 }
             }
-            foreach (Sporthal sp in sporthalls)
+            foreach (Poule poule in poules)
             {
-                //constraints.Add(new SporthalSharedOnSameDay(sp));
+                poule.CalculateRelatedConstraints(this);
             }
         }
 
@@ -381,7 +381,6 @@ namespace VolleybalCompetition_creator
                 OnMyChange(this, e);
             }
         }
-
         public void ImportVVBCompetition()
         {
             Club nationaal = clubs.Find(c => c.Id == -1 && c.name == "Nationaal");
@@ -516,10 +515,6 @@ namespace VolleybalCompetition_creator
  
 
         }
-
-
-
-
         public void ImportTeamSubscriptions(XElement doc)
         {
             foreach (XElement club in doc.Elements("Club"))
@@ -695,8 +690,6 @@ namespace VolleybalCompetition_creator
                 }
             }
         }
-
-
         public void WriteClubConstraints(XmlWriter writer)
         {
             writer.WriteStartElement("Clubs");

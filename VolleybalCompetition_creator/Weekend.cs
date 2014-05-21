@@ -6,8 +6,17 @@ using System.Diagnostics;
 
 namespace VolleybalCompetition_creator
 {
+
     public class Weekend : ConstraintAdmin
     {
+        public enum EvenOddEnum { Even, Odd};
+        public EvenOddEnum EvenOdd {
+            get
+            {
+                if (WeekNr % 2 == 0) return Weekend.EvenOddEnum.Even;
+                else return Weekend.EvenOddEnum.Odd;
+            }
+        }
         private const int MaxUsedYear = 2000; // Er wordt 15 bij opgeteld
         public int Year { get; set; }
         public int WeekNr { get; set; }
