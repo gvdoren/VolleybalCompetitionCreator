@@ -12,7 +12,6 @@ namespace VolleybalCompetition_creator
 {
     public partial class ConstraintView : DockContent
     {
-        Constraint constraint = null;
         Klvv klvv = null;
         GlobalState state = null;
         public ConstraintView(Klvv klvv, GlobalState state)
@@ -20,9 +19,9 @@ namespace VolleybalCompetition_creator
             this.klvv = klvv;
             this.state = state;
             InitializeComponent();
-            Show("dummy", null);
             klvv.OnMyChange += state_OnMyChange;
             objectListView1.ShowGroups = false;
+            state.OnMyChange += state_OnMyChange;
             
         }
         public void state_OnMyChange(object source, MyEventArgs e)
@@ -39,55 +38,20 @@ namespace VolleybalCompetition_creator
                 return;
             }
             lock (klvv) ;
-            int i = this.tabControl1.SelectedIndex;
-            this.tabControl1.SelectTab(0);
-            this.tabControl1.SelectTab(i);
-        }
-        public void Show(string tabName, Constraint constraint)
-        {
-            this.tabControl1.SelectTab(0);
-            this.constraint = constraint;
-            TabPage page = tabControl1.TabPages[0];
-            foreach (TabPage p in tabControl1.TabPages)
-            {
-                if (p.Text == tabName) page = p;
-            }
-            this.tabControl1.SelectTab(page);
-        }
-
-        private void tabControl1_Selected(object sender, TabControlEventArgs e)
-        {
-            try
-            {
-                lock (klvv) ;
-                if (e.TabPage == tabPage1) UpdateTabPage1();
-                if (e.TabPage == tabPage2) UpdateTabPage2();
-            }
-            catch { }
-        }
-        private void UpdateTabPage1()
-        {
-            richTextBox1.Clear();
-            if (constraint != null)
-            {
-                this.Text = constraint.Title;
-                foreach (string str in constraint.GetTextDescription())
-                {
-                    richTextBox1.AppendText(str + Environment.NewLine);
-                }
-            }
+            UpdateTabPage2();
         }
         private void UpdateTabPage2()
         {
             objectListView1.ClearObjects();
             label1.Text = "";
             this.Text = "No conflicts selected";
+            Constraint constraint = state.selectedConstraint;
             if (constraint != null)
             {
                 objectListView1.Objects = constraint.conflictMatches;
                 this.Text = constraint.Title;
                 label1.Text = "Conflict wedstrijden (" + constraint.conflictMatches.Count.ToString() + ")";
-                objectListView1.BuildList(false);
+                objectListView1.BuildList(true);
                 richTextBox2.Clear();
                 foreach (string str in constraint.GetTextDescription())
                 {

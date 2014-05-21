@@ -11,7 +11,7 @@ namespace VolleybalCompetition_creator
         List<Team> resultTeams = new List<Team>();
         List<Weekend> resultWeekends = new List<Weekend>();
         List<Match> resultMatches = new List<Match>();
-        List<Constraint> relatedConstraints = new List<Constraint>();
+        public List<Constraint> relatedConstraints = new List<Constraint>();
         int minConflicts = 0;
         public int maxTeams = 0;
         public Serie serie = null;
@@ -86,19 +86,14 @@ namespace VolleybalCompetition_creator
                 if (con.poule == this) relatedConstraints.Add(con);
             }
             List<Club> clubs = new List<Club>();
-            List<SporthallClub> sporthalls = new List<SporthallClub>();
             
             foreach (Team team in teams)
             {
                 if (clubs.Contains(team.club) == false) clubs.Add(team.club);
-                foreach(SporthallClub sporthal in team.club.sporthalls)
-                {
-                    if (sporthalls.Contains(sporthal) == false) sporthalls.Add(sporthal);
-                }
             }
             foreach (Constraint con in klvv.constraints)
             {
-                if (clubs.Contains(con.club) || con.poule == this || sporthalls.Contains(con.sporthal)) relatedConstraints.Add(con);
+                if (clubs.Contains(con.club) || con.poule == this ) relatedConstraints.Add(con);
             }
 
         }
@@ -118,14 +113,9 @@ namespace VolleybalCompetition_creator
                             intf.Progress(i, weekends.Count);
                             for (int j = i+1; j < weekends.Count / 2; j++)
                             {
-                                //if (i != j)
-                                {
-                                    Swap(weekends, i, j);
-                                    klvv.Evaluate(this);
-                                    SnapShotIfImproved(klvv);
-                                    Swap(weekends, i, j);
-                                }
-
+                                Swap(weekends, i, j);
+                                SnapShotIfImproved(klvv);
+                                Swap(weekends, i, j);
                             }
                             weekends = resultWeekends;
                         }
@@ -134,13 +124,9 @@ namespace VolleybalCompetition_creator
                             intf.Progress(i, weekends.Count);
                             for (int j = i+1; j < weekends.Count; j++)
                             {
-                                //if (i != j)
-                                {
-                                    Swap(weekends, i, j);
-                                    klvv.Evaluate(this);
-                                    SnapShotIfImproved(klvv);
-                                    Swap(weekends, i, j);
-                                }
+                                Swap(weekends, i, j);
+                                SnapShotIfImproved(klvv);
+                                Swap(weekends, i, j);
                             }
                             weekends = resultWeekends;
                         }
@@ -175,7 +161,7 @@ namespace VolleybalCompetition_creator
                 }
             }
         }
-        private void SnapShotIfImproved(Klvv klvv)
+        private bool SnapShotIfImproved(Klvv klvv)
         {
             bool snapshot = false;
             if (klvv.slow)
@@ -187,12 +173,17 @@ namespace VolleybalCompetition_creator
                     snapshot = true;
                     klvv.LastTotalConflicts = total;
                 }
-            } else
+            }
+            else
             {
-                if (conflict_cost < minConflicts)
+                klvv.EvaluateRelatedConstraints(this);
+                int total = klvv.TotalConflicts();
+                if (total < klvv.LastTotalConflicts)
                 {
                     snapshot = true;
+                    klvv.LastTotalConflicts = total;
                 }
+
             }
             if(snapshot)
             {
@@ -201,6 +192,7 @@ namespace VolleybalCompetition_creator
                 resultMatches = CopyMatches();
                 minConflicts = conflict_cost; 
             }
+            return snapshot;
         }
         public void SnapShot(Klvv klvv)
         {
@@ -241,7 +233,6 @@ namespace VolleybalCompetition_creator
             {
                 weekends.InsertRange(0, firstHalf);
                 weekends.AddRange(lastHalf);
-                klvv.Evaluate(this);
                 SnapShotIfImproved(klvv);
                 weekends.RemoveRange(0, firstHalf.Count);
                 weekends.RemoveRange(weekends.Count - lastHalf.Count, lastHalf.Count);
@@ -266,7 +257,6 @@ namespace VolleybalCompetition_creator
                         {
                             intf.Progress(i, teams.Count);
                             Swap(teams, i, teamindex);
-                            //klvv.Evaluate(this);
                             OptimizeWeekends(klvv, intf);
                             OptimizeHomeVisitor(klvv);
                             //SnapShotIfImproved(klvv, ref minConflict);
@@ -311,7 +301,6 @@ namespace VolleybalCompetition_creator
                             for (int j = i+1; j < teams.Count; j++)
                             {
                                 Swap(teams, i, j);
-                                klvv.Evaluate(this);
                                 SnapShotIfImproved(klvv);
                                 Swap(teams, i, j);
                             }
@@ -350,7 +339,6 @@ namespace VolleybalCompetition_creator
             }
             else
             {
-                klvv.Evaluate(this);
                 SnapShotIfImproved(klvv);
                 if (intf.Cancelled())
                 {
@@ -389,17 +377,10 @@ namespace VolleybalCompetition_creator
                 {
                     if (match.conflict_cost > 0)
                     {
-                        int before = minConflicts;
                         SwitchHomeTeamVisitorTeam(klvv,match);
-                        klvv.Evaluate(this);
-                        if (conflict_cost < minConflicts)
-                        {
-                            SnapShotIfImproved(klvv);
-                        }
-                        if (before <= minConflicts)
+                        if(SnapShotIfImproved(klvv) == false)
                         { // switch back
                             SwitchHomeTeamVisitorTeam(klvv,match);
-                            //klvv.Evaluate(this);
                         }
                     }
                 }

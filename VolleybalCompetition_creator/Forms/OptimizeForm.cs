@@ -23,7 +23,6 @@ namespace VolleybalCompetition_creator
             InitializeComponent();
             objectListView1.SetObjects(klvv.series);
             domainUpDown1.SelectedIndex = 6;
-            klvv.slow = true;
          }
 
         private void objectListView1_SubItemChecking(object sender, SubItemCheckingEventArgs e)

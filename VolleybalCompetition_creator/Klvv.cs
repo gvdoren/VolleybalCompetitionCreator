@@ -68,10 +68,18 @@ namespace VolleybalCompetition_creator
             }
             foreach (Constraint constraint in constraints)
             {
-                constraint.Evaluate(this,p);
+                constraint.Evaluate(this);
             }
         }
-        
+        public void EvaluateRelatedConstraints(Poule p)
+        {
+            lock (this) ;
+            foreach (Constraint constraint in p.relatedConstraints)
+            //foreach (Constraint constraint in constraints)
+            {
+                constraint.Evaluate(this);
+            }
+        }
         public int TotalConflicts()
         {
             lock (this) ;

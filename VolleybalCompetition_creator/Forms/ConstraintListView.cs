@@ -57,8 +57,8 @@ namespace VolleybalCompetition_creator
                     objectListView1.SelectedObjects.Clear();
                 }
             }
-            objectListView1.BuildList(false);
-            objectListView1_SelectionChanged(null, null);
+            objectListView1.BuildList(true);
+            //objectListView1_SelectionChanged(null, null);
             UpdateConflictCount();
          }
         private void UpdateConflictCount()
@@ -111,8 +111,6 @@ namespace VolleybalCompetition_creator
         public bool Filter(object modelObject)
         {
             Constraint constraint = (Constraint)modelObject;
-            if (checkBox1.Checked && constraint.conflict_cost == 0) return false;
-            //if (state.showConstraints.Count == 0) return true;
             return state.showConstraints.Contains(constraint);
         }
 
@@ -144,9 +142,11 @@ namespace VolleybalCompetition_creator
                 constraintView.Show(Pane, DockAlignment.Bottom, 0.45);
             }
             // Show the correct constraint
-            constraintView.Show("matchView", constraint);
-            state.selectedConstraint = constraint;
-
+            if (constraint != state.selectedConstraint)
+            {
+                state.selectedConstraint = constraint;
+                state.Changed();
+            }
         }
 
         private void ConstraintListView_FormClosed(object sender, FormClosedEventArgs e)
