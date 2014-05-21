@@ -38,6 +38,7 @@ namespace VolleybalCompetition_creator
         public bool VisitorAlso = true;
         public Club club { get; set; }
         public Poule poule = null;
+        public SporthallClub sporthal;
         public string name { get; set; }
         public int cost = 1;
         public int conflict_cost = 0;
@@ -87,7 +88,6 @@ namespace VolleybalCompetition_creator
     }
     class ConstraintZaal : Constraint
     {
-        public SporthallClub sporthal;
         public ConstraintZaal(SporthallClub sporthal,Club club)
         {
             name = "Sporthal niet beschikbaar";
