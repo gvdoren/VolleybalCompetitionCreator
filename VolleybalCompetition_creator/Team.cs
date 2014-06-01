@@ -88,6 +88,22 @@ namespace VolleybalCompetition_creator
         }
 
         public List<DateTime> plannedMatches = new List<DateTime>();
+       
+    }
 
+    public class TeamConstraint
+    {
+        public Team team = null;
+        public Club Club { get { return team.club; } }
+        public Serie Serie { get { return team.serie; } }
+        public Poule Poule { get { return team.poule; } }
+        public DateTime date;
+        public enum HomeVisitNone { Home, Visit, Free, NotHome, NotVisit};
+        public HomeVisitNone homeVisitNone;
+        public int cost = 1;
+        public TeamConstraint(Team team)
+        {
+            this.team = team;
+        }
     }
 }

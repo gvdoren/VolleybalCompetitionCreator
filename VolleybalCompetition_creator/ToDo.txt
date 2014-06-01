@@ -1,8 +1,37 @@
 ﻿- Immutable poules
-
-
-- Clubs die sporthal delen kun je niet uitdrukken
-- club constraints voor de sporthal zijn bij de sporthal opgeslagen. Echter, die worden gedeeld door meerdere clubs.
+  * gemaakt om een bestaande competitie in te lezen.
 
 - Aantal teams & selectie in Anorama. Koppelen? Ja
 - Check dat alle teams voldoende matchen spelen (ook check van tool zelf).
+
+- automatisch saven om de 10 minuten.
+
+- Series een kleur geven als er teams niet zijn ingedeeld
+
+- Inconsistent poules hoeft niet bij elke berekening mee te lopen.
+
+- Aparte constraint voor 'extra-kosten', indien een club teveel conflicten heeft.
+
+VVB
+- Sporthal kunnen aanpassen 
+- Inlezen op een gestructureerdere manier. Vertaling van de club-naam
+
+Kosten
+- Om flexibiliteit te behouden, de kosten van heen/terug te dicht bij elkaar varieren. (eerst lage cost, daarna hogere cost)?
+- Kosten moeten zijn in het aantal wedstrijden dat een club moet verzetten.
+- Indien het relatief tot het aantal teams veel conflicten zijn, de conflict-kosten gaan verhogen.
+
+
+Belangrijk:
+- Check dat alle teams zijn ingedeeld
+- Eventueel naar alle clubs de indeling in reeksen sturen voordat de kalender wordt gemaakt.
+- Extra reserve weekenden helpt enorm. Misschien ook bij de volwassenen reeks van 12?
+- Check data van anorama.
+
+
+
+
+
+'Overbodige features':
+- Fixed index nummer (vereist ook schema's van VVB. Foutgevoelig)
+- Even weeks

@@ -350,13 +350,13 @@ namespace VolleybalCompetition_creator
                     if (match.RealMatch())
                     {
                         string constraint = " - ";
-                        if (match.conflict_cost > 0) constraint = " * ";
+                        if (match.conflictConstraints.Count > 0) constraint = " * ";
                         string conflicts = "";
                         foreach (Constraint constr in match.conflictConstraints)
                         {
                             conflicts += constr.name + ",";
                         }
-                        writer.WriteLine("{5},{0},{1},{2},{3},{4},{6}", match.datetime, match.poule.fullName, match.homeTeam.name, match.visitorTeam.name, match.homeTeam.group.ToString(), constraint,conflicts);
+                        writer.WriteLine("{5},{0},{1},{2},{3},{4},{7},{6}", match.datetime, match.poule.fullName, match.homeTeam.name, match.visitorTeam.name, match.homeTeam.group.ToString(), constraint,conflicts, match.homeTeam.sporthal.name.Replace(","," "));
                     }
                 }
             }
@@ -365,7 +365,9 @@ namespace VolleybalCompetition_creator
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            saveFileDialog1.FileName = string.Format("FullCompetition{0}.xml",klvv.year);
+            DateTime now = DateTime.Now;
+            saveFileDialog1.FileName = string.Format("FullCompetition{0:00}{1:00}{2:00}_{3:00}{4:00}.xml", now.Year, now.Month, now.Day, now.Hour, now.Minute);
+            saveFileDialog1.Filter = "Xml (*.xml)|*.xml";
             saveFileDialog1.InitialDirectory = Environment.SpecialFolder.MyDocuments.ToString();
             saveFileDialog1.FileOk += new CancelEventHandler(saveFileDialog1_FileOk3);
             saveFileDialog1.ShowDialog();
@@ -422,6 +424,17 @@ namespace VolleybalCompetition_creator
                 writer.WriteEndElement();
             }
             writer.WriteEndElement();
+            writer.WriteStartElement("TeamConstraints");
+            foreach (TeamConstraint con in klvv.teamConstraints)
+            {
+                writer.WriteStartElement("Constraint");
+                writer.WriteAttributeString("TeamId", con.team.Id.ToString());
+                writer.WriteAttributeString("Date",con.date.ToShortDateString());
+                writer.WriteAttributeString("What", con.homeVisitNone.ToString());
+                writer.WriteAttributeString("Cost", con.cost.ToString());
+                writer.WriteEndElement();
+            }
+            writer.WriteEndElement();
             writer.WriteEndElement();
             writer.WriteEndDocument();
             writer.Close();
@@ -430,6 +443,7 @@ namespace VolleybalCompetition_creator
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
         {
             openFileDialog1.FileName = "FullCompetition.xml";
+            openFileDialog1.Filter = "Xml (*.xml)|*.xml";
             openFileDialog1.InitialDirectory = Environment.SpecialFolder.MyDocuments.ToString();
             openFileDialog1.FileOk += new CancelEventHandler(openFileDialog1_FileOk1);
             openFileDialog1.ShowDialog();
@@ -483,6 +497,22 @@ namespace VolleybalCompetition_creator
                     po.matches.Add(new Match(weekIndex, homeTeam, visitorTeam, serie, po));
                 }
             }
+            XElement teamConstraints = competition.Element("TeamConstraints");
+            if (teamConstraints != null)
+            {
+                foreach (XElement con in teamConstraints.Elements("Constraint"))
+                {
+                    int teamId = int.Parse(con.Attribute("TeamId").Value);
+                    DateTime date = DateTime.Parse(con.Attribute("Date").Value);
+                    TeamConstraint.HomeVisitNone what = (TeamConstraint.HomeVisitNone)Enum.Parse(typeof(TeamConstraint.HomeVisitNone), con.Attribute("What").Value);
+                    Team team = klvvnew.teams.Find(t => t.Id == teamId);
+                    TeamConstraint tc = new TeamConstraint(team);
+                    tc.homeVisitNone = what;
+                    tc.date = date;
+                    tc.cost = int.Parse(con.Attribute("Cost").Value);
+                    klvvnew.teamConstraints.Add(tc);
+                }
+            }
             klvvnew.fileName = openFileDialog1.FileName;
             klvvnew.RenewConstraints();
             klvv.Changed(klvvnew);
@@ -495,7 +525,7 @@ namespace VolleybalCompetition_creator
 
         private void vVBCompetitionToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            klvv.ImportVVBCompetition();
+            klvv.ImportVVBCompetition1();
             klvv.RenewConstraints();
             klvv.Evaluate(null);
             klvv.Changed();
@@ -590,6 +620,71 @@ namespace VolleybalCompetition_creator
             writer.WriteEndDocument();
             writer.Close();
         }
+
+        private void poulesSeriescsvToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DateTime now = DateTime.Now;
+            saveFileDialog1.FileName = string.Format("PouleSeries{0:00}{1:00}{2:00}_{3:00}{4:00}.csv",now.Year,now.Month,now.Day,now.Hour,now.Minute);
+            saveFileDialog1.Filter = "Comma-separated (*.csv)|*.csv";
+            saveFileDialog1.InitialDirectory = Environment.SpecialFolder.MyDocuments.ToString();
+            saveFileDialog1.FileOk += new CancelEventHandler(saveFileDialog1_FileOk5);
+            saveFileDialog1.ShowDialog();
+        }
+        public void saveFileDialog1_FileOk5(object sender, CancelEventArgs e)
+        {
+            StreamWriter writer = new StreamWriter(saveFileDialog1.FileName);
+            writer.WriteLine("Serie,Poule,Poule-team-number,Team,Club,Speeldag,Speeltijd");
+            foreach (Team team in klvv.teams)
+            {
+                if (team.serie.id >= 0)
+                {
+                    string pouleName = "-";
+                    if (team.poule != null)
+                    {
+                        pouleName = team.poule.name;
+                    }
+
+                    writer.WriteLine("{0},{1},{2},{3},{4},{5},{6}", team.serie.name, pouleName, team.Index, team.name, team.club.name, team.defaultDay.ToString(), team.defaultTime.ToString());
+                }
+            }
+            writer.Close();
+        }
+
+        private void matchescsvToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DateTime now = DateTime.Now;
+            saveFileDialog1.FileName = string.Format("Matches{0:00}{1:00}{2:00}_{3:00}{4:00}.csv", now.Year, now.Month, now.Day, now.Hour, now.Minute);
+            saveFileDialog1.Filter = "Comma-separated (*.csv)|*.csv";
+            saveFileDialog1.InitialDirectory = Environment.SpecialFolder.MyDocuments.ToString();
+            saveFileDialog1.FileOk += new CancelEventHandler(saveFileDialog1_FileOk6);
+            saveFileDialog1.ShowDialog();
+        }
+        public void saveFileDialog1_FileOk6(object sender, CancelEventArgs e)
+        {
+            StreamWriter writer = new StreamWriter(saveFileDialog1.FileName);
+            writer.WriteLine("Serie,Poule,Speeldag,datum,Speeltijd,homeClub,homeTeam,visitorClub,visitorTeam");
+            foreach (Poule poule in klvv.poules)
+            {
+                if(poule.serie.id>=0)
+                {
+                    foreach(Match match in poule.matches)
+                    {
+                        if (match.RealMatch())
+                        {
+                            writer.Write("{0},{1},{2},{3},{4},{5},{6},{7},{8}", poule.serie.name, poule.fullName, match.datetime.ToShortDateString(), match.DayString, match.Time.ToString(), match.homeTeam.club.name, match.homeTeam.name, match.visitorTeam.club.name, match.visitorTeam.name);
+
+                            foreach (Constraint con in match.conflictConstraints)
+                            {
+                                writer.Write("," + con.name);
+                            }
+                            writer.WriteLine();
+                        }
+                    }
+                }
+            }
+            writer.Close();
+        }
+
 
     }
 }

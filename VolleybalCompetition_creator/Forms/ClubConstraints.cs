@@ -32,7 +32,8 @@ namespace VolleybalCompetition_creator
             comboBox2.SelectedIndex = 0;
             state.OnMyChange += new MyEventHandler(state_OnMyChange);
             if (state.selectedClubs.Count > 0) SetClub(state.selectedClubs[0]);
-                
+            objectListView2.SetObjects(klvv.teamConstraints.FindAll(c => c.Club == club));
+                        
             //klvv.OnMyChange += state_OnMyChange;
         }
 
@@ -84,6 +85,7 @@ namespace VolleybalCompetition_creator
             UpdateSporthalForm();
             UpdateTeamsTab();
             UpdateFreeFormatTab();
+            UpdateTeamConstraints();
         }
 
         private void dataGridView2_SelectionChanged(object sender, EventArgs e)
@@ -129,6 +131,12 @@ namespace VolleybalCompetition_creator
             objectListView1.BuildList(true);
             if (club.groupingWithClub == null) comboBox2.SelectedIndex = 0;
             else comboBox2.SelectedItem = club.groupingWithClub;
+        }
+        private void UpdateTeamConstraints()
+        {
+            objectListView2.SetObjects(klvv.teamConstraints.FindAll(c => c.Club == club));
+            objectListView2.BuildList(true);
+            
         }
         private void dataGridView3_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -291,6 +299,40 @@ namespace VolleybalCompetition_creator
                 }
             }
         }
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            Team team = (Team)objectListView1.SelectedObject;
+            if (team != null)
+            {
+                TeamConstraint tc = new TeamConstraint(team);
+                klvv.teamConstraints.Add(tc);
+                objectListView2.SetObjects(klvv.teamConstraints.FindAll(c => c.Club == club));
+                objectListView2.BuildList(true);
+            }
+            klvv.Evaluate(null);
+            klvv.Changed();
+        }
+
+        private void objectListView1_SelectionChanged(object sender, EventArgs e)
+        {
+            button1.Enabled = (objectListView1.SelectedObject != null);
+        }
+
+        private void objectListView2_SelectionChanged(object sender, EventArgs e)
+        {
+            button2.Enabled = (objectListView2.SelectedObject != null);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            TeamConstraint tc = (TeamConstraint)objectListView2.SelectedObject;
+            klvv.teamConstraints.Remove(tc);
+            objectListView2.SetObjects(klvv.teamConstraints.FindAll(c => c.Club == club));
+            objectListView1.BuildList(true);
+            klvv.Evaluate(null);
+            klvv.Changed();
+        }
+
 
     }
 }

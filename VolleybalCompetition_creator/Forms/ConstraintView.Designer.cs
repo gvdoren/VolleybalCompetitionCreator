@@ -177,6 +177,7 @@
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "ConstraintView";
             this.Text = "ConstraintView";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ConstraintView_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

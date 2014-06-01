@@ -67,6 +67,7 @@ namespace VolleybalCompetition_creator
             if (serie != null)
             {
                 objectListView2.SetObjects(serie.poules.Values);
+                objectListView2.SelectedObject = poule;
             }
             else
             {
@@ -86,7 +87,8 @@ namespace VolleybalCompetition_creator
                 objectListView3.SetObjects(null);
             }
             
-            objectListView3.BuildList(true);
+            objectListView3.BuildList(false);
+            objectListView3.SelectedObjects = teams;
         }
         private void DisplayHtml(string html)
         {
@@ -136,23 +138,29 @@ namespace VolleybalCompetition_creator
         }
         private void objectListView1_SelectionChanged(object sender, EventArgs e)
         {
-            serie = (Serie)objectListView1.SelectedObject;
-            button1.Enabled = (objectListView1.SelectedObjects.Count == 1);
-            UpdatePouleList();
-            UpdateTeamList();
-            UpdateWebBrowser();
+            if (serie != (Serie)objectListView1.SelectedObject)
+            {
+                serie = (Serie)objectListView1.SelectedObject;
+                poule = null;
+                teams.Clear();
+                button1.Enabled = (objectListView1.SelectedObjects.Count == 1);
+                UpdatePouleList();
+                UpdateTeamList();
+                UpdateWebBrowser();
+            }
         }
 
         private void objectListView2_SelectionChanged(object sender, EventArgs e)
         {
             button2.Enabled = (objectListView2.SelectedObjects.Count >= 1);
             button3.Enabled = (objectListView2.SelectedObjects.Count == 1 && objectListView3.SelectedObjects.Count>0);
-            button5.Enabled = (objectListView2.SelectedObjects.Count >= 1);
+            button5.Enabled = (objectListView1.SelectedObjects.Count >= 1);
             poule = (Poule)objectListView2.SelectedObject;
         }
         private void objectListView3_SelectionChanged(object sender, EventArgs e)
         {
             button3.Enabled = (objectListView2.SelectedObjects.Count == 1 && objectListView3.SelectedObjects.Count > 0);
+            //button3.Enabled = (objectListView3.SelectedObjects.Count >0);
             teams.Clear();
             foreach (Team te in objectListView3.SelectedObjects)
             {
@@ -252,67 +260,73 @@ namespace VolleybalCompetition_creator
 
         private void button4_Click(object sender, EventArgs e)
         {
-            List<Team> tms = teams;
-            if (tms.Count == 0) tms = poule.teams;
-            foreach(Team team in tms)
+            foreach (Team team in serie.teams)
             {
-                int minDistance = team.poule.CalculateDistances(team);
-                Poule currentPoule = team.poule;
-                Poule minPoule = null;
-                foreach (Poule p in serie.poules.Values)
+                if (team.poule != null)
                 {
-                    bool allowed = true;
-                    if (checkBox1.Checked)
+                    int minDistance = team.poule.CalculateDistances(team);
+                    // When teams are together in a poule, ensure that there is no reason to move to another poule
+                    foreach (Team t in team.poule.teams)
                     {
-                        foreach (Team t in p.teams)
-                        {
-                            if (t!=team && t.club == team.club) allowed=false;// ander team zit al in poule
-                        }
+                        if (t.club == team.club & checkBox1.Checked) minDistance = int.MaxValue;
                     }
-                    if (allowed)
-                    {
-                        int distance = p.CalculateDistances(team);
-                        if (distance < minDistance)
-                        {
-                            minDistance = distance;
-                            minPoule = p;
-                        }
-                    }
-                }
-                minDistance = int.MaxValue;
-                Team minTeam = null;
-                if (minPoule != null)
-                {
-                    foreach (Team te in minPoule.teams)
+                    Poule currentPoule = team.poule;
+                    Poule minPoule = null;
+                    foreach (Poule p in serie.poules.Values)
                     {
                         bool allowed = true;
                         if (checkBox1.Checked)
                         {
-                            foreach (Team t in currentPoule.teams)
+                            foreach (Team t in p.teams)
                             {
-                                if (te.club == t.club) allowed=false;
+                                if (t != team && t.club == team.club) allowed = false;// ander team zit al in poule
                             }
                         }
                         if (allowed)
                         {
-                            int distance = currentPoule.CalculateDistances(te);
+                            int distance = p.CalculateDistances(team);
                             if (distance < minDistance)
                             {
                                 minDistance = distance;
-                                minTeam = te;
+                                minPoule = p;
                             }
                         }
                     }
-                }
-                if (minPoule != null && minTeam != null && minTeam != team && minPoule != currentPoule)
-                {
-                    currentPoule.teams.Remove(team);
-                    minPoule.teams.Add(team);
-                    team.poule = minPoule;
-                    minPoule.teams.Remove(minTeam);
-                    currentPoule.teams.Add(minTeam);
-                    minTeam.poule = currentPoule;
-                    
+                    minDistance = int.MaxValue;
+                    Team minTeam = null;
+                    if (minPoule != null)
+                    {
+                        foreach (Team te in minPoule.teams)
+                        {
+                            bool allowed = true;
+                            if (checkBox1.Checked)
+                            {
+                                foreach (Team t in currentPoule.teams)
+                                {
+                                    if (te.club == t.club) allowed = false;
+                                }
+                            }
+                            if (allowed)
+                            {
+                                int distance = currentPoule.CalculateDistances(te);
+                                if (distance < minDistance)
+                                {
+                                    minDistance = distance;
+                                    minTeam = te;
+                                }
+                            }
+                        }
+                    }
+                    if (minPoule != null && minTeam != null && minTeam != team && minPoule != currentPoule)
+                    {
+                        currentPoule.teams.Remove(team);
+                        minPoule.teams.Add(team);
+                        team.poule = minPoule;
+                        minPoule.teams.Remove(minTeam);
+                        currentPoule.teams.Add(minTeam);
+                        minTeam.poule = currentPoule;
+
+                    }
                 }
             }
             klvv.RenewConstraints();
@@ -322,22 +336,20 @@ namespace VolleybalCompetition_creator
 
         private void button5_Click(object sender, EventArgs e)
         {
-            foreach(Serie serie in klvv.series)
+            foreach(Serie serie in objectListView1.SelectedObjects)
             {
                 if (serie.optimizable)
                 {
-                    foreach (Poule poule in objectListView2.SelectedObjects)
+                    foreach (Poule poule in serie.poules.Values)
                     {
-                        int teamCount = poule.teams.Count;
-                        while (teamCount != 6 && teamCount != 10 && teamCount != 12 && teamCount != 14) teamCount++;
-                        List<Weekend> weekends = klvv.annorama.GetReeks(teamCount.ToString());
-                        if (weekends.Count < (teamCount - 1) * 2)
+                        List<Weekend> weekends = klvv.annorama.GetReeks(poule.maxTeams.ToString());
+                        if (weekends.Count < (poule.maxTeams - 1) * 2)
                         {
-                            System.Windows.Forms.MessageBox.Show(string.Format("Number of weekends in anorama ({0}) not sufficient for schema ({1})", weekends.Count, (teamCount - 1) * 2));
+                            System.Windows.Forms.MessageBox.Show(string.Format("Number of weekends in anorama ({0}) not sufficient for schema ({1})", weekends.Count, (poule.maxTeams - 1) * 2));
                         }
-                        if (weekends.Count != (teamCount - 1) * 2)
+                        if (weekends.Count != (poule.maxTeams - 1) * 2)
                         {
-                            System.Windows.Forms.MessageBox.Show(string.Format("Number of weekends in anorama ({0}) do not match with schema ({1})", weekends.Count, (teamCount - 1) * 2));
+                            //System.Windows.Forms.MessageBox.Show(string.Format("Number of weekends in anorama ({0}) do not match with schema ({1})", weekends.Count, (poule.maxTeams - 1) * 2));
                         }
                         poule.weekends.Clear();
                         foreach (Weekend we in weekends)
@@ -345,7 +357,8 @@ namespace VolleybalCompetition_creator
                             poule.weekends.Add(new Weekend(we.Saturday));
                         }
                         poule.matches.Clear();
-                        poule.CreateMatchesFromSchemaFiles(teamCount);
+                        poule.CreateMatches(poule.maxTeams);
+                        //poule.CreateMatchesFromSchemaFiles(poule.maxTeams);
                         klvv.RenewConstraints();
                         klvv.Evaluate(null);
                         klvv.Changed();
@@ -384,10 +397,12 @@ namespace VolleybalCompetition_creator
                     diag.ShowDialog();
                     if (diag.Ok)
                     {
-                        if(poule != null) team.poule.teams.Remove(team);
+                        if(team.poule != null) team.poule.teams.Remove(team);
                         team.poule = (Poule)diag.Selection.obj;
                     }
-                    objectListView1.BuildList(true);
+                    //objectListView1.BuildList(true);
+                    UpdateTeamList();
+                    UpdatePouleList();
                 }
             }
 

@@ -48,15 +48,24 @@
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label1 = new System.Windows.Forms.Label();
             this.dataGridView3 = new System.Windows.Forms.DataGridView();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column3 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.Column4 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.EvenOdd = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.objectListView2 = new BrightIdeasSoftware.ObjectListView();
+            this.olvColumn13 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn12 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn15 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn16 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn11 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
             this.tabControl1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).BeginInit();
             this.SuspendLayout();
             // 
             // tabPage3
@@ -101,15 +110,17 @@
             this.objectListView1.GridLines = true;
             this.objectListView1.HasCollapsibleGroups = false;
             this.objectListView1.Location = new System.Drawing.Point(3, 209);
+            this.objectListView1.MultiSelect = false;
             this.objectListView1.Name = "objectListView1";
             this.objectListView1.ShowGroups = false;
-            this.objectListView1.Size = new System.Drawing.Size(603, 302);
+            this.objectListView1.Size = new System.Drawing.Size(729, 303);
             this.objectListView1.TabIndex = 0;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
             this.objectListView1.CellEditFinishing += new BrightIdeasSoftware.CellEditEventHandler(this.objectListView1_CellEditFinishing);
             this.objectListView1.CellClick += new System.EventHandler<BrightIdeasSoftware.CellClickEventArgs>(this.objectListView1_CellClick);
             this.objectListView1.ItemsChanged += new System.EventHandler<BrightIdeasSoftware.ItemsChangedEventArgs>(this.objectListView1_ItemsChanged);
+            this.objectListView1.SelectionChanged += new System.EventHandler(this.objectListView1_SelectionChanged);
             this.objectListView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.objectListView1_MouseClick);
             // 
             // olvColumn1
@@ -219,7 +230,7 @@
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(599, 129);
+            this.textBox1.Size = new System.Drawing.Size(725, 129);
             this.textBox1.TabIndex = 3;
             // 
             // dataGridView2
@@ -230,7 +241,7 @@
             this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView2.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1});
-            this.dataGridView2.Location = new System.Drawing.Point(615, 10);
+            this.dataGridView2.Location = new System.Drawing.Point(741, 10);
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.RowHeadersVisible = false;
             this.dataGridView2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -248,7 +259,7 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(612, 123);
+            this.label1.Location = new System.Drawing.Point(738, 123);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(84, 13);
             this.label1.TabIndex = 6;
@@ -268,25 +279,13 @@
             this.Column3,
             this.Column4,
             this.EvenOdd});
-            this.dataGridView3.Location = new System.Drawing.Point(615, 151);
+            this.dataGridView3.Location = new System.Drawing.Point(741, 151);
             this.dataGridView3.Name = "dataGridView3";
             this.dataGridView3.RowHeadersVisible = false;
-            this.dataGridView3.Size = new System.Drawing.Size(248, 360);
+            this.dataGridView3.Size = new System.Drawing.Size(248, 490);
             this.dataGridView3.TabIndex = 7;
             this.dataGridView3.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView3_CellContentClick);
             this.dataGridView3.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView3_CellValueChanged);
-            // 
-            // tabControl1
-            // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl1.Controls.Add(this.tabPage3);
-            this.tabControl1.Location = new System.Drawing.Point(1, 4);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(877, 540);
-            this.tabControl1.TabIndex = 0;
             // 
             // Column2
             // 
@@ -312,11 +311,115 @@
             this.EvenOdd.HeaderText = "EvenOdd";
             this.EvenOdd.Name = "EvenOdd";
             // 
+            // tabControl1
+            // 
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Location = new System.Drawing.Point(1, 4);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(877, 540);
+            this.tabControl1.TabIndex = 0;
+            // 
+            // button2
+            // 
+            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button2.Enabled = false;
+            this.button2.Location = new System.Drawing.Point(657, 551);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 10;
+            this.button2.Text = "Delete";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.Enabled = false;
+            this.button1.Location = new System.Drawing.Point(657, 521);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 9;
+            this.button1.Text = "New";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
+            // objectListView2
+            // 
+            this.objectListView2.AllColumns.Add(this.olvColumn13);
+            this.objectListView2.AllColumns.Add(this.olvColumn12);
+            this.objectListView2.AllColumns.Add(this.olvColumn15);
+            this.objectListView2.AllColumns.Add(this.olvColumn16);
+            this.objectListView2.AllColumns.Add(this.olvColumn11);
+            this.objectListView2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.objectListView2.CellEditActivation = BrightIdeasSoftware.ObjectListView.CellEditActivateMode.SingleClick;
+            this.objectListView2.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.olvColumn13,
+            this.olvColumn12,
+            this.olvColumn15,
+            this.olvColumn16,
+            this.olvColumn11});
+            this.objectListView2.FullRowSelect = true;
+            this.objectListView2.HideSelection = false;
+            this.objectListView2.Location = new System.Drawing.Point(3, 518);
+            this.objectListView2.MultiSelect = false;
+            this.objectListView2.Name = "objectListView2";
+            this.objectListView2.ShowGroups = false;
+            this.objectListView2.Size = new System.Drawing.Size(632, 123);
+            this.objectListView2.TabIndex = 8;
+            this.objectListView2.UseCompatibleStateImageBehavior = false;
+            this.objectListView2.View = System.Windows.Forms.View.Details;
+            this.objectListView2.SelectionChanged += new System.EventHandler(this.objectListView2_SelectionChanged);
+            // 
+            // olvColumn13
+            // 
+            this.olvColumn13.AspectName = "Serie.name";
+            this.olvColumn13.CellPadding = null;
+            this.olvColumn13.IsEditable = false;
+            this.olvColumn13.Text = "Serie";
+            // 
+            // olvColumn12
+            // 
+            this.olvColumn12.AspectName = "team.name";
+            this.olvColumn12.CellPadding = null;
+            this.olvColumn12.FillsFreeSpace = true;
+            this.olvColumn12.IsEditable = false;
+            this.olvColumn12.Text = "Team";
+            // 
+            // olvColumn15
+            // 
+            this.olvColumn15.AspectName = "date";
+            this.olvColumn15.AspectToStringFormat = "{0:dd-MM-yyyy}";
+            this.olvColumn15.CellPadding = null;
+            this.olvColumn15.MinimumWidth = 100;
+            this.olvColumn15.Text = "Date";
+            this.olvColumn15.Width = 100;
+            // 
+            // olvColumn16
+            // 
+            this.olvColumn16.AspectName = "homeVisitNone";
+            this.olvColumn16.CellPadding = null;
+            this.olvColumn16.Text = "What";
+            this.olvColumn16.Width = 100;
+            // 
+            // olvColumn11
+            // 
+            this.olvColumn11.AspectName = "cost";
+            this.olvColumn11.CellPadding = null;
+            this.olvColumn11.Text = "Cost";
+            // 
             // InschrijvingenView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(878, 546);
+            this.ClientSize = new System.Drawing.Size(1004, 642);
+            this.Controls.Add(this.button2);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.objectListView2);
             this.Controls.Add(this.dataGridView3);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dataGridView2);
@@ -332,6 +435,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
             this.tabControl1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -364,6 +468,14 @@
         private System.Windows.Forms.DataGridViewCheckBoxColumn Column3;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Column4;
         private System.Windows.Forms.DataGridViewTextBoxColumn EvenOdd;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button1;
+        private BrightIdeasSoftware.ObjectListView objectListView2;
+        private BrightIdeasSoftware.OLVColumn olvColumn12;
+        private BrightIdeasSoftware.OLVColumn olvColumn13;
+        private BrightIdeasSoftware.OLVColumn olvColumn15;
+        private BrightIdeasSoftware.OLVColumn olvColumn16;
+        private BrightIdeasSoftware.OLVColumn olvColumn11;
 
     }
 }

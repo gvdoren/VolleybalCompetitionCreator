@@ -88,14 +88,11 @@ namespace VolleybalCompetition_creator
 
 
         }
-    }
-}
-class TablessTabControl : TabControl
-{
-    protected override void WndProc(ref Message m)
-    {
-        // Hide tabs by trapping the TCM_ADJUSTRECT message
-        if (m.Msg == 0x1328 && !DesignMode) m.Result = (IntPtr)1;
-        else base.WndProc(ref m);
+
+        private void ConstraintView_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            klvv.OnMyChange -= state_OnMyChange;
+            state.OnMyChange -= state_OnMyChange;
+        }
     }
 }

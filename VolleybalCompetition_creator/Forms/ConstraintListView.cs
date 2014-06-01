@@ -161,6 +161,19 @@ namespace VolleybalCompetition_creator
             klvv.Evaluate(null);
             klvv.Changed();
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            state.showConstraints.Clear();
+            foreach (Constraint con in klvv.constraints)
+            {
+                if (con.conflictMatches.Count > 0)
+                {
+                    state.showConstraints.Add(con);
+                }
+            }
+            state.Changed();
+        }
     }
 
 }

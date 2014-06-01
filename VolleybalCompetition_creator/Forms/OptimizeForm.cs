@@ -254,51 +254,31 @@ namespace VolleybalCompetition_creator
                 DateTime date = new DateTime();
                 List<Match> done = new List<Match>();
                 List<DateTime> givenUp = new List<DateTime>();
-                while (constraint.conflictMatches.Count > 0)
+                if (constraint != null)
                 {
-                    if (intf.Cancelled()) return;
-                    constraint.conflictMatches.Sort(delegate(Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
-                    int index = 0;
-                    while(index<constraint.conflictMatches.Count && 
-                          constraint.conflictMatches[index].datetime.Date<= date) index++;
-                    if (index >= constraint.conflictMatches.Count) break;
-                    date = constraint.conflictMatches[index].datetime.Date;
-                    List<Match> matchesDate = new List<Match>(constraint.conflictMatches.FindAll(m => m.datetime.Date == date));
-                    // Try switch
-                    // - Team komt niet meer terug in conflicten => solved
-                    // - Aantal 
-                    int Acount = matchesDate.Count(m => m.homeTeam.group == TeamGroups.GroupX);
-                    int Bcount = matchesDate.Count(m => m.homeTeam.group == TeamGroups.GroupY);
-                    TeamGroups focusGroup = Acount < Bcount ? TeamGroups.GroupX : TeamGroups.GroupY;
-                    List<Match> focusMatches = new List<Match>(matchesDate.FindAll(m => m.homeTeam.group == focusGroup));
-                    foreach (Match match in focusMatches)
+                    while (constraint.conflictMatches.Count > 0)
                     {
-                        match.poule.SwitchHomeTeamVisitorTeam(klvv,match);
-                    }
-                    klvv.Evaluate(null);
-                    bool undo = false;
-                    foreach (Match match1 in constraint.conflictMatches)
-                    {
-                        if (match1.datetime.Date < date && givenUp.Contains(match1.datetime.Date) == false)
-                        {
-                            undo = true;
-                        }
-                    }
-                    if (undo)
-                    {
-                        // undo change since it was not succesfull
+                        if (intf.Cancelled()) return;
+                        constraint.conflictMatches.Sort(delegate(Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
+                        int index = 0;
+                        while (index < constraint.conflictMatches.Count &&
+                              constraint.conflictMatches[index].datetime.Date <= date) index++;
+                        if (index >= constraint.conflictMatches.Count) break;
+                        date = constraint.conflictMatches[index].datetime.Date;
+                        List<Match> matchesDate = new List<Match>(constraint.conflictMatches.FindAll(m => m.datetime.Date == date));
+                        // Try switch
+                        // - Team komt niet meer terug in conflicten => solved
+                        // - Aantal 
+                        int Acount = matchesDate.Count(m => m.homeTeam.group == TeamGroups.GroupX);
+                        int Bcount = matchesDate.Count(m => m.homeTeam.group == TeamGroups.GroupY);
+                        TeamGroups focusGroup = Acount < Bcount ? TeamGroups.GroupX : TeamGroups.GroupY;
+                        List<Match> focusMatches = new List<Match>(matchesDate.FindAll(m => m.homeTeam.group == focusGroup));
                         foreach (Match match in focusMatches)
                         {
-                            match.poule.SwitchHomeTeamVisitorTeam(klvv,match);
-                        }
-                        focusGroup = Acount >= Bcount ? TeamGroups.GroupX : TeamGroups.GroupY;
-                        focusMatches = new List<Match>(matchesDate.FindAll(m => m.homeTeam.group == focusGroup));
-                        foreach (Match match in focusMatches)
-                        {
-                            match.poule.SwitchHomeTeamVisitorTeam(klvv,match);
+                            match.poule.SwitchHomeTeamVisitorTeam(klvv, match);
                         }
                         klvv.Evaluate(null);
-                        undo = false;
+                        bool undo = false;
                         foreach (Match match1 in constraint.conflictMatches)
                         {
                             if (match1.datetime.Date < date && givenUp.Contains(match1.datetime.Date) == false)
@@ -311,26 +291,49 @@ namespace VolleybalCompetition_creator
                             // undo change since it was not succesfull
                             foreach (Match match in focusMatches)
                             {
-                                match.poule.SwitchHomeTeamVisitorTeam(klvv,match);
+                                match.poule.SwitchHomeTeamVisitorTeam(klvv, match);
                             }
-                            givenUp.Add(date);
-                            klvv.Evaluate(null);
-                            foreach (Match match in matchesDate)
+                            focusGroup = Acount >= Bcount ? TeamGroups.GroupX : TeamGroups.GroupY;
+                            focusMatches = new List<Match>(matchesDate.FindAll(m => m.homeTeam.group == focusGroup));
+                            foreach (Match match in focusMatches)
                             {
-                                if (done.Contains(match) == false)
+                                match.poule.SwitchHomeTeamVisitorTeam(klvv, match);
+                            }
+                            klvv.Evaluate(null);
+                            undo = false;
+                            foreach (Match match1 in constraint.conflictMatches)
+                            {
+                                if (match1.datetime.Date < date && givenUp.Contains(match1.datetime.Date) == false)
                                 {
-                                    done.Add(match);
-                                    int before = constraint.conflictMatches.Count;
-                                    match.poule.SwitchHomeTeamVisitorTeam(klvv,match);
-                                    klvv.Evaluate(null);
-                                    if (before < constraint.conflictMatches.Count)
-                                    {
-                                        match.poule.SwitchHomeTeamVisitorTeam(klvv,match);
-                                        klvv.Evaluate(null);
-                                    }
+                                    undo = true;
                                 }
                             }
+                            if (undo)
+                            {
+                                // undo change since it was not succesfull
+                                foreach (Match match in focusMatches)
+                                {
+                                    match.poule.SwitchHomeTeamVisitorTeam(klvv, match);
+                                }
+                                givenUp.Add(date);
+                                klvv.Evaluate(null);
+                                foreach (Match match in matchesDate)
+                                {
+                                    if (done.Contains(match) == false)
+                                    {
+                                        done.Add(match);
+                                        int before = constraint.conflictMatches.Count;
+                                        match.poule.SwitchHomeTeamVisitorTeam(klvv, match);
+                                        klvv.Evaluate(null);
+                                        if (before < constraint.conflictMatches.Count)
+                                        {
+                                            match.poule.SwitchHomeTeamVisitorTeam(klvv, match);
+                                            klvv.Evaluate(null);
+                                        }
+                                    }
+                                }
 
+                            }
                         }
                     }
                 }
