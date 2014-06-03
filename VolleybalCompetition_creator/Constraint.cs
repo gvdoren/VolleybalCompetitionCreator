@@ -689,9 +689,9 @@ namespace VolleybalCompetition_creator
             {
                 List<Match> all_matches = new List<Match>();
                 Sporthal sporthal = sp.sporthall;
-                List<Team> listTeams = new List<Team>(club.teams.FindAll(t => t.sporthal.sporthall == sporthal));
+                List<Team> listTeams = new List<Team>(club.teams);
                 if (club.groupingWithClub != null)
-                    listTeams.AddRange(club.groupingWithClub.teams.FindAll(t => t.sporthal.sporthall == sporthal));
+                    listTeams.AddRange(club.groupingWithClub.teams);
                 for (int i = 0; i < listTeams.Count; i++)
                 {
                     Team team1 = listTeams[i];

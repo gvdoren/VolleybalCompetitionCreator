@@ -101,7 +101,7 @@ namespace VolleybalCompetition_creator
         public void OptimizeWeekends(Klvv klvv, IProgress intf)
         {
             MakeDirty();
-            if (serie.optimizable)
+            if (serie.optimizable && serie.weekOrderChangeAllowed)
             {
                 if (conflict_cost > 0)
                 {
@@ -349,7 +349,7 @@ namespace VolleybalCompetition_creator
         }
         public void SwitchHomeTeamVisitorTeam(Klvv klvv, Match match)
         {
-            if (serie.optimizable && (klvv.fixedSchema == false || match.Optimizable))
+            if (serie.optimizable && serie.homeVisitChangeAllowed && (klvv.fixedSchema == false || match.Optimizable))
             {
                 Match match2 = null;
                 Match match1 = null;
@@ -371,7 +371,7 @@ namespace VolleybalCompetition_creator
         public void OptimizeHomeVisitor(Klvv klvv)
         {
             MakeDirty();
-            if (serie.optimizable)
+            if (serie.optimizable && serie.homeVisitChangeAllowed)
             {
                 foreach (Match match in matches)
                 {

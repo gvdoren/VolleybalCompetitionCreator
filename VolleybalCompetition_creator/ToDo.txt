@@ -2,7 +2,6 @@
   * gemaakt om een bestaande competitie in te lezen.
 
 - Aantal teams & selectie in Anorama. Koppelen? Ja
-- Check dat alle teams voldoende matchen spelen (ook check van tool zelf).
 
 - automatisch saven om de 10 minuten.
 
@@ -11,6 +10,12 @@
 - Inconsistent poules hoeft niet bij elke berekening mee te lopen.
 
 - Aparte constraint voor 'extra-kosten', indien een club teveel conflicten heeft.
+
+- View om de matchen van een club te zien (ipv excel nu)
+
+- inconsistent constraint iets afzwakken: indien een reserve weekend, dan is het middelste weekend of voor heen of voor terugronde te gebruiken
+
+- optimize weekends: indien reserve weekend, dan is het middelste weekend of voor heen of voor terugronde te gebruiken
 
 VVB
 - Sporthal kunnen aanpassen 
@@ -21,11 +26,11 @@ Kosten
 - Kosten moeten zijn in het aantal wedstrijden dat een club moet verzetten.
 - Indien het relatief tot het aantal teams veel conflicten zijn, de conflict-kosten gaan verhogen.
 
-
 Belangrijk:
 - Check dat alle teams zijn ingedeeld
 - Eventueel naar alle clubs de indeling in reeksen sturen voordat de kalender wordt gemaakt.
-- Extra reserve weekenden helpt enorm. Misschien ook bij de volwassenen reeks van 12?
+- Week eerder de sluitingsdatum. (eerste week poules indelen, en terugkoppelen)
+- Extra reserve weekenden helpt enorm. Misschien ook bij de volwassenen reeks van 12? Geen plek. Alleen evt. voor 8.
 - Check data van anorama.
 
 

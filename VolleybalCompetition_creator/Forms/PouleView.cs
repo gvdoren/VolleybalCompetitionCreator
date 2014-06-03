@@ -259,17 +259,31 @@ namespace VolleybalCompetition_creator
 
         private void button5_Click(object sender, EventArgs e)
         {
-            Match match1 = (Match)objectListView2.SelectedObject;
-            poule.SwitchHomeTeamVisitorTeam(klvv,match1);
-            klvv.Evaluate(null);
-            klvv.Changed();
+            if (poule.serie.weekOrderChangeAllowed == false)
+            {
+                System.Windows.Forms.MessageBox.Show("Not allowed to change home/visit");
+            }
+            else
+            {
+                Match match1 = (Match)objectListView2.SelectedObject;
+                poule.SwitchHomeTeamVisitorTeam(klvv, match1);
+                klvv.Evaluate(null);
+                klvv.Changed();
+            }
         }
 
         private void button6_Click(object sender, EventArgs e)
         {
-            poule.SnapShot(klvv);
-            poule.OptimizeHomeVisitor(klvv);
-            klvv.Changed();
+            if (poule.serie.weekOrderChangeAllowed == false)
+            {
+                System.Windows.Forms.MessageBox.Show("Not allowed to change home/visit");
+            }
+            else
+            {
+                poule.SnapShot(klvv);
+                poule.OptimizeHomeVisitor(klvv);
+                klvv.Changed();
+            }
         }
 
         private void objectListView3_FormatRow(object sender, FormatRowEventArgs e)
@@ -306,15 +320,22 @@ namespace VolleybalCompetition_creator
         }
         private void Switch1_Click(object sender, EventArgs e)
         {
-            KeyValuePair<Weekend, int> kvp1 = (KeyValuePair<Weekend, int>)objectListView3.SelectedObjects[0];
-            KeyValuePair<Weekend, int> kvp2 = (KeyValuePair<Weekend, int>)objectListView3.SelectedObjects[1];
-            int index1 = kvp1.Value-1;
-            int index2 = kvp2.Value-1;
-            if (index1 >= 0) poule.weekends[index1] = kvp2.Key;
-            if (index2 >= 0) poule.weekends[index2] = kvp1.Key;
-            UpdateWeekMapping();
-            klvv.Evaluate(null);
-            klvv.Changed();
+            if (poule.serie.weekOrderChangeAllowed == false)
+            {
+                System.Windows.Forms.MessageBox.Show("Not allowed to change week ordering");
+            }
+            else
+            {
+                KeyValuePair<Weekend, int> kvp1 = (KeyValuePair<Weekend, int>)objectListView3.SelectedObjects[0];
+                KeyValuePair<Weekend, int> kvp2 = (KeyValuePair<Weekend, int>)objectListView3.SelectedObjects[1];
+                int index1 = kvp1.Value - 1;
+                int index2 = kvp2.Value - 1;
+                if (index1 >= 0) poule.weekends[index1] = kvp2.Key;
+                if (index2 >= 0) poule.weekends[index2] = kvp1.Key;
+                UpdateWeekMapping();
+                klvv.Evaluate(null);
+                klvv.Changed();
+            }
         }
         private void objectListView3_CellClick(object sender, CellClickEventArgs e)
         {
@@ -332,10 +353,18 @@ namespace VolleybalCompetition_creator
 
         private void button8_Click(object sender, EventArgs e)
         {
-            ProgressDialog diag = new ProgressDialog();
-            diag.WorkFunction += OptimizeWeekAssignment;
-            diag.CompletionFunction += OptimizeWeekAssignmentCompleted;
-            diag.Start("Optimizing weekends", null);
+            if (poule.serie.weekOrderChangeAllowed == false)
+            {
+                System.Windows.Forms.MessageBox.Show("Not allowed to change week ordering");
+            }
+            else
+            {
+
+                ProgressDialog diag = new ProgressDialog();
+                diag.WorkFunction += OptimizeWeekAssignment;
+                diag.CompletionFunction += OptimizeWeekAssignmentCompleted;
+                diag.Start("Optimizing weekends", null);
+            }
         }
         Team optimizeTeam = null;
         private void button9_Click(object sender, EventArgs e)

@@ -31,18 +31,34 @@ namespace VolleybalCompetition_creator
     public class SporthallClub
     {
         public Sporthal sporthall;
-        public string name { get { return sporthall.name; } }
-        public int id { get { return sporthall.id; } }
+        public string name 
+        { 
+            get
+            {
+                if (duplicate) return sporthall.name + "_2";
+                else return sporthall.name;
+            }
+        }
+        public int id 
+        { 
+            get
+            {
+                if (duplicate) return sporthall.id + 1000000;
+                else return sporthall.id;
+            } 
+        }
         public double lat { get { return sporthall.lat; } }
         public double lng { get { return sporthall.lng; } }
         public List<DateTime> NotAvailable = new List<DateTime>();
+        public bool duplicate { get; set; }
         public override string ToString()
         {
             return name;
         }
-        public SporthallClub(Sporthal sporthall)
+        public SporthallClub(Sporthal sporthall, bool duplicate = false)
         {
             this.sporthall = sporthall;
+            this.duplicate = duplicate;
 
         }
     }

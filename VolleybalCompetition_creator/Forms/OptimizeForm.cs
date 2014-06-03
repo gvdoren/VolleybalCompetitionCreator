@@ -31,7 +31,16 @@ namespace VolleybalCompetition_creator
             if (e.Column.Index == 1)
             {
                 serie.optimizable = (e.NewValue == CheckState.Checked);
-            } else 
+            }
+            else if (e.Column.Index == 2)
+            {
+                serie.weekOrderChangeAllowed = (e.NewValue == CheckState.Checked);
+            }
+            else if (e.Column.Index == 3)
+            {
+                serie.homeVisitChangeAllowed = (e.NewValue == CheckState.Checked);
+            }
+            else
             {
                 serie.constraintsHold = (e.NewValue == CheckState.Checked);
             }
@@ -52,18 +61,21 @@ namespace VolleybalCompetition_creator
             {
                 foreach (Poule poule in klvv.poules)
                 {
+                    if (poule.serie != null && poule.serie.optimizable == true)
                     {
-                        lock (klvv) ;
-                        IProgress intf = (IProgress)sender;
-                        intf.SetText("Optimizing - " + poule.serie.name + poule.name);
-                        poule.SnapShot(klvv);
-                        poule.OptimizeTeamAssignment(klvv, intf);
-                        poule.OptimizeHomeVisitor(klvv);
-                        poule.OptimizeWeekends(klvv, intf);
-                        klvv.Evaluate(null);
-                        if (intf.Cancelled()) return;
+                        {
+                            lock (klvv) ;
+                            IProgress intf = (IProgress)sender;
+                            intf.SetText("Optimizing - " + poule.serie.name + poule.name);
+                            poule.SnapShot(klvv);
+                            poule.OptimizeTeamAssignment(klvv, intf);
+                            poule.OptimizeHomeVisitor(klvv);
+                            poule.OptimizeWeekends(klvv, intf);
+                            klvv.Evaluate(null);
+                            if (intf.Cancelled()) return;
+                        }
+                        klvv.Changed();
                     }
-                    klvv.Changed();
                 }
             } while (checkBox1.Checked);
         }
@@ -357,6 +369,7 @@ namespace VolleybalCompetition_creator
             klvv.Changed();
 
         }
+
 
     }
 

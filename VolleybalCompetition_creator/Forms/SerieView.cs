@@ -234,7 +234,8 @@ namespace VolleybalCompetition_creator
                 }
                 serie.poules.Add(poule.name, poule);
                 int teamCount = int.Parse(comboBox1.SelectedItem.ToString());
-                poule.CreateMatchesFromSchemaFiles(teamCount);
+                if (poule.serie.Gewestelijk) poule.CreateMatches(teamCount);
+                else poule.CreateMatchesFromSchemaFiles(teamCount);
                 klvv.poules.Add(poule);
                 klvv.RenewConstraints();
                 klvv.Evaluate(null);
@@ -246,11 +247,11 @@ namespace VolleybalCompetition_creator
         {
             foreach (Team team in objectListView3.SelectedObjects)
             {
-                poule.teams.Add(team);
                 if (team.poule != null)
                 {
                     team.poule.teams.Remove(team);
                 }
+                poule.teams.Add(team);
                 team.poule = poule;
             }
             klvv.RenewConstraints();
@@ -259,6 +260,10 @@ namespace VolleybalCompetition_creator
         }
 
         private void button4_Click(object sender, EventArgs e)
+        {
+            OptimizeDistance();
+        }
+        private void OptimizeDistance()
         {
             foreach (Team team in serie.teams)
             {
@@ -357,8 +362,8 @@ namespace VolleybalCompetition_creator
                             poule.weekends.Add(new Weekend(we.Saturday));
                         }
                         poule.matches.Clear();
-                        poule.CreateMatches(poule.maxTeams);
-                        //poule.CreateMatchesFromSchemaFiles(poule.maxTeams);
+                        if (poule.serie.Gewestelijk) poule.CreateMatches(poule.maxTeams);
+                        else poule.CreateMatchesFromSchemaFiles(poule.maxTeams);
                         klvv.RenewConstraints();
                         klvv.Evaluate(null);
                         klvv.Changed();
@@ -399,6 +404,9 @@ namespace VolleybalCompetition_creator
                     {
                         if(team.poule != null) team.poule.teams.Remove(team);
                         team.poule = (Poule)diag.Selection.obj;
+                        team.poule.teams.Add(team);
+                        klvv.Evaluate(null);
+                        klvv.Changed();
                     }
                     //objectListView1.BuildList(true);
                     UpdateTeamList();
@@ -460,6 +468,11 @@ namespace VolleybalCompetition_creator
                 team.poule = po;
                 i++;
             }
+            // 3 times to be sure that a local minimum is found
+            OptimizeDistance();
+            OptimizeDistance();
+            OptimizeDistance();
+
             klvv.RenewConstraints();
             klvv.Evaluate(null);
             klvv.Changed();

@@ -22,6 +22,7 @@ namespace VolleybalCompetition_creator
             klvv.OnMyChange += state_OnMyChange;
             objectListView1.ShowGroups = false;
             state.OnMyChange += state_OnMyChange;
+            UpdateTabPage2();
             
         }
         public void state_OnMyChange(object source, MyEventArgs e)

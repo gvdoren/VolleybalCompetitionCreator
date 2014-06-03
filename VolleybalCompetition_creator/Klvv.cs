@@ -733,12 +733,12 @@ namespace VolleybalCompetition_creator
                                 sp = cl.sporthalls.Find(t => t.id == id);
                                 if (sp == null)
                                 {
-                                    Sporthal sp1 = sporthalls.Find(s => s.id == id);
+                                    Sporthal sp1 = sporthalls.Find(s => s.id == id || s.id == id-1000000);
                                     if (sp1 == null)
                                     {
-                                        System.Windows.Forms.MessageBox.Show(string.Format("Sporthal id={0} niet bekend", id));                                                
+                                        System.Windows.Forms.MessageBox.Show(string.Format("Sporthal id={0} niet bekend", id));
                                     }
-                                    sp = new SporthallClub(sp1);
+                                    sp = new SporthallClub(sp1,id>=1000000);
                                     cl.sporthalls.Add(sp);
                                 }
                             }
@@ -773,7 +773,7 @@ namespace VolleybalCompetition_creator
                             Team te = cl.teams.Find(t => t.Id == id && t.name == teamName && t.serie == serie);
                             int sporthalId = int.Parse(team.Attribute("SporthallId").Value);
                             SporthallClub sporthall;
-                            if (sporthalId == -1)
+                            if (sporthalId == -1 )
                             {
                                 string sporthalName = team.Attribute("SporthallName").Value;
                                 sporthall = cl.sporthalls.Find(sp => sp.id == sporthalId && sp.name == sporthalName);
@@ -935,8 +935,9 @@ namespace VolleybalCompetition_creator
                         writer.WriteAttributeString("SerieName", team.poule.name);
                         writer.WriteAttributeString("Id", team.Id.ToString());
                         writer.WriteAttributeString("Name", team.name);
-                        writer.WriteAttributeString("SporthallId", team.sporthal.id.ToString());
-                        writer.WriteAttributeString("SporthallName", team.sporthal.name);
+                        // Not the id and the name of the clubsporthal is used, but the original (duplication of sporthalls)
+                        writer.WriteAttributeString("SporthallId", team.sporthal.sporthall.id.ToString());
+                        writer.WriteAttributeString("SporthallName", team.sporthal.sporthall.name);
                         writer.WriteAttributeString("ClubId", team.club.Id.ToString());
                         writer.WriteAttributeString("ClubName", team.club.name);
                         writer.WriteEndElement();

@@ -520,7 +520,7 @@ namespace VolleybalCompetition_creator
             klvv.Evaluate(null);
             klvv.Changed();
             state.Clear();
-            Text = string.Format("Volleyball competition creation tool ({0})", klvv.year);
+            this.Text = string.Format("Volleyball competition creation tool ({0})", klvv.fileName);
         }
 
         private void vVBCompetitionToolStripMenuItem1_Click(object sender, EventArgs e)
