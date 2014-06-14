@@ -259,7 +259,7 @@ namespace VolleybalCompetition_creator
 
         private void button5_Click(object sender, EventArgs e)
         {
-            if (poule.serie.weekOrderChangeAllowed == false)
+            if (poule.serie.homeVisitChangeAllowed == false)
             {
                 System.Windows.Forms.MessageBox.Show("Not allowed to change home/visit");
             }
@@ -274,7 +274,7 @@ namespace VolleybalCompetition_creator
 
         private void button6_Click(object sender, EventArgs e)
         {
-            if (poule.serie.weekOrderChangeAllowed == false)
+            if (poule.serie.homeVisitChangeAllowed == false)
             {
                 System.Windows.Forms.MessageBox.Show("Not allowed to change home/visit");
             }
@@ -291,7 +291,7 @@ namespace VolleybalCompetition_creator
             
             KeyValuePair<Weekend, int> kvp = (KeyValuePair<Weekend, int>)e.Model;
             if (kvp.Value > 0) e.Item.SubItems[1].Text = "Week " + kvp.Value.ToString();
-            else e.Item.SubItems[1].Text = "---";
+            else e.Item.SubItems[1].Text = "----";
         }
 
         private void UpdateWeekMapping()
@@ -405,6 +405,43 @@ namespace VolleybalCompetition_creator
             poule.OptimizeWeekends(klvv, intf);
             klvv.Evaluate(null);
             if (intf.Cancelled()) return;
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            ProgressDialog diag = new ProgressDialog();
+            diag.WorkFunction += AnalyzePoule;
+            diag.CompletionFunction += OptimizeCompleted;
+            diag.Start("Analyzing", null);
+        }
+        private void AnalyzePoule(object sender, MyEventArgs e)
+        {
+            IProgress intf = (IProgress)sender;
+            intf.SetText("Analysing poule - " + poule.serie.name + poule.name);
+            poule.SnapShot(klvv);
+            poule.AnalyzeTeamAssignment(klvv, intf);
+            klvv.Evaluate(null);
+            if (intf.Cancelled()) return;
+
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            optimizeTeam = (Team)objectListView1.SelectedObject;
+            ProgressDialog diag = new ProgressDialog();
+            diag.WorkFunction += AnalyzeAndOptimizePoule;
+            diag.CompletionFunction += OptimizeCompleted;
+            diag.Start("Analyzing", null);
+        }
+        private void AnalyzeAndOptimizePoule(object sender, MyEventArgs e)
+        {
+            IProgress intf = (IProgress)sender;
+            intf.SetText("Analysing + Optimizing - " + poule.serie.name + poule.name);
+            poule.SnapShot(klvv);
+            poule.AnalyzeAndOptimizeTeamAssignment(klvv, intf, optimizeTeam);
+            klvv.Evaluate(null);
+            if (intf.Cancelled()) return;
+
         }
     }
 }

@@ -186,9 +186,10 @@ namespace VolleybalCompetition_creator
             }*/
             foreach (Poule p in objectListView2.SelectedObjects)
             {
-                foreach (Team team in p.teams)
+                List<Team> tempList = new List<Team>(p.teams);
+                foreach (Team team in tempList)
                 {
-                    team.poule = null;
+                    p.RemoveTeam(team);
                 }
                 serie.poules.Remove(p.name);
                 klvv.poules.Remove(p);
@@ -226,16 +227,15 @@ namespace VolleybalCompetition_creator
                 }
                 List<Weekend> weekends = klvv.annorama.GetReeks(comboBox1.SelectedItem.ToString());
 
-                Poule poule = new Poule(Letter.ToString());
-                poule.serie = serie;
+                int teamCount = int.Parse(comboBox1.SelectedItem.ToString());
+                Poule poule = new Poule(Letter.ToString(), teamCount,serie);
                 foreach (Weekend we in weekends)
                 {
                     poule.weekends.Add(new Weekend(we.Saturday));
                 }
                 serie.poules.Add(poule.name, poule);
-                int teamCount = int.Parse(comboBox1.SelectedItem.ToString());
-                if (poule.serie.Gewestelijk) poule.CreateMatches(teamCount);
-                else poule.CreateMatchesFromSchemaFiles(teamCount);
+                if (poule.serie.Gewestelijk) poule.CreateMatches();
+                else poule.CreateMatchesFromSchemaFiles();
                 klvv.poules.Add(poule);
                 klvv.RenewConstraints();
                 klvv.Evaluate(null);
@@ -247,12 +247,7 @@ namespace VolleybalCompetition_creator
         {
             foreach (Team team in objectListView3.SelectedObjects)
             {
-                if (team.poule != null)
-                {
-                    team.poule.teams.Remove(team);
-                }
-                poule.teams.Add(team);
-                team.poule = poule;
+                poule.AddTeam(team);
             }
             klvv.RenewConstraints();
             klvv.Evaluate(null);
@@ -265,72 +260,76 @@ namespace VolleybalCompetition_creator
         }
         private void OptimizeDistance()
         {
+            int minimumTeams = serie.teams.Count / serie.poules.Count;
             foreach (Team team in serie.teams)
             {
-                if (team.poule != null)
+                if (team.RealTeam())
                 {
-                    int minDistance = team.poule.CalculateDistances(team);
-                    // When teams are together in a poule, ensure that there is no reason to move to another poule
-                    foreach (Team t in team.poule.teams)
+                    if (team.poule != null)
                     {
-                        if (t.club == team.club & checkBox1.Checked) minDistance = int.MaxValue;
-                    }
-                    Poule currentPoule = team.poule;
-                    Poule minPoule = null;
-                    foreach (Poule p in serie.poules.Values)
-                    {
-                        bool allowed = true;
-                        if (checkBox1.Checked)
+                        int minDistance = team.poule.CalculateDistances(team);
+                        // When teams are together in a poule, ensure that there is no reason to not move to another poule
+                        foreach (Team t in team.poule.teams)
                         {
-                            foreach (Team t in p.teams)
-                            {
-                                if (t != team && t.club == team.club) allowed = false;// ander team zit al in poule
-                            }
+                            if (t.club == team.club & checkBox1.Checked) minDistance = int.MaxValue;
                         }
-                        if (allowed)
-                        {
-                            int distance = p.CalculateDistances(team);
-                            if (distance < minDistance)
-                            {
-                                minDistance = distance;
-                                minPoule = p;
-                            }
-                        }
-                    }
-                    minDistance = int.MaxValue;
-                    Team minTeam = null;
-                    if (minPoule != null)
-                    {
-                        foreach (Team te in minPoule.teams)
+                        Poule currentPoule = team.poule;
+                        Poule minPoule = null;
+                        foreach (Poule p in serie.poules.Values)
                         {
                             bool allowed = true;
                             if (checkBox1.Checked)
                             {
-                                foreach (Team t in currentPoule.teams)
+                                foreach (Team t in p.teams)
                                 {
-                                    if (te.club == t.club) allowed = false;
+                                    if (t != team && t.club == team.club) allowed = false;// ander team zit al in poule
                                 }
                             }
                             if (allowed)
                             {
-                                int distance = currentPoule.CalculateDistances(te);
+                                int distance = p.CalculateDistances(team);
                                 if (distance < minDistance)
                                 {
                                     minDistance = distance;
-                                    minTeam = te;
+                                    minPoule = p;
                                 }
                             }
                         }
-                    }
-                    if (minPoule != null && minTeam != null && minTeam != team && minPoule != currentPoule)
-                    {
-                        currentPoule.teams.Remove(team);
-                        minPoule.teams.Add(team);
-                        team.poule = minPoule;
-                        minPoule.teams.Remove(minTeam);
-                        currentPoule.teams.Add(minTeam);
-                        minTeam.poule = currentPoule;
-
+                        minDistance = int.MaxValue;
+                        Team minTeam = null;
+                        if (minPoule != null)
+                        {
+                            foreach (Team te in minPoule.teams)
+                            {
+                                if (te.RealTeam() || team.poule.TeamCount>minimumTeams)
+                                {
+                                    bool allowed = true;
+                                    if (checkBox1.Checked)
+                                    {
+                                        foreach (Team t in currentPoule.teams)
+                                        {
+                                            if (te.club == t.club) allowed = false;
+                                        }
+                                    }
+                                    if (allowed)
+                                    {
+                                        int distance = currentPoule.CalculateDistances(te);
+                                        if (distance < minDistance)
+                                        {
+                                            minDistance = distance;
+                                            minTeam = te;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (minPoule != null && minTeam != null && minTeam != team && minPoule != currentPoule)
+                        {
+                            currentPoule.RemoveTeam(team);
+                            minPoule.RemoveTeam(minTeam);
+                            minPoule.AddTeam(team);
+                            currentPoule.AddTeam(minTeam);
+                        }
                     }
                 }
             }
@@ -362,8 +361,8 @@ namespace VolleybalCompetition_creator
                             poule.weekends.Add(new Weekend(we.Saturday));
                         }
                         poule.matches.Clear();
-                        if (poule.serie.Gewestelijk) poule.CreateMatches(poule.maxTeams);
-                        else poule.CreateMatchesFromSchemaFiles(poule.maxTeams);
+                        if (poule.serie.Gewestelijk) poule.CreateMatches();
+                        else poule.CreateMatchesFromSchemaFiles();
                         klvv.RenewConstraints();
                         klvv.Evaluate(null);
                         klvv.Changed();
@@ -400,11 +399,14 @@ namespace VolleybalCompetition_creator
                     SelectionDialog diag = new SelectionDialog(list, def);
                     diag.Text = "Select the poule:";
                     diag.ShowDialog();
-                    if (diag.Ok)
+                    Poule newPoule = (Poule)diag.Selection.obj;
+                    if (diag.Ok && newPoule != team.poule)
                     {
-                        if(team.poule != null) team.poule.teams.Remove(team);
-                        team.poule = (Poule)diag.Selection.obj;
-                        team.poule.teams.Add(team);
+                        if(team.poule != null) team.poule.RemoveTeam(team);
+                        if (newPoule != null)
+                        {
+                            newPoule.AddTeam(team);
+                        }
                         klvv.Evaluate(null);
                         klvv.Changed();
                     }
@@ -419,8 +421,8 @@ namespace VolleybalCompetition_creator
         private void objectListView2_FormatRow(object sender, FormatRowEventArgs e)
         {
             Poule poule = (Poule)e.Model;
-            if (poule.teams.Count >  poule.maxTeams) e.Item.BackColor = Color.Red;
-            if (poule.teams.Count <= poule.maxTeams-2) e.Item.BackColor = Color.Orange;
+            if (poule.TeamCount > poule.maxTeams) e.Item.BackColor = Color.Red;
+            if (poule.TeamCount <= poule.maxTeams-2) e.Item.BackColor = Color.Orange;
         }
 
         private void objectListView3_FormatCell(object sender, FormatCellEventArgs e)
@@ -439,8 +441,7 @@ namespace VolleybalCompetition_creator
             // Remove the current assigned poule
             foreach (Team team in tms)
             {
-                if (team.poule != null) team.poule.teams.Remove(team);
-                team.poule = null;
+                if (team.poule != null) team.poule.RemoveTeam(team);
             }            
             // 
             tms.Sort(delegate(Team t1, Team t2)
@@ -456,16 +457,15 @@ namespace VolleybalCompetition_creator
             }
             tmPoules.Sort(delegate(Poule p1, Poule p2)
             {
-                int cp1 = (p1.maxTeams - p1.teams.Count);
-                int cp2 = (p1.maxTeams - p2.teams.Count);
+                int cp1 = (p1.maxTeams - p1.TeamCount);
+                int cp2 = (p1.maxTeams - p2.TeamCount);
                 return cp1.CompareTo(cp2);
             });
             int i = 0;
             foreach (Team team in tms)
             {
                 Poule po = tmPoules[i % tmPoules.Count];
-                po.teams.Add(team);
-                team.poule = po;
+                po.AddTeam(team);
                 i++;
             }
             // 3 times to be sure that a local minimum is found

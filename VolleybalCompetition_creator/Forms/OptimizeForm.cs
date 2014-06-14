@@ -57,8 +57,10 @@ namespace VolleybalCompetition_creator
         }
         private void OptimizePoules(object sender, MyEventArgs e)
         {
+            int score;
             do
             {
+                score = klvv.LastTotalConflicts;
                 foreach (Poule poule in klvv.poules)
                 {
                     if (poule.serie != null && poule.serie.optimizable == true)
@@ -77,7 +79,7 @@ namespace VolleybalCompetition_creator
                         klvv.Changed();
                     }
                 }
-            } while (checkBox1.Checked);
+            } while (checkBox1.Checked && klvv.LastTotalConflicts<score);
         }
         private void OptimizePoulesCompleted(object sender, MyEventArgs e)
         {
@@ -96,8 +98,10 @@ namespace VolleybalCompetition_creator
         {
             List<Team> teamList = null;
             IProgress intf = (IProgress)sender;
+            int score;
             do
             {
+                score = klvv.LastTotalConflicts;
                 teamList = new List<Team>();
                 foreach (Poule poule in klvv.poules)
                 {
@@ -125,7 +129,8 @@ namespace VolleybalCompetition_creator
                     }
                     klvv.Changed();
                 }
-            } while (checkBox1.Checked && teamList.Count > 0);
+            } while (checkBox1.Checked && teamList.Count > 0 && klvv.LastTotalConflicts<score);
+
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -138,8 +143,10 @@ namespace VolleybalCompetition_creator
         private void OptimizePoulesSelectedClubs(object sender, MyEventArgs e)
         {
             List<Poule> pouleList = null;
+            int score;
             do
             {
+                score = klvv.LastTotalConflicts;
                  pouleList = new List<Poule>();
                 foreach (Club club in state.selectedClubs)
                 {
@@ -171,7 +178,8 @@ namespace VolleybalCompetition_creator
                     }
                     klvv.Changed();
                 }
-            } while (checkBox1.Checked && pouleList.Count > 0);
+            } while (checkBox1.Checked && pouleList.Count > 0 && klvv.LastTotalConflicts<score);
+
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -184,8 +192,10 @@ namespace VolleybalCompetition_creator
         private void OptimizeTeamsSelectedClubs(object sender, MyEventArgs e)
         {
             List<Team> teamList = null;
+            int score;
             do
             {
+                score = klvv.LastTotalConflicts;
                 IProgress intf = (IProgress)sender;
                 teamList = new List<Team>();
                 foreach (Club club in state.selectedClubs)
@@ -211,7 +221,8 @@ namespace VolleybalCompetition_creator
                     }
                     klvv.Changed();
                 }
-            } while (checkBox1.Checked && teamList.Count > 0);
+            } while (checkBox1.Checked && teamList.Count > 0 && klvv.LastTotalConflicts<score);
+
         }
         
         private void OptimizeSeperatingABSelectedClubs(object sender, MyEventArgs e)
@@ -368,6 +379,40 @@ namespace VolleybalCompetition_creator
             klvv.Evaluate(null);
             klvv.Changed();
 
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            ProgressDialog diag = new ProgressDialog();
+            diag.WorkFunction += OptimizePoulesHomeVisit;
+            diag.CompletionFunction += OptimizePoulesCompleted;
+            diag.Start("Optimizing", null);
+        }
+        private void OptimizePoulesHomeVisit(object sender, MyEventArgs e)
+        {
+            int score;
+            do
+            {
+                score = klvv.LastTotalConflicts;
+                foreach (Poule poule in klvv.poules)
+                {
+                    if (poule.serie != null && poule.serie.optimizable == true)
+                    {
+                        {
+                            lock (klvv) ;
+                            IProgress intf = (IProgress)sender;
+                            intf.SetText("Optimizing - " + poule.serie.name + poule.name);
+                            poule.SnapShot(klvv);
+                            //poule.OptimizeTeamAssignment(klvv, intf);
+                            poule.OptimizeHomeVisitor(klvv);
+                            //poule.OptimizeWeekends(klvv, intf);
+                            klvv.Evaluate(null);
+                            if (intf.Cancelled()) return;
+                        }
+                        klvv.Changed();
+                    }
+                }
+            } while (checkBox1.Checked && klvv.LastTotalConflicts < score);
         }
 
 

@@ -126,7 +126,7 @@
             // 
             // olvColumn5
             // 
-            this.olvColumn5.AspectName = "teams.Count";
+            this.olvColumn5.AspectName = "TeamCount";
             this.olvColumn5.CellPadding = null;
             this.olvColumn5.Text = "Teams";
             this.olvColumn5.Width = 40;

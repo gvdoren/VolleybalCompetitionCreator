@@ -45,8 +45,8 @@ namespace VolleybalCompetition_creator
                 time = value;
             } 
         }
-        public Team homeTeam { get { if (homeTeamIndex < poule.teams.Count) return poule.teams[homeTeamIndex]; else return Team.CreateNullTeam(poule); } }
-        public Team visitorTeam { get { if (visitorTeamIndex < poule.teams.Count) return poule.teams[visitorTeamIndex]; else return Team.CreateNullTeam(poule); } }
+        public Team homeTeam { get { return poule.teams[homeTeamIndex]; } }
+        public Team visitorTeam { get { return poule.teams[visitorTeamIndex]; } }
         public Weekend Weekend { get { return poule.weekends[weekIndex]; } }
         public bool Optimizable
         {
@@ -66,7 +66,7 @@ namespace VolleybalCompetition_creator
         public Serie serie;
         public bool RealMatch()
         {
-            return homeTeam.name != "---" && visitorTeam.name != "---";
+            return homeTeam.RealTeam() && visitorTeam.RealTeam();
         }
         public Match(DateTime datetime, Team homeTeam, Team visitorTeam, Serie serie, Poule poule)
         {

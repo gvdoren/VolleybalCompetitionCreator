@@ -291,9 +291,9 @@ namespace VolleybalCompetition_creator
                     diag.ShowDialog();
                     if (diag.Ok)
                     {
-                        if (team.serie != null) team.serie.teams.Remove(team);
-                        team.serie = (Serie) diag.Selection.obj;
-                        team.serie.teams.Add(team);
+                        Serie newSerie = (Serie)diag.Selection.obj;
+                        if (team.poule != null) team.poule.RemoveTeam(team);
+                        newSerie.AddTeam(team);
                     }
                     objectListView1.BuildList(true);
                 }

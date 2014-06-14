@@ -44,6 +44,7 @@
             this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn5 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn8 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn11 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
@@ -56,7 +57,8 @@
             this.button8 = new System.Windows.Forms.Button();
             this.button9 = new System.Windows.Forms.Button();
             this.button10 = new System.Windows.Forms.Button();
-            this.olvColumn11 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.button11 = new System.Windows.Forms.Button();
+            this.button12 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView3)).BeginInit();
@@ -237,6 +239,12 @@
             this.olvColumn8.CellPadding = null;
             this.olvColumn8.Text = "Conflict";
             // 
+            // olvColumn11
+            // 
+            this.olvColumn11.AspectName = "Weekend.Even";
+            this.olvColumn11.CellPadding = null;
+            this.olvColumn11.Text = "Even";
+            // 
             // button4
             // 
             this.button4.Location = new System.Drawing.Point(178, 115);
@@ -358,17 +366,34 @@
             this.button10.UseVisualStyleBackColor = true;
             this.button10.Click += new System.EventHandler(this.button10_Click);
             // 
-            // olvColumn11
+            // button11
             // 
-            this.olvColumn11.AspectName = "Weekend.Even";
-            this.olvColumn11.CellPadding = null;
-            this.olvColumn11.Text = "Even";
+            this.button11.Location = new System.Drawing.Point(178, 144);
+            this.button11.Name = "button11";
+            this.button11.Size = new System.Drawing.Size(56, 23);
+            this.button11.TabIndex = 13;
+            this.button11.Text = "Analyse";
+            this.button11.UseVisualStyleBackColor = true;
+            this.button11.Click += new System.EventHandler(this.button11_Click);
+            // 
+            // button12
+            // 
+            this.button12.Enabled = false;
+            this.button12.Location = new System.Drawing.Point(178, 173);
+            this.button12.Name = "button12";
+            this.button12.Size = new System.Drawing.Size(56, 23);
+            this.button12.TabIndex = 14;
+            this.button12.Text = "A + O";
+            this.button12.UseVisualStyleBackColor = true;
+            this.button12.Click += new System.EventHandler(this.button12_Click);
             // 
             // PouleView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(634, 441);
+            this.Controls.Add(this.button12);
+            this.Controls.Add(this.button11);
             this.Controls.Add(this.button10);
             this.Controls.Add(this.button9);
             this.Controls.Add(this.label2);
@@ -427,5 +452,7 @@
         private System.Windows.Forms.Button button9;
         private System.Windows.Forms.Button button10;
         private BrightIdeasSoftware.OLVColumn olvColumn11;
+        private System.Windows.Forms.Button button11;
+        private System.Windows.Forms.Button button12;
     }
 }

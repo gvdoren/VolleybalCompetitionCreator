@@ -401,6 +401,7 @@ namespace VolleybalCompetition_creator
                     writer.WriteAttributeString("TeamName", team.name);
                     writer.WriteAttributeString("Id", team.Id.ToString());
                     writer.WriteEndElement();
+                   
                 }
                 writer.WriteEndElement();
                 writer.WriteStartElement("Weekends");
@@ -464,25 +465,42 @@ namespace VolleybalCompetition_creator
                 int SerieId = int.Parse(poule.Attribute("SerieSortId").Value);
                 Serie serie = klvvnew.series.Find(s => s.id == SerieId && s.name == SerieName);
                 Poule po = klvvnew.poules.Find(p => p.serie == serie && p.name == PouleName);
+                XAttribute attr = poule.Attribute("MaxTeams");
+                int maxTeams = int.Parse(attr.Value);
+                if (maxTeams == 0) maxTeams = 14;
                 if (po == null)
                 {
-                    po = new Poule(PouleName);
-                    po.serie = serie;
+                    po = new Poule(PouleName,maxTeams,serie);
                     serie.poules.Add(po.name, po);
                     klvvnew.poules.Add(po);
                 }
-                XAttribute attr = poule.Attribute("MaxTeams");
-                if (attr != null)
-                {
-                    po.maxTeams = int.Parse(attr.Value);
-                }
+                int index = 0;
                 foreach (XElement team in poule.Element("Teams").Elements("Team"))
                 {
                     int teamId = int.Parse(team.Attribute("Id").Value);
                     string teamName = team.Attribute("TeamName").Value;
-                    Team te = klvvnew.teams.Find(t => t.Id == teamId && t.name == teamName);
-                    te.poule = po;
-                    po.teams.Add(te);
+                    Team te;
+                    if (teamName == "----")
+                    {
+                        te = Team.CreateNullTeam(null, serie);
+                    }
+                    else
+                    {
+                        te = klvvnew.teams.Find(t => t.Id == teamId && t.name == teamName);
+                    }
+                    if (te.poule != null)
+                    {
+                        Team t = new Team(-1, te.name, null, serie);
+                        t.defaultDay = te.defaultDay;
+                        t.defaultTime = te.defaultTime;
+                        t.group = te.group;
+                        t.sporthal = te.sporthal;
+                        te.club.AddTeam(t);
+                        serie.AddTeam(t);
+                        te = t;
+                    }
+                    po.AddTeam(te,index); //must at fixex position
+                    index++;
                 }
                 foreach (XElement weekend in poule.Element("Weekends").Elements("Weekend"))
                 {
@@ -633,10 +651,10 @@ namespace VolleybalCompetition_creator
         public void saveFileDialog1_FileOk5(object sender, CancelEventArgs e)
         {
             StreamWriter writer = new StreamWriter(saveFileDialog1.FileName);
-            writer.WriteLine("Serie,Poule,Poule-team-number,Team,Club,Speeldag,Speeltijd");
+            writer.WriteLine("Serie,Poule,Poule-team-number,Team,Club,Speeldag,Speeltijd,Groep");
             foreach (Team team in klvv.teams)
             {
-                if (team.serie.id >= 0)
+                if (team.club.Id >=0)
                 {
                     string pouleName = "-";
                     if (team.poule != null)
@@ -644,7 +662,7 @@ namespace VolleybalCompetition_creator
                         pouleName = team.poule.name;
                     }
 
-                    writer.WriteLine("{0},{1},{2},{3},{4},{5},{6}", team.serie.name, pouleName, team.Index, team.name, team.club.name, team.defaultDay.ToString(), team.defaultTime.ToString());
+                    writer.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7}", team.serie.name, pouleName, team.Index, team.name, team.club.name, team.defaultDay.ToString(), team.defaultTime.ToString(),team.group.ToString());
                 }
             }
             writer.Close();

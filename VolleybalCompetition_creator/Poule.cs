@@ -13,22 +13,67 @@ namespace VolleybalCompetition_creator
         List<Match> resultMatches = new List<Match>();
         public List<Constraint> relatedConstraints = new List<Constraint>();
         int minConflicts = 0;
-        public int maxTeams = 0;
+        private int _maxTeams;
+        public int maxTeams { get { return _maxTeams;}}
         public Serie serie = null;
         public string name { get; set; }
         public List<Team> teams = new List<Team>();
-        public Poule(string name) { this.name = name; }
-        public string fullName { get { return serie.name + name; ;} }
-        public int AnoramaSize()
+        public bool AddTeam(Team team, int index = -1)
         {
-            if (teams.Count <= 4) return 4;
-            if (teams.Count <= 6) return 6;
-            if (teams.Count <= 8) return 8;
-            if (teams.Count <= 10) return 10;
-            if (teams.Count <= 12) return 12;
-            if (teams.Count <= 14) return 14;
-            return 0;
+            if(TeamCount< maxTeams && teams.Contains(team) == false)
+            {
+                if(index<0) index = teams.FindIndex(t => t.RealTeam() == false);
+                if (index >= 0)
+                {
+                    if (team.poule != null) team.poule.RemoveTeam(team);
+                    teams[index] = team;
+                    team.poule = this;
+                    UpdateTeamCount();
+                    return true;
+                }
+                else
+                {
+                    System.Windows.Forms.MessageBox.Show("Inconsistency");
+                }
+            }
+            return false;
         }
+        public bool RemoveTeam(Team team)
+        {
+            int index = teams.FindIndex(t => t == team);
+            if (index >=0 )
+            {
+                Team dummy = Team.CreateNullTeam(null, serie);
+                dummy.poule = this;
+                teams[index] = dummy;
+                team.poule = null;
+                UpdateTeamCount();
+                return true;
+            }
+            return false;
+        }
+        public int TeamCount = 0;
+        private void UpdateTeamCount()
+        {
+            TeamCount = 0;
+            foreach (Team team in teams)
+            {
+                if(team.RealTeam()) TeamCount++;
+            }
+        }
+        public Poule(string name, int maxTeams, Serie serie) 
+        {
+            this.serie = serie;
+            this._maxTeams = maxTeams;
+            for (int i = 0; i < maxTeams; i++)
+            {
+                Team t = Team.CreateNullTeam(null,serie);
+                teams.Add(t);
+                t.poule = this;  // initially, this cannot be done by CreateNullTeam
+            }
+            this.name = name; 
+        }
+        public string fullName { get { return serie.name + name; ;} }
         public List<Weekend> weekends = new List<Weekend>();
         public void AddWeekend(int year, int weekNr)
         {
@@ -45,12 +90,12 @@ namespace VolleybalCompetition_creator
             {
                 foreach (Team t2 in teams)
                 {
-                    distance += t1.sporthal.sporthall.Distance(t2.sporthal.sporthall);
+                    if(t2.RealTeam()) distance += t1.sporthal.sporthall.Distance(t2.sporthal.sporthall);
                 }
             }
-            if (teams.Count > 1)
+            if (TeamCount > 1)
             {
-                distance = (distance / (teams.Count - 1));
+                distance = (distance / (TeamCount - 1));
             }
             return distance;
         }
@@ -251,7 +296,7 @@ namespace VolleybalCompetition_creator
                 if (conflict_cost > 0)
                 {
                     int teamindex = teams.FindIndex(t => t == team);
-                    for (int i = 0; i < teams.Count; i++)
+                    for (int i = 0; i < maxTeams; i++)
                     {
                         if (i != teamindex)
                         {
@@ -282,32 +327,158 @@ namespace VolleybalCompetition_creator
             {
                 if (conflict_cost > 0)
                 {
-                    if (teams.Count <= 6)
+                    if (maxTeams <= 6)
                     {
-                        List<Team> temp = new List<Team>(teams);
-                        teams = new List<Team>();
-                        try
-                        {
-                            GenerateTeamCombination(klvv, temp, intf);
-                        }
-                        catch { }
-                        teams = resultTeams;
+                        OptimizeFullTeamAssignment(klvv, intf);
                     }
                     else // semi-optimisation.
                     {
-                        for (int i = 0; i < teams.Count; i++)
+                        for (int i = 0; i < maxTeams; i++)
                         {
-                            intf.Progress(i, teams.Count);
-                            for (int j = i+1; j < teams.Count; j++)
+                            intf.Progress(i, maxTeams);
+                            for (int j = 0; j < maxTeams; j++)
                             {
-                                Swap(teams, i, j);
-                                SnapShotIfImproved(klvv);
-                                Swap(teams, i, j);
+                                if (j != i)
+                                {
+                                    Swap(teams, i, j);
+                                    SnapShotIfImproved(klvv);
+                                    Swap(teams, i, j);
+                                }
                             }
                         }
-                        teams = resultTeams;
-                        klvv.Evaluate(null);
                     }
+                    teams = resultTeams;
+                    klvv.Evaluate(null);
+                }
+            }
+        }
+        public int[,] AnalyzeTeamAssignment(Klvv klvv, IProgress intf)
+        {
+            int[,] score = new int[maxTeams+1,maxTeams+1];
+            List<Team> fixedOrderList = new List<Team>(teams);
+            MakeDirty();
+            if (serie.optimizable)
+            {
+                for(int k = 1;k<=maxTeams;k++)
+                {
+                    intf.Progress(k-1, maxTeams);
+                    teams.Add(teams[0]);
+                    teams.RemoveAt(0);
+                    /*
+                    for (int i = 0; i < maxTeams-1; i++)
+                    {
+                        Swap(teams, i, i+1);
+                    }*/
+                    klvv.EvaluateRelatedConstraints(this);
+                    int index = 0;
+                    foreach (Team team in fixedOrderList)
+                    {
+                        score[index, (index + maxTeams - k) % maxTeams] = team.conflict;
+                        index++;
+                    }
+                }
+                Console.Write("{0,30}", "Teams:");
+                for (int k = 1; k <= maxTeams; k++)
+                {
+                    Console.Write("{0,4}", "p-"+k.ToString());
+                }
+                Console.WriteLine();
+                int index1 = 0;
+                foreach (Team team in fixedOrderList)
+                {
+                    Console.Write("{0,30}", team.name);
+                    for (int k = 0; k < maxTeams; k++)
+                    {
+                        Console.Write("{0,4}", score[index1, k]);
+                    }
+                    Console.WriteLine();
+                    index1++;
+                }
+                teams = resultTeams;
+                klvv.Evaluate(null);
+            }
+            return score;
+        }
+
+        public void AnalyzeAndOptimizeTeamAssignment(Klvv klvv, IProgress intf, Team team)
+        {
+            int[,] score = AnalyzeTeamAssignment(klvv, intf);
+            bool[] used = new bool[maxTeams];
+            for(int i = 0;i<maxTeams;i++) used[i] = false;
+            foreach (Team t in teams)
+            {
+                int index = teams.FindIndex(te => te == t);
+                AnalyzeAndOptimizeTeamAssignmentRecursive(klvv, intf, score, used, index, t, 0, new List<Team>(teams), klvv.LastTotalConflicts);
+            }
+        }
+        public void AnalyzeAndOptimizeTeamAssignmentRecursive(Klvv klvv, IProgress intf, int[,] score, bool[] used, int startPos, Team team, int delta,List<Team> newTeamList,int minTotalConflict )
+        {
+            //Console.WriteLine("Team: {0}", team.name);
+            int index = teams.FindIndex(t => t == team);
+            List<int> possibilities = new List<int>();
+            for (int i = 0; i < maxTeams; i++)
+            {
+                if (used[i] == false) possibilities.Add(i);
+            }
+            possibilities.Sort(delegate(int i1, int i2) { return score[index,i1].CompareTo(score[index,i2]); });
+            int delta1 = 0;
+            foreach (int i in possibilities)
+            {
+                //Console.WriteLine("  - pos: {0}", i);
+                delta1 = score[index, i] - score[index, index];
+                if (delta + delta1 < 0)
+                {
+                    used[i] = true;
+                    newTeamList[i] = team;
+                    if (i == startPos)
+                    {
+                        List<Team> temp = new List<Team>(teams);
+                        teams = newTeamList;
+                        klvv.EvaluateRelatedConstraints(this);
+                        if (klvv.TotalConflicts() <= minTotalConflict)
+                        {
+                            Console.WriteLine(" **** Final score: {0}", delta + delta1);
+                            int index1 = 0;
+                            int total = 0;
+                            foreach (Team t in newTeamList)
+                            {
+                                int sc = score[teams.FindIndex(te => te == t), index1];
+                                Console.WriteLine(" - {0} : {1}", t.name, sc);
+                                total += sc;
+                                index1++;
+                            }
+                            Console.WriteLine("   Total: {0} - {1}", total, klvv.TotalConflicts());
+                            
+                        }
+                        teams = temp;
+                    }
+                    else
+                    {
+                        AnalyzeAndOptimizeTeamAssignmentRecursive(klvv, intf, score, used, startPos, teams[i], delta + delta1,newTeamList, minTotalConflict);
+                        
+                    }
+                    newTeamList[i] = teams[i];
+                    used[i] = false;
+                }
+            }
+
+        }
+        public void OptimizeFullTeamAssignment(Klvv klvv, IProgress intf)
+        {
+            MakeDirty();
+            if (serie.optimizable)
+            {
+                if (conflict_cost > 0)
+                {
+                    List<Team> temp = new List<Team>(teams);
+                    teams = new List<Team>();
+                    try
+                    {
+                        GenerateTeamCombination(klvv, temp, intf);
+                    }
+                    catch { }
+                    teams = resultTeams;
+
                 }
             }
         }
@@ -388,15 +559,15 @@ namespace VolleybalCompetition_creator
                 klvv.Evaluate(null);
             }
         }
-        public void CreateMatchesFromSchemaFiles(int teamCount)
+        public void CreateMatchesFromSchemaFiles()
         {
             try
             {
-                string[] lines = System.IO.File.ReadAllLines(System.Windows.Forms.Application.StartupPath + @"/InputData/" + string.Format("Schema{0}.csv", teamCount));
-                int reqMatches = teamCount * (teamCount - 1);
+                string[] lines = System.IO.File.ReadAllLines(System.Windows.Forms.Application.StartupPath + @"/InputData/" + string.Format("Schema{0}.csv", maxTeams));
+                int reqMatches = maxTeams * (maxTeams - 1);
                 if (lines.Length != reqMatches)
                 {
-                    System.Windows.Forms.MessageBox.Show(string.Format("Schema{0}.csv does not have the correct number of lines. {1} iso {2}", teamCount, lines.Length,reqMatches));
+                    System.Windows.Forms.MessageBox.Show(string.Format("Schema{0}.csv does not have the correct number of lines. {1} iso {2}", maxTeams, lines.Length,reqMatches));
                 }
                 char[] delimiters = new char[] { ',', ';' };
                 foreach (string line in lines)
@@ -408,21 +579,18 @@ namespace VolleybalCompetition_creator
                     Match m2 = new Match(day, team1, team2, serie, this);
                     matches.Add(m2);
                 }
-                maxTeams = teamCount;
             }
             catch
             {
-                System.Windows.Forms.MessageBox.Show(string.Format("No schema available for {0} teams",teamCount));
+                System.Windows.Forms.MessageBox.Show(string.Format("No schema available for {0} teams", maxTeams));
             }
         }
 
-        public void CreateMatches(int teamCount)
+        public void CreateMatches()
         {
             matches.Clear();
-            if (teamCount % 2 == 1) teamCount++;
-            maxTeams = teamCount;
             List<int> allTeams = new List<int>();
-            for (int i = 0; i < teamCount; i++)
+            for (int i = 0; i < maxTeams; i++)
             {
                 allTeams.Add(i);
             }

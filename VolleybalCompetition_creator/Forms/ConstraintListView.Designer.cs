@@ -32,10 +32,10 @@
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.label1 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
-            this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -74,11 +74,11 @@
             // 
             // olvColumn2
             // 
-            this.olvColumn2.AspectName = "club.name";
+            this.olvColumn2.AspectName = "Context";
             this.olvColumn2.CellPadding = null;
             this.olvColumn2.FillsFreeSpace = true;
             this.olvColumn2.MaximumWidth = 100;
-            this.olvColumn2.Text = "Club";
+            this.olvColumn2.Text = "";
             // 
             // olvColumn3
             // 
@@ -86,6 +86,12 @@
             this.olvColumn3.CellPadding = null;
             this.olvColumn3.MaximumWidth = 80;
             this.olvColumn3.Text = "conflict";
+            // 
+            // olvColumn4
+            // 
+            this.olvColumn4.AspectName = "conflict_cost";
+            this.olvColumn4.CellPadding = null;
+            this.olvColumn4.Text = "cost";
             // 
             // label1
             // 
@@ -109,6 +115,7 @@
             // 
             // button2
             // 
+            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button2.Location = new System.Drawing.Point(325, 1);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
@@ -116,12 +123,6 @@
             this.button2.Text = "Show All";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // olvColumn4
-            // 
-            this.olvColumn4.AspectName = "conflict_cost";
-            this.olvColumn4.CellPadding = null;
-            this.olvColumn4.Text = "cost";
             // 
             // ConstraintListView
             // 

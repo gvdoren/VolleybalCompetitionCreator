@@ -9,34 +9,41 @@
 
 - Inconsistent poules hoeft niet bij elke berekening mee te lopen.
 
-- Aparte constraint voor 'extra-kosten', indien een club teveel conflicten heeft.
-
 - View om de matchen van een club te zien (ipv excel nu)
 
 - inconsistent constraint iets afzwakken: indien een reserve weekend, dan is het middelste weekend of voor heen of voor terugronde te gebruiken
-
 - optimize weekends: indien reserve weekend, dan is het middelste weekend of voor heen of voor terugronde te gebruiken
+  * Dit is niet zo handig. De reden is dat er twee stappen nodig zijn om het vrije weekend van de ene helft naar de andere te krijgen.
+  * Mogelijk is hier een analyse stap mogelijk, waardoor misschien alle mogelijkheden kunnen worden doorgerekend.
+
+
+- Optimalisatie mbv Analyse (alleen nuttig voor grote poules die niet brute force bepaald kunnen worden):
+   * Snellere evaluatie, waardoor meer mogelijkheden kunnen worden bekeken. Is het dan mogelijk om alle mogelijkheden te beschouwen (+ afbreken van dure mogelijkheden)
+   * Analyse is niet geheel 'betrouwbaar', team score representeerd niet de overall score verbetering:
+     - Indien er net een omslag is of de X of Y teams dominant zijn (mogelijk toch bij alle teams tellen).
+	 - Een lege plek in de poule, heeft invloed. Waar staat ie toevallig met roteren
+	 - 
+
+- Automatische naamgeving (A,B,C,...) op de website.
+- Kunnen wijzigingen van speeltijd, sporthal, ....
 
 VVB
 - Sporthal kunnen aanpassen 
 - Inlezen op een gestructureerdere manier. Vertaling van de club-naam
+- idee: Alle teams inlezen + koppelen aan poule + unique nummer. Default aan 'Nationale club'. In een grote tabel, kun je club veranderen.
 
-Kosten
-- Om flexibiliteit te behouden, de kosten van heen/terug te dicht bij elkaar varieren. (eerst lage cost, daarna hogere cost)?
-- Kosten moeten zijn in het aantal wedstrijden dat een club moet verzetten.
-- Indien het relatief tot het aantal teams veel conflicten zijn, de conflict-kosten gaan verhogen.
 
 Belangrijk:
+- zet op de site er expliciet bij dat ze aangeven of hun nationale teams in X of Y of nogroup zit.
 - Check dat alle teams zijn ingedeeld
 - Eventueel naar alle clubs de indeling in reeksen sturen voordat de kalender wordt gemaakt.
 - Week eerder de sluitingsdatum. (eerste week poules indelen, en terugkoppelen)
-- Extra reserve weekenden helpt enorm. Misschien ook bij de volwassenen reeks van 12? Geen plek. Alleen evt. voor 8.
 - Check data van anorama.
 
 
 
 
 
-'Overbodige features':
+'Overbodige features' (constraint checks lopen nu niet mee):
 - Fixed index nummer (vereist ook schema's van VVB. Foutgevoelig)
-- Even weeks
+- Even weeks??

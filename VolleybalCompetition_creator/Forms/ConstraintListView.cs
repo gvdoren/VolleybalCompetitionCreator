@@ -167,7 +167,7 @@ namespace VolleybalCompetition_creator
             state.showConstraints.Clear();
             foreach (Constraint con in klvv.constraints)
             {
-                if (con.conflictMatches.Count > 0)
+                if (con.conflictMatches.Count > 0 || con.conflict_cost >0)
                 {
                     state.showConstraints.Add(con);
                 }

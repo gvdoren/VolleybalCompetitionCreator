@@ -11,6 +11,24 @@ namespace VolleybalCompetition_creator
     public class Club: ConstraintAdmin
     {
         public List<Team> teams = new List<Team>();
+        public bool AddTeam(Team team)
+        {
+            if (teams.Contains(team) == false)
+            {
+                if (team.club != null) team.club.RemoveTeam(team);
+                teams.Add(team);
+                team.club = this;
+                return true;
+            }
+            return false;
+
+        }
+        public bool RemoveTeam(Team team)
+        {
+            teams.Remove(team);
+            team.club = null;
+            return true;
+        }
         public List<SporthallClub> sporthalls = new List<SporthallClub>();
         public Club groupingWithClub = null;
         public string FreeFormatConstraints = "";

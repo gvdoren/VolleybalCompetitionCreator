@@ -69,7 +69,8 @@ namespace VolleybalCompetition_creator
             //this.NotAtSameTime = this;
             this.Id = Id;
             this.name = name;
-            this.poule = poule;
+            if (poule != null) poule.AddTeam(this);
+            else this.poule = null;
             this.serie = serie;
             this.sporthal = null;
             this.group = TeamGroups.NoGroup;
@@ -78,13 +79,17 @@ namespace VolleybalCompetition_creator
         {
             return match.homeTeam == this || match.visitorTeam == this;
         }
-        public static Team CreateNullTeam(Poule poule)
+        public static Team CreateNullTeam(Poule poule, Serie serie)
         {
-            Team team = new Team(0,"---",poule,poule.serie);
+            Team team = new Team(0,"----",poule,serie);
             team.defaultDay = DayOfWeek.Saturday;
             team.defaultTime = new Time(0,0);
             team.club = Club.CreateNullClub();
             return team;
+        }
+        public bool RealTeam()
+        {
+            return name != "----";
         }
 
         public List<DateTime> plannedMatches = new List<DateTime>();
