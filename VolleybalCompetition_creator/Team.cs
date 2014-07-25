@@ -46,6 +46,11 @@ namespace VolleybalCompetition_creator
                 }
             }
         }
+        public override void AddConflict(Constraint constraint)
+        {
+            // only for real teams.
+            if(RealTeam()) base.AddConflict(constraint);
+        }
         public Team NotAtSameTime = null;
         public string serieTeamName { get { return serie.name + " - " + name; } }
         public DayOfWeek defaultDay = DayOfWeek.Monday; // initial value since monday is never the default
@@ -75,6 +80,15 @@ namespace VolleybalCompetition_creator
             this.sporthal = null;
             this.group = TeamGroups.NoGroup;
         }
+        public int percentage
+        {
+            get
+            {
+                if (poule == null) return 0;
+                int maxConflicts = ((poule.teams.Count - 1) / 3);
+                return (conflict * 100) / maxConflicts;
+            }
+        }
         public bool IsMatch(Match match)
         {
             return match.homeTeam == this || match.visitorTeam == this;
@@ -85,6 +99,7 @@ namespace VolleybalCompetition_creator
             team.defaultDay = DayOfWeek.Saturday;
             team.defaultTime = new Time(0,0);
             team.club = Club.CreateNullClub();
+            
             return team;
         }
         public bool RealTeam()

@@ -73,6 +73,7 @@
             this.objectListView1.TabIndex = 0;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
+            this.objectListView1.FormatRow += new System.EventHandler<BrightIdeasSoftware.FormatRowEventArgs>(this.objectListView1_FormatRow);
             this.objectListView1.SelectionChanged += new System.EventHandler(this.objectListView1_SelectionChanged);
             // 
             // olvColumn1

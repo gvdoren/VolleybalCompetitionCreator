@@ -162,6 +162,12 @@
     <Compile Include="Forms\SelectionDialog.Designer.cs">
       <DependentUpon>SelectionDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\TeamListView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\TeamListView.Designer.cs">
+      <DependentUpon>TeamListView.cs</DependentUpon>
+    </Compile>
     <Compile Include="GlobalState.cs" />
     <Compile Include="Klvv.cs" />
     <Compile Include="Match.cs" />
@@ -252,6 +258,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SelectionDialog.resx">
       <DependentUpon>SelectionDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TeamListView.resx">
+      <DependentUpon>TeamListView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

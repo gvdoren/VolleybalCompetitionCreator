@@ -29,6 +29,11 @@ namespace VolleybalCompetition_creator
             team.club = null;
             return true;
         }
+        public int percentage
+        {
+            get { if (teams.Count == 0) return 0;
+                  return (conflict * 100) / teams.Count; }
+        }
         public List<SporthallClub> sporthalls = new List<SporthallClub>();
         public Club groupingWithClub = null;
         public string FreeFormatConstraints = "";

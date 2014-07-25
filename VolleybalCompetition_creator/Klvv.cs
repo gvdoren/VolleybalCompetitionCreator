@@ -16,11 +16,8 @@ namespace VolleybalCompetition_creator
 {
     public class Klvv
     {
-        public string fileName = "Competition.xml";
-        public bool slow = false;
+        public string savedFileName = "Competition.xml";
         public int year;
-        public bool fixedSchema = true;
-        public int ABdiff = 8;
         public List<Club> clubs;
         public List<Serie> series = new List<Serie>();
         public List<Poule> poules = new List<Poule>();
@@ -106,6 +103,7 @@ namespace VolleybalCompetition_creator
             this.annorama = new Anorama(year);
             //System.Windows.Forms.MessageBox.Show("KLVV initialized" + System.Windows.Forms.Application.StartupPath);
             Serie nationaalSerie = new Serie(-1, "Nationaal");
+            nationaalSerie.Nationaal = true;
             nationaalSerie.optimizable = false;
             series.Add(nationaalSerie);
 
@@ -124,7 +122,8 @@ namespace VolleybalCompetition_creator
             }
             // read sporthalls
             //System.Windows.Forms.MessageBox.Show("KLVV reading sporthalls");
-            string sporthalls_json = File.ReadAllText(System.Windows.Forms.Application.StartupPath + @"/InputData/sporthalls.json"); // local copy
+            string sporthalls_json = new WebClient().DownloadString("http://klvv.be/server/sporthalls.php");
+            //string sporthalls_json = File.ReadAllText(System.Windows.Forms.Application.StartupPath + @"/InputData/sporthalls.json"); // local copy
             JArray sporthallObjects = JArray.Parse(sporthalls_json);
             foreach (JObject sporthallObject in sporthallObjects)
             {
@@ -194,19 +193,24 @@ namespace VolleybalCompetition_creator
 
             foreach (Club club in clubs)
             {
-                constraints.Add(new ConstraintNotAllInHomeWeekend(club));
-                constraints.Add(new ConstraintNotAtWeekendHome(club));
-                constraints.Add(new ConstraintNotAtSameTime(club));
+                constraints.Add(new ConstraintNotAllInSameHomeWeekend(club));
+                constraints.Add(new ConstraintDifferentGroupsInSameWeekend(club));
+                constraints.Add(new ConstraintPlayAtSameTime(club));
+                constraints.Add(new ConstraintNoPouleAssigned(club));
                 foreach (SporthallClub sp in club.sporthalls)
                 {
-                    constraints.Add(new ConstraintZaal(sp, club));
+                    constraints.Add(new ConstraintSporthallNotAvailable(sp, club));
                 }
             }
-            constraints.Add(new ConstraintTeams(this));
+            constraints.Add(new ConstraintSpecialTeamRequirement(this));
             // Deze moet als laatste
             foreach (Club club in clubs)
             {
-                constraints.Add(new ConstraintTooManyConflicts(club));
+                constraints.Add(new ConstraintClubTooManyConflicts(club));
+            } 
+            foreach (Team team in teams)
+            {
+                constraints.Add(new ConstraintTeamTooManyConflicts(team));
             }
             foreach (Poule poule in poules)
             {
@@ -214,138 +218,6 @@ namespace VolleybalCompetition_creator
             }
         }
 
-        public void ImportKLVVCompetition()
-        {
-            foreach (Club club in clubs)
-            {
-                if (club.Id >= 0)
-                {
-                    //string url = "http://klvv.be/server/clubmatches.php?clubId="+club.Id+"&hidePast=false&hideOut=true";
-                    //var json1 = new WebClient().DownloadString(url);
-                    //File.WriteAllText(@"../../Data/clubmatches"+club.Id+".json",json1.ToString());
-                    // partial data required, only get the series id out. That will be used to read the serie data
-                    Console.WriteLine(club.name);
-                    string json1 = File.ReadAllText(@"InputData/clubmatches" + club.Id + ".json");// local copy
-                    JArray poules = JArray.Parse(json1);
-                    foreach (JObject poule in poules)
-                    {
-                        if (((int)poule["trophy"]) == 0)
-                        {
-                            string serieName = (string)poule["prefix"];
-                            int serieId = int.Parse(poule["serieSortId"].ToString());
-                            string pouleName = (string)poule["serieLetter"];
-                            if (pouleName.Length < 2) // exclude A2, etc
-                            {
-                                Console.WriteLine(serieName + pouleName);
-                                Serie serie = series.Find(s => s.id == serieId);
-                                if (serie == null)
-                                {
-                                    System.Windows.Forms.MessageBox.Show(string.Format("Serie {0} is niet bekend", serieName));
-                                    Environment.Exit(0);
-                                }
-                                if (serie.poules.ContainsKey(pouleName) == false)
-                                {
-                                    serie.poules.Add(pouleName, new Poule(pouleName,14,serie));
-                                    System.Windows.Forms.MessageBox.Show(string.Format("MaxTeams bepaling niet geimplementeerd bij import klvv", serieName));
-                                    
-                                }
-                                Poule po = serie.poules[pouleName];
-                                po.serie = serie;
-                                if (this.poules.Contains(po) == false)
-                                {
-                                    this.poules.Add(po);
-                                }
-                                  
-                                foreach (JObject match in poule["matches"])
-                                {
-                                    // "2013-09-28T20:30:00+0200"
-                                    // "2013-09-22T11:00:00+02:00"
-                                    // (string)match["datetime"]
-                                    CultureInfo provider = CultureInfo.InvariantCulture;
-                                    string datetimeStr = (string)match["datetime"];
-                                    DateTime datetime = DateTime.ParseExact(datetimeStr, "MM/dd/yyyy HH:mm:ss", provider);
-                                    //datetime = DateTime.ParseExact("2013-09-22T11:00:00+02:00", "yyyy-MM-ddTHH:mm:sszzz", null);
-                                    string teamName = (string)match["homeTeam"];
-                                    int teamId = (int)match["homeTeamId"];
-                                    Team homeTeam = teams.Find(t => t.Id == teamId);
-                                    if (homeTeam == null)
-                                    {
-                                        homeTeam = new Team(teamId, teamName, po, po.serie);
-                                        teams.Add(homeTeam);
-                                    }
-                                    homeTeam.plannedMatches.Add(datetime);
-
-                                    club.AddTeam(homeTeam);
-                                    po.AddTeam(homeTeam);
-                                    po.serie.AddTeam(homeTeam);
-                                    teamName = (string)match["visitorTeam"];
-                                    teamId = (int)match["visitorTeamId"];
-                                    Team visitorTeam = teams.Find(t => t.Id == teamId);
-                                    if (visitorTeam == null)
-                                    {
-                                        visitorTeam = new Team(teamId, teamName, po, po.serie);
-                                        teams.Add(visitorTeam);
-                                    }
-                                    visitorTeam.serie = po.serie;
-                                    po.AddTeam(visitorTeam);
-                                    Match mat = new Match(datetime, homeTeam, visitorTeam, serie, po);
-                                    po.matches.Add(mat);
-                                    // check whether the sporthal is already added to the club
-                                    string sporthalId_json = (string)match["sporthallId"];
-                                    if (sporthalId_json != null)
-                                    {
-                                        int sporthalId = (int)match["sporthallId"];
-                                        SporthallClub sporthal = club.sporthalls.Find(s => s.id == sporthalId);
-                                        if (sporthal == null)
-                                        {
-                                            Sporthal sporth = sporthalls.Find(s => s.id == sporthalId);
-                                            if (sporth == null)
-                                            {
-                                                System.Windows.Forms.MessageBox.Show(string.Format("Sporthal id={0} niet bekend", sporthalId));                                                
-                                            }
-                                            sporthal = new SporthallClub(sporth);
-                                            club.sporthalls.Add(sporthal);
-                                        
-                                        }
-                                        if (homeTeam.sporthal == null && sporthal != null)
-                                        {
-                                            homeTeam.sporthal = sporthal;
-                                        }
-                                    }
-
-                                }
-                                foreach (Team te in teams)
-                                {
-                                    SelectDefaultDayTime(te);
-                                }
-
-                                po.weekends.Sort(delegate(Weekend w1, Weekend w2)
-                                {
-                                    int v1 = (w1.Year * 52) + w1.WeekNr;
-                                    int v2 = (w2.Year * 52) + w2.WeekNr;
-                                    return v1.CompareTo(v2);
-                                });
-                                foreach (Match match in po.matches)
-                                {
-                                    match.SetWeekIndex();
-                                }
-                                po.matches.Sort(delegate(Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
-                            }
-
-                        }
-                    }
-                }
-            }
-            foreach(Team t in teams)
-            {
-                if(t.sporthal == null)
-                {
-                    t.sporthal = t.club.sporthalls[0];
-                    
-                }
-            }
-
-        }
         private void SelectDefaultDayTime(Team team)
         {
             DayOfWeek preferredDay = DayOfWeek.Monday;
@@ -509,32 +381,151 @@ namespace VolleybalCompetition_creator
             {
                 foreach (Match match in po.matches)
                 {
-                    match.SetWeekIndex();
+                    //match.SetWeekIndex();
                 }
             }
  
 
         }
-        public void ImportVVBCompetition1()
+        private static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
         {
-            Club nationaal = clubs.Find(c => c.Id == -1 && c.name == "Nationaal");
-            if (nationaal == null)
+            // Unix timestamp is seconds past epoch
+            System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+            dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
+            return dtDateTime;
+        }
+        public void ConvertKLVVCompetitionToCSV(string filename)
+        {
+            StreamWriter writer = new StreamWriter(filename);
+
+            Dictionary<int, int> registrationMapping = new Dictionary<int, int>();
+            string url3 = "http://klvv.be/server/series.php?season=2014-2015&trophy=false";
+            var json3 = new WebClient().DownloadString(url3);
+            JArray Sorts = JArray.Parse(json3);
+            foreach (JObject sort in Sorts)
             {
-                nationaal = new Club();
-                nationaal.name = "Nationaal";
-                nationaal.Id = -1;
-                clubs.Add(nationaal);
+                foreach (JObject serieSorts in sort["serieSorts"])
+                {
+                    foreach (JObject serie in serieSorts["series"])
+                    {
+                        int serieId = int.Parse(serie["id"].ToString());
+                        string url2 = "http://klvv.be/server/teamsinserie.php?serieId=" + serieId;
+                        var json2 = new WebClient().DownloadString(url2);
+                        JArray teams = JArray.Parse(json2);
+                        foreach (JObject team in teams)
+                        {
+                            int teamId = int.Parse(team["teamId"].ToString());
+                            int registrationId = int.Parse(team["registrationId"].ToString());
+                            registrationMapping.Add(teamId, registrationId);
+                        }
+                    }
+                }
             }
-            Serie nationaalSerie = series.Find(s => s.id == -1);
-            string MyDocuments = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+
+            foreach (Club club in clubs)
+            {
+                if (club.Id >= 0 && club.Id<1000000)
+                {
+                    string url = "http://klvv.be/server/clubmatches.php?clubId="+club.Id+"&hidePast=false&hideOut=true";
+                    var json1 = new WebClient().DownloadString(url);
+                    //Console.WriteLine(club.name);
+                    //string json1 = File.ReadAllText(@"InputData/clubmatches" + club.Id + ".json");// local copy
+                    JArray poules = JArray.Parse(json1);
+                    foreach (JObject poule in poules)
+                    {
+                        if (((int)poule["trophy"]) == 0)
+                        {
+                            string serieName = (string)poule["prefix"];
+                            int serieId = int.Parse(poule["serieSortId"].ToString());
+                            string pouleName = (string)poule["serieLetter"];
+
+                          
+                            foreach (JObject match in poule["matches"])
+                            {
+                                // "2013-09-28T20:30:00+0200"
+                                // "2013-09-22T11:00:00+02:00"
+                                // (string)match["datetime"]
+                                CultureInfo provider = CultureInfo.InvariantCulture;
+                                string datetimeStr = (string)match["datetime"];
+                                //DateTime datetime = DateTime.ParseExact(datetimeStr, "MM/dd/yyyy HH:mm:ss", provider);
+
+                                DateTime datetime = UnixTimeStampToDateTime(double.Parse(datetimeStr)/1000);
+
+                                //datetime = DateTime.ParseExact("2013-09-22T11:00:00+02:00", "yyyy-MM-ddTHH:mm:sszzz", null);
+                                string homeTeamName = (string)match["homeTeam"];
+                                int homeTeamId = registrationMapping[(int)match["homeTeamId"]];
+                                string visitorTeamName = (string)match["visitorTeam"];
+                                int visitorTeamId = registrationMapping[(int)match["visitorTeamId"]];
+                                string sporthal = "-";
+                                int sporthalId = -1;
+                                try
+                                {
+                                    sporthalId = (int)match["sporthallId"];
+                                    sporthal = sporthalls.Find(s => s.id == sporthalId).name;
+                                }
+                                catch
+                                {
+                                    // just take a sporthall of the club
+                                    sporthal = club.sporthalls[0].sporthall.name;
+                                    sporthalId = club.sporthalls[0].sporthall.id;
+                                }
+                                sporthal = sporthal.Replace(",", " ");
+                                string date = datetime.ToShortDateString();
+                                string aanvangsuur = datetime.ToShortTimeString();
+                                string thuisclubname = club.name;
+                                int thuisclubId = club.Id;
+                                writer.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13}",
+                                     serieName, serieId, pouleName, "-1", homeTeamName, homeTeamId, visitorTeamName, visitorTeamId, sporthal, sporthalId, date, aanvangsuur, thuisclubname, thuisclubId);
+ 
+                            }
+                        }
+                    }
+                }
+            }
+            writer.Close();
+        }
+
+        public void ConvertVVBCompetitionToCSV(string filename)
+        {
+            StreamWriter writer = new StreamWriter(filename);
+            XDocument doc = XDocument.Load(@"http://vvb.volleyadmin.be/services/wedstrijden_xml.php");
+            XElement kalender = doc.Element("kalender");
+            foreach (XElement wedstrijd in kalender.Elements("wedstrijd"))
+            {
+
+                string aanvangsuur = wedstrijd.Element("aanvangsuur").Value;
+                string datum = wedstrijd.Element("datum").Value;
+                string thuisploeg = wedstrijd.Element("thuisploeg").Value;
+                string bezoekersploeg = wedstrijd.Element("bezoekersploeg").Value;
+                string sporthal = wedstrijd.Element("sporthal").Value;
+                string poule = wedstrijd.Element("reeks").Value;
+                DateTime date = DateTime.Parse(datum);
+                sporthal = sporthal.Replace(",", " ");
+                int thuisploegId = -1;
+                int bezoekersploegId = -1;
+                sporthal = sporthal.Replace(",", " ");
+                int sporthalId = -1;
+                string thuisclubname = "Nationaal";
+                int thuisclubId = -1;
+                writer.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13}",
+                    "Nationaal1", "-1", poule, "-1", thuisploeg, thuisploegId, bezoekersploeg, bezoekersploegId, sporthal, sporthalId, date.ToShortDateString(), aanvangsuur, thuisclubname, thuisclubId);
+            }
+            writer.Close();
+        }
+ /*     XML-based variant was not available. Was it due to website changes?
+  *     public void ConvertVVBCompetitionToCSV(string filename)
+        {
             HtmlDocument doc = new HtmlDocument();
-            doc.Load(MyDocuments + @"\vvb2014.txt");
-            foreach(HtmlNode table in doc.DocumentNode.SelectNodes("//table"))
+            doc.Load(@"\vvb2014.txt");
+            StreamWriter writer = new StreamWriter(filename);
+
+            foreach (HtmlNode table in doc.DocumentNode.SelectNodes("//table"))
             {
                 HtmlNode tr = table.SelectSingleNode(".//tr");
                 HtmlNode td = tr.SelectSingleNode(".//td");
-                string reeks = td.InnerText;
-                reeks = reeks.Substring(12);
+                string poule = td.InnerText;
+                poule = poule.Substring(12);
                 HtmlNodeCollection lines = table.SelectNodes(".//tr");
                 for (int i = 2; i < lines.Count; i++)
                 {
@@ -544,99 +535,210 @@ namespace VolleybalCompetition_creator
                     DateTime dt = DateTime.Parse(date);
                     string aanvangsuur = fields[3].InnerText;
                     string thuisploeg = fields[4].InnerText;
+                    int thuisploegId = -1;
                     string bezoekersploeg = fields[5].InnerText;
+                    int bezoekersploegId = -1;
                     string sporthal = fields[6].InnerText;
-                    string clubname = thuisploeg;
-                    // verwijder A, B, C in naam ploeg
-                    if (thuisploeg.EndsWith(" A") ||
-                       thuisploeg.EndsWith(" B") ||
-                       thuisploeg.EndsWith(" C") ||
-                        thuisploeg.EndsWith(" D"))
-                    {                        
-                        clubname = thuisploeg.Substring(0, thuisploeg.Length - 2);
-                    }
+                    sporthal = sporthal.Replace(",", " ");
+                    int sporthalId = -1;
+                    string thuisclubname = "Nationaal";
+                    int thuisclubId = -1;
+                    writer.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13}",
+                        "Nationaal1", "-1", poule, "-1", thuisploeg, thuisploegId, bezoekersploeg, bezoekersploegId, sporthal, sporthalId, date, aanvangsuur, thuisclubname, thuisclubId);
+                }
+            }
+            writer.Close();
+        }
+  * */
+        public void ImportCSV(string fileName)
+        {
+            const int serieIndex = 0;
+            const int serieIdIndex = 1;
+            const int pouleIndex = 2;
+            const int pouleIdIndex = 3;
+            const int homeTeamIndex = 4;
+            const int homeTeamIdIndex = 5;
+            const int visitorTeamIndex = 6;
+            const int visitorTeamIdIndex = 7;
+            const int sporthallIndex = 8;
+            const int sporthallIdIndex = 9;
+            const int dateIndex = 10;
+            const int timeIndex = 11;
+            const int clubIndex = 12;
+            const int clubIdIndex = 13;
 
-                    Club club = clubs.Find(cl => cl.name.ToLower() == clubname.ToLower());
-                    if (club == null)
+            string[] lines = System.IO.File.ReadAllLines(fileName);
+            List<string[]> ParameterLines = new List<string[]>();
+            foreach (string line in lines)
+            {
+                ParameterLines.Add(line.Split(','));
+            }
+            foreach (string[] parameters in ParameterLines)
+            {
+                int SerieId = int.Parse(parameters[serieIdIndex]);
+                Serie serie = null;
+                // reeksen toevoegen indien ze niet bestaan
+                if (SerieId >= 0) serie = series.Find(s => s.id == SerieId);
+                if (serie == null) serie = series.Find(s => s.name == parameters[serieIndex]);
+                if (serie == null)
+                {
+                    if (SerieId < 0)
                     {
-                        club = nationaal;
-                    }
-                    SporthallClub sporth = club.sporthalls.Find(sp => sp.name.ToLower() == sporthal.ToLower());
-                    if (sporth == null)
-                    {
-                        sporth = new SporthallClub(new Sporthal(-1, sporthal));
-                        club.sporthalls.Add(sporth);
-                    }
-                    Poule poule = null;
-                    if (nationaalSerie.poules.ContainsKey(reeks) == true)
-                    {
-                        poule = nationaalSerie.poules[reeks];
-                    }
-                    else
-                    {
-                        poule = new Poule(reeks, 14, nationaalSerie);
-                        nationaalSerie.poules.Add(reeks, poule);
-                        poule.serie = nationaalSerie;
-                        poules.Add(poule);
-                    }
-                    poule.serie.constraintsHold = true;
-                    Team homeTeam = poule.teams.Find(t => t.Id == -1 && t.name == thuisploeg && t.serie == nationaalSerie);
-                    if (homeTeam == null)
-                    {
-                        homeTeam = new Team(-1, thuisploeg, poule, poule.serie);
-                        homeTeam.sporthal = sporth;
-                        teams.Add(homeTeam);
-                    }
-                    poule.AddTeam(homeTeam);
-                    if (homeTeam.sporthal == null)
-                    {
-                        if (homeTeam.club != null && homeTeam.club.sporthalls.Count > 0)
+                        // create unique id
+                        if (series.Count > 0)
                         {
-                            homeTeam.sporthal = homeTeam.club.sporthalls[0];
+                            SerieId = Math.Max(1000000, 1 + series.Max(delegate(Serie s) { return s.id; }));
+                        }
+                        else
+                        {
+                            SerieId = 1000000;
                         }
                     }
-                    nationaalSerie.AddTeam(homeTeam);
-                    club.AddTeam(homeTeam);
-                    
-                    if (homeTeam.defaultTime == null)
-                    {
-                        int hour = int.Parse(aanvangsuur.Substring(0, 2));
-                        int minute = int.Parse(aanvangsuur.Substring(aanvangsuur.Length - 2, 2));
-                        homeTeam.defaultTime = new Time(hour, minute);
-                    }
-                    if (homeTeam.defaultDay == DayOfWeek.Monday) homeTeam.defaultDay = dt.DayOfWeek;
-
-                    string clubnamevisitor = bezoekersploeg;
-                    // verwijder A, B, C in naam ploeg
-                    if (bezoekersploeg.EndsWith(" A") ||
-                        bezoekersploeg.EndsWith(" B") ||
-                        bezoekersploeg.EndsWith(" C") ||
-                        bezoekersploeg.EndsWith(" D"))
-                    {
-                        clubnamevisitor = thuisploeg.Substring(0, thuisploeg.Length - 2);
-                    }
-
-                    Team visitorTeam = poule.teams.Find(t => t.Id == -1 && t.name == bezoekersploeg && t.serie == nationaalSerie);
-                    if (visitorTeam == null)
-                    {
-                        visitorTeam = new Team(-1, bezoekersploeg, poule, poule.serie);
-                        int hour = int.Parse(aanvangsuur.Substring(0, 2));
-                        int minute = int.Parse(aanvangsuur.Substring(aanvangsuur.Length - 2, 2));
-                        teams.Add(visitorTeam);
-                    }
-                    poule.AddTeam(visitorTeam);
-
-                    Match match = new Match(dt, homeTeam, visitorTeam, nationaalSerie, poule);
-                    poule.matches.Add(match);
+                    serie = new Serie(SerieId, parameters[serieIndex]);
+                    serie.optimizable = false;
+                    series.Add(serie);
                 }
-            }
-            foreach (Poule po in nationaalSerie.poules.Values)
-            {
-                foreach (Match match in po.matches)
+                // poules toevoegen indien ze niet bestaan
+                List<Poule> poules1 = serie.poules.Values.ToList();
+                Poule poule = poules1.Find(s => s.name == parameters[pouleIndex]);
+                if (poule == null)
                 {
-                    match.SetWeekIndex();
+                    // Calculate the size of the poule
+                    List<string[]> SelectedLines = ParameterLines.FindAll(l=> l[serieIndex] == parameters[serieIndex] && l[pouleIndex] == parameters[pouleIndex]);
+                    int c = (int) Math.Ceiling(Math.Sqrt(SelectedLines.Count));
+
+                    poule = new Poule(parameters[pouleIndex], c, serie);
+                    poules.Add(poule);
+                    serie.poules.Add(poule.name,poule);
+                    poule.imported = true;
+                }
+                // clubs toevoegen indien ze niet bestaan
+                Club club = null;
+                int clubId = int.Parse(parameters[clubIdIndex]);
+                if (clubId >= 0) club = clubs.Find(s => s.Id == clubId);
+                if (club == null) club = clubs.Find(c => c.name == parameters[clubIndex]);
+                if (club == null)
+                {
+                    if (clubId < 0)
+                    {
+                        // create unique id
+                        if (clubs.Count > 0)
+                        {
+                            clubId = Math.Max(1000000, 1 + clubs.Max(delegate(Club c) { return c.Id; }));
+                        }
+                        else
+                        {
+                            clubId = 1000000;
+                        }
+                    }
+                    club = new Club();
+                    club.name = parameters[clubIndex];
+                    club.Id = clubId;
+                    clubs.Add(club);
+
+                }
+                int sporthalId = int.Parse(parameters[sporthallIdIndex]);
+                Sporthal sporthal = null;
+                if (sporthalId >= 0) sporthal = sporthalls.Find(s => s.id == sporthalId);
+                if(sporthal == null) sporthal = sporthalls.Find(s => s.name == parameters[sporthallIndex]);
+                // sporthalls toevoegen indien ze niet bestaan
+                if (sporthal == null)
+                {
+                    if (sporthalId < 0)
+                    {
+                        // create unique id
+                        if (sporthalls.Count > 0)
+                        {
+                            sporthalId = Math.Max(1000000, 1 + sporthalls.Max(delegate(Sporthal s) { return s.id; }));
+                        }
+                        else
+                        {
+                            sporthalId = 1000000;
+                        }
+                    }
+                    sporthal = new Sporthal(sporthalId,parameters[sporthallIndex]);
+                    sporthalls.Add(sporthal);
+                }
+                // sporthal aan club toevoegen indien deze nog niet bestaat
+                SporthallClub sporthallclub = club.sporthalls.Find(sp => sp.sporthall == sporthal);
+                if (sporthallclub == null)
+                {
+                    sporthallclub = new SporthallClub(sporthal);
+                    club.sporthalls.Add(sporthallclub);
+                }
+                int teamId = int.Parse(parameters[homeTeamIdIndex]);
+                Team team = null;
+                if (teamId >= 0) team = teams.Find(t => t.Id == teamId);
+                if (team == null) team = poule.teams.Find(t => t.name == parameters[homeTeamIndex]);
+                // teams toevoegen indien ze niet bestaan (alleen via thuisspelende ploegen)
+                if (team == null)
+                {
+                    if (teamId < 0)
+                    {
+                        // create unique id
+                        if (teams.Count > 0)
+                        {
+                            teamId = Math.Max(1000000, 1 + teams.Max(delegate(Team t) { return t.Id; }));
+                        }
+                        else
+                        {
+                            teamId = 1000000;
+                        }
+                    }
+                    team = new Team(teamId, parameters[homeTeamIndex],poule,serie);
+                    DateTime date = DateTime.Parse(parameters[dateIndex] +" "+ parameters[timeIndex]);
+                    team.defaultDay = date.DayOfWeek;
+                    team.defaultTime = new Time(date);
+                    teams.Add(team);
+                    team.sporthal = sporthallclub;
+                }
+                poule.AddTeam(team);
+                serie.AddTeam(team);
+                club.AddTeam(team);
+            }
+            // Add matches
+            foreach (string[] parameters in ParameterLines)
+            {
+                Serie serie = series.Find(s => s.name == parameters[serieIndex]);
+                List<Poule> poules1 = serie.poules.Values.ToList();
+                Poule poule = poules1.Find(s => s.name == parameters[pouleIndex]);
+                Team homeTeam = null;
+                int homeTeamIndex1 = int.Parse(parameters[homeTeamIdIndex]);
+                if (homeTeamIndex1 >= 0) homeTeam = poule.teams.Find(t => t.Id == homeTeamIndex1);
+                else homeTeam = poule.BestFit(parameters[homeTeamIndex]);
+                Team visitorTeam = null;
+                int visitorTeamIndex1 = int.Parse(parameters[visitorTeamIdIndex]);
+                if (visitorTeamIndex1 >= 0) visitorTeam = poule.teams.Find(t => t.Id == visitorTeamIndex1);
+                else visitorTeam = poule.BestFit(parameters[visitorTeamIndex]);
+                if (homeTeam == null ) 
+                    System.Windows.Forms.MessageBox.Show(string.Format("Team '{0}' is not added to the poule", parameters[homeTeamIndex]));
+                if (visitorTeam == null) 
+                    System.Windows.Forms.MessageBox.Show(string.Format("Team '{0}' is not added to the poule", parameters[visitorTeamIndex]));
+                DateTime dt = DateTime.Parse(parameters[dateIndex] + " " + parameters[timeIndex]);
+                poule.matches.Add(new Match(dt, homeTeam, visitorTeam, serie, poule));
+            }
+            // create weekends in the poules
+            foreach (Poule poule in poules)
+            {
+                bool done = false;
+                poule.matches.Sort(delegate(Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
+                foreach (Match mat in poule.matches)
+                {
+                    if (mat.weekIndex < 0)
+                    {
+                        if (done == false)
+                        {
+                            poule.weekends.Sort(delegate(Weekend w1, Weekend w2) { return w1.Saturday.CompareTo(w2.Saturday); });
+                            done = true;
+                        }
+                        Weekend we = new Weekend(mat.datetime);
+                        mat.weekIndex = poule.weekends.FindIndex(w => w.Saturday == we.Saturday);
+                    }
                 }
             }
+            RenewConstraints();
+            Evaluate(null);
+            Changed();
         }
         
         public void ImportTeamSubscriptions(XElement doc)
@@ -811,8 +913,19 @@ namespace VolleybalCompetition_creator
                     }
                 }
             }
+            RenewConstraints();
+            Evaluate(null);
+            Changed();
         }
-        public void WriteClubConstraints(XmlWriter writer)
+        public void WriteClubConstraints(string filename)
+        {
+            XmlWriter writer = XmlWriter.Create(filename);
+            writer.WriteStartDocument();
+            WriteClubConstraintsInt(writer);
+            writer.WriteEndDocument();
+            writer.Close();
+        }
+        private void WriteClubConstraintsInt(XmlWriter writer)
         {
             writer.WriteStartElement("Clubs");
             foreach (Club club in clubs)
@@ -942,6 +1055,378 @@ namespace VolleybalCompetition_creator
                     }
                 }
             }
+        }
+        public void WriteStatistics(string filename)
+        {
+            StreamWriter writer = new StreamWriter(filename);
+            writer.WriteLine("Poules:");
+            writer.WriteLine("Poule, Matches, Conflicts, Percentage");
+            foreach (Poule poule in poules)
+            {
+                if (poule.imported == false)
+                {
+                    if (poule.matches.Count > 0)
+                    {
+                        decimal perc = poule.conflict;
+                        perc /= poule.matches.Count;
+                        perc *= 100;
+                        writer.WriteLine("{0},{1},{2},{3}", poule.fullName, poule.matches.Count, poule.conflict, perc.ToString("0.0", CultureInfo.InvariantCulture));
+                    }
+                }
+            }
+            writer.WriteLine("Clubs:");
+            writer.WriteLine("Club, Matches, Conflicts, Percentage");
+            foreach (Club club in clubs)
+            {
+                double count = 0;
+                List<Poule> poules1 = new List<Poule>();
+                foreach (Team t in club.teams)
+                {
+                    if (t.poule != null && poules1.Contains(t.poule) == false)
+                    {
+                        poules1.Add(t.poule);
+                    }
+                }
+                foreach (Poule poule in poules1)
+                {
+                    if (poule.imported == false)
+                    {
+                        count += poule.matches.Count(m => m.homeTeam.club == club); ;
+                    }
+                }
+                if (count > 0)
+                {
+                    double perc = club.conflict;
+                    perc /= count;
+                    perc *= 100;
+                    writer.WriteLine("{0},{1},{2},{3}", club.name, count, club.conflict, perc.ToString("00.0", CultureInfo.InvariantCulture));
+                }
+            }
+            writer.Close();
+        }
+        public void WriteMatches(string filename)
+        {
+            StreamWriter writer = new StreamWriter(filename);
+            writer.WriteLine("Serie,Poule,Speeldag,datum,Speeltijd,homeClub,homeTeam,visitorClub,visitorTeam");
+            foreach (Poule poule in poules)
+            {
+                if (poule.serie.id >= 0)
+                {
+                    foreach (Match match in poule.matches)
+                    {
+                        if (match.RealMatch())
+                        {
+                            writer.Write("{0},{1},{2},{3},{4},{5},{6},{7},{8}", poule.serie.name, poule.fullName, match.datetime.ToShortDateString(), match.DayString, match.Time.ToString(), match.homeTeam.club.name, match.homeTeam.name, match.visitorTeam.club.name, match.visitorTeam.name);
+
+                            foreach (Constraint con in match.conflictConstraints)
+                            {
+                                writer.Write("," + con.name);
+                            }
+                            writer.WriteLine();
+                        }
+                    }
+                }
+            }
+            writer.Close();
+
+        }
+        public void WriteSeriePoules(string filename)
+        {
+            StreamWriter writer = new StreamWriter(filename);
+            writer.WriteLine("Serie,Poule,Poule-team-number,Team,Club,Speeldag,Speeltijd,Groep");
+            foreach (Team team in teams)
+            {
+                if (team.club.Id >= 0)
+                {
+                    string pouleName = "-";
+                    if (team.poule != null)
+                    {
+                        pouleName = team.poule.name;
+                    }
+
+                    writer.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7}", team.serie.name, pouleName, team.Index, team.name, team.club.name, team.defaultDay.ToString(), team.defaultTime.ToString(), team.group.ToString());
+                }
+            }
+            writer.Close();
+        }
+        public void WriteExportToKLVVXml(string filename)
+        {
+            XmlWriter writer = XmlWriter.Create(filename);
+            writer.WriteStartDocument();
+            writer.WriteStartElement("Competition");
+            WritePoules(writer);
+            WriteTeams(writer);
+            WriteMatches(writer);
+            writer.WriteEndElement();
+            writer.WriteEndDocument();
+            writer.Close();
+        }
+        public void WriteConflictReportPerType(string filename)
+        {
+            StreamWriter writer = new StreamWriter(filename);
+            string name = "";
+            string title = "";
+            constraints.Sort(delegate(Constraint c1, Constraint c2) { return c1.Title.CompareTo(c2.Title); });
+            foreach (Constraint constraint in constraints)
+            {
+                if (constraint.conflict_cost > 0)
+                {
+                    if (constraint.name != name)
+                    {
+                        name = constraint.name;
+                        writer.WriteLine("{0}", name);
+                    }
+                    if (constraint.Title != title)
+                    {
+                        title = constraint.Title;
+                        writer.WriteLine("{0}", title);
+                    }
+                    constraint.Sort();
+                    foreach (Match match in constraint.conflictMatches)
+                    {
+                        writer.WriteLine("{0},{1},{2},{3},{4}", match.datetime, match.poule.fullName, match.homeTeam.name, match.visitorTeam.name, match.homeTeam.group.ToString());
+                    }
+                }
+            }
+            writer.Close();
+
+        }
+
+        public void WriteConflictReportPerClub(string filename)
+        {
+            StreamWriter writer = new StreamWriter(filename);
+            string name = "";
+            string title = "";
+            foreach (Club club in clubs)
+            {
+                if (club.conflict_cost > 0)
+                {
+                    writer.WriteLine("{0}", club.name);
+                    club.conflictConstraints.Sort(delegate(Constraint c1, Constraint c2) { return c1.Title.CompareTo(c2.Title); });
+                    foreach (Constraint constraint in club.conflictConstraints)
+                    {
+                        if (constraint.conflict_cost > 0)
+                        {
+                            if (constraint.name != name)
+                            {
+                                name = constraint.name;
+                                writer.WriteLine(" {0}", name);
+                            }
+                            if (constraint.Title != title)
+                            {
+                                title = constraint.Title;
+                                writer.WriteLine("  - {0}", title);
+                            }
+                            constraint.Sort();
+                            foreach (Match match in constraint.conflictMatches)
+                            {
+                                writer.WriteLine("{0},{1},{2},{3},{4}", match.datetime, match.poule.fullName, match.homeTeam.name, match.visitorTeam.name, match.homeTeam.group.ToString());
+                            }
+                        }
+                    }
+                }
+            }
+            writer.Close();
+        }
+        public void WriteCompetitionPerClub(string filename)
+        {
+            StreamWriter writer = new StreamWriter(filename);
+            foreach (Club club in clubs)
+            {
+                List<Match> matches = new List<Match>();
+                foreach (Team team in club.teams)
+                {
+                    if (team.poule != null)
+                    {
+                        foreach (Match match in team.poule.matches)
+                        {
+                            if (match.homeTeam.club == club)
+                            {
+                                if (matches.Contains(match) == false) matches.Add(match);
+                            }
+                        }
+                    }
+                }
+
+                writer.WriteLine("{0}", club.name);
+                matches.Sort(delegate(Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
+                foreach (Match match in matches)
+                {
+                    if (match.RealMatch())
+                    {
+                        string constraint = " - ";
+                        if (match.conflictConstraints.Count > 0) constraint = " * ";
+                        string conflicts = "";
+                        foreach (Constraint constr in match.conflictConstraints)
+                        {
+                            conflicts += constr.name + ",";
+                        }
+                        writer.WriteLine("{5},{0},{1},{2},{3},{4},{7},{6}", match.datetime, match.poule.fullName, match.homeTeam.name, match.visitorTeam.name, match.homeTeam.group.ToString(), constraint, conflicts, match.homeTeam.sporthal.name.Replace(",", " "));
+                    }
+                }
+            }
+            writer.Close();
+        }
+        public void WriteProject(string fileName)
+        {
+            XmlWriter writer = XmlWriter.Create(fileName);
+            writer.WriteStartDocument();
+            writer.WriteStartElement("Competition");
+            writer.WriteStartElement("Settings");
+            writer.WriteElementString("Year", year.ToString());
+            writer.WriteEndElement();
+            WriteClubConstraintsInt(writer);
+            writer.WriteStartElement("Poules");
+            foreach (Poule poule in poules)
+            {
+                writer.WriteStartElement("Poule");
+                writer.WriteAttributeString("Name", poule.name);
+                writer.WriteAttributeString("SerieSortId", poule.serie.id.ToString());
+                writer.WriteAttributeString("SerieName", poule.serie.name);
+                if (poule.imported)
+                {
+                    writer.WriteAttributeString("SerieSortImported", "true");
+                    writer.WriteAttributeString("Imported", "true");
+                }
+                writer.WriteAttributeString("MaxTeams", poule.maxTeams.ToString());
+                writer.WriteStartElement("Teams");
+                foreach (Team team in poule.teams)
+                {
+                    writer.WriteStartElement("Team");
+                    writer.WriteAttributeString("TeamName", team.name);
+                    writer.WriteAttributeString("Id", team.Id.ToString());
+                    writer.WriteEndElement();
+
+                }
+                writer.WriteEndElement();
+                writer.WriteStartElement("Weekends");
+                foreach (Weekend weekend in poule.weekends)
+                {
+                    writer.WriteStartElement("Weekend");
+                    writer.WriteAttributeString("Date", weekend.Saturday.Date.ToShortDateString());
+                    writer.WriteEndElement();
+                }
+                writer.WriteEndElement();
+                writer.WriteStartElement("Matches");
+                foreach (Match match in poule.matches)
+                {
+                    writer.WriteStartElement("Match");
+                    writer.WriteAttributeString("homeTeam", match.homeTeamIndex.ToString());
+                    writer.WriteAttributeString("visitorTeam", match.visitorTeamIndex.ToString());
+                    writer.WriteAttributeString("weekend", match.weekIndex.ToString());
+                    writer.WriteEndElement();
+                }
+                writer.WriteEndElement();
+                writer.WriteEndElement();
+            }
+            writer.WriteEndElement();
+            writer.WriteStartElement("TeamConstraints");
+            foreach (TeamConstraint con in teamConstraints)
+            {
+                writer.WriteStartElement("Constraint");
+                writer.WriteAttributeString("TeamId", con.team.Id.ToString());
+                writer.WriteAttributeString("Date", con.date.ToShortDateString());
+                writer.WriteAttributeString("What", con.homeVisitNone.ToString());
+                writer.WriteAttributeString("Cost", con.cost.ToString());
+                writer.WriteEndElement();
+            }
+            writer.WriteEndElement();
+            writer.WriteEndElement();
+            writer.WriteEndDocument();
+            writer.Close();
+        }
+        public void LoadFullCompetition(string filename)
+        {
+            XDocument doc = XDocument.Load(filename);
+            XElement competition = doc.Element("Competition");
+            XElement settings = competition.Element("Settings");
+            int year = int.Parse(settings.Element("Year").Value);
+            Klvv klvvnew = new Klvv(year);
+            klvvnew.ImportTeamSubscriptions(competition.Element("Clubs"));
+            foreach (XElement poule in competition.Element("Poules").Elements("Poule"))
+            {
+                string PouleName = poule.Attribute("Name").Value;
+                string SerieName = poule.Attribute("SerieName").Value;
+                int SerieId = int.Parse(poule.Attribute("SerieSortId").Value);
+                Serie serie = klvvnew.series.Find(s => s.id == SerieId && s.name == SerieName);
+                XAttribute imported = poule.Attribute("SerieSortImported");
+                Poule po = klvvnew.poules.Find(p => p.serie == serie && p.name == PouleName);
+                XAttribute attr = poule.Attribute("MaxTeams");
+                int maxTeams = int.Parse(attr.Value);
+                if (maxTeams == 0) maxTeams = 14;
+                if (po == null)
+                {
+                    po = new Poule(PouleName, maxTeams, serie);
+                    serie.poules.Add(po.name, po);
+                    klvvnew.poules.Add(po);
+                }
+                // temporarily, to import old files
+                if (SerieName == "Nationaal") po.imported = true;
+                if (imported != null) po.imported = true;
+
+                int index = 0;
+                foreach (XElement team in poule.Element("Teams").Elements("Team"))
+                {
+                    int teamId = int.Parse(team.Attribute("Id").Value);
+                    string teamName = team.Attribute("TeamName").Value;
+                    Team te;
+                    if (teamName == "----")
+                    {
+                        te = Team.CreateNullTeam(null, serie);
+                    }
+                    else
+                    {
+                        te = klvvnew.teams.Find(t => t.Id == teamId && t.name == teamName);
+                    }
+                    if (te.poule != null)
+                    {
+                        Team t = new Team(-1, te.name, null, serie);
+                        t.defaultDay = te.defaultDay;
+                        t.defaultTime = te.defaultTime;
+                        t.group = te.group;
+                        t.sporthal = te.sporthal;
+                        te.club.AddTeam(t);
+                        serie.AddTeam(t);
+                        te = t;
+                    }
+                    po.AddTeam(te, index); //must at fixex position
+                    index++;
+                }
+                foreach (XElement weekend in poule.Element("Weekends").Elements("Weekend"))
+                {
+                    DateTime date = DateTime.Parse(weekend.Attribute("Date").Value);
+                    po.weekends.Add(new Weekend(date));
+                }
+                foreach (XElement match in poule.Element("Matches").Elements("Match"))
+                {
+                    int weekIndex = int.Parse(match.Attribute("weekend").Value);
+                    int homeTeam = int.Parse(match.Attribute("homeTeam").Value);
+                    int visitorTeam = int.Parse(match.Attribute("visitorTeam").Value);
+                    po.matches.Add(new Match(weekIndex, homeTeam, visitorTeam, serie, po));
+                }
+            }
+            XElement teamConstraints = competition.Element("TeamConstraints");
+            if (teamConstraints != null)
+            {
+                foreach (XElement con in teamConstraints.Elements("Constraint"))
+                {
+                    int teamId = int.Parse(con.Attribute("TeamId").Value);
+                    DateTime date = DateTime.Parse(con.Attribute("Date").Value);
+                    TeamConstraint.HomeVisitNone what = (TeamConstraint.HomeVisitNone)Enum.Parse(typeof(TeamConstraint.HomeVisitNone), con.Attribute("What").Value);
+                    Team team = klvvnew.teams.Find(t => t.Id == teamId);
+                    TeamConstraint tc = new TeamConstraint(team);
+                    tc.homeVisitNone = what;
+                    tc.date = date;
+                    tc.cost = int.Parse(con.Attribute("Cost").Value);
+                    klvvnew.teamConstraints.Add(tc);
+                }
+            }
+            klvvnew.savedFileName = filename;
+            klvvnew.RenewConstraints();
+            // klvvnew is distributed to the views
+            Changed(klvvnew);
+            klvvnew.Evaluate(null);
+            klvvnew.Changed();
         }
 
     }

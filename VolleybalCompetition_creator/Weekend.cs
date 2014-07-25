@@ -18,8 +18,8 @@ namespace VolleybalCompetition_creator
             }
         }
         private const int MaxUsedYear = 2000; // Er wordt 15 bij opgeteld
-        public int Year { get; set; }
-        public int WeekNr { get; set; }
+        public int Year;
+        public int WeekNr;
         public Weekend(int year, int weekNr)
         {
             this.Year = year;
@@ -35,14 +35,18 @@ namespace VolleybalCompetition_creator
         {
             CreateWeekend(date);
         }
-        private void CreateWeekend(DateTime date)
+        public static void Convert(DateTime date, ref int Year, ref int WeekNr)
         {
             System.Globalization.CultureInfo cul = System.Globalization.CultureInfo.CurrentCulture;
-            this.WeekNr = cul.Calendar.GetWeekOfYear(
+            WeekNr = cul.Calendar.GetWeekOfYear(
                 date,
                 System.Globalization.CalendarWeekRule.FirstFullWeek,
                 DayOfWeek.Saturday);
-            this.Year = date.Year;
+            Year = date.Year;
+        }
+        private void CreateWeekend(DateTime date)
+        {
+            Convert(date, ref Year, ref WeekNr);
             if (Year - 15 > 2001)
             {
                 System.Windows.Forms.MessageBox.Show(string.Format("Programma kan niet worden gebruikt na {0}. Vraag een update via giel@van.doren.be", (MaxUsedYear + 15)));

@@ -41,6 +41,7 @@
             this.olvColumn10 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn7 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn0 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn14 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
@@ -91,6 +92,7 @@
             this.objectListView1.AllColumns.Add(this.olvColumn10);
             this.objectListView1.AllColumns.Add(this.olvColumn7);
             this.objectListView1.AllColumns.Add(this.olvColumn0);
+            this.objectListView1.AllColumns.Add(this.olvColumn14);
             this.objectListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
@@ -100,13 +102,9 @@
             this.olvColumn2,
             this.olvColumn4,
             this.olvColumn5,
-            this.olvColumn6,
             this.olvColumn3,
-            this.olvColumn9,
-            this.olvColumn8,
-            this.olvColumn10,
-            this.olvColumn7,
-            this.olvColumn0});
+            this.olvColumn14});
+            this.objectListView1.FullRowSelect = true;
             this.objectListView1.GridLines = true;
             this.objectListView1.HasCollapsibleGroups = false;
             this.objectListView1.Location = new System.Drawing.Point(3, 209);
@@ -148,13 +146,16 @@
             // 
             this.olvColumn5.AspectName = "defaultTime";
             this.olvColumn5.CellPadding = null;
+            this.olvColumn5.IsEditable = false;
             this.olvColumn5.Text = "Tijd";
             // 
             // olvColumn6
             // 
             this.olvColumn6.AspectName = "sporthal.name";
             this.olvColumn6.CellPadding = null;
+            this.olvColumn6.DisplayIndex = 4;
             this.olvColumn6.FillsFreeSpace = true;
+            this.olvColumn6.IsVisible = false;
             this.olvColumn6.Text = "Sporthal";
             this.olvColumn6.Width = 100;
             // 
@@ -169,6 +170,8 @@
             // 
             this.olvColumn9.AspectName = "EvenOdd";
             this.olvColumn9.CellPadding = null;
+            this.olvColumn9.DisplayIndex = 6;
+            this.olvColumn9.IsVisible = false;
             this.olvColumn9.MinimumWidth = 25;
             this.olvColumn9.Text = "Even/Oneven";
             // 
@@ -176,6 +179,8 @@
             // 
             this.olvColumn8.AspectName = "FixedSchemaNumber";
             this.olvColumn8.CellPadding = null;
+            this.olvColumn8.DisplayIndex = 7;
+            this.olvColumn8.IsVisible = false;
             this.olvColumn8.MinimumWidth = 25;
             this.olvColumn8.Text = "Fixed-Schema";
             this.olvColumn8.Width = 40;
@@ -184,7 +189,9 @@
             // 
             this.olvColumn10.AspectName = "email";
             this.olvColumn10.CellPadding = null;
+            this.olvColumn10.DisplayIndex = 8;
             this.olvColumn10.FillsFreeSpace = true;
+            this.olvColumn10.IsVisible = false;
             this.olvColumn10.MinimumWidth = 0;
             this.olvColumn10.Text = "Email";
             // 
@@ -192,17 +199,29 @@
             // 
             this.olvColumn7.AspectName = "NotAtSameTimeId";
             this.olvColumn7.CellPadding = null;
+            this.olvColumn7.DisplayIndex = 9;
             this.olvColumn7.FillsFreeSpace = true;
+            this.olvColumn7.IsVisible = false;
             this.olvColumn7.Text = "Not at same time with:";
             // 
             // olvColumn0
             // 
             this.olvColumn0.AspectName = "Id";
             this.olvColumn0.CellPadding = null;
+            this.olvColumn0.DisplayIndex = 10;
             this.olvColumn0.FillsFreeSpace = true;
+            this.olvColumn0.IsEditable = false;
+            this.olvColumn0.IsVisible = false;
             this.olvColumn0.MaximumWidth = 40;
             this.olvColumn0.Text = "Id";
             this.olvColumn0.Width = 40;
+            // 
+            // olvColumn14
+            // 
+            this.olvColumn14.AspectName = "club";
+            this.olvColumn14.CellPadding = null;
+            this.olvColumn14.IsEditable = false;
+            this.olvColumn14.Text = "Club";
             // 
             // comboBox2
             // 
@@ -476,6 +495,7 @@
         private BrightIdeasSoftware.OLVColumn olvColumn15;
         private BrightIdeasSoftware.OLVColumn olvColumn16;
         private BrightIdeasSoftware.OLVColumn olvColumn11;
+        private BrightIdeasSoftware.OLVColumn olvColumn14;
 
     }
 }

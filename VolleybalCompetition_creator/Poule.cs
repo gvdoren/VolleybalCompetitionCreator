@@ -8,6 +8,7 @@ namespace VolleybalCompetition_creator
     public class Poule: ConstraintAdmin
     {
         // Temp lists for snapshot
+        public bool imported = false;
         List<Team> resultTeams = new List<Team>();
         List<Weekend> resultWeekends = new List<Weekend>();
         List<Match> resultMatches = new List<Match>();
@@ -63,6 +64,13 @@ namespace VolleybalCompetition_creator
         }
         public Poule(string name, int maxTeams, Serie serie) 
         {
+            while (maxTeams != 4 &&
+                  maxTeams != 6 &&
+                  maxTeams != 8 &&
+                  maxTeams != 10 &&
+                  maxTeams != 12 &&
+                  maxTeams != 14) maxTeams++;
+
             this.serie = serie;
             this._maxTeams = maxTeams;
             for (int i = 0; i < maxTeams; i++)
@@ -75,13 +83,18 @@ namespace VolleybalCompetition_creator
         }
         public string fullName { get { return serie.name + name; ;} }
         public List<Weekend> weekends = new List<Weekend>();
-        public void AddWeekend(int year, int weekNr)
+        public int AddWeekend(DateTime date)
         {
+            int year = 0;
+            int weekNr = 0;
+            Weekend.Convert(date, ref year, ref weekNr);
             int index = weekends.FindIndex(w => w.WeekNr == weekNr && w.Year == year);
             if (index < 0)
             {
+                index = weekends.Count;
                 weekends.Add(new Weekend(year, weekNr));
             }
+            return index;
         }
         public int CalculateDistances(Team t1)
         {
@@ -126,19 +139,25 @@ namespace VolleybalCompetition_creator
         public void CalculateRelatedConstraints(Klvv klvv)
         {
             relatedConstraints = new List<Constraint>();
-            foreach (Constraint con in klvv.constraints)
-            {
-                if (con.poule == this) relatedConstraints.Add(con);
-            }
+            //foreach (Constraint con in klvv.constraints)
+            //{
+            //    if (con.poule == this) relatedConstraints.Add(con);
+            //}
             List<Club> clubs = new List<Club>();
             
             foreach (Team team in teams)
             {
                 if (clubs.Contains(team.club) == false) clubs.Add(team.club);
+                // related club (via the grouping (sharing sporthall))
+                if (team.club.groupingWithClub != null)
+                {
+                    Club relatedClub = team.club.groupingWithClub;
+                    if (clubs.Contains(relatedClub) == false) clubs.Add(relatedClub);
+                }
             }
             foreach (Constraint con in klvv.constraints)
             {
-                if (clubs.Contains(con.club) || con.poule == this || (con as ConstraintTeams)!= null) relatedConstraints.Add(con);
+                if (clubs.Contains(con.club) || con.poule == this || (con as ConstraintSpecialTeamRequirement)!= null) relatedConstraints.Add(con);
             }
 
         }
@@ -209,27 +228,14 @@ namespace VolleybalCompetition_creator
         private bool SnapShotIfImproved(Klvv klvv)
         {
             bool snapshot = false;
-            if (klvv.slow)
+            klvv.EvaluateRelatedConstraints(this);
+            int total = klvv.TotalConflicts();
+            if (total < klvv.LastTotalConflicts)
             {
-                klvv.Evaluate(null);
-                int total = klvv.TotalConflicts();
-                if (total < klvv.LastTotalConflicts)
-                {
-                    snapshot = true;
-                    klvv.LastTotalConflicts = total;
-                }
+                snapshot = true;
+                klvv.LastTotalConflicts = total;
             }
-            else
-            {
-                klvv.EvaluateRelatedConstraints(this);
-                int total = klvv.TotalConflicts();
-                if (total < klvv.LastTotalConflicts)
-                {
-                    snapshot = true;
-                    klvv.LastTotalConflicts = total;
-                }
 
-            }
             if(snapshot)
             {
                 resultTeams = new List<Team>(teams);
@@ -520,7 +526,7 @@ namespace VolleybalCompetition_creator
         }
         public void SwitchHomeTeamVisitorTeam(Klvv klvv, Match match)
         {
-            if (serie.optimizable && serie.homeVisitChangeAllowed && (klvv.fixedSchema == false || match.Optimizable))
+            if (serie.optimizable && serie.homeVisitChangeAllowed && match.Optimizable)
             {
                 Match match2 = null;
                 Match match1 = null;
@@ -539,6 +545,29 @@ namespace VolleybalCompetition_creator
                 }
             }
         }
+
+        public Team BestFit(string name)
+        {
+            Team result = null;
+            int best = 4; // minimum number of letters that need to be equal
+            foreach (Team t in teams)
+            {
+                int score = 0;
+                for (int i = 0; i < Math.Min(name.Length, t.name.Length); i++)
+                {
+                    if (name[i] != t.name[i]) break;
+                    score = i + 1;
+                }
+                if (score > best)
+                {
+                    best = score;
+                    result = t;
+                }
+            }
+            return result;
+        }
+
+
         public void OptimizeHomeVisitor(Klvv klvv)
         {
             MakeDirty();

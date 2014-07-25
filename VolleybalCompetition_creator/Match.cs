@@ -8,10 +8,14 @@ namespace VolleybalCompetition_creator
 {
     public class Match: ConstraintAdmin
     {
+        private DateTime _datetime = new DateTime(0);
+        private bool specialDate { get { return _datetime.Ticks != 0; } }
+        public int weekIndex = -1;
         public DateTime datetime 
         {
             get
             {
+                if (specialDate) return _datetime;
                 DateTime date= Weekend.Saturday;
                 date = date.AddDays(homeTeam.defaultDay == DayOfWeek.Saturday ? 0 : 1);
                 date = date.AddHours(homeTeam.defaultTime.Hours);
@@ -19,18 +23,30 @@ namespace VolleybalCompetition_creator
                 return date;
             }
         }
-        private int tempYear;
-        private int tempWeek;
-        public int Year { get { return poule.weekends[weekIndex].Year; }}
-        public int Week { get { return poule.weekends[weekIndex].WeekNr; }}
         public DayOfWeek Day { get { return datetime.DayOfWeek; } }
         public string DayString
         {
             get
             {
-                if (Day == DayOfWeek.Saturday) return "Zat";
-                if (Day == DayOfWeek.Sunday) return "Zon";
-                return "--";
+                switch (Day)
+                {
+                    case DayOfWeek.Monday:
+                        return "Mon";
+                    case DayOfWeek.Tuesday:
+                        return "Tue";
+                    case DayOfWeek.Wednesday:
+                        return "Wed";
+                    case DayOfWeek.Thursday:
+                        return "Thu";
+                    case DayOfWeek.Friday:
+                        return "Fri";
+                    case DayOfWeek.Saturday:
+                        return "Sat";
+                    case DayOfWeek.Sunday:
+                        return "Sun";
+                    default:
+                        return "--";
+                }
             }
         }
                 
@@ -38,6 +54,7 @@ namespace VolleybalCompetition_creator
         public Time Time { 
             get 
             {
+                if (specialDate) return time;
                 return homeTeam.defaultTime; 
             }
             set 
@@ -47,7 +64,13 @@ namespace VolleybalCompetition_creator
         }
         public Team homeTeam { get { return poule.teams[homeTeamIndex]; } }
         public Team visitorTeam { get { return poule.teams[visitorTeamIndex]; } }
-        public Weekend Weekend { get { return poule.weekends[weekIndex]; } }
+        public Weekend Weekend
+        {
+            get
+            {
+                return poule.weekends[weekIndex];
+            }
+        }
         public bool Optimizable
         {
             get
@@ -61,7 +84,6 @@ namespace VolleybalCompetition_creator
 
         public int homeTeamIndex;
         public int visitorTeamIndex;
-        public int weekIndex = -1;
         public Poule poule;
         public Serie serie;
         public bool RealMatch()
@@ -70,22 +92,22 @@ namespace VolleybalCompetition_creator
         }
         public Match(DateTime datetime, Team homeTeam, Team visitorTeam, Serie serie, Poule poule)
         {
-            System.Globalization.CultureInfo cul = System.Globalization.CultureInfo.CurrentCulture;
-            this.tempWeek = cul.Calendar.GetWeekOfYear(
-                datetime,
-                System.Globalization.CalendarWeekRule.FirstFullWeek,
-                DayOfWeek.Saturday);
-            this.tempYear = datetime.Year;
+            weekIndex = poule.AddWeekend(datetime);
+            this._datetime = datetime;
             this.Time = new Time(datetime);
             this.homeTeamIndex = poule.teams.FindIndex(t => t == homeTeam);
             this.visitorTeamIndex = poule.teams.FindIndex(t => t == visitorTeam);
+            if (homeTeamIndex < 0)
+            {
+                Console.WriteLine("Negative");
+            }
             if (visitorTeamIndex < 0)
             {
                 Console.WriteLine("Negative");
             }
             this.serie = serie;
             this.poule = poule;
-            poule.AddWeekend(tempYear, tempWeek);
+            
         }
         public Match(int weekIndex, int homeTeam, int visitorTeam, Serie serie, Poule poule)
         {
@@ -104,16 +126,8 @@ namespace VolleybalCompetition_creator
             this.poule = match.poule;
             this.conflict = match.conflict;
             this.conflict_cost = match.conflict_cost;
-            this.tempWeek = match.tempWeek;
-            this.tempYear = match.tempYear;
             this.time = match.time;
-        }
-
-        
-        
-        public void SetWeekIndex()
-        {
-            if(weekIndex<0) weekIndex = poule.FindWeekendNrInSchema(tempYear, tempWeek);
+            this._datetime = match._datetime;
         }
     }
 }

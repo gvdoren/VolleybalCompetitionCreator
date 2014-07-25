@@ -22,7 +22,6 @@ namespace VolleybalCompetition_creator
             this.state = state;
             InitializeComponent();
             objectListView1.SetObjects(klvv.series);
-            domainUpDown1.SelectedIndex = 6;
          }
 
         private void objectListView1_SubItemChecking(object sender, SubItemCheckingEventArgs e)
@@ -259,7 +258,7 @@ namespace VolleybalCompetition_creator
         private void OptimizeGroupsSelectedClubs(object sender, MyEventArgs e)
         {
             IProgress intf = (IProgress)sender;
-            ConstraintNotAtWeekendHome constraint = null;
+            ConstraintDifferentGroupsInSameWeekend constraint = null;
             int clubindex = 0;
             foreach (Club club in state.selectedClubs)
             {
@@ -268,7 +267,7 @@ namespace VolleybalCompetition_creator
                 // find the constraint for this club
                 foreach(Constraint constr in klvv.constraints)
                 {
-                    ConstraintNotAtWeekendHome con = constr as ConstraintNotAtWeekendHome;
+                    ConstraintDifferentGroupsInSameWeekend con = constr as ConstraintDifferentGroupsInSameWeekend;
                     if(con != null && con.club == club)
                     {
                         constraint = con;
@@ -361,24 +360,6 @@ namespace VolleybalCompetition_creator
                     }
                 }
             }
-        }
-
-        private void checkBox2_CheckedChanged(object sender, EventArgs e)
-        {
-            klvv.slow = checkBox2.Checked;
-        }
-
-        private void checkBox3_CheckedChanged(object sender, EventArgs e)
-        {
-            klvv.fixedSchema = checkBox3.Checked;
-        }
-
-        private void domainUpDown1_TextChanged(object sender, EventArgs e)
-        {
-            klvv.ABdiff = int.Parse(domainUpDown1.Text);
-            klvv.Evaluate(null);
-            klvv.Changed();
-
         }
 
         private void button6_Click(object sender, EventArgs e)

@@ -43,7 +43,7 @@ namespace VolleybalCompetition_creator
                 return;
             }
             lock (klvv);
-            if (state.showConstraints.Contains(state.selectedConstraint) == false)
+            if (state.selectedConstraint != null && state.showConstraints.Contains(state.selectedConstraint) == false && state.selectedConstraint.error == false)
             {
                 if (state.showConstraints.Count > 0)
                 {
@@ -63,12 +63,49 @@ namespace VolleybalCompetition_creator
          }
         private void UpdateConflictCount()
         {
+            bool error = false;
             int conflicts = 0;
             foreach (Constraint constraint in klvv.constraints)
             {
                 conflicts += constraint.conflict_cost;
+                error |= constraint.error;
+                
             }
+            int totalMatches = 0;
+            int conflictMatches = 0;
+            foreach (Poule poule in klvv.poules)
+            {
+                if (poule.imported == false)
+                {
+                    foreach (Match mat in poule.matches)
+                    {
+                        if (mat.RealMatch())
+                        {
+                            if (mat.conflict > 0)
+                            {
+                                conflictMatches++;
+                            }
+                            totalMatches++;
+                        }
+                    }
+                }
+            }
+
+
+            if (error) label1.ForeColor = Color.Red;
+            else label1.ForeColor = Color.Black;
             label1.Text = "Conflicts: " + conflicts.ToString();
+            double percentage = 0;
+            if (totalMatches > 0)
+            {
+                percentage = conflictMatches*100;
+                percentage /= totalMatches;
+            }
+            else
+            {
+                percentage = 0;
+            }
+            label2.Text = "Conflict-matches: " + conflictMatches.ToString() + string.Format(" ({0:F1}%)",percentage);
         }
         private void objectListView1_MouseClick(object sender, MouseEventArgs e)
         {
@@ -111,7 +148,7 @@ namespace VolleybalCompetition_creator
         public bool Filter(object modelObject)
         {
             Constraint constraint = (Constraint)modelObject;
-            return state.showConstraints.Contains(constraint);
+            return state.showConstraints.Contains(constraint) || constraint.error;
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)

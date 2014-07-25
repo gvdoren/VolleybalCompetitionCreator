@@ -17,6 +17,11 @@ namespace VolleybalCompetition_creator
             }
 
         }
+        public Time(Time time)
+        {
+            this.Hours = time.Hours;
+            this.Minutes = time.Minutes;
+        }
         public Time(int hours, int minutes)
         {
             this.Hours = hours;
@@ -27,6 +32,16 @@ namespace VolleybalCompetition_creator
             this.Hours = datetime.Hour;
             this.Minutes = datetime.Minute;
         }
+        public void AddMinutes(int minutes)
+        {
+            Minutes += minutes;
+            while (Minutes >= 60)
+            {
+                Hours++;
+                Minutes -= 60;
+            }
+            while (Hours >= 24) Hours -= 24;
+        }
         public static bool operator <(Time t1, Time t2)
         {
             return t1.Hours < t2.Hours || (t1.Hours == t2.Hours && t1.Minutes < t2.Minutes);
@@ -34,6 +49,14 @@ namespace VolleybalCompetition_creator
         public static bool operator >(Time t1, Time t2)
         {
             return t1.Hours > t2.Hours || (t1.Hours == t2.Hours && t1.Minutes > t2.Minutes);
+        }
+        public static bool operator ==(Time t1, Time t2)
+        {
+            return t1.Hours == t2.Hours && t1.Minutes == t2.Minutes;
+        }
+        public static bool operator !=(Time t1, Time t2)
+        {
+            return t1.Hours != t2.Hours || t1.Minutes != t2.Minutes;
         }
         public override string ToString()
         {

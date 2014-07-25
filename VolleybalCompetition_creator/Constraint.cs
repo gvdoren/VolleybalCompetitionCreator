@@ -19,7 +19,7 @@ namespace VolleybalCompetition_creator
             conflict = 0;
             conflict_cost = 0;
         }
-        public void AddConflict(Constraint constraint)
+        public virtual void AddConflict(Constraint constraint)
         {
             if (conflictConstraints.Contains(constraint) == false)
             {
@@ -36,8 +36,24 @@ namespace VolleybalCompetition_creator
         List<Poule> poules = new List<Poule>();
         List<Team> teams = new List<Team>();
         public bool VisitorAlso = true;
+        public bool error = false;
+        List<String> errorList = new List<string>();
+        protected void ClearErrors()
+        {
+            error = false;
+            errorList.Clear();
+        }
+        protected void AddError(string error_str)
+        {
+            error = true;
+            errorList.Add(error_str);
+        }
+        protected string[] ErrorInfo()
+        {
+            return errorList.ToArray();
+        }
         public Club club { get; set; }
-        public string Context
+        public virtual string Context
         {
             get
             {
@@ -103,10 +119,10 @@ namespace VolleybalCompetition_creator
             conflictMatches.Sort(delegate(Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
         }
     }
-    class ConstraintZaal : Constraint
+    class ConstraintSporthallNotAvailable : Constraint
     {
         SporthallClub sporthal;
-        public ConstraintZaal(SporthallClub sporthal, Club club)
+        public ConstraintSporthallNotAvailable(SporthallClub sporthal, Club club)
         {
             name = "Sporthal niet beschikbaar";
             this.sporthal = sporthal;
@@ -128,7 +144,7 @@ namespace VolleybalCompetition_creator
                 foreach (Team team in club.teams)
                 {
                     Poule poule = team.poule;
-                    if (poule != null && poule.serie.constraintsHold && poule.serie.name != "Nationaal")
+                    if (poule != null && poule.serie.constraintsHold && poule.imported == false)
                     {
                         foreach (Match match in poule.matches)
                         {
@@ -168,7 +184,7 @@ namespace VolleybalCompetition_creator
         {
             get
             {
-                return name + " - " + poule.name + poule.serie.name;
+                return name + " - " + poule.serie.name + poule.name;
             }
         }
         public ConstraintSchemaTooClose(Poule poule)
@@ -180,7 +196,7 @@ namespace VolleybalCompetition_creator
         {
             conflict_cost = 0;
             conflictMatches.Clear();
-            if (poule.serie.constraintsHold)
+            if (poule.serie.constraintsHold && poule.imported == false)
             {
                 for (int m1 = 0; m1 < poule.matches.Count; m1++)
                 {
@@ -222,7 +238,7 @@ namespace VolleybalCompetition_creator
         {
             get
             {
-                return name + " - " + poule.name + poule.serie.name;
+                return name + " - " + poule.serie.name + poule.name;
             }
         }
         public ConstraintSchemaTooManyHomeAfterEachOther(Poule poule)
@@ -235,7 +251,7 @@ namespace VolleybalCompetition_creator
         {
             conflict_cost = 0;
             conflictMatches.Clear();
-            if (poule.serie.constraintsHold && poule.serie.name != "Nationaal")
+            if (poule.serie.constraintsHold && poule.imported == false)
             {
                 List<Match> sortedMatches = new List<Match>(poule.matches);
                 sortedMatches.Sort(delegate(Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
@@ -357,7 +373,7 @@ namespace VolleybalCompetition_creator
         {
             get
             {
-                return name + " - " + poule.name + poule.serie.name;
+                return name + " - " + poule.serie.name + poule.name;
             }
         }
         int Number = 0;
@@ -369,11 +385,12 @@ namespace VolleybalCompetition_creator
         }
         public override void Evaluate(Klvv klvv)
         {
-            if (Number % 1000 == 0) // Deze test niet elke keer uitvoeren.
+            if (Number % 1000 == 0 || error == true) // Deze test niet elke keer uitvoeren.
             {
                 conflict_cost = 0;
                 conflictMatches.Clear();
-                if (poule.serie.constraintsHold && poule.serie.name != "Nationaal")
+                ClearErrors();
+                if (poule.serie.constraintsHold && poule.imported == false)
                 {
                     SortedList<int, int> HomeMatches = new SortedList<int, int>();
                     SortedList<int, int> VisitorMatches = new SortedList<int, int>();
@@ -384,13 +401,12 @@ namespace VolleybalCompetition_creator
                         if (t.poule.teams.Contains(t) == false)
                         {
                             conflict_cost += cost;
-                            System.Windows.Forms.MessageBox.Show("Internal test - poule consistency: Poule does not contain team");
+                            AddError("Internal test - poule consistency: Poule does not contain team");
                         }
                         if (t.serie.poules.ContainsValue(poule) == false)
                         {
                             conflict_cost += cost;
-                            System.Windows.Forms.MessageBox.Show("Internal test - poule consistency: Serie does not contain poule");
-
+                            AddError("Internal test - poule consistency: Serie does not contain poule");
                         }
                     }
                     for (int m1 = 0; m1 < poule.matches.Count; m1++)
@@ -401,23 +417,26 @@ namespace VolleybalCompetition_creator
                     }
                     foreach (Team t in poule.teams)
                     {
-                        if (HomeMatches[t.Index] != poule.maxTeams - 1)
+                        if (t.RealTeam())
                         {
-                            foreach (Match match in poule.matches)
+                            if (HomeMatches[t.Index] != poule.maxTeams - 1)
                             {
-                                if (match.homeTeam == t)
+                                foreach (Match match in poule.matches)
                                 {
-                                    System.Windows.Forms.MessageBox.Show("Internal test - poule consistency: Aantal thuis matches klopt niet");
+                                    if (match.homeTeam == t)
+                                    {
+                                        AddError("Internal test - poule consistency: Aantal thuis matches klopt niet");
+                                    }
                                 }
                             }
-                        }
-                        if (VisitorMatches[t.Index] != poule.maxTeams - 1)
-                        {
-                            foreach (Match match in poule.matches)
+                            if (VisitorMatches[t.Index] != poule.maxTeams - 1)
                             {
-                                if (match.visitorTeam == t)
+                                foreach (Match match in poule.matches)
                                 {
-                                    System.Windows.Forms.MessageBox.Show("Internal test - poule consistency: Aantal uit matches klopt niet");
+                                    if (match.visitorTeam == t)
+                                    {
+                                        AddError("Internal test - poule consistency: Aantal uit matches klopt niet");
+                                    }
                                 }
                             }
                         }
@@ -432,7 +451,7 @@ namespace VolleybalCompetition_creator
                     {
                         if (poule.weekends[i].Saturday.Date > lastAllowedWeekendFirstHalf)
                         {
-                            System.Windows.Forms.MessageBox.Show("Internal test - poule consistency: Wedstrijd van de eerste helft wordt pas in tweede helft gespeeld");
+                            AddError("Internal test - poule consistency: Wedstrijd van de eerste helft wordt pas in tweede helft gespeeld");
                         }
                     }
                     int firstAllowedWeekendSecondHalfIndex = (int)Math.Floor(halfWeekendCount);
@@ -441,7 +460,7 @@ namespace VolleybalCompetition_creator
                     {
                         if (poule.weekends[i].Saturday.Date < firstAllowedWeekendSecondHalf)
                         {
-                            System.Windows.Forms.MessageBox.Show("Internal test - poule consistency: Wedstrijd van de tweed helft wordt in eerste helft gespeeld");
+                            AddError("Internal test - poule consistency: Wedstrijd van de tweed helft wordt in eerste helft gespeeld");
                         }
                     }
                     foreach (Match m1 in poule.matches)
@@ -452,7 +471,7 @@ namespace VolleybalCompetition_creator
                             if ((m1.weekIndex < poule.weekends.Count / 2 && m2.weekIndex < poule.weekends.Count / 2) ||
                                (m1.weekIndex >= poule.weekends.Count / 2 && m2.weekIndex >= poule.weekends.Count / 2))
                             {
-                                System.Windows.Forms.MessageBox.Show("Internal test - poule consistency: WeekIndex van matches is corrupt");
+                                AddError("Internal test - poule consistency: WeekIndex van matches is corrupt");
                             }
                         }
 
@@ -461,20 +480,11 @@ namespace VolleybalCompetition_creator
                     {
                         foreach (Team team in club.teams)
                         {
-                            if (team.poule == null)
+                            if (team.poule != null && team.poule.matches.Count(m => m.homeTeam == team) == 0)
                             {
                                 conflict_cost += cost;
+                                AddError("Internal test - poule consistency: No matches for team");
                             }
-                            else
-                            {
-                                if (team.poule.matches.Count(m => m.homeTeam == team) == 0)
-                                {
-                                    conflict_cost += cost;
-                                    System.Windows.Forms.MessageBox.Show("Internal test - poule consistency: No matches for team");
-
-                                }
-                            }
-
                         }
                     }
                 }
@@ -483,8 +493,41 @@ namespace VolleybalCompetition_creator
         }
         public override string[] GetTextDescription()
         {
-            List<string> result = new List<string>();
-            return result.ToArray();
+            return ErrorInfo();
+        }
+    }
+    class ConstraintNoPouleAssigned : Constraint
+    {
+        public override string Title
+        {
+            get
+            {
+                return name + " - " + club.name;
+            }
+        }
+        public ConstraintNoPouleAssigned(Club club)
+        {
+            name = "No poule assigned to team";
+            this.club = club;
+            cost = 10000;
+        }
+        public override void Evaluate(Klvv klvv)
+        {
+            conflict_cost = 0;
+            conflictMatches.Clear();
+            ClearErrors();
+            foreach (Team team in club.teams)
+            {
+                if (team.poule == null)
+                {
+                    conflict_cost += cost;
+                    AddError(string.Format("Team {0} (serie:{1}) has no poule assigned", team.name, team.serie.name));
+                }
+            }
+        }
+        public override string[] GetTextDescription()
+        {
+            return ErrorInfo();
         }
     }
     class ConstraintPouleTwoTeamsOfSameClub : Constraint
@@ -493,7 +536,7 @@ namespace VolleybalCompetition_creator
         {
             get
             {
-                return name + " - " + poule.name + poule.serie.name;
+                return name + " - " + poule.serie.name + poule.name;
             }
         }
         public ConstraintPouleTwoTeamsOfSameClub(Poule poule)
@@ -507,7 +550,7 @@ namespace VolleybalCompetition_creator
         {
             conflict_cost = 0;
             conflictMatches.Clear();
-            if (poule.serie.constraintsHold && poule.serie.name != "Nationaal")
+            if (poule.serie.constraintsHold && poule.imported == false)
             {
                 foreach(Team t1 in poule.teams)
                 {
@@ -549,84 +592,13 @@ namespace VolleybalCompetition_creator
             return result.ToArray();
         }
     }
-    class ConstraintPouleFixedNumber : Constraint
-    {
-        public override string Title
-        {
-            get
-            {
-                return name + " - " + poule.name + poule.serie.name;
-            }
-        }
-        public ConstraintPouleFixedNumber(Poule poule)
-        {
-            name = "Poule - Team staat niet op juiste positie in schema";
-            this.poule = poule;
-            this.cost = 1000;
-        }
-        public override void Evaluate(Klvv klvv)
-        {
-            conflict_cost = 0;
-            conflictMatches.Clear();
-            if (klvv.fixedSchema == true)
-            {
-                bool fixedSchemaPoule = false;
-                int i = 1;
-                foreach (Team team in poule.teams)
-                {
-                    if (team.FixedSchema)
-                    {
-                        fixedSchemaPoule = true;
-                        if (team.FixedSchemaNumber != i)
-                        {
-                            List<Match> matches = poule.matches.FindAll(m => m.homeTeam == team || m.visitorTeam == team);
-                            foreach (Match m in matches)
-                            {
-                                AddConflictMatch(VisitorHomeBoth.HomeOnly,m);
-                            }
-                        }
-                    }
-                    i++;
-                }
-                i = 1;
-                if (fixedSchemaPoule)
-                {
-                    List<Weekend> anoramaWeekends = klvv.annorama.GetReeks(poule.maxTeams.ToString());
-                    if (anoramaWeekends.Count != poule.weekends.Count)
-                    {
-                        this.conflict_cost += 1;
-                        poule.conflict_cost += cost;
-                    }
-                    else
-                    {
-                        for (i = 0; i < poule.weekends.Count; i++)
-                        {
-                            if (poule.weekends[i].Saturday != anoramaWeekends[i].Saturday)
-                            {
-                                List<Match> matches = poule.matches.FindAll(m => m.Weekend.Saturday == poule.weekends[i].Saturday);
-                                foreach (Match m in matches)
-                                {
-                                    AddConflictMatch(VisitorHomeBoth.Both,m);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        public override string[] GetTextDescription()
-        {
-            List<string> result = new List<string>();
-            return result.ToArray();
-        }
-    }
     class ConstraintPouleOddEvenWeek : Constraint
     {
         public override string Title
         {
             get
             {
-                return name + " - " + poule.name + poule.serie.name;
+                return name + " - " + poule.serie.name + poule.name;
             }
         }
         public ConstraintPouleOddEvenWeek(Poule poule)
@@ -656,118 +628,9 @@ namespace VolleybalCompetition_creator
             return result.ToArray();
         }
     }
-    class ConstraintNotAtWeekendHome_old : Constraint
+    class ConstraintDifferentGroupsInSameWeekend : Constraint
     {
-        public ConstraintNotAtWeekendHome_old(Club cl)
-        {
-            club = cl;
-            VisitorAlso = false;
-            name = "Teams in verschillende groupen spelen op dezelfde dag";
-            cost = 10;
-        }
-        public override void Evaluate(Klvv klvv)
-        {
-            conflict_cost = 0;
-            conflictMatches.Clear();
-            foreach (SporthallClub sp in club.sporthalls)
-            {
-                Sporthal sporthal = sp.sporthall;
-                List<Team> listTeams = new List<Team>(club.teams.FindAll(t => t.sporthal.sporthall == sporthal));
-                if (club.groupingWithClub != null)
-                    listTeams.AddRange(club.groupingWithClub.teams.FindAll(t => t.sporthal.sporthall == sporthal));
-                for (int i = 0; i < listTeams.Count; i++)
-                {
-                    Team team1 = listTeams[i];
-                    Poule poule1 = team1.poule;
-                    if (poule1 != null)
-                    {
-                        if (poule == null || poule == poule1)
-                        {
-                            if (poule1.serie.constraintsHold)
-                            {
-                                List<Match> team1Matches = team1.poule.matches.FindAll(m => m.homeTeam == team1);
-                                team1Matches.Sort(delegate(Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
-                                for (int j = i + 1; j < listTeams.Count; j++)
-                                {
-                                    Team team2 = listTeams[j];
-                                    if (team2.poule != null)
-                                    {
-                                        if (team2.poule.serie.constraintsHold)
-                                        {
-                                            if ((team1.group == TeamGroups.GroupX && team2.group == TeamGroups.GroupY) ||
-                                               (team1.group == TeamGroups.GroupY && team2.group == TeamGroups.GroupX)
-                                                )
-                                            {
-                                                List<Match> team2Matches = team2.poule.matches.FindAll(m => m.homeTeam == team2);
-                                                team2Matches.Sort(delegate(Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
-
-                                                Poule poule2 = team2.poule;
-                                                int i1 = 0;
-                                                int i2 = 0;
-
-
-                                                while (i1 < team1Matches.Count && i2 < team2Matches.Count)
-                                                {
-                                                    Match m1 = team1Matches[i1];
-                                                    Match m2 = team2Matches[i2];
-                                                    if (m1.datetime.Date < m2.datetime.Date || m1.visitorTeam.club == m1.homeTeam.club)
-                                                    {
-                                                        i1++;
-                                                    }
-                                                    else if (m2.datetime.Date < m1.datetime.Date || m2.visitorTeam.club == m2.homeTeam.club)
-                                                    {
-                                                        i2++;
-                                                    }
-                                                    else
-                                                    {
-                                                        if (m1.RealMatch() && m2.RealMatch())
-                                                        {
-                                                            DateTime st1 = m1.datetime;
-                                                            DateTime en1 = st1.AddHours(2);
-                                                            st1 = st1.AddHours(-klvv.ABdiff);
-                                                            if (m1.serie.Reserve())
-                                                            {
-                                                                st1 = st1.AddHours(-2);
-                                                            }
-                                                            DateTime st2 = m2.datetime;
-                                                            DateTime en2 = st2.AddHours(2);
-                                                            st2 = st2.AddHours(-klvv.ABdiff);
-                                                            if (m2.serie.Reserve())
-                                                            {
-                                                                st2 = st2.AddHours(-2);
-                                                            }
-                                                            if (m1.homeTeam.club != m2.homeTeam.club || (st1 <= en2 && en1 >= st2))
-                                                            {
-                                                                cost = 5;
-                                                                if (conflictMatches.Count > 10) cost = 10;
-                                                                if (conflictMatches.Count > 20) cost = 20;
-                                                                if (conflictMatches.Count > 30 || m1.homeTeam.club.groupingWithClub != null) cost = 40;
-                                                                this.AddConflictMatch(VisitorHomeBoth.HomeOnly, m1, m2);
-                                                            }
-                                                        }
-                                                        i1++;
-                                                        i2++;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        public override string[] GetTextDescription()
-        {
-            List<string> result = new List<string>();
-            return result.ToArray();
-        }
-    }
-    class ConstraintNotAtWeekendHome : Constraint
-    {
-        public ConstraintNotAtWeekendHome(Club cl)
+        public ConstraintDifferentGroupsInSameWeekend(Club cl)
         {
             club = cl;
             VisitorAlso = false;
@@ -805,33 +668,35 @@ namespace VolleybalCompetition_creator
                 while(e<all_matches.Count && all_matches[e].datetime.Date == date) e++;
                 int cX = 0;
                 int cY = 0;
-                bool xNationaal = false;
-                bool yNationaal = false;
+                bool xImported = false;
+                bool yImported = false;
                 for(int j=s;j<e;j++)
                 {
                     Match m = all_matches[j];
-                    if (m.homeTeam.serie.name == "Nationaal")
+                    if (m.homeTeam.poule.imported)
                     {
-                        if (m.homeTeam.group == TeamGroups.GroupX) xNationaal = true;
-                        if (m.homeTeam.group == TeamGroups.GroupY) yNationaal = true;
+                        if (m.homeTeam.group == TeamGroups.GroupX) xImported = true;
+                        if (m.homeTeam.group == TeamGroups.GroupY) yImported = true;
                     }
                     if(m.homeTeam.group == TeamGroups.GroupX && (m.visitorTeam.club != club || m.visitorTeam.group == TeamGroups.GroupX)) cX++;
                     if(m.homeTeam.group == TeamGroups.GroupY && (m.visitorTeam.club != club || m.visitorTeam.group == TeamGroups.GroupY)) cY++;
                 }
                 if(cX>0 && cY>0)
                 {
+                    // Welke group gaan we als 'verkeerd' bestempelen.
                     bool x = false;
                     if (cX < cY) x = true;
-                    if (yNationaal && xNationaal == false) x = true;
-                    if (xNationaal && yNationaal == false) x = false;
+                    // Indien of X of Y niet veranderd kan worden, dan is automatisch de andere groep 'verkeerd'
+                    if (yImported && xImported == false) x = true;
+                    if (xImported && yImported == false) x = false;
                     for(int j=s;j<e;j++)
                     {
                         Match m = all_matches[j];
                         if (m.poule.serie.Gewestelijk) cost = 20;
                         else cost = 40;
-                        if (x && m.homeTeam.group == TeamGroups.GroupX) 
+                        if (x && m.homeTeam.group == TeamGroups.GroupX && m.homeTeam.club == club) 
                             AddConflictMatch(VisitorHomeBoth.HomeOnly, m);
-                        if (x == false && m.homeTeam.group == TeamGroups.GroupY) AddConflictMatch(VisitorHomeBoth.HomeOnly, m);
+                        if (x == false && m.homeTeam.group == TeamGroups.GroupY && m.homeTeam.club == club) AddConflictMatch(VisitorHomeBoth.HomeOnly, m);
                     }
                         
                 }
@@ -844,9 +709,9 @@ namespace VolleybalCompetition_creator
             return result.ToArray();
         }
     }
-    class ConstraintNotAllInHomeWeekend : Constraint
+    class ConstraintNotAllInSameHomeWeekend : Constraint
     {
-        public ConstraintNotAllInHomeWeekend(Club club)
+        public ConstraintNotAllInSameHomeWeekend(Club club)
         {
             this.club = club;
             name = "Niet iedereen in zelfde thuis-weekend";
@@ -950,9 +815,9 @@ namespace VolleybalCompetition_creator
     }
 
 
-    class ConstraintNotAtSameTime : Constraint
+    class ConstraintPlayAtSameTime : Constraint
     {
-        public ConstraintNotAtSameTime(Club cl)
+        public ConstraintPlayAtSameTime(Club cl)
         {
             club = cl;
             VisitorAlso = false;
@@ -1038,10 +903,10 @@ namespace VolleybalCompetition_creator
             return result.ToArray();
         }
     }
-    class ConstraintTeams : Constraint
+    class ConstraintSpecialTeamRequirement : Constraint
     {
         Klvv klvv;
-        public ConstraintTeams(Klvv klvv)
+        public ConstraintSpecialTeamRequirement(Klvv klvv)
         {
             this.klvv = klvv;
             VisitorAlso = false;
@@ -1109,7 +974,7 @@ namespace VolleybalCompetition_creator
         {
             get
             {
-                return name + " - " + poule.name + poule.serie.name;
+                return name + " - " + poule.serie.name + poule.name;
             }
         }
         public ConstraintPouleFullLastTwoWeekends(Poule poule)
@@ -1125,7 +990,7 @@ namespace VolleybalCompetition_creator
             conflictMatches.Clear();
             if (poule.serie.constraintsHold)
             {
-                if (poule.weekends.Count > ((poule.maxTeams - 1) * 2) && poule.serie.name != "Nationaal")
+                if (poule.weekends.Count > ((poule.maxTeams - 1) * 2) && poule.imported == false)
                 {
                     int[] count = new int[poule.weekends.Count];
                     foreach (Match match in poule.matches)
@@ -1150,9 +1015,9 @@ namespace VolleybalCompetition_creator
         }
     }
 
-    class ConstraintTooManyConflicts : Constraint
+    class ConstraintClubTooManyConflicts : Constraint
     {
-        public ConstraintTooManyConflicts(Club cl)
+        public ConstraintClubTooManyConflicts(Club cl)
         {
             club = cl;
             VisitorAlso = false;
@@ -1162,13 +1027,53 @@ namespace VolleybalCompetition_creator
         {
             conflict_cost = 0;
             conflictMatches.Clear();
-            conflict_cost += Math.Max(0, club.conflict - club.teams.Count)*40;
+            if (club.conflict > 0)
+            {
+                conflict_cost += Math.Max(0, club.conflict - (club.teams.Count - 1)) * 80;
+            }
         }
         public override string[] GetTextDescription()
         {
             List<string> result = new List<string>();
             return result.ToArray();
         }
+    }
+
+    class ConstraintTeamTooManyConflicts : Constraint
+    {
+        Team team = null;
+        
+        public ConstraintTeamTooManyConflicts(Team team)
+        {
+            this.team = team;
+            poule = team.poule;
+            VisitorAlso = false;
+            name = "Relatief veel conflict tov # thuismatchen";
+        }
+        public override void Evaluate(Klvv klvv)
+        {
+            conflict_cost = 0;
+            conflictMatches.Clear();
+            int maxConflicts = 0;
+            if (team.poule != null)
+            {
+                maxConflicts = ((team.poule.teams.Count - 1) / 3);
+            }
+            conflict_cost += Math.Max(0, team.conflict - maxConflicts) * 80;
+        }
+        public override string[] GetTextDescription()
+        {
+            List<string> result = new List<string>();
+            return result.ToArray();
+        }
+        public override string Context
+        {
+            get
+            {
+                return team.name;
+            }
+        } 
+
     }
 
 

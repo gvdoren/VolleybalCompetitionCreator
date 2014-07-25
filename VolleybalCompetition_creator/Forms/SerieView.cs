@@ -35,6 +35,7 @@ namespace VolleybalCompetition_creator
             }
             if (comboBox1.Items.Count > 0) comboBox1.SelectedIndex = 0;
             klvv.OnMyChange += state_OnMyChange;
+            state.OnMyChange += state_OnMyChange;
             firstHalf = File.ReadAllText(@"Data/html_first.html");
             secondHalf = File.ReadAllText(@"Data/html_second.html");
             UpdateWebBrowser();
@@ -57,9 +58,15 @@ namespace VolleybalCompetition_creator
             UpdateSerieList();
             UpdatePouleList();
             UpdateTeamList();
+            UpdateWebBrowser();
         }
         void UpdateSerieList()
         {
+            objectListView1.SetObjects(klvv.series);
+            if (serie != null)
+            {
+                objectListView1.SelectedObject = serie;
+            }
             objectListView1.BuildList(true);
         }
         void UpdatePouleList()
@@ -144,9 +151,10 @@ namespace VolleybalCompetition_creator
                 poule = null;
                 teams.Clear();
                 button1.Enabled = (objectListView1.SelectedObjects.Count == 1);
-                UpdatePouleList();
-                UpdateTeamList();
-                UpdateWebBrowser();
+                state.Changed();
+                //UpdatePouleList();
+                //UpdateTeamList();
+                //UpdateWebBrowser();
             }
         }
 
@@ -171,19 +179,6 @@ namespace VolleybalCompetition_creator
         private void button2_Click(object sender, EventArgs e)
         {// delete poule
             
-            /*int i = 0;
-            while(i<klvv.constraints.Count)
-            {
-                ConstraintSchemaTooClose c = klvv.constraints[i] as ConstraintSchemaTooClose;
-                if (c != null && c.poule == poule)
-                {
-                    klvv.constraints.RemoveAt(i);
-                }
-                else
-                {
-                    i++;
-                }
-            }*/
             foreach (Poule p in objectListView2.SelectedObjects)
             {
                 List<Team> tempList = new List<Team>(p.teams);
@@ -194,21 +189,8 @@ namespace VolleybalCompetition_creator
                 serie.poules.Remove(p.name);
                 klvv.poules.Remove(p);
             }
-            /*foreach (DockContent content in this.DockPanel.Contents)
-            {
-                PouleView pouleview = content as PouleView;
-                if (pouleview != null)
-                {
-                    if (poule == pouleview.poule)
-                    {
-                        pouleview.Close();
-                        break;
-                    }
-                }
-            }*/
-
-            UpdateSerieList();
-            UpdatePouleList();
+            //UpdateSerieList();
+            //UpdatePouleList();
             klvv.RenewConstraints();
             klvv.Evaluate(null);
             klvv.Changed();
@@ -234,8 +216,10 @@ namespace VolleybalCompetition_creator
                     poule.weekends.Add(new Weekend(we.Saturday));
                 }
                 serie.poules.Add(poule.name, poule);
-                if (poule.serie.Gewestelijk) poule.CreateMatches();
-                else poule.CreateMatchesFromSchemaFiles();
+                if (poule.serie.Gewestelijk) 
+                    poule.CreateMatches();
+                else 
+                    poule.CreateMatchesFromSchemaFiles();
                 klvv.poules.Add(poule);
                 klvv.RenewConstraints();
                 klvv.Evaluate(null);
@@ -361,8 +345,10 @@ namespace VolleybalCompetition_creator
                             poule.weekends.Add(new Weekend(we.Saturday));
                         }
                         poule.matches.Clear();
-                        if (poule.serie.Gewestelijk) poule.CreateMatches();
-                        else poule.CreateMatchesFromSchemaFiles();
+                        if (poule.serie.Gewestelijk) 
+                            poule.CreateMatches();
+                        else 
+                            poule.CreateMatchesFromSchemaFiles();
                         klvv.RenewConstraints();
                         klvv.Evaluate(null);
                         klvv.Changed();
@@ -375,6 +361,7 @@ namespace VolleybalCompetition_creator
         private void SerieView_FormClosed(object sender, FormClosedEventArgs e)
         {
             klvv.OnMyChange -= state_OnMyChange;
+            state.OnMyChange -= state_OnMyChange;
         }
 
         private void objectListView3_DoubleClick(object sender, EventArgs e)
@@ -411,8 +398,8 @@ namespace VolleybalCompetition_creator
                         klvv.Changed();
                     }
                     //objectListView1.BuildList(true);
-                    UpdateTeamList();
-                    UpdatePouleList();
+                    //UpdateTeamList();
+                    //UpdatePouleList();
                 }
             }
 
@@ -476,6 +463,23 @@ namespace VolleybalCompetition_creator
             klvv.RenewConstraints();
             klvv.Evaluate(null);
             klvv.Changed();
+        }
+
+        private void objectListView1_FormatRow(object sender, FormatRowEventArgs e)
+        {
+            Color color = Color.White;
+            Serie serie = (Serie)e.Model;
+            foreach (Team team in serie.teams)
+            {
+                if (team.poule == null) color = Color.Red;
+            }
+            foreach (Poule poule in serie.poules.Values)
+            {
+                if (poule.TeamCount > poule.maxTeams) color = Color.Red;
+                if (poule.TeamCount <= poule.maxTeams - 2 && color != Color.Red) color = Color.Orange;
+            }
+            e.Item.BackColor = color;
+
         }
 
     

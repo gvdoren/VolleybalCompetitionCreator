@@ -297,6 +297,73 @@ namespace VolleybalCompetition_creator
                     }
                     objectListView1.BuildList(true);
                 }
+                if (columnindex == olvColumn2.Index) // name
+                {
+                    List<Selection> list = new List<Selection>();
+                    Selection def = null;
+                    Selection sel;
+                    sel = new Selection(club.name);list.Add(sel);if (sel.ToString() == team.name) def = sel;
+                    sel = new Selection(club.name+" A");list.Add(sel);if (sel.ToString() == team.name) def = sel;
+                    sel = new Selection(club.name+" B");list.Add(sel);if (sel.ToString() == team.name) def = sel;
+                    sel = new Selection(club.name+" C");list.Add(sel);if (sel.ToString() == team.name) def = sel;
+                    sel = new Selection(club.name+" D");list.Add(sel);if (sel.ToString() == team.name) def = sel;
+                    sel = new Selection(club.name+" E");list.Add(sel);if (sel.ToString() == team.name) def = sel;
+                    sel = new Selection(club.name+" F");list.Add(sel);if (sel.ToString() == team.name) def = sel;
+                    sel = new Selection(club.name+" G");list.Add(sel);if (sel.ToString() == team.name) def = sel;
+                    sel = new Selection(club.name+" H");list.Add(sel);if (sel.ToString() == team.name) def = sel;
+                    SelectionDialog diag = new SelectionDialog(list, def);
+                    diag.Text = "Select the name:";
+                    diag.ShowDialog();
+                    if (diag.Ok)
+                    {
+                        string newName = diag.Selection.label;
+                        team.name = newName;
+                    }
+                    objectListView1.BuildList(true);
+                }
+                if (columnindex == olvColumn14.Index) // club
+                {
+                    List<Selection> list = new List<Selection>();
+                    Selection def = null;
+                    foreach (Club club in klvv.clubs)
+                    {
+                        Selection sel = new Selection(club.name, club);
+                        if (club == team.club) def = sel;
+                        list.Add(sel);
+                    }
+                    SelectionDialog diag = new SelectionDialog(list, def);
+                    diag.Text = "Select the club:";
+                    diag.ShowDialog();
+                    if (diag.Ok)
+                    {
+                        Club newClub = (Club)diag.Selection.obj;
+                        newClub.AddTeam(team);
+                    }
+                    objectListView1.BuildList(true);
+
+                }
+                if (columnindex == olvColumn5.Index) // time
+                {
+                    List<Selection> list = new List<Selection>();
+                    Selection def = null;
+                    Time time = new Time(9, 30);
+                    while(time < new Time(21,00))
+                    {
+                        Selection sel = new Selection(time.ToString(),new Time(time));
+                        if (team.defaultTime == time) def = sel;
+                        list.Add(sel);
+                        time.AddMinutes(30);
+                    }
+                    SelectionDialog diag = new SelectionDialog(list, def);
+                    diag.Text = "Select the time:";
+                    diag.ShowDialog();
+                    if (diag.Ok)
+                    {
+                        Time newTime = (Time)diag.Selection.obj;
+                        team.defaultTime = newTime;
+                    }
+                    objectListView1.BuildList(true);
+                }
             }
         }
         private void button1_Click_1(object sender, EventArgs e)

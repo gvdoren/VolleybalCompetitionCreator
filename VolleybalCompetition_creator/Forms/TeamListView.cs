@@ -7,23 +7,22 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
+using BrightIdeasSoftware;
 
 namespace VolleybalCompetition_creator
 {
-    public partial class ConstraintView : DockContent
+    public partial class TeamListView : DockContent
     {
         Klvv klvv = null;
-        GlobalState state = null;
-        public ConstraintView(Klvv klvv, GlobalState state)
+        GlobalState state;
+        public TeamListView(Klvv klvv, GlobalState state)
         {
             this.klvv = klvv;
             this.state = state;
             InitializeComponent();
+            objectListView1.SetObjects(klvv.teams);
+            state.OnMyChange += new MyEventHandler(state_OnMyChange); 
             klvv.OnMyChange += state_OnMyChange;
-            objectListView1.ShowGroups = false;
-            state.OnMyChange += state_OnMyChange;
-            UpdateTabPage2();
-            
         }
         public void state_OnMyChange(object source, MyEventArgs e)
         {
@@ -39,28 +38,10 @@ namespace VolleybalCompetition_creator
                 return;
             }
             lock (klvv) ;
-            UpdateTabPage2();
-        }
-        private void UpdateTabPage2()
-        {
-            objectListView1.ClearObjects();
-            label1.Text = "";
-            this.Text = "No conflicts selected";
-            richTextBox2.Clear();
-                
-            Constraint constraint = state.selectedConstraint;
-            if (constraint != null)
-            {
-                objectListView1.Objects = constraint.conflictMatches;
-                this.Text = constraint.Title;
-                label1.Text = "Conflict wedstrijden (" + constraint.conflictMatches.Count.ToString() + ")";
-                objectListView1.BuildList(true);
-                richTextBox2.Clear();
-                foreach (string str in constraint.GetTextDescription())
-                {
-                    richTextBox2.AppendText(str + Environment.NewLine);
-                }
-            }
+            // Niet nodig? teams veranderen niet. Selected team is anders deselected
+            // objectListView1.SetObjects(klvv.teams);
+            objectListView1.BuildList(true);
+            Refresh();
         }
 
         private void objectListView1_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -68,8 +49,8 @@ namespace VolleybalCompetition_creator
             ListViewHitTestInfo hit = objectListView1.HitTest(e.Location);
             if (hit.Item != null)
             {
-                Match match = objectListView1.GetModelObject(hit.Item.Index) as Match;
-                if (match != null && match.poule != null)
+                Team team = objectListView1.GetModelObject(hit.Item.Index) as Team;
+                if (team != null)
                 {
                     // check whether the PouleView is already existing
                     foreach (DockContent content in this.DockPanel.Contents)
@@ -77,25 +58,44 @@ namespace VolleybalCompetition_creator
                         PouleView pouleview = content as PouleView;
                         if (pouleview != null)
                         {
-                            if (match.poule == pouleview.poule)
+                            if (team.poule == pouleview.poule)
                             {
                                 pouleview.Activate();
                                 return;
                             }
                         }
                     }
-                    PouleView pouleView = new PouleView(klvv, state, match.poule);
+                    PouleView pouleView = new PouleView(klvv, state, team.poule);
                     pouleView.Show(this.DockPanel);
                 }
-            }
-
-
+            };
         }
 
-        private void ConstraintView_FormClosed(object sender, FormClosedEventArgs e)
+        private void TeamListView_FormClosed(object sender, FormClosedEventArgs e)
         {
+            state.OnMyChange -= new MyEventHandler(state_OnMyChange);
             klvv.OnMyChange -= state_OnMyChange;
-            state.OnMyChange -= state_OnMyChange;
+        }
+
+        private void objectListView1_CellClick(object sender, CellClickEventArgs e)
+        {
+            if (objectListView1.SelectedObjects.Count > 0)
+            {
+
+                List<Constraint> constraints = new List<Constraint>();
+                foreach (Object obj in objectListView1.SelectedObjects)
+                {
+                    Team team = (Team)obj;
+                    state.selectedClubs.Clear();
+                    state.selectedClubs.Add(team.club);
+                    if (team.poule != null)
+                    {
+                        constraints.AddRange(team.conflictConstraints);
+                    }
+                    state.Changed();
+                }
+                state.ShowConstraints(constraints);
+            }
         }
     }
 }

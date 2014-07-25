@@ -21,7 +21,7 @@ namespace VolleybalCompetition_creator
             InitializeComponent();
             objectListView1.SetObjects(klvv.clubs);
             klvv.OnMyChange += state_OnMyChange;
-            //state.OnMyChange += state_OnMyChange;
+            state.OnMyChange += state_OnMyChange;
             
         }
         public void state_OnMyChange(object source, MyEventArgs e)
@@ -38,8 +38,11 @@ namespace VolleybalCompetition_creator
                 this.Invoke(new Action(() => state_OnMyChange(source, e)));
                 return;
             }
-            lock (klvv) ;
+            lock (klvv);
+            this.objectListView1.SelectedIndexChanged -= this.objectListView1_SelectedIndexChanged;
+            objectListView1.SelectedObjects=state.selectedClubs;
             objectListView1.BuildList(true);
+            this.objectListView1.SelectedIndexChanged += this.objectListView1_SelectedIndexChanged;
         }
 
         private void objectListView1_SelectedIndexChanged(object sender, EventArgs e)
