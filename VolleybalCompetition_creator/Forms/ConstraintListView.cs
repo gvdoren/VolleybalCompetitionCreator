@@ -75,7 +75,7 @@ namespace VolleybalCompetition_creator
             int conflictMatches = 0;
             foreach (Poule poule in klvv.poules)
             {
-                if (poule.imported == false)
+                if (poule.evaluated)
                 {
                     foreach (Match mat in poule.matches)
                     {

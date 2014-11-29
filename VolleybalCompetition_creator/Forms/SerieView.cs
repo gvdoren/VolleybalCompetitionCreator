@@ -244,6 +244,14 @@ namespace VolleybalCompetition_creator
         }
         private void OptimizeDistance()
         {
+            // determine the selected poules. If nothing is selected, all poules in the series are included.
+            List<Poule> SelectedPoules = new List<Poule>();
+            foreach (Poule p in objectListView2.SelectedObjects)
+            {
+                SelectedPoules.Add(p);
+            }
+            if (SelectedPoules.Count == 0) SelectedPoules.AddRange(serie.poules.Values);
+
             int minimumTeams = serie.teams.Count / serie.poules.Count;
             foreach (Team team in serie.teams)
             {
@@ -251,68 +259,71 @@ namespace VolleybalCompetition_creator
                 {
                     if (team.poule != null)
                     {
-                        int minDistance = team.poule.CalculateDistances(team);
-                        // When teams are together in a poule, ensure that there is no reason to not move to another poule
-                        foreach (Team t in team.poule.teams)
+                        if(SelectedPoules.Contains(team.poule)) // mag het team meedoen met de optimalisatie
                         {
-                            if (t.club == team.club & checkBox1.Checked) minDistance = int.MaxValue;
-                        }
-                        Poule currentPoule = team.poule;
-                        Poule minPoule = null;
-                        foreach (Poule p in serie.poules.Values)
-                        {
-                            bool allowed = true;
-                            if (checkBox1.Checked)
+                            int minDistance = team.poule.CalculateDistances(team);
+                            // When teams are together in a poule, ensure that there is no reason to not move to another poule
+                            foreach (Team t in team.poule.teams)
                             {
-                                foreach (Team t in p.teams)
-                                {
-                                    if (t != team && t.club == team.club) allowed = false;// ander team zit al in poule
-                                }
+                                if (t.club == team.club & checkBox1.Checked) minDistance = int.MaxValue;
                             }
-                            if (allowed)
+                            Poule currentPoule = team.poule;
+                            Poule minPoule = null;
+                            foreach (Poule p in SelectedPoules)
                             {
-                                int distance = p.CalculateDistances(team);
-                                if (distance < minDistance)
+                                bool allowed = true;
+                                if (checkBox1.Checked)
                                 {
-                                    minDistance = distance;
-                                    minPoule = p;
-                                }
-                            }
-                        }
-                        minDistance = int.MaxValue;
-                        Team minTeam = null;
-                        if (minPoule != null)
-                        {
-                            foreach (Team te in minPoule.teams)
-                            {
-                                if (te.RealTeam() || team.poule.TeamCount>minimumTeams)
-                                {
-                                    bool allowed = true;
-                                    if (checkBox1.Checked)
+                                    foreach (Team t in p.teams)
                                     {
-                                        foreach (Team t in currentPoule.teams)
-                                        {
-                                            if (te.club == t.club) allowed = false;
-                                        }
+                                        if (t != team && t.club == team.club) allowed = false;// ander team zit al in poule
                                     }
-                                    if (allowed)
+                                }
+                                if (allowed)
+                                {
+                                    int distance = p.CalculateDistances(team);
+                                    if (distance < minDistance)
                                     {
-                                        int distance = currentPoule.CalculateDistances(te);
-                                        if (distance < minDistance)
-                                        {
-                                            minDistance = distance;
-                                            minTeam = te;
-                                        }
+                                        minDistance = distance;
+                                        minPoule = p;
                                     }
                                 }
                             }
-                        }
-                        if (minPoule != null && minTeam != null && minTeam != team && minPoule != currentPoule)
-                        {
-                            currentPoule.RemoveTeam(team);
-                            minPoule.RemoveTeam(minTeam);
-                            minPoule.AddTeam(team);
-                            currentPoule.AddTeam(minTeam);
+                            minDistance = int.MaxValue;
+                            Team minTeam = null;
+                            if (minPoule != null)
+                            {
+                                foreach (Team te in minPoule.teams)
+                                {
+                                    if (te.RealTeam() || team.poule.TeamCount>minimumTeams)
+                                    {
+                                        bool allowed = true;
+                                        if (checkBox1.Checked)
+                                        {
+                                            foreach (Team t in currentPoule.teams)
+                                            {
+                                                if (te.club == t.club) allowed = false;
+                                            }
+                                        }
+                                        if (allowed)
+                                        {
+                                            int distance = currentPoule.CalculateDistances(te);
+                                            if (distance < minDistance)
+                                            {
+                                                minDistance = distance;
+                                                minTeam = te;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if (minPoule != null && minTeam != null && minTeam != team && minPoule != currentPoule)
+                            {
+                                currentPoule.RemoveTeam(team);
+                                minPoule.RemoveTeam(minTeam);
+                                minPoule.AddTeam(team);
+                                currentPoule.AddTeam(minTeam);
+                            }
                         }
                     }
                 }

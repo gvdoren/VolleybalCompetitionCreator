@@ -39,9 +39,13 @@ namespace VolleybalCompetition_creator
             {
                 serie.homeVisitChangeAllowed = (e.NewValue == CheckState.Checked);
             }
+            else if (e.Column.Index == 4)
+            {
+                serie.evaluated = (e.NewValue == CheckState.Checked);
+            }
             else
             {
-                serie.constraintsHold = (e.NewValue == CheckState.Checked);
+                serie.export = (e.NewValue == CheckState.Checked);
             }
             klvv.Evaluate(null);
             klvv.Changed();
@@ -62,7 +66,7 @@ namespace VolleybalCompetition_creator
                 score = klvv.LastTotalConflicts;
                 foreach (Poule poule in klvv.poules)
                 {
-                    if (poule.serie != null && poule.serie.optimizable == true)
+                    if (poule.serie != null && poule.optimizable == true)
                     {
                         {
                             lock (klvv) ;
@@ -71,6 +75,7 @@ namespace VolleybalCompetition_creator
                             poule.SnapShot(klvv);
                             poule.OptimizeTeamAssignment(klvv, intf);
                             poule.OptimizeHomeVisitor(klvv);
+                            poule.OptimizeHomeVisitorReverse(klvv);
                             poule.OptimizeWeekends(klvv, intf);
                             klvv.Evaluate(null);
                             if (intf.Cancelled()) return;
@@ -104,7 +109,7 @@ namespace VolleybalCompetition_creator
                 teamList = new List<Team>();
                 foreach (Poule poule in klvv.poules)
                 {
-                    if (poule.serie.optimizable)
+                    if (poule.optimizable)
                     {
                         foreach (Team team in poule.teams)
                         {
@@ -154,7 +159,7 @@ namespace VolleybalCompetition_creator
                         if (team.poule != null && 
                             pouleList.Contains(team.poule) == false && 
                             team.poule.conflict_cost > 0 &&
-                            team.poule.serie.optimizable
+                            team.poule.optimizable
                             )
                         {
                             pouleList.Add(team.poule);
@@ -170,6 +175,7 @@ namespace VolleybalCompetition_creator
                         intf.SetText("Optimizing - " + poule.serie.name + poule.name);
                         poule.SnapShot(klvv);
                         poule.OptimizeTeamAssignment(klvv, intf);
+                        //poule.AnalyzeAndOptimizeTeamAssignment(klvv, intf);
                         poule.OptimizeHomeVisitor(klvv);
                         poule.OptimizeWeekends(klvv, intf);
                         klvv.Evaluate(null);
@@ -201,7 +207,7 @@ namespace VolleybalCompetition_creator
                 {
                     foreach (Team team in club.teams)
                     {
-                        if (team.conflict_cost > 0 && team.poule != null && team.poule.serie.optimizable)
+                        if (team.conflict_cost > 0 && team.poule != null && team.poule.optimizable)
                         {
                             teamList.Add(team);
                         }
@@ -377,7 +383,7 @@ namespace VolleybalCompetition_creator
                 score = klvv.LastTotalConflicts;
                 foreach (Poule poule in klvv.poules)
                 {
-                    if (poule.serie != null && poule.serie.optimizable == true)
+                    if (poule.serie != null && poule.optimizable == true)
                     {
                         {
                             lock (klvv) ;

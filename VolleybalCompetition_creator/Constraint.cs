@@ -144,7 +144,7 @@ namespace VolleybalCompetition_creator
                 foreach (Team team in club.teams)
                 {
                     Poule poule = team.poule;
-                    if (poule != null && poule.serie.constraintsHold && poule.imported == false)
+                    if (poule != null && poule.evaluated)
                     {
                         foreach (Match match in poule.matches)
                         {
@@ -196,7 +196,7 @@ namespace VolleybalCompetition_creator
         {
             conflict_cost = 0;
             conflictMatches.Clear();
-            if (poule.serie.constraintsHold && poule.imported == false)
+            if (poule.evaluated)
             {
                 for (int m1 = 0; m1 < poule.matches.Count; m1++)
                 {
@@ -251,7 +251,7 @@ namespace VolleybalCompetition_creator
         {
             conflict_cost = 0;
             conflictMatches.Clear();
-            if (poule.serie.constraintsHold && poule.imported == false)
+            if (poule.evaluated)
             {
                 List<Match> sortedMatches = new List<Match>(poule.matches);
                 sortedMatches.Sort(delegate(Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
@@ -390,7 +390,7 @@ namespace VolleybalCompetition_creator
                 conflict_cost = 0;
                 conflictMatches.Clear();
                 ClearErrors();
-                if (poule.serie.constraintsHold && poule.imported == false)
+                if (poule.evaluated)
                 {
                     SortedList<int, int> HomeMatches = new SortedList<int, int>();
                     SortedList<int, int> VisitorMatches = new SortedList<int, int>();
@@ -550,7 +550,7 @@ namespace VolleybalCompetition_creator
         {
             conflict_cost = 0;
             conflictMatches.Clear();
-            if (poule.serie.constraintsHold && poule.imported == false)
+            if (poule.evaluated)
             {
                 foreach(Team t1 in poule.teams)
                 {
@@ -652,7 +652,7 @@ namespace VolleybalCompetition_creator
                 {
                     if (poule == null || poule == poule1)
                     {
-                        if (poule1.serie.constraintsHold)
+                        if (poule1.evaluated)
                         {
                             all_matches.AddRange(team1.poule.matches.FindAll(m => m.homeTeam == team1 && m.RealMatch() && m.homeTeam.group!= TeamGroups.NoGroup));
                         }
@@ -668,15 +668,15 @@ namespace VolleybalCompetition_creator
                 while(e<all_matches.Count && all_matches[e].datetime.Date == date) e++;
                 int cX = 0;
                 int cY = 0;
-                bool xImported = false;
-                bool yImported = false;
+                bool xUnchangeable = false;
+                bool yUnchangeable = false;
                 for(int j=s;j<e;j++)
                 {
                     Match m = all_matches[j];
-                    if (m.homeTeam.poule.imported)
+                    if (m.homeTeam.poule.optimizable == false)
                     {
-                        if (m.homeTeam.group == TeamGroups.GroupX) xImported = true;
-                        if (m.homeTeam.group == TeamGroups.GroupY) yImported = true;
+                        if (m.homeTeam.group == TeamGroups.GroupX) xUnchangeable = true;
+                        if (m.homeTeam.group == TeamGroups.GroupY) yUnchangeable = true;
                     }
                     if(m.homeTeam.group == TeamGroups.GroupX && (m.visitorTeam.club != club || m.visitorTeam.group == TeamGroups.GroupX)) cX++;
                     if(m.homeTeam.group == TeamGroups.GroupY && (m.visitorTeam.club != club || m.visitorTeam.group == TeamGroups.GroupY)) cY++;
@@ -687,8 +687,8 @@ namespace VolleybalCompetition_creator
                     bool x = false;
                     if (cX < cY) x = true;
                     // Indien of X of Y niet veranderd kan worden, dan is automatisch de andere groep 'verkeerd'
-                    if (yImported && xImported == false) x = true;
-                    if (xImported && yImported == false) x = false;
+                    if (yUnchangeable && xUnchangeable == false) x = true;
+                    if (xUnchangeable && yUnchangeable == false) x = false;
                     for(int j=s;j<e;j++)
                     {
                         Match m = all_matches[j];
@@ -757,7 +757,7 @@ namespace VolleybalCompetition_creator
                     SortedList<DateTime, List<Match>> CountPerWeekend = new SortedList<DateTime, List<Match>>();
                     foreach (Team team in listTeams)
                     {
-                        if (team.poule != null && team.poule.serie.constraintsHold)
+                        if (team.poule != null && team.poule.evaluated)
                         {
                             if (team.group == targetGroup)
                             {
@@ -781,12 +781,12 @@ namespace VolleybalCompetition_creator
                         int l1count = l1.Count;
                         foreach (Match match in l1)
                         {
-                            if (match.poule.serie.optimizable == false) l1count += 10;
+                            if (match.poule.optimizable == false) l1count += 10;
                         }
                         int l2count = l2.Count;
                         foreach (Match match in l2)
                         {
-                            if (match.poule.serie.optimizable == false) l2count += 10;
+                            if (match.poule.optimizable == false) l2count += 10;
                         }
                         return l1count.CompareTo(l2count);
                     });
@@ -834,14 +834,14 @@ namespace VolleybalCompetition_creator
                 {
                     if (poule == null || poule == poule1)
                     {
-                        if (poule1.serie.constraintsHold)
+                        if (poule1.evaluated)
                         {
                             List<Match> team1Matches = team1.poule.matches.FindAll(m => m.homeTeam == team1 || m.visitorTeam == team1);
                             team1Matches.Sort(delegate(Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
                             Team team2 = team1.NotAtSameTime;
                             if (team2.poule != null)
                             {
-                                if (team2.poule.serie.constraintsHold)
+                                if (team2.poule.evaluated)
                                 {
                                     List<Match> team2Matches = team2.poule.matches.FindAll(m => m.homeTeam == team2 || m.visitorTeam == team2);
                                     team2Matches.Sort(delegate(Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
@@ -920,7 +920,7 @@ namespace VolleybalCompetition_creator
             {
                 if (constraint.team.poule != null)
                 {
-                    if (constraint.team.poule.serie.constraintsHold)
+                    if (constraint.team.poule.evaluated)
                     {
 
                         Team team = constraint.team;
@@ -988,9 +988,9 @@ namespace VolleybalCompetition_creator
         {
             conflict_cost = 0;
             conflictMatches.Clear();
-            if (poule.serie.constraintsHold)
+            if (poule.evaluated)
             {
-                if (poule.weekends.Count > ((poule.maxTeams - 1) * 2) && poule.imported == false)
+                if (poule.weekends.Count > ((poule.maxTeams - 1) * 2))
                 {
                     int[] count = new int[poule.weekends.Count];
                     foreach (Match match in poule.matches)

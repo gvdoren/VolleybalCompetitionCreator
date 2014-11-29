@@ -66,8 +66,8 @@ namespace VolleybalCompetition_creator
         }
         public void WriteXML(int year)
         {
-            string MyDocuments = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            using (XmlWriter writer = XmlWriter.Create(string.Format("{0}\\Anorama{1}.xml", MyDocuments, year)))
+            string BaseDirectory = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\CompetitionCreator";
+            using (XmlWriter writer = XmlWriter.Create(string.Format("{0}\\Anorama{1}.xml", BaseDirectory, year)))
             {
                 writer.WriteStartDocument();
                 writer.WriteStartElement("Anorama");
@@ -100,8 +100,8 @@ namespace VolleybalCompetition_creator
         }
         public void ReadXML(int year)
         {
-            string MyDocuments = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            XElement Anorama = XElement.Load(string.Format("{0}\\Anorama{1}.xml",MyDocuments , year));
+            string BaseDirectory = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\CompetitionCreator";
+            XElement Anorama = XElement.Load(string.Format("{0}\\Anorama{1}.xml", BaseDirectory, year));
             title = Anorama.Attribute("Title").Value;
             IEnumerable<XElement> Reeksen = Anorama.Element("Reeksen").Elements("Reeks");
             foreach (XElement reeks in Reeksen)

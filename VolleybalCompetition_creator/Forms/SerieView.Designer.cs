@@ -50,6 +50,7 @@
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
+            this.checkboxWithinSelectedPoules = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView3)).BeginInit();
@@ -210,6 +211,7 @@
             // 
             // olvColumn9
             // 
+            this.olvColumn9.AspectName = "Ranking";
             this.olvColumn9.CellPadding = null;
             this.olvColumn9.Text = "Rangschikking";
             // 
@@ -284,6 +286,16 @@
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
+            // checkboxWithinSelectedPoules
+            // 
+            this.checkboxWithinSelectedPoules.AutoSize = true;
+            this.checkboxWithinSelectedPoules.Location = new System.Drawing.Point(373, 189);
+            this.checkboxWithinSelectedPoules.Name = "checkboxWithinSelectedPoules";
+            this.checkboxWithinSelectedPoules.Size = new System.Drawing.Size(128, 17);
+            this.checkboxWithinSelectedPoules.TabIndex = 9;
+            this.checkboxWithinSelectedPoules.Text = "Within selected poule";
+            this.checkboxWithinSelectedPoules.UseVisualStyleBackColor = true;
+            // 
             // SerieView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -291,6 +303,7 @@
             this.ClientSize = new System.Drawing.Size(919, 608);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
+            this.Controls.Add(this.checkboxWithinSelectedPoules);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.webBrowser1);
             this.Controls.Add(this.button4);
@@ -337,5 +350,6 @@
         private System.Windows.Forms.Button button5;
         private BrightIdeasSoftware.OLVColumn olvColumn10;
         private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.CheckBox checkboxWithinSelectedPoules;
     }
 }

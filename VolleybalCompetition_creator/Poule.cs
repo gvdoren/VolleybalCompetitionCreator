@@ -9,6 +9,8 @@ namespace VolleybalCompetition_creator
     {
         // Temp lists for snapshot
         public bool imported = false;
+        public bool optimizable { get { return serie != null && serie.optimizable && evaluated; } }
+        public bool evaluated { get { return serie != null && serie.evaluated && imported == false; } }
         List<Team> resultTeams = new List<Team>();
         List<Weekend> resultWeekends = new List<Weekend>();
         List<Match> resultMatches = new List<Match>();
@@ -230,7 +232,7 @@ namespace VolleybalCompetition_creator
             bool snapshot = false;
             klvv.EvaluateRelatedConstraints(this);
             int total = klvv.TotalConflicts();
-            if (total < klvv.LastTotalConflicts)
+            if (total <= klvv.LastTotalConflicts)
             {
                 snapshot = true;
                 klvv.LastTotalConflicts = total;
@@ -241,7 +243,8 @@ namespace VolleybalCompetition_creator
                 resultTeams = new List<Team>(teams);
                 resultWeekends = new List<Weekend>(weekends);
                 resultMatches = CopyMatches();
-                minConflicts = conflict_cost; 
+                minConflicts = conflict_cost;
+                klvv.stateNotSaved = true; 
             }
             return snapshot;
         }
@@ -367,7 +370,6 @@ namespace VolleybalCompetition_creator
             {
                 for(int k = 1;k<=maxTeams;k++)
                 {
-                    intf.Progress(k-1, maxTeams);
                     teams.Add(teams[0]);
                     teams.RemoveAt(0);
                     /*
@@ -406,68 +408,44 @@ namespace VolleybalCompetition_creator
             return score;
         }
 
-        public void AnalyzeAndOptimizeTeamAssignment(Klvv klvv, IProgress intf, Team team)
+        public void AnalyzeAndOptimizeTeamAssignment(Klvv klvv, IProgress intf)
         {
-            int[,] score = AnalyzeTeamAssignment(klvv, intf);
-            bool[] used = new bool[maxTeams];
-            for(int i = 0;i<maxTeams;i++) used[i] = false;
-            foreach (Team t in teams)
-            {
-                int index = teams.FindIndex(te => te == t);
-                AnalyzeAndOptimizeTeamAssignmentRecursive(klvv, intf, score, used, index, t, 0, new List<Team>(teams), klvv.LastTotalConflicts);
-            }
+            SnapShot(klvv);
+            int best_score = 1000;
+            int[,] table = AnalyzeTeamAssignment(klvv, intf);
+            Team[] used = new Team[maxTeams];
+            for(int i = 0;i<maxTeams;i++) used[i] = null;
+            AnalyzeAndOptimizeTeamAssignmentRecursive(klvv, intf, table, used, 0, ref best_score, new List<Team>(teams), 0);
+            teams = resultTeams;
+            klvv.Evaluate(null);
         }
-        public void AnalyzeAndOptimizeTeamAssignmentRecursive(Klvv klvv, IProgress intf, int[,] score, bool[] used, int startPos, Team team, int delta,List<Team> newTeamList,int minTotalConflict )
+        public void AnalyzeAndOptimizeTeamAssignmentRecursive(Klvv klvv, IProgress intf, int[,] table, Team[] used, int team, ref int best_score,List<Team> newTeamList, int score)
         {
-            //Console.WriteLine("Team: {0}", team.name);
-            int index = teams.FindIndex(t => t == team);
-            List<int> possibilities = new List<int>();
-            for (int i = 0; i < maxTeams; i++)
+            if (score < best_score && intf.Cancelled() == false)
             {
-                if (used[i] == false) possibilities.Add(i);
-            }
-            possibilities.Sort(delegate(int i1, int i2) { return score[index,i1].CompareTo(score[index,i2]); });
-            int delta1 = 0;
-            foreach (int i in possibilities)
-            {
-                //Console.WriteLine("  - pos: {0}", i);
-                delta1 = score[index, i] - score[index, index];
-                if (delta + delta1 < 0)
+                if (team < maxTeams)
                 {
-                    used[i] = true;
-                    newTeamList[i] = team;
-                    if (i == startPos)
+                    for (int i = 0; i < maxTeams; i++)
                     {
-                        List<Team> temp = new List<Team>(teams);
-                        teams = newTeamList;
-                        klvv.EvaluateRelatedConstraints(this);
-                        if (klvv.TotalConflicts() <= minTotalConflict)
+                        if (team == 0) intf.Progress(i, maxTeams);
+                        if (used[i] == null)
                         {
-                            Console.WriteLine(" **** Final score: {0}", delta + delta1);
-                            int index1 = 0;
-                            int total = 0;
-                            foreach (Team t in newTeamList)
-                            {
-                                int sc = score[teams.FindIndex(te => te == t), index1];
-                                Console.WriteLine(" - {0} : {1}", t.name, sc);
-                                total += sc;
-                                index1++;
-                            }
-                            Console.WriteLine("   Total: {0} - {1}", total, klvv.TotalConflicts());
-                            
+                            used[i] = teams[team];
+                            AnalyzeAndOptimizeTeamAssignmentRecursive(klvv, intf, table, used, team + 1, ref best_score, new List<Team>(teams), score + table[team, i]);
+                            used[i] = null;
                         }
-                        teams = temp;
                     }
-                    else
-                    {
-                        AnalyzeAndOptimizeTeamAssignmentRecursive(klvv, intf, score, used, startPos, teams[i], delta + delta1,newTeamList, minTotalConflict);
-                        
-                    }
-                    newTeamList[i] = teams[i];
-                    used[i] = false;
+                }
+                else
+                { // improved best-score
+                    Console.WriteLine("score: {0}", score);
+                    best_score = score;
+                    List<Team> temp = teams;
+                    teams = new List<Team>(used);
+                    SnapShotIfImproved(klvv);
+                    teams = temp;
                 }
             }
-
         }
         public void OptimizeFullTeamAssignment(Klvv klvv, IProgress intf)
         {
@@ -526,7 +504,7 @@ namespace VolleybalCompetition_creator
         }
         public void SwitchHomeTeamVisitorTeam(Klvv klvv, Match match)
         {
-            if (serie.optimizable && serie.homeVisitChangeAllowed && match.Optimizable)
+            if (optimizable && serie.homeVisitChangeAllowed && match.Optimizable)
             {
                 Match match2 = null;
                 Match match1 = null;
@@ -577,10 +555,32 @@ namespace VolleybalCompetition_creator
                 {
                     if (match.conflict_cost > 0)
                     {
-                        SwitchHomeTeamVisitorTeam(klvv,match);
-                        if(SnapShotIfImproved(klvv) == false)
+                        SwitchHomeTeamVisitorTeam(klvv, match);
+                        if (SnapShotIfImproved(klvv) == false)
                         { // switch back
-                            SwitchHomeTeamVisitorTeam(klvv,match);
+                            SwitchHomeTeamVisitorTeam(klvv, match);
+                        }
+                    }
+                }
+                matches = resultMatches;
+                klvv.Evaluate(null);
+            }
+        }
+        public void OptimizeHomeVisitorReverse(Klvv klvv)
+        {
+            MakeDirty();
+            if (serie.optimizable && serie.homeVisitChangeAllowed)
+            {
+                List<Match> reverseMatches = new List<Match>(matches);
+                reverseMatches.Reverse();
+                foreach (Match match in reverseMatches)
+                {
+                    if (match.conflict_cost > 0)
+                    {
+                        SwitchHomeTeamVisitorTeam(klvv, match);
+                        if (SnapShotIfImproved(klvv) == false)
+                        { // switch back
+                            SwitchHomeTeamVisitorTeam(klvv, match);
                         }
                     }
                 }

@@ -30,8 +30,8 @@ namespace VolleybalCompetition_creator
         { 
             this.id = id; 
             this.name = name;
-            _optimizable = true; 
-            constraintsHold = true;
+            optimizable = true; 
+            evaluated = true;
             weekOrderChangeAllowed = Gewestelijk;
             homeVisitChangeAllowed = Gewestelijk;
             reserve = (name == "1H" || name == "2H" || name == "1D" || name == "2D" || Nationaal);
@@ -55,10 +55,14 @@ namespace VolleybalCompetition_creator
             return true;
         }
         private bool _optimizable;
-        public bool optimizable { get { return _optimizable & constraintsHold & imported == false; } set { _optimizable = value; } }
-        public bool constraintsHold { get; set; }
-        public bool weekOrderChangeAllowed { get; set; }
-        public bool homeVisitChangeAllowed { get; set; }
+        
+        private bool _weekOptimizable;
+        private bool _homeVisitOptimizable;
+        public bool optimizable { get { return _optimizable & evaluated & imported == false; } set { _optimizable = value; export = value; } }
+        public bool weekOrderChangeAllowed { get { return optimizable && _weekOptimizable; } set { _weekOptimizable = value; } }
+        public bool homeVisitChangeAllowed { get { return optimizable && _homeVisitOptimizable; } set { _homeVisitOptimizable = value; } }
+        public bool export { get;set;} 
+        public bool evaluated { get; set; }
         public bool Reserve()
         {
             return reserve;

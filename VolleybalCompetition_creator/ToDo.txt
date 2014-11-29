@@ -5,6 +5,8 @@
 
 - automatisch saven om de 10 minuten.
 
+- Group A&B volledig vertalen naar group X&Y
+
 - Series een kleur geven als er teams niet zijn ingedeeld
 
 - View om de matchen van een club te zien (ipv excel nu)
@@ -47,6 +49,10 @@ Inlezen bestaande competitie:
 - ToDo:
    * Bij creatie van poules moeten ook de weekenden structuur gecreeerd worden. Andere stukken van de applicatie gaat hier van uit.
 
-
+- Inlezen van registratie:
+   * Wat is veranderd, meenemen, dus oude registratie intact laten. 
+       Voordeel: nationale reeksen blijven bestaan.
+	   Risico: wedstrijd-wijzigingen van senioren ploegen worden niet meegenomen.
+	   Alleen jeugd-exporteren.
 
 

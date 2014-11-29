@@ -79,7 +79,8 @@ namespace VolleybalCompetition_creator
                 return;
             }
             lock (klvv);
-            this.Text = string.Format("Volleyball competition creation tool ({0})", klvv.savedFileName);
+            string changed = klvv.stateNotSaved ? "*" : "";
+            this.Text = string.Format("Volleyball competition creation tool ({0}{1})", klvv.savedFileName, changed);
         }
 
 
@@ -472,6 +473,45 @@ namespace VolleybalCompetition_creator
         {
             klvv.ConvertKLVVCompetitionToCSV(saveFileDialog1.FileName);
         }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (klvv.stateNotSaved)
+            {
+                DialogResult result = MessageBox.Show("Competition changed. Do you want to save the competition first?", "Closing application",
+MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
+                {
+                    e.Cancel = true;
+                }
+            }
+        }
+
+        private void clubRegistrationsKlvvsitexmlToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DateTime now = DateTime.Now;
+            saveFileDialog1 = new SaveFileDialog();
+            saveFileDialog1.FileName = string.Format("ExportToKlvv_registrations{0:00}{1:00}{2:00}_{3:00}{4:00}.xml", now.Year, now.Month, now.Day, now.Hour, now.Minute);
+            saveFileDialog1.Filter = "Xml (*.xml)|*.xml";
+            saveFileDialog1.InitialDirectory = BaseDirectory;
+            saveFileDialog1.FileOk += new CancelEventHandler(saveFileDialog1_FileOk10);
+            saveFileDialog1.ShowDialog();
+        }
+        public void saveFileDialog1_FileOk10(object sender, CancelEventArgs e)
+        {
+            klvv.WriteClubConstraints(saveFileDialog1.FileName,false /* zonder nationale teams*/); 
+        }
+
+        private void importKLVVRankingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            klvv.KLVVAddRanking();
+        }
+
+        private void helpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
     }
 }
 

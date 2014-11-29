@@ -438,10 +438,24 @@ namespace VolleybalCompetition_creator
             IProgress intf = (IProgress)sender;
             intf.SetText("Analysing + Optimizing - " + poule.serie.name + poule.name);
             poule.SnapShot(klvv);
-            poule.AnalyzeAndOptimizeTeamAssignment(klvv, intf, optimizeTeam);
+            poule.AnalyzeAndOptimizeTeamAssignment(klvv, intf);
             klvv.Evaluate(null);
             if (intf.Cancelled()) return;
 
+        }
+
+        private void button13_Click(object sender, EventArgs e)
+        {
+            if (poule.serie.homeVisitChangeAllowed == false)
+            {
+                System.Windows.Forms.MessageBox.Show("Not allowed to change home/visit");
+            }
+            else
+            {
+                poule.SnapShot(klvv);
+                poule.OptimizeHomeVisitorReverse(klvv);
+                klvv.Changed();
+            }
         }
     }
 }

@@ -13,6 +13,7 @@ namespace VolleybalCompetition_creator
         public int Id { get; set; }
         public string name { get; set; }
         public Club club { get; set; }
+        public string Ranking { get; set;  }
         public SporthallClub sporthal { get; set; }
         public Poule poule = null;
         public Serie serie = null;

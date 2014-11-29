@@ -28,21 +28,21 @@
         /// </summary>
         private void InitializeComponent()
         {
-            WeifenLuo.WinFormsUI.Docking.DockPanelSkin dockPanelSkin2 = new WeifenLuo.WinFormsUI.Docking.DockPanelSkin();
-            WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin autoHideStripSkin2 = new WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient4 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient8 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin dockPaneStripSkin2 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient dockPaneStripGradient2 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient9 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient5 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient10 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient dockPaneStripToolWindowGradient2 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient11 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient12 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient6 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient13 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient14 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPanelSkin dockPanelSkin1 = new WeifenLuo.WinFormsUI.Docking.DockPanelSkin();
+            WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin autoHideStripSkin1 = new WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient1 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin dockPaneStripSkin1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient dockPaneStripGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient2 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient2 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient3 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient dockPaneStripToolWindowGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient4 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient5 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient3 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient6 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient7 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.invoerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,12 +53,14 @@
             this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.subscriptionsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.kLVVTeamSubscriptionsklvvbeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.kLVVConvertToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.vVBConvertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cSVCompetitionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.kLVVConvertToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importKLVVRankingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportCompetitionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.perClubToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.competitionxmlForKlvvsiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clubRegistrationsKlvvsitexmlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.perClubToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.poulesSeriescsvToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.matchescsvToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statisticscsvToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -78,6 +80,7 @@
             this.optimizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -90,52 +93,52 @@
             this.dockPanel.Location = new System.Drawing.Point(0, 27);
             this.dockPanel.Name = "dockPanel";
             this.dockPanel.Size = new System.Drawing.Size(640, 238);
-            dockPanelGradient4.EndColor = System.Drawing.SystemColors.ControlLight;
-            dockPanelGradient4.StartColor = System.Drawing.SystemColors.ControlLight;
-            autoHideStripSkin2.DockStripGradient = dockPanelGradient4;
-            tabGradient8.EndColor = System.Drawing.SystemColors.Control;
-            tabGradient8.StartColor = System.Drawing.SystemColors.Control;
-            tabGradient8.TextColor = System.Drawing.SystemColors.ControlDarkDark;
-            autoHideStripSkin2.TabGradient = tabGradient8;
-            autoHideStripSkin2.TextFont = new System.Drawing.Font("Segoe UI", 9F);
-            dockPanelSkin2.AutoHideStripSkin = autoHideStripSkin2;
-            tabGradient9.EndColor = System.Drawing.SystemColors.ControlLightLight;
-            tabGradient9.StartColor = System.Drawing.SystemColors.ControlLightLight;
-            tabGradient9.TextColor = System.Drawing.SystemColors.ControlText;
-            dockPaneStripGradient2.ActiveTabGradient = tabGradient9;
-            dockPanelGradient5.EndColor = System.Drawing.SystemColors.Control;
-            dockPanelGradient5.StartColor = System.Drawing.SystemColors.Control;
-            dockPaneStripGradient2.DockStripGradient = dockPanelGradient5;
-            tabGradient10.EndColor = System.Drawing.SystemColors.ControlLight;
-            tabGradient10.StartColor = System.Drawing.SystemColors.ControlLight;
-            tabGradient10.TextColor = System.Drawing.SystemColors.ControlText;
-            dockPaneStripGradient2.InactiveTabGradient = tabGradient10;
-            dockPaneStripSkin2.DocumentGradient = dockPaneStripGradient2;
-            dockPaneStripSkin2.TextFont = new System.Drawing.Font("Segoe UI", 9F);
-            tabGradient11.EndColor = System.Drawing.SystemColors.ActiveCaption;
-            tabGradient11.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient11.StartColor = System.Drawing.SystemColors.GradientActiveCaption;
-            tabGradient11.TextColor = System.Drawing.SystemColors.ActiveCaptionText;
-            dockPaneStripToolWindowGradient2.ActiveCaptionGradient = tabGradient11;
-            tabGradient12.EndColor = System.Drawing.SystemColors.Control;
-            tabGradient12.StartColor = System.Drawing.SystemColors.Control;
-            tabGradient12.TextColor = System.Drawing.SystemColors.ControlText;
-            dockPaneStripToolWindowGradient2.ActiveTabGradient = tabGradient12;
-            dockPanelGradient6.EndColor = System.Drawing.SystemColors.ControlLight;
-            dockPanelGradient6.StartColor = System.Drawing.SystemColors.ControlLight;
-            dockPaneStripToolWindowGradient2.DockStripGradient = dockPanelGradient6;
-            tabGradient13.EndColor = System.Drawing.SystemColors.InactiveCaption;
-            tabGradient13.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient13.StartColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            tabGradient13.TextColor = System.Drawing.SystemColors.InactiveCaptionText;
-            dockPaneStripToolWindowGradient2.InactiveCaptionGradient = tabGradient13;
-            tabGradient14.EndColor = System.Drawing.Color.Transparent;
-            tabGradient14.StartColor = System.Drawing.Color.Transparent;
-            tabGradient14.TextColor = System.Drawing.SystemColors.ControlDarkDark;
-            dockPaneStripToolWindowGradient2.InactiveTabGradient = tabGradient14;
-            dockPaneStripSkin2.ToolWindowGradient = dockPaneStripToolWindowGradient2;
-            dockPanelSkin2.DockPaneStripSkin = dockPaneStripSkin2;
-            this.dockPanel.Skin = dockPanelSkin2;
+            dockPanelGradient1.EndColor = System.Drawing.SystemColors.ControlLight;
+            dockPanelGradient1.StartColor = System.Drawing.SystemColors.ControlLight;
+            autoHideStripSkin1.DockStripGradient = dockPanelGradient1;
+            tabGradient1.EndColor = System.Drawing.SystemColors.Control;
+            tabGradient1.StartColor = System.Drawing.SystemColors.Control;
+            tabGradient1.TextColor = System.Drawing.SystemColors.ControlDarkDark;
+            autoHideStripSkin1.TabGradient = tabGradient1;
+            autoHideStripSkin1.TextFont = new System.Drawing.Font("Segoe UI", 9F);
+            dockPanelSkin1.AutoHideStripSkin = autoHideStripSkin1;
+            tabGradient2.EndColor = System.Drawing.SystemColors.ControlLightLight;
+            tabGradient2.StartColor = System.Drawing.SystemColors.ControlLightLight;
+            tabGradient2.TextColor = System.Drawing.SystemColors.ControlText;
+            dockPaneStripGradient1.ActiveTabGradient = tabGradient2;
+            dockPanelGradient2.EndColor = System.Drawing.SystemColors.Control;
+            dockPanelGradient2.StartColor = System.Drawing.SystemColors.Control;
+            dockPaneStripGradient1.DockStripGradient = dockPanelGradient2;
+            tabGradient3.EndColor = System.Drawing.SystemColors.ControlLight;
+            tabGradient3.StartColor = System.Drawing.SystemColors.ControlLight;
+            tabGradient3.TextColor = System.Drawing.SystemColors.ControlText;
+            dockPaneStripGradient1.InactiveTabGradient = tabGradient3;
+            dockPaneStripSkin1.DocumentGradient = dockPaneStripGradient1;
+            dockPaneStripSkin1.TextFont = new System.Drawing.Font("Segoe UI", 9F);
+            tabGradient4.EndColor = System.Drawing.SystemColors.ActiveCaption;
+            tabGradient4.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
+            tabGradient4.StartColor = System.Drawing.SystemColors.GradientActiveCaption;
+            tabGradient4.TextColor = System.Drawing.SystemColors.ActiveCaptionText;
+            dockPaneStripToolWindowGradient1.ActiveCaptionGradient = tabGradient4;
+            tabGradient5.EndColor = System.Drawing.SystemColors.Control;
+            tabGradient5.StartColor = System.Drawing.SystemColors.Control;
+            tabGradient5.TextColor = System.Drawing.SystemColors.ControlText;
+            dockPaneStripToolWindowGradient1.ActiveTabGradient = tabGradient5;
+            dockPanelGradient3.EndColor = System.Drawing.SystemColors.ControlLight;
+            dockPanelGradient3.StartColor = System.Drawing.SystemColors.ControlLight;
+            dockPaneStripToolWindowGradient1.DockStripGradient = dockPanelGradient3;
+            tabGradient6.EndColor = System.Drawing.SystemColors.InactiveCaption;
+            tabGradient6.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
+            tabGradient6.StartColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            tabGradient6.TextColor = System.Drawing.SystemColors.InactiveCaptionText;
+            dockPaneStripToolWindowGradient1.InactiveCaptionGradient = tabGradient6;
+            tabGradient7.EndColor = System.Drawing.Color.Transparent;
+            tabGradient7.StartColor = System.Drawing.Color.Transparent;
+            tabGradient7.TextColor = System.Drawing.SystemColors.ControlDarkDark;
+            dockPaneStripToolWindowGradient1.InactiveTabGradient = tabGradient7;
+            dockPaneStripSkin1.ToolWindowGradient = dockPaneStripToolWindowGradient1;
+            dockPanelSkin1.DockPaneStripSkin = dockPaneStripSkin1;
+            this.dockPanel.Skin = dockPanelSkin1;
             this.dockPanel.TabIndex = 0;
             // 
             // menuStrip1
@@ -145,7 +148,8 @@
             this.manageToolStripMenuItem,
             this.viewsToolStripMenuItem,
             this.aboutToolStripMenuItem,
-            this.optimizeToolStripMenuItem});
+            this.optimizeToolStripMenuItem,
+            this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(640, 24);
@@ -202,7 +206,8 @@
             this.kLVVTeamSubscriptionsklvvbeToolStripMenuItem,
             this.kLVVConvertToCSVToolStripMenuItem,
             this.vVBConvertToolStripMenuItem,
-            this.cSVCompetitionToolStripMenuItem});
+            this.cSVCompetitionToolStripMenuItem,
+            this.importKLVVRankingToolStripMenuItem});
             this.importToolStripMenuItem.Name = "importToolStripMenuItem";
             this.importToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
             this.importToolStripMenuItem.Text = "Import";
@@ -221,6 +226,13 @@
             this.kLVVTeamSubscriptionsklvvbeToolStripMenuItem.Text = "http://klvv.be/server/restricted/registrations/registrationsXML.php";
             this.kLVVTeamSubscriptionsklvvbeToolStripMenuItem.Click += new System.EventHandler(this.kLVVTeamSubscriptionsklvvbeToolStripMenuItem_Click);
             // 
+            // kLVVConvertToCSVToolStripMenuItem
+            // 
+            this.kLVVConvertToCSVToolStripMenuItem.Name = "kLVVConvertToCSVToolStripMenuItem";
+            this.kLVVConvertToCSVToolStripMenuItem.Size = new System.Drawing.Size(424, 22);
+            this.kLVVConvertToCSVToolStripMenuItem.Text = "Convert KLVV-site to CSV";
+            this.kLVVConvertToCSVToolStripMenuItem.Click += new System.EventHandler(this.kLVVConvertToCSVToolStripMenuItem_Click);
+            // 
             // vVBConvertToolStripMenuItem
             // 
             this.vVBConvertToolStripMenuItem.Name = "vVBConvertToolStripMenuItem";
@@ -235,18 +247,19 @@
             this.cSVCompetitionToolStripMenuItem.Text = "Import CSV";
             this.cSVCompetitionToolStripMenuItem.Click += new System.EventHandler(this.cSVCompetitionToolStripMenuItem_Click);
             // 
-            // kLVVConvertToCSVToolStripMenuItem
+            // importKLVVRankingToolStripMenuItem
             // 
-            this.kLVVConvertToCSVToolStripMenuItem.Name = "kLVVConvertToCSVToolStripMenuItem";
-            this.kLVVConvertToCSVToolStripMenuItem.Size = new System.Drawing.Size(424, 22);
-            this.kLVVConvertToCSVToolStripMenuItem.Text = "Convert KLVV-site to CSV";
-            this.kLVVConvertToCSVToolStripMenuItem.Click += new System.EventHandler(this.kLVVConvertToCSVToolStripMenuItem_Click);
+            this.importKLVVRankingToolStripMenuItem.Name = "importKLVVRankingToolStripMenuItem";
+            this.importKLVVRankingToolStripMenuItem.Size = new System.Drawing.Size(424, 22);
+            this.importKLVVRankingToolStripMenuItem.Text = "Import KLVV - ranking";
+            this.importKLVVRankingToolStripMenuItem.Click += new System.EventHandler(this.importKLVVRankingToolStripMenuItem_Click);
             // 
             // exportCompetitionToolStripMenuItem
             // 
             this.exportCompetitionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.perClubToolStripMenuItem1,
             this.competitionxmlForKlvvsiteToolStripMenuItem,
+            this.clubRegistrationsKlvvsitexmlToolStripMenuItem,
+            this.perClubToolStripMenuItem1,
             this.poulesSeriescsvToolStripMenuItem,
             this.matchescsvToolStripMenuItem,
             this.statisticscsvToolStripMenuItem});
@@ -254,38 +267,45 @@
             this.exportCompetitionToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
             this.exportCompetitionToolStripMenuItem.Text = "Export Competition";
             // 
-            // perClubToolStripMenuItem1
-            // 
-            this.perClubToolStripMenuItem1.Name = "perClubToolStripMenuItem1";
-            this.perClubToolStripMenuItem1.Size = new System.Drawing.Size(178, 22);
-            this.perClubToolStripMenuItem1.Text = "Per Club (.csv)";
-            this.perClubToolStripMenuItem1.Click += new System.EventHandler(this.perClubToolStripMenuItem1_Click);
-            // 
             // competitionxmlForKlvvsiteToolStripMenuItem
             // 
             this.competitionxmlForKlvvsiteToolStripMenuItem.Name = "competitionxmlForKlvvsiteToolStripMenuItem";
-            this.competitionxmlForKlvvsiteToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.competitionxmlForKlvvsiteToolStripMenuItem.Text = "Klvv-site (.xml)";
+            this.competitionxmlForKlvvsiteToolStripMenuItem.Size = new System.Drawing.Size(287, 22);
+            this.competitionxmlForKlvvsiteToolStripMenuItem.Text = "Generated Competition - Klvv-site (.xml)";
             this.competitionxmlForKlvvsiteToolStripMenuItem.Click += new System.EventHandler(this.competitionxmlForKlvvsiteToolStripMenuItem_Click);
+            // 
+            // clubRegistrationsKlvvsitexmlToolStripMenuItem
+            // 
+            this.clubRegistrationsKlvvsitexmlToolStripMenuItem.Name = "clubRegistrationsKlvvsitexmlToolStripMenuItem";
+            this.clubRegistrationsKlvvsitexmlToolStripMenuItem.Size = new System.Drawing.Size(287, 22);
+            this.clubRegistrationsKlvvsitexmlToolStripMenuItem.Text = "Club Registrations - klvv-site (.xml)";
+            this.clubRegistrationsKlvvsitexmlToolStripMenuItem.Click += new System.EventHandler(this.clubRegistrationsKlvvsitexmlToolStripMenuItem_Click);
+            // 
+            // perClubToolStripMenuItem1
+            // 
+            this.perClubToolStripMenuItem1.Name = "perClubToolStripMenuItem1";
+            this.perClubToolStripMenuItem1.Size = new System.Drawing.Size(287, 22);
+            this.perClubToolStripMenuItem1.Text = "Per Club (.csv)";
+            this.perClubToolStripMenuItem1.Click += new System.EventHandler(this.perClubToolStripMenuItem1_Click);
             // 
             // poulesSeriescsvToolStripMenuItem
             // 
             this.poulesSeriescsvToolStripMenuItem.Name = "poulesSeriescsvToolStripMenuItem";
-            this.poulesSeriescsvToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.poulesSeriescsvToolStripMenuItem.Size = new System.Drawing.Size(287, 22);
             this.poulesSeriescsvToolStripMenuItem.Text = "Poules+Series (.csv)";
             this.poulesSeriescsvToolStripMenuItem.Click += new System.EventHandler(this.poulesSeriescsvToolStripMenuItem_Click);
             // 
             // matchescsvToolStripMenuItem
             // 
             this.matchescsvToolStripMenuItem.Name = "matchescsvToolStripMenuItem";
-            this.matchescsvToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.matchescsvToolStripMenuItem.Size = new System.Drawing.Size(287, 22);
             this.matchescsvToolStripMenuItem.Text = "Matches (.csv)";
             this.matchescsvToolStripMenuItem.Click += new System.EventHandler(this.matchescsvToolStripMenuItem_Click);
             // 
             // statisticscsvToolStripMenuItem
             // 
             this.statisticscsvToolStripMenuItem.Name = "statisticscsvToolStripMenuItem";
-            this.statisticscsvToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.statisticscsvToolStripMenuItem.Size = new System.Drawing.Size(287, 22);
             this.statisticscsvToolStripMenuItem.Text = "Statistics (.csv)";
             this.statisticscsvToolStripMenuItem.Click += new System.EventHandler(this.statisticscsvToolStripMenuItem_Click);
             // 
@@ -402,6 +422,14 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "Help";
+            this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -412,6 +440,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Volleyball Competition Creation Tool";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -456,6 +485,9 @@
         private System.Windows.Forms.ToolStripMenuItem cSVCompetitionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem kLVVConvertToCSVToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem teamsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem clubRegistrationsKlvvsitexmlToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem importKLVVRankingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
     }
 }
 
