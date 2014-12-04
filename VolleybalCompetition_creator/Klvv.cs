@@ -164,18 +164,25 @@ namespace VolleybalCompetition_creator
             string json = File.ReadAllText(System.Windows.Forms.Application.StartupPath + @"/InputData/clubs.json"); // local copy
             clubs = JsonConvert.DeserializeObject<List<Club>>(json);
 
-            
 
             /*
-             * ImportKLVVCompetition();
-             * ImportTeamSubscriptions();
-             * ImportVVBCompetition();
-             * RenewConstraints();
-             * */
+                * ImportKLVVCompetition();
+                * ImportTeamSubscriptions();
+                * ImportVVBCompetition();
+                * RenewConstraints();
+                * */
 
-            
+
             Evaluate(null);
             Changed();
+        }
+        public void OpenLastProject()
+        {
+            string lastOpenedProject = Properties.Settings.Default.LastOpenedProject;
+            if (File.Exists(lastOpenedProject))
+            {
+                LoadFullCompetition(lastOpenedProject);
+            }
         }
         public void RenewConstraints()
         {
@@ -850,10 +857,11 @@ namespace VolleybalCompetition_creator
                             if (teamGroup == "A") te.group = TeamGroups.GroupX;
                             if (teamGroup == "B") te.group = TeamGroups.GroupY;
                             XAttribute attrNot = team.Attribute("NotAtSameTime");
+                            te.NotAtSameTime = null;
                             if (attrNot != null)
                             {
                                 int idNot = int.Parse(attrNot.Value);
-                                te.NotAtSameTimeId_int = idNot;
+                                te.NotAtSameTime = cl.teams.Find(t => t.Id == idNot);
                             }
                             attrNot = team.Attribute("FixedSchemaIndex");
                             if (attrNot != null)
@@ -876,14 +884,7 @@ namespace VolleybalCompetition_creator
                             }
                         }
                     }
-                    foreach (Team te in cl.teams)
-                    {
-                        if (te.NotAtSameTimeId_int >= 0)
-                        {
-                            te.NotAtSameTime = cl.teams.Find(t => t.Id == te.NotAtSameTimeId_int);
-                        }
-                    }
-                }
+                 }
             }
             RenewConstraints();
             Evaluate(null);
@@ -1314,6 +1315,8 @@ namespace VolleybalCompetition_creator
             writer.Close();
             stateNotSaved = false;
             savedFileName = fileName;
+            Properties.Settings.Default.LastOpenedProject = savedFileName;
+            Properties.Settings.Default.Save();
             Changed();
         }
 
@@ -1447,6 +1450,10 @@ namespace VolleybalCompetition_creator
             }
             klvvnew.savedFileName = filename;
             klvvnew.RenewConstraints();
+            Properties.Settings.Default.LastOpenedProject = filename;
+            Properties.Settings.Default.Save();
+            Changed();
+
             // klvvnew is distributed to the views
             Changed(klvvnew);
             klvvnew.Evaluate(null);

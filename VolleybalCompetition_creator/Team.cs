@@ -22,13 +22,12 @@ namespace VolleybalCompetition_creator
         public bool Optimizable { get { return FixedSchema == false; } }
         public int FixedSchemaNumber = 0;
         public bool FixedSchema { get { return FixedSchemaNumber > 0; } }
-        public int NotAtSameTimeId_int = -2;
         public string email;
         public string NotAtSameTimeId
         {
             get
             {
-                if (NotAtSameTimeId_int >= -1) return NotAtSameTime.serieTeamName;
+                if (NotAtSameTime != null) return NotAtSameTime.serieTeamName;
                 else return "";
             }
             set
@@ -37,12 +36,10 @@ namespace VolleybalCompetition_creator
                 bool success = int.TryParse(value, out id);
                 if (success)
                 {
-                    NotAtSameTimeId_int = id;
                     NotAtSameTime = club.teams.Find(t => t.Id == id);
                 }
                 else
                 {
-                    NotAtSameTimeId_int = -2;
                     NotAtSameTime = null;
                 }
             }
@@ -107,7 +104,30 @@ namespace VolleybalCompetition_creator
         {
             return name != "----";
         }
+        public void RemoveTeam(Klvv klvv)
+        {
+            if (club != null)  club.RemoveTeam(this);
+            if (poule != null) poule.RemoveTeam(this);
+            if (serie != null) serie.RemoveTeam(this);
+            // Remove constraints related to the team
+            List<TeamConstraint> tobedeleted = new List<TeamConstraint>();
+            foreach (TeamConstraint con in klvv.teamConstraints)
+            {
+                if (con.team == this) tobedeleted.Add(con);
+            }
+            foreach (TeamConstraint con in tobedeleted)
+            {
+                klvv.teamConstraints.Remove(con);
+            }
+            
+            // Remove links from other teams to this team
+            foreach (Team t in klvv.teams)
+            {
+                if (t.NotAtSameTime == this) t.NotAtSameTime = null;
+            }
 
+
+        }
         public List<DateTime> plannedMatches = new List<DateTime>();
        
     }

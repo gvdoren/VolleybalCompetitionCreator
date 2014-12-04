@@ -23,11 +23,16 @@ namespace VolleybalCompetition_creator
             return false;
 
         }
+ 
         public bool RemoveTeam(Team team)
         {
-            teams.Remove(team);
-            team.club = null;
-            return true;
+            if (teams.Contains(team) == true)
+            {
+                teams.Remove(team);
+                team.club = null;
+                return true;
+            }
+            return false;
         }
         public int percentage
         {

@@ -209,6 +209,10 @@
     <Compile Include="Team.cs" />
     <Compile Include="Time.cs" />
     <Compile Include="Weekend.cs" />
+    <Content Include="data\help.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="data\html_first.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>

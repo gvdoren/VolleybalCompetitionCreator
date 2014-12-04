@@ -50,7 +50,7 @@
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
-            this.checkboxWithinSelectedPoules = new System.Windows.Forms.CheckBox();
+            this.button7 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView3)).BeginInit();
@@ -286,15 +286,16 @@
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
-            // checkboxWithinSelectedPoules
+            // button7
             // 
-            this.checkboxWithinSelectedPoules.AutoSize = true;
-            this.checkboxWithinSelectedPoules.Location = new System.Drawing.Point(373, 189);
-            this.checkboxWithinSelectedPoules.Name = "checkboxWithinSelectedPoules";
-            this.checkboxWithinSelectedPoules.Size = new System.Drawing.Size(128, 17);
-            this.checkboxWithinSelectedPoules.TabIndex = 9;
-            this.checkboxWithinSelectedPoules.Text = "Within selected poule";
-            this.checkboxWithinSelectedPoules.UseVisualStyleBackColor = true;
+            this.button7.Enabled = false;
+            this.button7.Location = new System.Drawing.Point(374, 184);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(118, 23);
+            this.button7.TabIndex = 10;
+            this.button7.Text = "Delete Team";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
             // SerieView
             // 
@@ -302,8 +303,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(919, 608);
             this.Controls.Add(this.button6);
+            this.Controls.Add(this.button7);
             this.Controls.Add(this.button5);
-            this.Controls.Add(this.checkboxWithinSelectedPoules);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.webBrowser1);
             this.Controls.Add(this.button4);
@@ -350,6 +351,6 @@
         private System.Windows.Forms.Button button5;
         private BrightIdeasSoftware.OLVColumn olvColumn10;
         private System.Windows.Forms.Button button6;
-        private System.Windows.Forms.CheckBox checkboxWithinSelectedPoules;
+        private System.Windows.Forms.Button button7;
     }
 }

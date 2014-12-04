@@ -96,6 +96,7 @@ namespace VolleybalCompetition_creator
             
             objectListView3.BuildList(false);
             objectListView3.SelectedObjects = teams;
+            objectListView3_SelectionChanged(null, null);
         }
         private void DisplayHtml(string html)
         {
@@ -168,7 +169,8 @@ namespace VolleybalCompetition_creator
         private void objectListView3_SelectionChanged(object sender, EventArgs e)
         {
             button3.Enabled = (objectListView2.SelectedObjects.Count == 1 && objectListView3.SelectedObjects.Count > 0);
-            //button3.Enabled = (objectListView3.SelectedObjects.Count >0);
+            button7.Enabled = (objectListView3.SelectedObjects.Count == 1);
+
             teams.Clear();
             foreach (Team te in objectListView3.SelectedObjects)
             {
@@ -491,6 +493,26 @@ namespace VolleybalCompetition_creator
             }
             e.Item.BackColor = color;
 
+        }
+
+        private void checkboxWithinSelectedPoules_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            Team t = (Team)objectListView3.SelectedObject;
+            string s = string.Format("Het team '{0}' van club '{1}' in serie '{2}' wordt volledig verwijderd, dus ook weggehaald bij de inschrijvingen van de club. Wil je dat?", t.name, t.club.name, t.serie.name);
+            DialogResult dialogResult = MessageBox.Show(s, "Delete team", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
+            {
+                t.RemoveTeam(klvv);
+            }
+
+            klvv.RenewConstraints();
+            klvv.Evaluate(null);
+            klvv.Changed();
         }
 
     

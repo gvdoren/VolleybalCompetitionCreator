@@ -63,6 +63,7 @@ namespace VolleybalCompetition_creator
             }
             klvv.OnMyChange += state_OnMyChange;
             state.OnMyChange += state_OnMyChange;
+            klvv.OpenLastProject();
         }
         public void state_OnMyChange(object source, MyEventArgs e)
         {
@@ -509,7 +510,8 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
         private void helpToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            Help help = new Help();
+            help.ShowDialog();
         }
 
     }

@@ -7,15 +7,7 @@
 
 - Group A&B volledig vertalen naar group X&Y
 
-- Series een kleur geven als er teams niet zijn ingedeeld
-
 - View om de matchen van een club te zien (ipv excel nu)
-
-- inconsistent constraint iets afzwakken: indien een reserve weekend, dan is het middelste weekend of voor heen of voor terugronde te gebruiken
-- optimize weekends: indien reserve weekend, dan is het middelste weekend of voor heen of voor terugronde te gebruiken
-  * Dit is niet zo handig. De reden is dat er twee stappen nodig zijn om het vrije weekend van de ene helft naar de andere te krijgen.
-  * Mogelijk is hier een analyse stap mogelijk, waardoor misschien alle mogelijkheden kunnen worden doorgerekend.
-
 
 - Optimalisatie mbv Analyse (alleen nuttig voor grote poules die niet brute force bepaald kunnen worden):
    * Snellere evaluatie, waardoor meer mogelijkheden kunnen worden bekeken. Is het dan mogelijk om alle mogelijkheden te beschouwen (+ afbreken van dure mogelijkheden)
@@ -27,27 +19,14 @@
 - Automatische naamgeving (A,B,C,...) op de website (of toevoegen in het programma)
 - Kunnen wijzigingen van speeltijd, sporthal, ....
 
-VVB
-- Sporthal kunnen aanpassen 
-
-
 Belangrijk:
 - zet op de site er expliciet bij dat ze aangeven of hun nationale teams in X of Y of nogroup zit.
-- Check dat alle teams zijn ingedeeld
 - Eventueel naar alle clubs de indeling in reeksen sturen voordat de kalender wordt gemaakt.
 - Week eerder de sluitingsdatum. (eerste week poules indelen, en terugkoppelen)
 - Check data van anorama.
 - Check of er teams bijzitten met relatief veel conflicts (bv 6 of 7). 
    - Probeer de pijn te verdelen (XY groups opt, evt. daarna met HomeVisit opt).
    - Indien meerdere poules kan het helpen ze naar een andere poule te verplaatsen
-
-
-Inlezen bestaande competitie:
-- KLVV & VVB Converteren naar csv file. Alle 'vervelende' parsing daar doen. KLVV heeft unieke id's dus die kunnen we mappen op de registratie.
-- Inlezen van CSV. Hiervan poules maken in de goede series.
-- Invoeren van nationale teams blijft handwerk. Zou dit echt niet anders kunnen?
-- ToDo:
-   * Bij creatie van poules moeten ook de weekenden structuur gecreeerd worden. Andere stukken van de applicatie gaat hier van uit.
 
 - Inlezen van registratie:
    * Wat is veranderd, meenemen, dus oude registratie intact laten. 

@@ -62,6 +62,8 @@
             this.olvColumn15 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn16 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn11 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.button3 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
@@ -111,7 +113,7 @@
             this.objectListView1.MultiSelect = false;
             this.objectListView1.Name = "objectListView1";
             this.objectListView1.ShowGroups = false;
-            this.objectListView1.Size = new System.Drawing.Size(729, 303);
+            this.objectListView1.Size = new System.Drawing.Size(729, 274);
             this.objectListView1.TabIndex = 0;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
@@ -431,12 +433,37 @@
             this.olvColumn11.CellPadding = null;
             this.olvColumn11.Text = "Cost";
             // 
+            // button3
+            // 
+            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button3.Enabled = false;
+            this.button3.Location = new System.Drawing.Point(621, 489);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(111, 23);
+            this.button3.TabIndex = 9;
+            this.button3.Text = "Add Team";
+            this.button3.UseVisualStyleBackColor = true;
+            // 
+            // button4
+            // 
+            this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button4.Enabled = false;
+            this.button4.Location = new System.Drawing.Point(504, 489);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(111, 23);
+            this.button4.TabIndex = 9;
+            this.button4.Text = "Delete Team";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
             // InschrijvingenView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1004, 642);
             this.Controls.Add(this.button2);
+            this.Controls.Add(this.button4);
+            this.Controls.Add(this.button3);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.objectListView2);
             this.Controls.Add(this.dataGridView3);
@@ -496,6 +523,8 @@
         private BrightIdeasSoftware.OLVColumn olvColumn16;
         private BrightIdeasSoftware.OLVColumn olvColumn11;
         private BrightIdeasSoftware.OLVColumn olvColumn14;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button4;
 
     }
 }

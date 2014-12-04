@@ -383,6 +383,7 @@ namespace VolleybalCompetition_creator
         private void objectListView1_SelectionChanged(object sender, EventArgs e)
         {
             button1.Enabled = (objectListView1.SelectedObject != null);
+            button4.Enabled = (objectListView1.SelectedObject != null);
         }
 
         private void objectListView2_SelectionChanged(object sender, EventArgs e)
@@ -396,6 +397,22 @@ namespace VolleybalCompetition_creator
             klvv.teamConstraints.Remove(tc);
             objectListView2.SetObjects(klvv.teamConstraints.FindAll(c => c.Club == club));
             objectListView1.BuildList(true);
+            klvv.Evaluate(null);
+            klvv.Changed();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Team t = (Team)objectListView1.SelectedObject;
+            string s = string.Format("Het team '{0}' van club '{1}' in serie '{2}' wordt volledig verwijderd. Wil je dat?", t.name, t.club.name, t.serie.name);
+            DialogResult dialogResult = MessageBox.Show(s, "Delete team", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
+            {
+                t.RemoveTeam(klvv);
+            }
+            UpdateTeamsTab();
+            UpdateTeamConstraints();
+            klvv.RenewConstraints();
             klvv.Evaluate(null);
             klvv.Changed();
         }
