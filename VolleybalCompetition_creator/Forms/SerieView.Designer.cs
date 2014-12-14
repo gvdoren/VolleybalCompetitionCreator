@@ -194,26 +194,40 @@
             this.olvColumn6.AspectName = "name";
             this.olvColumn6.CellPadding = null;
             this.olvColumn6.FillsFreeSpace = true;
+            this.olvColumn6.MaximumWidth = 300;
+            this.olvColumn6.MinimumWidth = 100;
             this.olvColumn6.Text = "Team";
-            this.olvColumn6.Width = 100;
+            this.olvColumn6.Width = 300;
             // 
             // olvColumn7
             // 
             this.olvColumn7.AspectName = "poule.name";
             this.olvColumn7.CellPadding = null;
+            this.olvColumn7.FillsFreeSpace = true;
+            this.olvColumn7.MaximumWidth = 50;
+            this.olvColumn7.MinimumWidth = 20;
             this.olvColumn7.Text = "Poule";
+            this.olvColumn7.Width = 50;
             // 
             // olvColumn8
             // 
             this.olvColumn8.AspectName = "AvgDistance";
             this.olvColumn8.CellPadding = null;
+            this.olvColumn8.FillsFreeSpace = true;
+            this.olvColumn8.MaximumWidth = 50;
+            this.olvColumn8.MinimumWidth = 20;
             this.olvColumn8.Text = "Afstand";
+            this.olvColumn8.Width = 50;
             // 
             // olvColumn9
             // 
             this.olvColumn9.AspectName = "Ranking";
             this.olvColumn9.CellPadding = null;
+            this.olvColumn9.FillsFreeSpace = true;
+            this.olvColumn9.MaximumWidth = 50;
+            this.olvColumn9.MinimumWidth = 20;
             this.olvColumn9.Text = "Rangschikking";
+            this.olvColumn9.Width = 50;
             // 
             // button3
             // 

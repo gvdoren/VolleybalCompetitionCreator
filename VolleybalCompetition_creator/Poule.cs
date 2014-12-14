@@ -66,13 +66,13 @@ namespace VolleybalCompetition_creator
         }
         public Poule(string name, int maxTeams, Serie serie) 
         {
-            while (maxTeams != 4 &&
+            /*while (maxTeams != 4 &&
                   maxTeams != 6 &&
                   maxTeams != 8 &&
                   maxTeams != 10 &&
                   maxTeams != 12 &&
                   maxTeams != 14) maxTeams++;
-
+            */
             this.serie = serie;
             this._maxTeams = maxTeams;
             for (int i = 0; i < maxTeams; i++)

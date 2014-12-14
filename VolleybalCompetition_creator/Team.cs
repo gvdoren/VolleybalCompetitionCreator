@@ -109,24 +109,7 @@ namespace VolleybalCompetition_creator
             if (club != null)  club.RemoveTeam(this);
             if (poule != null) poule.RemoveTeam(this);
             if (serie != null) serie.RemoveTeam(this);
-            // Remove constraints related to the team
-            List<TeamConstraint> tobedeleted = new List<TeamConstraint>();
-            foreach (TeamConstraint con in klvv.teamConstraints)
-            {
-                if (con.team == this) tobedeleted.Add(con);
-            }
-            foreach (TeamConstraint con in tobedeleted)
-            {
-                klvv.teamConstraints.Remove(con);
-            }
-            
-            // Remove links from other teams to this team
-            foreach (Team t in klvv.teams)
-            {
-                if (t.NotAtSameTime == this) t.NotAtSameTime = null;
-            }
-
-
+            klvv.RemoveTeam(this);
         }
         public List<DateTime> plannedMatches = new List<DateTime>();
        

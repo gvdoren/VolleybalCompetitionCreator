@@ -294,8 +294,31 @@ namespace VolleybalCompetition_creator
                         Serie newSerie = (Serie)diag.Selection.obj;
                         if (team.poule != null) team.poule.RemoveTeam(team);
                         newSerie.AddTeam(team);
+                        klvv.MakeDirty();
                     }
                     objectListView1.BuildList(true);
+                }
+                if (columnindex == olvColumn6.Index) // sporthal
+                {
+                    List<Selection> list = new List<Selection>();
+                    Selection def = null;
+                    foreach (SporthallClub sporthal in club.sporthalls)
+                    {
+                        Selection sel = new Selection(sporthal.name, sporthal);
+                        if (sporthal == team.sporthal) def = sel;
+                        list.Add(sel);
+                    }
+                    SelectionDialog diag = new SelectionDialog(list, def);
+                    diag.Text = "Select the sporthal:";
+                    diag.ShowDialog();
+                    if (diag.Ok)
+                    {
+                        SporthallClub sporthal = (SporthallClub)diag.Selection.obj;
+                        team.sporthal = sporthal;
+                        klvv.MakeDirty();
+                    }
+                    objectListView1.BuildList(true);
+
                 }
                 if (columnindex == olvColumn2.Index) // name
                 {
@@ -318,6 +341,7 @@ namespace VolleybalCompetition_creator
                     {
                         string newName = diag.Selection.label;
                         team.name = newName;
+                        klvv.MakeDirty();
                     }
                     objectListView1.BuildList(true);
                 }
@@ -338,6 +362,7 @@ namespace VolleybalCompetition_creator
                     {
                         Club newClub = (Club)diag.Selection.obj;
                         newClub.AddTeam(team);
+                        klvv.MakeDirty();
                     }
                     objectListView1.BuildList(true);
 
@@ -361,10 +386,13 @@ namespace VolleybalCompetition_creator
                     {
                         Time newTime = (Time)diag.Selection.obj;
                         team.defaultTime = newTime;
+                        klvv.MakeDirty();
                     }
                     objectListView1.BuildList(true);
                 }
             }
+            klvv.Evaluate(null);
+            klvv.Changed();
         }
         private void button1_Click_1(object sender, EventArgs e)
         {
@@ -417,6 +445,11 @@ namespace VolleybalCompetition_creator
             klvv.Changed();
         }
 
-
+        private void objectListView1_FormatRow(object sender, FormatRowEventArgs e)
+        {
+            Team t = (Team)e.Model;
+            int count = t.club.teams.Count(te => te.name == t.name && t.serie == te.serie);
+            if (count>1) e.Item.BackColor = Color.Red;
+        }
     }
 }

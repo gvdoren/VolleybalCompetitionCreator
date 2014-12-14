@@ -119,6 +119,7 @@
             this.objectListView1.View = System.Windows.Forms.View.Details;
             this.objectListView1.CellEditFinishing += new BrightIdeasSoftware.CellEditEventHandler(this.objectListView1_CellEditFinishing);
             this.objectListView1.CellClick += new System.EventHandler<BrightIdeasSoftware.CellClickEventArgs>(this.objectListView1_CellClick);
+            this.objectListView1.FormatRow += new System.EventHandler<BrightIdeasSoftware.FormatRowEventArgs>(this.objectListView1_FormatRow);
             this.objectListView1.ItemsChanged += new System.EventHandler<BrightIdeasSoftware.ItemsChangedEventArgs>(this.objectListView1_ItemsChanged);
             this.objectListView1.SelectionChanged += new System.EventHandler(this.objectListView1_SelectionChanged);
             this.objectListView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.objectListView1_MouseClick);
@@ -157,6 +158,7 @@
             this.olvColumn6.CellPadding = null;
             this.olvColumn6.DisplayIndex = 4;
             this.olvColumn6.FillsFreeSpace = true;
+            this.olvColumn6.IsEditable = false;
             this.olvColumn6.IsVisible = false;
             this.olvColumn6.Text = "Sporthal";
             this.olvColumn6.Width = 100;

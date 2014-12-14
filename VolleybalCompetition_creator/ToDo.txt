@@ -7,17 +7,12 @@
 
 - Group A&B volledig vertalen naar group X&Y
 
-- View om de matchen van een club te zien (ipv excel nu)
-
 - Optimalisatie mbv Analyse (alleen nuttig voor grote poules die niet brute force bepaald kunnen worden):
    * Snellere evaluatie, waardoor meer mogelijkheden kunnen worden bekeken. Is het dan mogelijk om alle mogelijkheden te beschouwen (+ afbreken van dure mogelijkheden)
    * Analyse is niet geheel 'betrouwbaar', team score representeerd niet de overall score verbetering:
      - Indien er net een omslag is of de X of Y teams dominant zijn (mogelijk toch bij alle teams tellen).
 	 - Een lege plek in de poule, heeft invloed. Waar staat ie toevallig met roteren
 	 - 
-
-- Automatische naamgeving (A,B,C,...) op de website (of toevoegen in het programma)
-- Kunnen wijzigingen van speeltijd, sporthal, ....
 
 Belangrijk:
 - zet op de site er expliciet bij dat ze aangeven of hun nationale teams in X of Y of nogroup zit.
@@ -35,3 +30,13 @@ Belangrijk:
 	   Alleen jeugd-exporteren.
 
 
+Terug inlezen van de competitie. Waar heb ik last van:
+ - Verandering van de poule (2H_ZR : B -> A)
+ - Wisselen van twee teams van een club van poules (Helchteren A + B) in MM reeks
+ - Wisselen van twee teams van een club van poules (Stalvoc Beverlo A + B) in KH reeks
+ Gefixed aan het schema lokaal, zodat het overeen stemt met wat op de site staat.
+ - Afstanden sporthallen outdated. Moet van site afkomen.
+ - Teams die forfait hadden gegeven, staan toch terug in de lijst (heeft Bram deze wel weggehaald?)
+
+
+ 

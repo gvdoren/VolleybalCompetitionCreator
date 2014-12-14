@@ -412,35 +412,39 @@ namespace VolleybalCompetition_creator
                     for (int m1 = 0; m1 < poule.matches.Count; m1++)
                     {
                         Match match1 = poule.matches[m1];
-                        HomeMatches[match1.homeTeam.Index]++;
-                        VisitorMatches[match1.visitorTeam.Index]++;
+                        if (match1.RealMatch())
+                        {
+                            HomeMatches[match1.homeTeam.Index]++;
+                            VisitorMatches[match1.visitorTeam.Index]++;
+                        }
                     }
                     foreach (Team t in poule.teams)
                     {
                         if (t.RealTeam())
                         {
-                            if (HomeMatches[t.Index] != poule.maxTeams - 1)
+                            if (HomeMatches[t.Index] != poule.TeamCount - 1)
                             {
                                 foreach (Match match in poule.matches)
                                 {
                                     if (match.homeTeam == t)
                                     {
-                                        AddError("Internal test - poule consistency: Aantal thuis matches klopt niet");
+                                        AddError(string.Format("Internal test - poule consistency: Aantal thuis matches klopt niet (poule: {0}, team: {1})",poule.fullName,t.name));
                                     }
                                 }
                             }
-                            if (VisitorMatches[t.Index] != poule.maxTeams - 1)
+                            if (VisitorMatches[t.Index] != poule.TeamCount - 1)
                             {
                                 foreach (Match match in poule.matches)
                                 {
                                     if (match.visitorTeam == t)
                                     {
-                                        AddError("Internal test - poule consistency: Aantal uit matches klopt niet");
+                                        AddError(string.Format("Internal test - poule consistency: Aantal uit matches klopt niet (poule: {0}, team: {1})", poule.fullName, t.name));
                                     }
                                 }
                             }
                         }
                     }
+                    /* Na importeren komen deze conflicten voor door wedstrijd wijzigingen
                     List<Weekend> tempWeekends = new List<Weekend>(poule.weekends);
                     tempWeekends.Sort(delegate(Weekend w1, Weekend w2) { return w1.Saturday.Date.CompareTo(w2.Saturday.Date); });
                     double halfWeekendCount = tempWeekends.Count;
@@ -463,6 +467,8 @@ namespace VolleybalCompetition_creator
                             AddError("Internal test - poule consistency: Wedstrijd van de tweed helft wordt in eerste helft gespeeld");
                         }
                     }
+                     * */
+                    /* werkt niet voor geimporteerde competitie. De weekIndexes zijn dan niet meer mooi oplopend
                     foreach (Match m1 in poule.matches)
                     {
                         if (m1.RealMatch())
@@ -476,15 +482,13 @@ namespace VolleybalCompetition_creator
                         }
 
                     }
-                    foreach (Club club in klvv.clubs)
+                     * */
+                    foreach (Team team in poule.teams)
                     {
-                        foreach (Team team in club.teams)
+                        if (team.RealTeam() && team.poule.matches.Count(m => m.homeTeam == team) == 0)
                         {
-                            if (team.poule != null && team.poule.matches.Count(m => m.homeTeam == team) == 0)
-                            {
-                                conflict_cost += cost;
-                                AddError("Internal test - poule consistency: No matches for team");
-                            }
+                            conflict_cost += cost;
+                            AddError(string.Format("Internal test - poule consistency: No matches for team '{0}'",team.name));
                         }
                     }
                 }

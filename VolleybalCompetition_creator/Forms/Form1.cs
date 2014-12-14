@@ -505,7 +505,22 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
         private void importKLVVRankingToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            klvv.KLVVAddRanking();
+        
+            ProgressDialog diag = new ProgressDialog();
+            diag.WorkFunction += importKLVVRanking;
+            diag.CompletionFunction += importKLVVRankingCompleted;
+            diag.Start("Optimizing", null);
+        }
+        private void importKLVVRanking(object sender, MyEventArgs e)
+        {
+            IProgress intf = (IProgress)sender;
+            intf.SetText("Import ranking");
+            klvv.KLVVAddRanking(intf);
+        }
+        private void importKLVVRankingCompleted(object sender, MyEventArgs e)
+        {
+            klvv.Evaluate(null);
+            klvv.Changed();
         }
 
         private void helpToolStripMenuItem_Click(object sender, EventArgs e)
