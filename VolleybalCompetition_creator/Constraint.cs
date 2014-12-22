@@ -7,6 +7,15 @@ using WeifenLuo.WinFormsUI.Docking;
 namespace VolleybalCompetition_creator
 {
     public enum TeamGroups {GroupX, GroupY, NoGroup};
+    public static class Extensions
+    {
+        public static string ToStringCustom(this TeamGroups group)
+        {
+            if (group == TeamGroups.GroupX) return "X";
+            else if (group == TeamGroups.GroupY) return "Y";
+            else return "-";
+        }
+    }
 
     public class ConstraintAdmin
     {
@@ -271,13 +280,8 @@ namespace VolleybalCompetition_creator
                         {
                             if (match.RealMatch())
                             {
-                                if (matchNr < poule.maxTeams - 1) homeFirstHalf.Add(match);
+                                if (matchNr < poule.maxTeams) homeFirstHalf.Add(match);
                                 else homeSecondHalf.Add(match);
-                            }
-                            if (visitorMatches.Count > maxMatches.Count)
-                            {
-                                maxMatches = visitorMatches;
-                                home = false;
                             }
                             visitorMatches = new List<Match>();
                             homeMatches.Add(match);
@@ -285,25 +289,20 @@ namespace VolleybalCompetition_creator
                         }
                         if (match.visitorTeam == team)
                         {
-                            if (homeMatches.Count > maxMatches.Count)
-                            {
-                                maxMatches = homeMatches;
-                                home = true;
-                            }
                             homeMatches = new List<Match>();
                             visitorMatches.Add(match);
                             matchNr++;
                         }
-                    }
-                    if (visitorMatches.Count > maxMatches.Count)
-                    {
-                        maxMatches = visitorMatches;
-                        home = false;
-                    }
-                    if (homeMatches.Count > maxMatches.Count)
-                    {
-                        maxMatches = homeMatches;
-                        home = true;
+                        if (visitorMatches.Count > maxMatches.Count)
+                        {
+                            maxMatches = visitorMatches;
+                            home = false;
+                        }
+                        if (homeMatches.Count > maxMatches.Count)
+                        {
+                            maxMatches = homeMatches;
+                            home = true;
+                        }
                     }
                     if (maxMatches.Count >= 4)
                     {
@@ -656,7 +655,7 @@ namespace VolleybalCompetition_creator
                 {
                     if (poule == null || poule == poule1)
                     {
-                        if (poule1.evaluated)
+                        //if (poule1.evaluated)
                         {
                             all_matches.AddRange(team1.poule.matches.FindAll(m => m.homeTeam == team1 && m.RealMatch() && m.homeTeam.group!= TeamGroups.NoGroup));
                         }
@@ -698,9 +697,32 @@ namespace VolleybalCompetition_creator
                         Match m = all_matches[j];
                         if (m.poule.serie.Gewestelijk) cost = 20;
                         else cost = 40;
-                        if (x && m.homeTeam.group == TeamGroups.GroupX && m.homeTeam.club == club) 
+                        if (x && m.homeTeam.group == TeamGroups.GroupX && m.homeTeam.club == club)
+                        {
+                            
+                            for (int k = s; k < e; k++)
+                            {
+                                Match m1 = all_matches[k];
+                                if (m1.homeTeam.group == TeamGroups.GroupY && m.Overlapp(m1))
+                                {
+                                    cost += 2; // indien de tijden overlappend zijn extra kosten
+                                }
+                            }
                             AddConflictMatch(VisitorHomeBoth.HomeOnly, m);
-                        if (x == false && m.homeTeam.group == TeamGroups.GroupY && m.homeTeam.club == club) AddConflictMatch(VisitorHomeBoth.HomeOnly, m);
+                        }
+                        if (x == false && m.homeTeam.group == TeamGroups.GroupY && m.homeTeam.club == club)
+                        {
+                            
+                            for (int k = s; k < e; k++)
+                            {
+                                Match m1 = all_matches[k];
+                                if (m1.homeTeam.group == TeamGroups.GroupX && m.Overlapp(m1))
+                                {
+                                    cost += 2; // indien de tijden overlappend zijn extra kosten
+                                }
+                            }
+                            AddConflictMatch(VisitorHomeBoth.HomeOnly, m);
+                        }
                     }
                         
                 }
@@ -761,7 +783,7 @@ namespace VolleybalCompetition_creator
                     SortedList<DateTime, List<Match>> CountPerWeekend = new SortedList<DateTime, List<Match>>();
                     foreach (Team team in listTeams)
                     {
-                        if (team.poule != null && team.poule.evaluated)
+                        if (team.poule != null)
                         {
                             if (team.group == targetGroup)
                             {

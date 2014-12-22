@@ -23,6 +23,31 @@ namespace VolleybalCompetition_creator
                 return date;
             }
         }
+        public bool Overlapp(Match m)
+        {
+            if (RealMatch() && m.RealMatch())
+            {
+                double delta = 1.99; // normale lengte wedstrijd
+                if (homeTeam.club != m.homeTeam.club) delta += 1.5; // extra reistijd
+                DateTime st1 = datetime;
+                DateTime en1 = st1.AddHours(delta);
+                if (serie.Reserve())
+                {
+                    st1 = st1.AddHours(-2); // reserve wedstrijd
+                }
+                DateTime st2 = m.datetime;
+                DateTime en2 = st2.AddHours(delta);
+                if (m.serie.Reserve())
+                {
+                    st2 = st2.AddHours(-2); // reserve wedstrijd
+                }
+                if (st1 <= en2 && en1 >= st2)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         public DayOfWeek Day { get { return datetime.DayOfWeek; } }
         public string DayString
         {

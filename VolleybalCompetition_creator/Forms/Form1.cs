@@ -529,6 +529,64 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             help.ShowDialog();
         }
 
+        private void clubteamVergelijkingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openFileDialog1 = new OpenFileDialog();
+            openFileDialog1.Title = "Select vorig project waarmee te vergelijken";
+            openFileDialog1.FileName = "FullCompetition.xml";
+            openFileDialog1.Filter = "Xml (*.xml)|*.xml";
+            openFileDialog1.InitialDirectory = BaseDirectory;
+            openFileDialog1.FileOk += new CancelEventHandler(openFileDialog1_FileOk4);
+            openFileDialog1.ShowDialog();
+        }
+        public void openFileDialog1_FileOk4(object sender, CancelEventArgs e)
+        {
+            DateTime now = DateTime.Now;
+            saveFileDialog1 = new SaveFileDialog();
+            saveFileDialog1.FileName = string.Format("Compare_registrations{0:00}{1:00}{2:00}_{3:00}{4:00}.csv", now.Year, now.Month, now.Day, now.Hour, now.Minute);
+            saveFileDialog1.Filter = "Comma-separated (*.csv)|*.csv";
+            saveFileDialog1.InitialDirectory = BaseDirectory;
+            saveFileDialog1.FileOk += new CancelEventHandler(saveFileDialog1_FileOk11);
+            saveFileDialog1.ShowDialog();
+        }
+        public void saveFileDialog1_FileOk11(object sender, CancelEventArgs e)
+        {
+            klvv.CompareRegistrations(openFileDialog1.FileName, saveFileDialog1.FileName);
+        }
+
+        private void load2ndProjectToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openFileDialog1 = new OpenFileDialog();
+            openFileDialog1.Title = "Open comparison project";
+            openFileDialog1.FileName = "FullCompetition.xml";
+            openFileDialog1.Filter = "Xml (*.xml)|*.xml";
+            openFileDialog1.InitialDirectory = BaseDirectory;
+            openFileDialog1.FileOk += new CancelEventHandler(openFileDialog1_FileOk5);
+            openFileDialog1.ShowDialog();
+
+        }
+        public void openFileDialog1_FileOk5(object sender, CancelEventArgs e)
+        {
+            state.comparisonKlvv = klvv.LoadFullCompetitionIntern(openFileDialog1.FileName);
+            state.Changed();
+        }
+
+        private void comparisonOnOffToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (state.comparison == false)
+            {
+                comparisonOnOffToolStripMenuItem.Checked = true;
+                state.comparison = true;
+            }
+            else
+            {
+                comparisonOnOffToolStripMenuItem.Checked = false;
+                state.comparison = false;
+            }
+        }
+
+
+
     }
 }
 

@@ -39,4 +39,12 @@ Terug inlezen van de competitie. Waar heb ik last van:
  - Teams die forfait hadden gegeven, staan toch terug in de lijst (heeft Bram deze wel weggehaald?)
 
 
+ToDo:
+- Bij inschrijvingen kun je aangeven dat je een team 'terugtrekt'. Forfait, of naar de tweede ronde, of een team verkeerd ingegeven.
+- Bij import 1 vreemde sporthal creeeren (net zoals Club Nationaal). Dan hoeven er niet allerlei vreemde sporthallen gecreeerd te worden.
+- Bij export competitie matches naar klvv (en eventuele andere exports) expliciet vragen om welke reeksen meegenomen moeten worden
+- Opschonen data-directories. Nu is het onoverzichtelijk
+- Afstand sporthallen
+- Optimalisatie verbeteren: XY groepen: het is erger als je tegelijk met een andere groep op dezelfde tijd samen zit.
+- reeks met een 2 toevoegen: a2, b2
  

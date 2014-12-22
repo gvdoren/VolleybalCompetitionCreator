@@ -10,6 +10,8 @@ namespace VolleybalCompetition_creator
         public List<Club> selectedClubs = new List<Club>();
         public Constraint selectedConstraint = null;
         public List<Constraint> showConstraints = new List<Constraint>();
+        public Klvv comparisonKlvv = null;
+        public bool comparison = false;
         public void ShowConstraints(List<Constraint> constraints)
         {
             var areEquivalent = (constraints.Count == showConstraints.Count) && !constraints.Except(showConstraints).Any();

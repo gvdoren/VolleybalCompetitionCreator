@@ -399,7 +399,18 @@ namespace VolleybalCompetition_creator
             Team team = (Team)objectListView1.SelectedObject;
             if (team != null)
             {
+                TeamConstraint prevCon = null;
+                foreach (TeamConstraint con in klvv.teamConstraints)
+                {
+                    if (con.Club == team.club) prevCon = con;
+                }
                 TeamConstraint tc = new TeamConstraint(team);
+                if (prevCon != null)
+                {
+                    tc.date = prevCon.date;
+                    tc.homeVisitNone = prevCon.homeVisitNone;
+                    tc.cost = prevCon.cost;
+                }
                 klvv.teamConstraints.Add(tc);
                 objectListView2.SetObjects(klvv.teamConstraints.FindAll(c => c.Club == club));
                 objectListView2.BuildList(true);
@@ -449,7 +460,10 @@ namespace VolleybalCompetition_creator
         {
             Team t = (Team)e.Model;
             int count = t.club.teams.Count(te => te.name == t.name && t.serie == te.serie);
-            if (count>1) e.Item.BackColor = Color.Red;
+            if (count > 1)
+            {
+                e.Item.BackColor = Color.Red;
+            }
         }
     }
 }
