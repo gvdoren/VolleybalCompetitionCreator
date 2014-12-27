@@ -43,7 +43,6 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.button6 = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.olvColumn6 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -56,18 +55,16 @@
             this.objectListView1.AllColumns.Add(this.olvColumn4);
             this.objectListView1.AllColumns.Add(this.olvColumn5);
             this.objectListView1.AllColumns.Add(this.olvColumn3);
-            this.objectListView1.AllColumns.Add(this.olvColumn6);
-            this.objectListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.objectListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.objectListView1.CheckedAspectName = "";
             this.objectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumn1,
             this.olvColumn2,
             this.olvColumn4,
             this.olvColumn5,
-            this.olvColumn3,
-            this.olvColumn6});
+            this.olvColumn3});
             this.objectListView1.Location = new System.Drawing.Point(13, 13);
             this.objectListView1.Name = "objectListView1";
             this.objectListView1.OwnerDraw = true;
@@ -227,15 +224,6 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Selected Clubs";
             // 
-            // olvColumn6
-            // 
-            this.olvColumn6.AspectName = "export";
-            this.olvColumn6.CellPadding = null;
-            this.olvColumn6.CheckBoxes = true;
-            this.olvColumn6.FillsFreeSpace = true;
-            this.olvColumn6.MaximumWidth = 120;
-            this.olvColumn6.Text = "Export Matches";
-            // 
             // OptimizeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -273,6 +261,5 @@
         private BrightIdeasSoftware.OLVColumn olvColumn4;
         private BrightIdeasSoftware.OLVColumn olvColumn5;
         private System.Windows.Forms.Button button6;
-        private BrightIdeasSoftware.OLVColumn olvColumn6;
     }
 }

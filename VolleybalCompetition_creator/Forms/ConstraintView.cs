@@ -38,8 +38,10 @@ namespace VolleybalCompetition_creator
                 this.Invoke(new Action(() => state_OnMyChange(source, e)));
                 return;
             }
-            lock (klvv) ;
-            UpdateTabPage2();
+            lock (klvv)
+            {
+                UpdateTabPage2();
+            }
         }
         private void UpdateTabPage2()
         {

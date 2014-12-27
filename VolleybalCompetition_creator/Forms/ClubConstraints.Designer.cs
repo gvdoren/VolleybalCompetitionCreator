@@ -31,6 +31,7 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.objectListView1 = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn17 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn5 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -84,6 +85,7 @@
             // objectListView1
             // 
             this.objectListView1.AllColumns.Add(this.olvColumn1);
+            this.objectListView1.AllColumns.Add(this.olvColumn17);
             this.objectListView1.AllColumns.Add(this.olvColumn2);
             this.objectListView1.AllColumns.Add(this.olvColumn4);
             this.objectListView1.AllColumns.Add(this.olvColumn5);
@@ -95,16 +97,18 @@
             this.objectListView1.AllColumns.Add(this.olvColumn7);
             this.objectListView1.AllColumns.Add(this.olvColumn0);
             this.objectListView1.AllColumns.Add(this.olvColumn14);
-            this.objectListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.objectListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.objectListView1.CellEditActivation = BrightIdeasSoftware.ObjectListView.CellEditActivateMode.SingleClick;
             this.objectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumn1,
+            this.olvColumn17,
             this.olvColumn2,
             this.olvColumn4,
             this.olvColumn5,
             this.olvColumn3,
+            this.olvColumn0,
             this.olvColumn14});
             this.objectListView1.FullRowSelect = true;
             this.objectListView1.GridLines = true;
@@ -130,6 +134,12 @@
             this.olvColumn1.CellPadding = null;
             this.olvColumn1.IsEditable = false;
             this.olvColumn1.Text = "Serie";
+            // 
+            // olvColumn17
+            // 
+            this.olvColumn17.AspectName = "poule.name";
+            this.olvColumn17.CellPadding = null;
+            this.olvColumn17.Text = "Poule";
             // 
             // olvColumn2
             // 
@@ -174,7 +184,7 @@
             // 
             this.olvColumn9.AspectName = "EvenOdd";
             this.olvColumn9.CellPadding = null;
-            this.olvColumn9.DisplayIndex = 6;
+            this.olvColumn9.DisplayIndex = 5;
             this.olvColumn9.IsVisible = false;
             this.olvColumn9.MinimumWidth = 25;
             this.olvColumn9.Text = "Even/Oneven";
@@ -183,7 +193,7 @@
             // 
             this.olvColumn8.AspectName = "FixedSchemaNumber";
             this.olvColumn8.CellPadding = null;
-            this.olvColumn8.DisplayIndex = 7;
+            this.olvColumn8.DisplayIndex = 5;
             this.olvColumn8.IsVisible = false;
             this.olvColumn8.MinimumWidth = 25;
             this.olvColumn8.Text = "Fixed-Schema";
@@ -193,7 +203,7 @@
             // 
             this.olvColumn10.AspectName = "email";
             this.olvColumn10.CellPadding = null;
-            this.olvColumn10.DisplayIndex = 8;
+            this.olvColumn10.DisplayIndex = 5;
             this.olvColumn10.FillsFreeSpace = true;
             this.olvColumn10.IsVisible = false;
             this.olvColumn10.MinimumWidth = 0;
@@ -203,7 +213,7 @@
             // 
             this.olvColumn7.AspectName = "NotAtSameTimeId";
             this.olvColumn7.CellPadding = null;
-            this.olvColumn7.DisplayIndex = 9;
+            this.olvColumn7.DisplayIndex = 5;
             this.olvColumn7.FillsFreeSpace = true;
             this.olvColumn7.IsVisible = false;
             this.olvColumn7.Text = "Not at same time with:";
@@ -212,10 +222,8 @@
             // 
             this.olvColumn0.AspectName = "Id";
             this.olvColumn0.CellPadding = null;
-            this.olvColumn0.DisplayIndex = 10;
             this.olvColumn0.FillsFreeSpace = true;
             this.olvColumn0.IsEditable = false;
-            this.olvColumn0.IsVisible = false;
             this.olvColumn0.MaximumWidth = 40;
             this.olvColumn0.Text = "Id";
             this.olvColumn0.Width = 40;
@@ -247,8 +255,8 @@
             // 
             // textBox1
             // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox1.Location = new System.Drawing.Point(7, 58);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
@@ -294,8 +302,8 @@
             this.dataGridView3.AllowUserToDeleteRows = false;
             this.dataGridView3.AllowUserToResizeColumns = false;
             this.dataGridView3.AllowUserToResizeRows = false;
-            this.dataGridView3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridView3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView3.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column2,
@@ -336,9 +344,9 @@
             // 
             // tabControl1
             // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Location = new System.Drawing.Point(1, 4);
             this.tabControl1.Name = "tabControl1";
@@ -377,8 +385,8 @@
             this.objectListView2.AllColumns.Add(this.olvColumn15);
             this.objectListView2.AllColumns.Add(this.olvColumn16);
             this.objectListView2.AllColumns.Add(this.olvColumn11);
-            this.objectListView2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.objectListView2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.objectListView2.CellEditActivation = BrightIdeasSoftware.ObjectListView.CellEditActivateMode.SingleClick;
             this.objectListView2.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumn13,
@@ -400,7 +408,7 @@
             // 
             // olvColumn13
             // 
-            this.olvColumn13.AspectName = "Serie.name";
+            this.olvColumn13.AspectName = "serie.name";
             this.olvColumn13.CellPadding = null;
             this.olvColumn13.IsEditable = false;
             this.olvColumn13.Text = "Serie";
@@ -527,6 +535,7 @@
         private BrightIdeasSoftware.OLVColumn olvColumn14;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
+        private BrightIdeasSoftware.OLVColumn olvColumn17;
 
     }
 }

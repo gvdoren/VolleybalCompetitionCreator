@@ -16,7 +16,7 @@ namespace VolleybalCompetition_creator
         {
             InitializeComponent();
             string curDir = Directory.GetCurrentDirectory();
-            this.webBrowser1.Url = new Uri(String.Format("file:///{0}/data/help.html", curDir));
+            this.webBrowser1.Url = new Uri(String.Format("file:///{0}/html/help.html", curDir));
         }
     }
 }

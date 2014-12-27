@@ -17,7 +17,7 @@ namespace VolleybalCompetition_creator
         public SporthallClub sporthal { get; set; }
         public Poule poule = null;
         public Serie serie = null;
-        public string seriePouleName { get { return poule.serie.name + poule.name; } }
+        public string seriePouleName { get { return serie.name + ((poule!= null)?poule.name:"-"); } }
         public Time defaultTime;
         public bool Optimizable { get { return FixedSchema == false; } }
         public int FixedSchemaNumber = 0;
@@ -67,7 +67,7 @@ namespace VolleybalCompetition_creator
                 else return 0;
             }
         }
-        public Team(int Id, string name, Poule poule, Serie serie) 
+        public Team(int Id, string name, Poule poule, Serie serie, Club club) 
         {
             //this.NotAtSameTime = this;
             this.Id = Id;
@@ -77,6 +77,7 @@ namespace VolleybalCompetition_creator
             this.serie = serie;
             this.sporthal = null;
             this.group = TeamGroups.NoGroup;
+            club.AddTeam(this);
         }
         public int percentage
         {
@@ -93,10 +94,9 @@ namespace VolleybalCompetition_creator
         }
         public static Team CreateNullTeam(Poule poule, Serie serie)
         {
-            Team team = new Team(0,"----",poule,serie);
+            Team team = new Team(0,"----",poule,serie, Club.CreateNullClub());
             team.defaultDay = DayOfWeek.Saturday;
             team.defaultTime = new Time(0,0);
-            team.club = Club.CreateNullClub();
             
             return team;
         }
@@ -115,19 +115,4 @@ namespace VolleybalCompetition_creator
        
     }
 
-    public class TeamConstraint
-    {
-        public Team team = null;
-        public Club Club { get { return team.club; } }
-        public Serie Serie { get { return team.serie; } }
-        public Poule Poule { get { return team.poule; } }
-        public DateTime date;
-        public enum HomeVisitNone { Home, Visit, Free, NotHome, NotVisit};
-        public HomeVisitNone homeVisitNone;
-        public int cost = 1;
-        public TeamConstraint(Team team)
-        {
-            this.team = team;
-        }
-    }
 }

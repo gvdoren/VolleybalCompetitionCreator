@@ -46,10 +46,12 @@ namespace VolleybalCompetition_creator
             {
                 objectListView1.SetObjects(klvv.poules);
             }*/
-            lock (klvv) ;
-            objectListView1.SetObjects(klvv.poules);
-            objectListView1.BuildList(true);
-            Refresh();
+            lock (klvv)
+            {
+                objectListView1.SetObjects(klvv.poules);
+                objectListView1.BuildList(true);
+                Refresh();
+            }
         }
         public class SerieFilter: IModelFilter 
         {

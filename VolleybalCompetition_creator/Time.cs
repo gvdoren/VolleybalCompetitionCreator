@@ -58,6 +58,22 @@ namespace VolleybalCompetition_creator
         {
             return t1.Hours != t2.Hours || t1.Minutes != t2.Minutes;
         }
+        public override int GetHashCode()
+        {
+            return (Hours * 60) + Minutes;
+        }
+        public override bool Equals(object obj)
+        {
+            Time t = obj as Time;
+            if (t != null)
+            {
+                return (this == t);
+            }
+            else
+            {
+                return false;
+            }
+        }
         public override string ToString()
         {
             return Hours.ToString() + ":" + Minutes.ToString("D2");

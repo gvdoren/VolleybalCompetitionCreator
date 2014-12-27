@@ -63,40 +63,42 @@ namespace VolleybalCompetition_creator
                 this.Invoke(new Action(() => state_OnMyChange(source, e)));
                 return;
             }
-            lock (klvv) ;
-            // If dynamically the poule is removed.
-            if (klvv.poules.Contains(poule) == false)
+            lock (klvv)
             {
-                Close();
-                return;
-            }
+                // If dynamically the poule is removed.
+                if (klvv.poules.Contains(poule) == false)
+                {
+                    Close();
+                    return;
+                }
 
-            selectedTeams.Clear();
-            selectedMatches.Clear();
-            selectedWeekends.Clear();
-            foreach (Object obj in objectListView1.SelectedObjects)
-            {
-                selectedTeams.Add((Team)obj);
-            }
-            objectListView1.BuildList(true);
-            objectListView1.SelectedObjects = selectedTeams;
-            foreach (Object obj in objectListView2.SelectedObjects)
-            {
-                selectedMatches.Add((Match)obj);
-            }
-            objectListView2.Objects = poule.matches;
-            objectListView2.BuildList(true);
-            objectListView2.SelectedObjects = selectedMatches;
-            foreach (Object obj in objectListView3.SelectedObjects)
-            {
-                selectedWeekends.Add(((KeyValuePair<Weekend, int>)obj).Key);
-            }
-            UpdateWeekMapping();
-            objectListView3.BuildList(true);
-            foreach (Object obj in objectListView3.Objects)
-            {
-                KeyValuePair<Weekend, int> kvp = (KeyValuePair<Weekend, int>)obj;
-                if (selectedWeekends.Contains(kvp.Key) == true) objectListView3.SelectObject(obj);
+                selectedTeams.Clear();
+                selectedMatches.Clear();
+                selectedWeekends.Clear();
+                foreach (Object obj in objectListView1.SelectedObjects)
+                {
+                    selectedTeams.Add((Team)obj);
+                }
+                objectListView1.BuildList(true);
+                objectListView1.SelectedObjects = selectedTeams;
+                foreach (Object obj in objectListView2.SelectedObjects)
+                {
+                    selectedMatches.Add((Match)obj);
+                }
+                objectListView2.Objects = poule.matches;
+                objectListView2.BuildList(true);
+                objectListView2.SelectedObjects = selectedMatches;
+                foreach (Object obj in objectListView3.SelectedObjects)
+                {
+                    selectedWeekends.Add(((KeyValuePair<Weekend, int>)obj).Key);
+                }
+                UpdateWeekMapping();
+                objectListView3.BuildList(true);
+                foreach (Object obj in objectListView3.Objects)
+                {
+                    KeyValuePair<Weekend, int> kvp = (KeyValuePair<Weekend, int>)obj;
+                    if (selectedWeekends.Contains(kvp.Key) == true) objectListView3.SelectObject(obj);
+                }
             }
         }
        

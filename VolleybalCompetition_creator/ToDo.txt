@@ -19,6 +19,7 @@ Belangrijk:
 - Eventueel naar alle clubs de indeling in reeksen sturen voordat de kalender wordt gemaakt.
 - Week eerder de sluitingsdatum. (eerste week poules indelen, en terugkoppelen)
 - Check data van anorama.
+   * Mag een reserve-datum gebruikt worden!!
 - Check of er teams bijzitten met relatief veel conflicts (bv 6 of 7). 
    - Probeer de pijn te verdelen (XY groups opt, evt. daarna met HomeVisit opt).
    - Indien meerdere poules kan het helpen ze naar een andere poule te verplaatsen
@@ -41,10 +42,9 @@ Terug inlezen van de competitie. Waar heb ik last van:
 
 ToDo:
 - Bij inschrijvingen kun je aangeven dat je een team 'terugtrekt'. Forfait, of naar de tweede ronde, of een team verkeerd ingegeven.
-- Bij import 1 vreemde sporthal creeeren (net zoals Club Nationaal). Dan hoeven er niet allerlei vreemde sporthallen gecreeerd te worden.
-- Bij export competitie matches naar klvv (en eventuele andere exports) expliciet vragen om welke reeksen meegenomen moeten worden
-- Opschonen data-directories. Nu is het onoverzichtelijk
 - Afstand sporthallen
-- Optimalisatie verbeteren: XY groepen: het is erger als je tegelijk met een andere groep op dezelfde tijd samen zit.
 - reeks met een 2 toevoegen: a2, b2
+- af en toe wordt de 'cost' hoger. Hoe kan dat. Welke constraint wordt niet meegenomen in de related constraints?
+- Extra info vvb gebruiken bij importeren 
+
  

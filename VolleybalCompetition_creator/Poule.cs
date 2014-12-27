@@ -159,7 +159,10 @@ namespace VolleybalCompetition_creator
             }
             foreach (Constraint con in klvv.constraints)
             {
-                if (clubs.Contains(con.club) || con.poule == this || (con as ConstraintSpecialTeamRequirement)!= null) relatedConstraints.Add(con);
+                if (clubs.Contains(con.club) || 
+                    con.poule == this || 
+                    teams.Contains(con.team)  
+                    ) relatedConstraints.Add(con);
             }
 
         }

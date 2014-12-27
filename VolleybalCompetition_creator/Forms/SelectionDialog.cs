@@ -11,22 +11,52 @@ namespace VolleybalCompetition_creator
 {
     public partial class SelectionDialog : Form
     {
-        public string Text {
-            set { label1.Text = value;}
-        }
         public bool Ok = false;
-        public SelectionDialog(List<Selection> list, object selected = null)
+        private bool multi = false;
+        private void SetMultiSelect()
+        {
+            multi = true;
+            objectListView1.CheckBoxes = true;
+        }
+        public SelectionDialog(List<Selection> list, bool multi = false)
         {
             InitializeComponent();
+            if (multi) SetMultiSelect();
             objectListView1.SetObjects(list);
-            objectListView1.SelectedObject = selected;
-            objectListView1.EnsureModelVisible(selected);
+            if (multi)
+            {
+                objectListView1.CheckedObjects = list.FindAll(l => l.selected == true);
+            }
+            else
+            {
+                objectListView1.SelectedObject = list.Find(l => l.selected == true);
+            }
+            //objectListView1.SelectedObject = selected;
+            objectListView1.EnsureModelVisible(objectListView1.SelectedObject);
         }
         public Selection Selection
         {
             get
             {
+                if (multi) throw new Exception("Single selection cannot be used for selection dialog in multi-select-mode");
                 if (Ok) return (Selection)objectListView1.SelectedObject;
+                return null;
+            }
+        }
+        public List<Selection> Selections
+        {
+            get
+            {
+                if (multi==false) throw new Exception("Multi selections cannot be used for selection dialog in single-select-mode");
+                if (Ok)
+                {
+                    List<Selection> selections = new List<Selection>();
+                    foreach (object obj in objectListView1.CheckedObjects)
+                    {
+                        selections.Add((Selection)obj);
+                    }
+                    return selections;
+                }
                 return null;
             }
         }
@@ -39,14 +69,16 @@ namespace VolleybalCompetition_creator
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (objectListView1.SelectedObject != null) Ok = true;
+            if (multi == false && objectListView1.SelectedObject != null) Ok = true;
+            else if (multi == true) Ok = true;
             else Ok = false;
             this.Close();
         }
 
         private void objectListView1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            if (objectListView1.SelectedObject != null) Ok = true;
+            if (multi == false && objectListView1.SelectedObject != null) Ok = true;
+            else if (multi == true) Ok = true;
             else Ok = false;
             this.Close();
         }
@@ -56,6 +88,7 @@ namespace VolleybalCompetition_creator
         public string label;
         public int value;
         public object obj;
+        public bool selected;
         public Selection(string label)
         {
             this.label = label;

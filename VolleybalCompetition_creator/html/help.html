@@ -42,6 +42,7 @@
   <ol>
     <li><a href="#creeer nieuwe competitie">Maak een nieuwe competitie</a></li>
     <li><a href="#importeer registraties">Importeer de team-registraties</a> </li>
+    <li><a href="#controleer registraties">Controleer de team-registraties</a> </li>
     <li><a href="#anorama">Vul de anorama in voor elk weekend &amp; voor elke reeks</a></li>
     <li><a href="#poules indelen">Wijs de teams aan poules toe</a></li>
     <li><a href="#competitie importeren">Importeer een bestaande (nationale) competitie</a></li>
@@ -54,16 +55,33 @@
 <h4>Importeer de team-registraties</h4>
 <p>Er zijn twee manieren om de registraties binnen te halen:</p>
   <ol>
-    <li>File - Import - KLVV Registrations: er wordt dan gevraagd een file aan te geven (die je waarschijnlijk van te voren van de site hebt gesaved.</li>
-    <li>File - Import - http://klvv.be/server/restricted/registrations/registrationsXML.php: Hiermee haal je het direct van de website af</li>
+    <li>File - Import - Registrations - file: er wordt dan gevraagd een file aan te geven (die je waarschijnlijk van te voren van de site hebt gesaved).</li>
+    <li>File - Import - Registrations - site: Hiermee haal je het direct van de website af (http://klvv.be/server/restricted/registrations/registrationsXML.php)</li>
   </ol>
-  <p>Nadat je de registraties hebt geimporteerd is het zaak ze te controleren:</p>
+<p>&nbsp;</p>
+  <a name="controleer registraties"/>
+<h4>Controleer de team-registraties</h4>
+<p>Nadat je de registraties hebt geimporteerd is het zaak ze te controleren:</p>
   <ul>
-    <li>Zijn de series goed. Dit is vooral voor de senioren teams. Klopt de reeks die ze hebben ingeschreven.</li>
-    <li>Zijn de X en Y groepen logisch ingedeeld</li>
+    <li>Zijn de series goed. Dit is vooral voor de senioren teams. Klopt de reeks die ze hebben ingeschreven. Mogen ze in de betreffende reeks inschrijven.</li>
+    <li>Zijn de X en Y groepen logisch ingedeeld en klopt dit met de </li>
     <li>Vrije tekst:
       <ul>
-        <li>Eetfestijnen en andere verzoeken kunnen vertaald worden in </li>
+        <li>Klopt de indeling in X en Y met de vrije tekst die eventueel is toegevoegd:
+          <ul>
+            <li>Eetfestijnen en andere verzoeken kunnen vertaald worden in speciale team requirements. Probeer dit te beperken. Je kunt aangeven dat een team op een datum:
+              <ul>
+                <li>Niet speelt</li>
+                <li>Thuis speelt</li>
+                <li>Niet thuis speelt</li>
+                <li>Uit speelt</li>
+                <li>Niet uit speelt</li>
+              </ul>
+              <p>              Daarbij moet je aangeven hoezwaar het niet voldoen aan deze eis wordt gerekend. Normaal kun je de kosten het beste laten staan op '1'.
+              </p>
+            </li>
+          </ul>
+        </li>
       </ul>
     </li>
   </ul>
@@ -77,10 +95,10 @@
 <h4>Poules indelen</h4>
   <p>Onder Edit-Poule zit de poule manager. Je hebt de volgende opties:</p>
   <ul>
-    <li>Poule creeeren: Je moet hiervoor eerst de juiste serie selecteren, en het max. aantal teams dat in de poule komt. Als je nu op creeer poule drukt, dan wordt op basis hiervan het basis-schema voor de poule gekozen.</li>
+    <li>Poule creeeren: Je moet hiervoor eerst de juiste serie selecteren, en het max. aantal teams dat in de poule komt. Als je nu op creeer poule drukt, dan wordt op basis hiervan het basis-schema voor de poule gekozen. Let op: op het moment van poule creatie wordt de anorama uitgelezen en op basis daarvan de weekenden van de poule gecreeerd.</li>
     <li>Poule verwijderen: Selecteer de poule, en druk op delete poule. De teams die in deze poule zaten, blijven bestaan maar verliezen hun poule en moeten opnieuw aan een poule worden toegewezen.</li>
     <li>Team indelen in poules: Selecteer de poule, selecteer de team(s) en druk op 'assign team(s)'. </li>
-    <li>Automatisch teams indelen: Indien je veel teams moet indelen kan het handig zijn om eerst het juiste aantal poules te creeeren, and dan met 'automatic divide' de teams in te verdelen over de poules.</li>
+    <li>Automatisch teams indelen: Indien je veel teams moet indelen kan het handig zijn om eerst het juiste aantal poules te creeeren, and dan met 'automatic divide' de teams in te verdelen over de poules. Indien de rangschikking van de eerste helft is geimporteerd (<a href="#rangschikking importeren">Rangschikking importeren</a>), dan wordt hier rekening mee gehouden. De hoogste in de rangschikking in poule A, daarna in B, enzovoort. De nieuw ingeschreven teams komen altijd in de laatste poule (bij de laagst geeindigden).</li>
     <li>Optimalizeren: nadat de teams zijn ingedeeld, kun je met behulp van 'Optimize distance' de verdeling van de teams over de poules optimaliseren mbt de afstand. De poules worden zo ingedeeld dat de totale afstand die de teams moeten afleggen minimaal is. In praktijk komt dit erop neer dat teams die vlak bij elkaar wonen in 1 poule worden gestopt. Hierbij kun je aangeven of meerdere teams van 1 club in 1 poule mogen (wat optimaal voor de afstand is), of dat deze verdeeld moeten worden over de poules (indien mogelijk).<br />
     Als er poules geselecteerd zijn, vind de herverdeling (optimalisatie) van teams alleen plaats binnen de geselecteerde poules. Als er geen poules zijn geselecteerd, dan vindt de optimalisatie plaats over alle poules.</li>
     <li>Reset-schema: Dan worden alle schema's van de poules in de serie weer naar default terug gezet en de optimalisatie van het schema teniet gedaan. Deze functionaliteit heeft eigenlijk niets te maken met het indelen van poules.</li>
@@ -106,6 +124,10 @@
   <a name="optimaliseer"/>
 <h4>Competitie optimaliseren</h4>
 <p>&nbsp;</p>
+
+  <a name="rangschikking importeren"/>
+<h4>"Rangschikking importeren</h4>
+
 <a name="type conflicten" ></a>
 <h3>Type conflicten</h3>
 <p>De generatie van de competitie wordt in goede banen geleid door conflicten te definieren, die een bepaalde penalty-kosten introduceren. Omdat het programma probeert de totale kosten te minimaliseren zal het aantal conflicten geminimaliseert worden. </p>

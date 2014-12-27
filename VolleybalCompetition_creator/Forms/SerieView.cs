@@ -36,8 +36,8 @@ namespace VolleybalCompetition_creator
             if (comboBox1.Items.Count > 0) comboBox1.SelectedIndex = 0;
             klvv.OnMyChange += state_OnMyChange;
             state.OnMyChange += state_OnMyChange;
-            firstHalf = File.ReadAllText(@"Data/html_first.html");
-            secondHalf = File.ReadAllText(@"Data/html_second.html");
+            firstHalf = File.ReadAllText(@"html/html_first.html");
+            secondHalf = File.ReadAllText(@"html/html_second.html");
             UpdateWebBrowser();
             UpdatePouleList();
         }
@@ -54,11 +54,13 @@ namespace VolleybalCompetition_creator
                 this.Invoke(new Action(() => state_OnMyChange(source, e)));
                 return;
             }
-            lock (klvv) ;
-            UpdateSerieList();
-            UpdatePouleList();
-            UpdateTeamList();
-            UpdateWebBrowser();
+            lock (klvv)
+            {
+                UpdateSerieList();
+                UpdatePouleList();
+                UpdateTeamList();
+                UpdateWebBrowser();
+            }
         }
         void UpdateSerieList()
         {
@@ -389,15 +391,14 @@ namespace VolleybalCompetition_creator
                 if (columnindex == 1)
                 {
                     List<Selection> list = new List<Selection>();
-                    Selection def = null;
                     foreach (Poule poule in serie.poules.Values)
                     {
                         Selection sel = new Selection(poule.name, poule);
-                        if (poule == team.poule) def = sel;
+                        if (poule == team.poule) sel.selected = true;
                         list.Add(sel);
                     }
                     list.Add(new Selection("No poule", null));
-                    SelectionDialog diag = new SelectionDialog(list, def);
+                    SelectionDialog diag = new SelectionDialog(list);
                     diag.Text = "Select the poule:";
                     diag.ShowDialog();
                     Poule newPoule = (Poule)diag.Selection.obj;

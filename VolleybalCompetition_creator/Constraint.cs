@@ -41,9 +41,6 @@ namespace VolleybalCompetition_creator
 
     public abstract class Constraint
     {
-        List<Club> clubs = new List<Club>();
-        List<Poule> poules = new List<Poule>();
-        List<Team> teams = new List<Team>();
         public bool VisitorAlso = true;
         public bool error = false;
         List<String> errorList = new List<string>();
@@ -62,6 +59,8 @@ namespace VolleybalCompetition_creator
             return errorList.ToArray();
         }
         public Club club { get; set; }
+        public Poule poule { get; set; }
+        public Team team { get; set; }
         public virtual string Context
         {
             get
@@ -71,7 +70,6 @@ namespace VolleybalCompetition_creator
                 return "----";
             }
         }
-        public Poule poule = null;
         public string name { get; set; }
         public int cost = 1;
         public int conflict_cost = 0;
@@ -929,70 +927,6 @@ namespace VolleybalCompetition_creator
             return result.ToArray();
         }
     }
-    class ConstraintSpecialTeamRequirement : Constraint
-    {
-        Klvv klvv;
-        public ConstraintSpecialTeamRequirement(Klvv klvv)
-        {
-            this.klvv = klvv;
-            VisitorAlso = false;
-            name = "Special team requirement not fulfilled.";
-        }
-        public override void Evaluate(Klvv klvv)
-        {
-            conflict_cost = 0;
-            conflictMatches.Clear();
-            foreach (TeamConstraint constraint in klvv.teamConstraints)
-            {
-                if (constraint.team.poule != null)
-                {
-                    if (constraint.team.poule.evaluated)
-                    {
-
-                        Team team = constraint.team;
-                        cost = constraint.cost;
-                        Match match = team.poule.matches.Find(m => m.datetime.Date == constraint.date.Date && m.RealMatch() && (m.homeTeam == team || m.visitorTeam == team));
-                        switch (constraint.homeVisitNone)
-                        {
-                            case TeamConstraint.HomeVisitNone.Free:
-                                if (match != null)
-                                {
-                                    if (match.homeTeam == team) AddConflictMatch(VisitorHomeBoth.HomeOnly, match);
-                                    else AddConflictMatch(VisitorHomeBoth.VisitorOnly, match);
-                                }
-                                break;
-                            case TeamConstraint.HomeVisitNone.NotHome:
-                                if (match != null && match.homeTeam == team) AddConflictMatch(VisitorHomeBoth.HomeOnly, match);
-                                break;
-                            case TeamConstraint.HomeVisitNone.NotVisit:
-                                if (match != null && match.visitorTeam == team) AddConflictMatch(VisitorHomeBoth.VisitorOnly, match);
-                                break;
-                            case TeamConstraint.HomeVisitNone.Home:
-                                if (match == null || match.homeTeam != team)
-                                {
-                                    Match m = constraint.Poule.matches.Find(mm => mm.homeTeam == constraint.team);
-                                    AddConflictMatch(VisitorHomeBoth.VisitorOnly, m);
-                                }
-                                break;
-                            case TeamConstraint.HomeVisitNone.Visit:
-                                if (match == null || match.visitorTeam != team)
-                                {
-                                    Match m = constraint.Poule.matches.Find(mm => mm.homeTeam == constraint.team);
-                                    AddConflictMatch(VisitorHomeBoth.HomeOnly, m);
-                                }
-                                break;
-
-                        }
-                    }
-                }
-            }
-        }
-        public override string[] GetTextDescription()
-        {
-            List<string> result = new List<string>();
-            return result.ToArray();
-        }
-    }
     // TODO: wordt nog niet gebruikt, niet nodig als er geen reserve dag is.
     class ConstraintPouleFullLastTwoWeekends : Constraint
     {
@@ -1067,8 +1001,6 @@ namespace VolleybalCompetition_creator
 
     class ConstraintTeamTooManyConflicts : Constraint
     {
-        Team team = null;
-        
         public ConstraintTeamTooManyConflicts(Team team)
         {
             this.team = team;
@@ -1100,6 +1032,96 @@ namespace VolleybalCompetition_creator
             }
         } 
 
+    }
+    public class TeamConstraint : Constraint
+    {
+        public Serie serie { get { return team.serie; } }
+        public DateTime date;
+        public enum HomeVisitNone { Home, Visit, Free, NotHome, NotVisit };
+        public HomeVisitNone homeVisitNone;
+        public TeamConstraint(Team team)
+        {
+            this.team = team;
+            this.club = team.club;
+            VisitorAlso = false;
+            cost = 1;
+            name = "Team conflict";
+        }
+        public override void Evaluate(Klvv klvv)
+        {
+            conflict_cost = 0;
+            conflictMatches.Clear();
+            if (team.poule != null)
+            {
+                Match match = team.poule.matches.Find(m => m.datetime.Date == date.Date && m.RealMatch() && (m.homeTeam == team || m.visitorTeam == team));
+                switch (homeVisitNone)
+                {
+                    case TeamConstraint.HomeVisitNone.Free:
+                        if (match != null)
+                        {
+                            if (match.homeTeam == team) AddConflictMatch(VisitorHomeBoth.HomeOnly, match);
+                            else AddConflictMatch(VisitorHomeBoth.VisitorOnly, match);
+                        }
+                        break;
+                    case TeamConstraint.HomeVisitNone.NotHome:
+                        if (match != null && match.homeTeam == team) AddConflictMatch(VisitorHomeBoth.HomeOnly, match);
+                        break;
+                    case TeamConstraint.HomeVisitNone.NotVisit:
+                        if (match != null && match.visitorTeam == team) AddConflictMatch(VisitorHomeBoth.VisitorOnly, match);
+                        break;
+                    case TeamConstraint.HomeVisitNone.Home:
+                        if (match == null)
+                        {
+                            conflict_cost += cost;
+                            team.AddConflict(this);
+                            team.club.AddConflict(this);
+                        }
+                        else if (match.homeTeam != team)
+                        {
+                            AddConflictMatch(VisitorHomeBoth.VisitorOnly, match);
+                        }
+                        break;
+                    case TeamConstraint.HomeVisitNone.Visit:
+                        if (match == null)
+                        {
+                            conflict_cost += cost;
+                            team.AddConflict(this);
+                            team.club.AddConflict(this);
+                        }
+                        else if (match.visitorTeam != team)
+                        {
+                            AddConflictMatch(VisitorHomeBoth.HomeOnly, match);
+                        }
+                        break;
+                }
+            }
+        }
+        public override string[] GetTextDescription()
+        {
+            List<string> result = new List<string>();
+            result.Add("Team '" + team.name + "' (" + team.seriePouleName + ") van club " + team.club.name + " heeft als wens ");
+            switch (homeVisitNone)
+            {
+                case HomeVisitNone.Free:
+                    result.Add("'vrij te zijn'");
+                    break;
+                case HomeVisitNone.Home:
+                    result.Add("'thuis te spelen'");
+                    break;
+                case HomeVisitNone.NotHome:
+                    result.Add("'niet thuis te spelen'");
+                    break;
+                case HomeVisitNone.NotVisit:
+                    result.Add("'niet uit te spelen'");
+                    break;
+                case HomeVisitNone.Visit:
+                    result.Add("'uit te spelen'");
+                    break;
+            }
+            result.Add(" op " + date.ToShortDateString());
+
+            return result.ToArray();
+        }
     }
 
 

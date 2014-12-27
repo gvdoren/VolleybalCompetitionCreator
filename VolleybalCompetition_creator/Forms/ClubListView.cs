@@ -38,11 +38,13 @@ namespace VolleybalCompetition_creator
                 this.Invoke(new Action(() => state_OnMyChange(source, e)));
                 return;
             }
-            lock (klvv);
-            this.objectListView1.SelectedIndexChanged -= this.objectListView1_SelectedIndexChanged;
-            objectListView1.SelectedObjects=state.selectedClubs;
-            objectListView1.BuildList(true);
-            this.objectListView1.SelectedIndexChanged += this.objectListView1_SelectedIndexChanged;
+            lock (klvv)
+            {
+                this.objectListView1.SelectedIndexChanged -= this.objectListView1_SelectedIndexChanged;
+                objectListView1.SelectedObjects = state.selectedClubs;
+                objectListView1.BuildList(true);
+                this.objectListView1.SelectedIndexChanged += this.objectListView1_SelectedIndexChanged;
+            }
         }
 
         private void objectListView1_SelectedIndexChanged(object sender, EventArgs e)

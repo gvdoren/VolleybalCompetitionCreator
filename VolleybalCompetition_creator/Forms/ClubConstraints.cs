@@ -32,7 +32,7 @@ namespace VolleybalCompetition_creator
             comboBox2.SelectedIndex = 0;
             state.OnMyChange += new MyEventHandler(state_OnMyChange);
             if (state.selectedClubs.Count > 0) SetClub(state.selectedClubs[0]);
-            objectListView2.SetObjects(klvv.teamConstraints.FindAll(c => c.Club == club));
+            objectListView2.SetObjects(klvv.constraints.FindAll(c => (c as TeamConstraint) != null && c.club == club));
                         
             //klvv.OnMyChange += state_OnMyChange;
         }
@@ -72,10 +72,12 @@ namespace VolleybalCompetition_creator
                 this.Invoke(new Action(() => state_OnMyChange(source, e)));
                 return;
             }
-            lock (klvv);
-            if (state.selectedClubs.Count > 0 && state.selectedClubs[0] != club)
+            lock (klvv)
             {
-                SetClub(state.selectedClubs[0]);
+                if (state.selectedClubs.Count > 0 && state.selectedClubs[0] != club)
+                {
+                    SetClub(state.selectedClubs[0]);
+                }
             }
         }
         private void SetClub(Club club)
@@ -134,7 +136,7 @@ namespace VolleybalCompetition_creator
         }
         private void UpdateTeamConstraints()
         {
-            objectListView2.SetObjects(klvv.teamConstraints.FindAll(c => c.Club == club));
+            objectListView2.SetObjects(klvv.constraints.FindAll(c => (c as TeamConstraint) != null && c.club == club)); 
             objectListView2.BuildList(true);
             
         }
@@ -279,14 +281,13 @@ namespace VolleybalCompetition_creator
                 if (columnindex == 0)
                 {
                     List<Selection> list = new List<Selection>();
-                    Selection def = null;
                     foreach (Serie serie in klvv.series)
                     {
                         Selection sel = new Selection(serie.name, serie);
-                        if (serie == team.serie) def = sel;
+                        if (serie == team.serie) sel.selected = true;
                         list.Add(sel);
                     }
-                    SelectionDialog diag = new SelectionDialog(list, def);
+                    SelectionDialog diag = new SelectionDialog(list);
                     diag.Text = "Select the serie:";
                     diag.ShowDialog();
                     if (diag.Ok)
@@ -301,14 +302,13 @@ namespace VolleybalCompetition_creator
                 if (columnindex == olvColumn6.Index) // sporthal
                 {
                     List<Selection> list = new List<Selection>();
-                    Selection def = null;
                     foreach (SporthallClub sporthal in club.sporthalls)
                     {
                         Selection sel = new Selection(sporthal.name, sporthal);
-                        if (sporthal == team.sporthal) def = sel;
+                        if (sporthal == team.sporthal) sel.selected = true;
                         list.Add(sel);
                     }
-                    SelectionDialog diag = new SelectionDialog(list, def);
+                    SelectionDialog diag = new SelectionDialog(list);
                     diag.Text = "Select the sporthal:";
                     diag.ShowDialog();
                     if (diag.Ok)
@@ -323,18 +323,17 @@ namespace VolleybalCompetition_creator
                 if (columnindex == olvColumn2.Index) // name
                 {
                     List<Selection> list = new List<Selection>();
-                    Selection def = null;
                     Selection sel;
-                    sel = new Selection(club.name);list.Add(sel);if (sel.ToString() == team.name) def = sel;
-                    sel = new Selection(club.name+" A");list.Add(sel);if (sel.ToString() == team.name) def = sel;
-                    sel = new Selection(club.name+" B");list.Add(sel);if (sel.ToString() == team.name) def = sel;
-                    sel = new Selection(club.name+" C");list.Add(sel);if (sel.ToString() == team.name) def = sel;
-                    sel = new Selection(club.name+" D");list.Add(sel);if (sel.ToString() == team.name) def = sel;
-                    sel = new Selection(club.name+" E");list.Add(sel);if (sel.ToString() == team.name) def = sel;
-                    sel = new Selection(club.name+" F");list.Add(sel);if (sel.ToString() == team.name) def = sel;
-                    sel = new Selection(club.name+" G");list.Add(sel);if (sel.ToString() == team.name) def = sel;
-                    sel = new Selection(club.name+" H");list.Add(sel);if (sel.ToString() == team.name) def = sel;
-                    SelectionDialog diag = new SelectionDialog(list, def);
+                    sel = new Selection(club.name);list.Add(sel);if (sel.ToString() == team.name) sel.selected = true;
+                    sel = new Selection(club.name+" A");list.Add(sel);if (sel.ToString() == team.name) sel.selected = true;
+                    sel = new Selection(club.name + " B"); list.Add(sel); if (sel.ToString() == team.name) sel.selected = true;
+                    sel = new Selection(club.name + " C"); list.Add(sel); if (sel.ToString() == team.name) sel.selected = true;
+                    sel = new Selection(club.name + " D"); list.Add(sel); if (sel.ToString() == team.name) sel.selected = true;
+                    sel = new Selection(club.name + " E"); list.Add(sel); if (sel.ToString() == team.name) sel.selected = true;
+                    sel = new Selection(club.name + " F"); list.Add(sel); if (sel.ToString() == team.name) sel.selected = true;
+                    sel = new Selection(club.name + " G"); list.Add(sel); if (sel.ToString() == team.name) sel.selected = true;
+                    sel = new Selection(club.name + " H"); list.Add(sel); if (sel.ToString() == team.name) sel.selected = true;
+                    SelectionDialog diag = new SelectionDialog(list);
                     diag.Text = "Select the name:";
                     diag.ShowDialog();
                     if (diag.Ok)
@@ -348,14 +347,13 @@ namespace VolleybalCompetition_creator
                 if (columnindex == olvColumn14.Index) // club
                 {
                     List<Selection> list = new List<Selection>();
-                    Selection def = null;
                     foreach (Club club in klvv.clubs)
                     {
                         Selection sel = new Selection(club.name, club);
-                        if (club == team.club) def = sel;
+                        if (club == team.club) sel.selected = true;
                         list.Add(sel);
                     }
-                    SelectionDialog diag = new SelectionDialog(list, def);
+                    SelectionDialog diag = new SelectionDialog(list);
                     diag.Text = "Select the club:";
                     diag.ShowDialog();
                     if (diag.Ok)
@@ -370,16 +368,15 @@ namespace VolleybalCompetition_creator
                 if (columnindex == olvColumn5.Index) // time
                 {
                     List<Selection> list = new List<Selection>();
-                    Selection def = null;
                     Time time = new Time(9, 30);
                     while(time < new Time(21,00))
                     {
                         Selection sel = new Selection(time.ToString(),new Time(time));
-                        if (team.defaultTime == time) def = sel;
+                        if (team.defaultTime == time) sel.selected = true;
                         list.Add(sel);
                         time.AddMinutes(30);
                     }
-                    SelectionDialog diag = new SelectionDialog(list, def);
+                    SelectionDialog diag = new SelectionDialog(list);
                     diag.Text = "Select the time:";
                     diag.ShowDialog();
                     if (diag.Ok)
@@ -400,9 +397,10 @@ namespace VolleybalCompetition_creator
             if (team != null)
             {
                 TeamConstraint prevCon = null;
-                foreach (TeamConstraint con in klvv.teamConstraints)
+                foreach (Constraint c in klvv.constraints)
                 {
-                    if (con.Club == team.club) prevCon = con;
+                    TeamConstraint con = c as TeamConstraint;
+                    if (con != null && con.club == team.club) prevCon = con;
                 }
                 TeamConstraint tc = new TeamConstraint(team);
                 if (prevCon != null)
@@ -411,8 +409,8 @@ namespace VolleybalCompetition_creator
                     tc.homeVisitNone = prevCon.homeVisitNone;
                     tc.cost = prevCon.cost;
                 }
-                klvv.teamConstraints.Add(tc);
-                objectListView2.SetObjects(klvv.teamConstraints.FindAll(c => c.Club == club));
+                klvv.constraints.Add(tc);
+                objectListView2.SetObjects(klvv.constraints.FindAll(c => c.club == club && ((c as TeamConstraint) != null)));
                 objectListView2.BuildList(true);
             }
             klvv.Evaluate(null);
@@ -433,8 +431,8 @@ namespace VolleybalCompetition_creator
         private void button2_Click(object sender, EventArgs e)
         {
             TeamConstraint tc = (TeamConstraint)objectListView2.SelectedObject;
-            klvv.teamConstraints.Remove(tc);
-            objectListView2.SetObjects(klvv.teamConstraints.FindAll(c => c.Club == club));
+            klvv.constraints.Remove(tc);
+            objectListView2.SetObjects(klvv.constraints.FindAll(c => (c as TeamConstraint) != null && c.club == club));
             objectListView1.BuildList(true);
             klvv.Evaluate(null);
             klvv.Changed();

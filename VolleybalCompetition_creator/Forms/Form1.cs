@@ -79,9 +79,11 @@ namespace VolleybalCompetition_creator
                 this.Invoke(new Action(() => state_OnMyChange(source, e)));
                 return;
             }
-            lock (klvv);
-            string changed = klvv.stateNotSaved ? "*" : "";
-            this.Text = string.Format("Volleyball competition creation tool ({0}{1})", klvv.savedFileName, changed);
+            lock (klvv)
+            {
+                string changed = klvv.stateNotSaved ? "*" : "";
+                this.Text = string.Format("Volleyball competition creation tool ({0}{1})", klvv.savedFileName, changed);
+            }
         }
 
 
@@ -357,6 +359,7 @@ namespace VolleybalCompetition_creator
 
         private void competitionxmlForKlvvsiteToolStripMenuItem_Click(object sender, EventArgs e)
         {
+           
             DateTime now = DateTime.Now;
             saveFileDialog1 = new SaveFileDialog();
             saveFileDialog1.FileName = string.Format("ExportToKlvv{0:00}{1:00}{2:00}_{3:00}{4:00}.xml", now.Year, now.Month, now.Day, now.Hour, now.Minute);
@@ -367,7 +370,27 @@ namespace VolleybalCompetition_creator
         }
         public void saveFileDialog1_FileOk4(object sender, CancelEventArgs e)
         {
-            klvv.WriteExportToKLVVXml(saveFileDialog1.FileName);
+            List<Selection> selection = new List<Selection>();
+            foreach (Serie serie in klvv.series)
+            {
+                Selection sel = new Selection(serie.name);
+                sel.obj = serie;
+                sel.selected = (serie.imported == false);
+                selection.Add(sel);
+            }
+
+            SelectionDialog diag = new SelectionDialog(selection,true);
+            diag.ShowDialog();
+            List<Serie> series = new List<Serie>();
+            if (diag.Ok)
+            {
+                foreach (Selection sel in diag.Selections)
+                {
+                    if (sel.selected) series.Add((Serie)sel.obj);
+                }
+
+                klvv.WriteExportToKLVVXml(saveFileDialog1.FileName, series);
+            }
         }
 
         private void poulesSeriescsvToolStripMenuItem_Click(object sender, EventArgs e)
@@ -397,7 +420,25 @@ namespace VolleybalCompetition_creator
         }
         public void saveFileDialog1_FileOk6(object sender, CancelEventArgs e)
         {
-            klvv.WriteMatches(saveFileDialog1.FileName);
+            List<Selection> selection = new List<Selection>();
+            foreach (Serie serie in klvv.series)
+            {
+                Selection sel = new Selection(serie.name);
+                sel.obj = serie;
+                sel.selected = (serie.imported == false);
+                selection.Add(sel);
+            }
+            SelectionDialog diag = new SelectionDialog(selection, true);
+            diag.ShowDialog();
+            if (diag.Ok)
+            {
+                List<Serie> series = new List<Serie>();
+                foreach (Selection sel in diag.Selections)
+                {
+                    if (sel.selected) series.Add((Serie)sel.obj);
+                }
+                klvv.WriteMatches(saveFileDialog1.FileName, series);
+            }
         }
 
         private void statisticscsvToolStripMenuItem_Click(object sender, EventArgs e)

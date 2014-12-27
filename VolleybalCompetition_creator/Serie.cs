@@ -59,10 +59,9 @@ namespace VolleybalCompetition_creator
         
         private bool _weekOptimizable;
         private bool _homeVisitOptimizable;
-        public bool optimizable { get { return _optimizable & evaluated & imported == false; } set { _optimizable = value; export = value; } }
+        public bool optimizable { get { return _optimizable & evaluated & imported == false; } set { _optimizable = value; } }
         public bool weekOrderChangeAllowed { get { return optimizable && _weekOptimizable; } set { _weekOptimizable = value; } }
         public bool homeVisitChangeAllowed { get { return optimizable && _homeVisitOptimizable; } set { _homeVisitOptimizable = value; } }
-        public bool export { get;set;} 
         public bool evaluated { get; set; }
         public bool Reserve()
         {

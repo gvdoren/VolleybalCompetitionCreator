@@ -42,24 +42,26 @@ namespace VolleybalCompetition_creator
                 this.Invoke(new Action(() => state_OnMyChange(source, e)));
                 return;
             }
-            lock (klvv);
-            if (state.selectedConstraint != null && state.showConstraints.Contains(state.selectedConstraint) == false && state.selectedConstraint.error == false)
+            lock (klvv)
             {
-                if (state.showConstraints.Count > 0)
+                if (state.selectedConstraint != null && state.showConstraints.Contains(state.selectedConstraint) == false && state.selectedConstraint.error == false)
                 {
+                    if (state.showConstraints.Count > 0)
+                    {
 
-                    state.selectedConstraint = state.showConstraints[0];
-                    objectListView1.SelectObject(state.selectedConstraint);
+                        state.selectedConstraint = state.showConstraints[0];
+                        objectListView1.SelectObject(state.selectedConstraint);
+                    }
+                    else
+                    {
+                        state.selectedConstraint = null;
+                        objectListView1.SelectedObjects.Clear();
+                    }
                 }
-                else
-                {
-                    state.selectedConstraint = null;
-                    objectListView1.SelectedObjects.Clear();
-                }
+                objectListView1.BuildList(true);
+                //objectListView1_SelectionChanged(null, null);
+                UpdateConflictCount();
             }
-            objectListView1.BuildList(true);
-            //objectListView1_SelectionChanged(null, null);
-            UpdateConflictCount();
          }
         private void UpdateConflictCount()
         {

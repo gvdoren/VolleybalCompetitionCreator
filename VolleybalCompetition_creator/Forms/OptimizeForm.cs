@@ -43,10 +43,6 @@ namespace VolleybalCompetition_creator
             {
                 serie.evaluated = (e.NewValue == CheckState.Checked);
             }
-            else
-            {
-                serie.export = (e.NewValue == CheckState.Checked);
-            }
             klvv.Evaluate(null);
             klvv.Changed();
         }
@@ -69,16 +65,18 @@ namespace VolleybalCompetition_creator
                     if (poule.serie != null && poule.optimizable == true)
                     {
                         {
-                            lock (klvv) ;
-                            IProgress intf = (IProgress)sender;
-                            intf.SetText("Optimizing - " + poule.serie.name + poule.name);
-                            poule.SnapShot(klvv);
-                            poule.OptimizeTeamAssignment(klvv, intf);
-                            poule.OptimizeHomeVisitor(klvv);
-                            poule.OptimizeHomeVisitorReverse(klvv);
-                            poule.OptimizeWeekends(klvv, intf);
-                            klvv.Evaluate(null);
-                            if (intf.Cancelled()) return;
+                            lock (klvv)
+                            {
+                                IProgress intf = (IProgress)sender;
+                                intf.SetText("Optimizing - " + poule.serie.name + poule.name);
+                                poule.SnapShot(klvv);
+                                poule.OptimizeTeamAssignment(klvv, intf);
+                                poule.OptimizeHomeVisitor(klvv);
+                                poule.OptimizeHomeVisitorReverse(klvv);
+                                poule.OptimizeWeekends(klvv, intf);
+                                klvv.Evaluate(null);
+                                if (intf.Cancelled()) return;
+                            }
                         }
                         klvv.Changed();
                     }
@@ -125,11 +123,13 @@ namespace VolleybalCompetition_creator
                 foreach (Team team in teamList)
                 {
                     {
-                        lock (klvv) ;
-                        intf.SetText("Optimizing - " + team.poule.serie.name + team.poule.name + " - " + team.name);
-                        team.poule.SnapShot(klvv);
-                        team.poule.OptimizeTeam(klvv, intf, team);
-                        if (intf.Cancelled()) return;
+                        lock (klvv)
+                        {
+                            intf.SetText("Optimizing - " + team.poule.serie.name + team.poule.name + " - " + team.name);
+                            team.poule.SnapShot(klvv);
+                            team.poule.OptimizeTeam(klvv, intf, team);
+                            if (intf.Cancelled()) return;
+                        }
                     }
                     klvv.Changed();
                 }
@@ -170,16 +170,18 @@ namespace VolleybalCompetition_creator
                 foreach (Poule poule in pouleList)
                 {
                     {
-                        lock (klvv) ;
-                        IProgress intf = (IProgress)sender;
-                        intf.SetText("Optimizing - " + poule.serie.name + poule.name);
-                        poule.SnapShot(klvv);
-                        poule.OptimizeTeamAssignment(klvv, intf);
-                        //poule.AnalyzeAndOptimizeTeamAssignment(klvv, intf);
-                        poule.OptimizeHomeVisitor(klvv);
-                        poule.OptimizeWeekends(klvv, intf);
-                        klvv.Evaluate(null);
-                        if (intf.Cancelled()) return;
+                        lock (klvv)
+                        {
+                            IProgress intf = (IProgress)sender;
+                            intf.SetText("Optimizing - " + poule.serie.name + poule.name);
+                            poule.SnapShot(klvv);
+                            poule.OptimizeTeamAssignment(klvv, intf);
+                            //poule.AnalyzeAndOptimizeTeamAssignment(klvv, intf);
+                            poule.OptimizeHomeVisitor(klvv);
+                            poule.OptimizeWeekends(klvv, intf);
+                            klvv.Evaluate(null);
+                            if (intf.Cancelled()) return;
+                        }
                     }
                     klvv.Changed();
                 }
@@ -218,11 +220,13 @@ namespace VolleybalCompetition_creator
                 foreach (Team team in teamList)
                 {
                     {
-                        lock (klvv);
-                        intf.SetText("Optimizing - " + team.poule.serie.name + team.poule.name + " - " + team.name);
-                        team.poule.SnapShot(klvv);
-                        team.poule.OptimizeTeam(klvv, intf, team);
-                        if (intf.Cancelled()) return;
+                        lock (klvv)
+                        {
+                            intf.SetText("Optimizing - " + team.poule.serie.name + team.poule.name + " - " + team.name);
+                            team.poule.SnapShot(klvv);
+                            team.poule.OptimizeTeam(klvv, intf, team);
+                            if (intf.Cancelled()) return;
+                        }
                     }
                     klvv.Changed();
                 }
@@ -386,15 +390,17 @@ namespace VolleybalCompetition_creator
                     if (poule.serie != null && poule.optimizable == true)
                     {
                         {
-                            lock (klvv) ;
-                            IProgress intf = (IProgress)sender;
-                            intf.SetText("Optimizing - " + poule.serie.name + poule.name);
-                            poule.SnapShot(klvv);
-                            //poule.OptimizeTeamAssignment(klvv, intf);
-                            poule.OptimizeHomeVisitor(klvv);
-                            //poule.OptimizeWeekends(klvv, intf);
-                            klvv.Evaluate(null);
-                            if (intf.Cancelled()) return;
+                            lock (klvv)
+                            {
+                                IProgress intf = (IProgress)sender;
+                                intf.SetText("Optimizing - " + poule.serie.name + poule.name);
+                                poule.SnapShot(klvv);
+                                //poule.OptimizeTeamAssignment(klvv, intf);
+                                poule.OptimizeHomeVisitor(klvv);
+                                //poule.OptimizeWeekends(klvv, intf);
+                                klvv.Evaluate(null);
+                                if (intf.Cancelled()) return;
+                            }
                         }
                         klvv.Changed();
                     }

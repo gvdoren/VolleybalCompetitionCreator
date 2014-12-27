@@ -37,11 +37,13 @@ namespace VolleybalCompetition_creator
                 this.Invoke(new Action(() => state_OnMyChange(source, e)));
                 return;
             }
-            lock (klvv) ;
-            // Niet nodig? teams veranderen niet. Selected team is anders deselected
-            // objectListView1.SetObjects(klvv.teams);
-            objectListView1.BuildList(true);
-            Refresh();
+            lock (klvv)
+            {
+                // Niet nodig? teams veranderen niet. Selected team is anders deselected
+                // objectListView1.SetObjects(klvv.teams);
+                objectListView1.BuildList(true);
+                Refresh();
+            }
         }
 
         private void objectListView1_MouseDoubleClick(object sender, MouseEventArgs e)
