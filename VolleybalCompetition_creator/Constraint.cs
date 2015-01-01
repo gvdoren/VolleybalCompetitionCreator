@@ -400,7 +400,7 @@ namespace VolleybalCompetition_creator
                             conflict_cost += cost;
                             AddError("Internal test - poule consistency: Poule does not contain team");
                         }
-                        if (t.serie.poules.ContainsValue(poule) == false)
+                        if (t.serie.poules.Contains(poule) == false)
                         {
                             conflict_cost += cost;
                             AddError("Internal test - poule consistency: Serie does not contain poule");
@@ -519,7 +519,7 @@ namespace VolleybalCompetition_creator
             ClearErrors();
             foreach (Team team in club.teams)
             {
-                if (team.poule == null)
+                if (team.deleted == false && team.poule == null)
                 {
                     conflict_cost += cost;
                     AddError(string.Format("Team {0} (serie:{1}) has no poule assigned", team.name, team.serie.name));

@@ -459,5 +459,24 @@ namespace VolleybalCompetition_creator
                 klvv.Changed();
             }
         }
+
+        private void button14_Click(object sender, EventArgs e)
+        {
+            optimizeTeam = (Team)objectListView1.SelectedObject;
+            ProgressDialog diag = new ProgressDialog();
+            diag.WorkFunction += AnalyzeAndOptimizeWeekendAndHomeVisit;
+            diag.CompletionFunction += OptimizeCompleted;
+            diag.Start("Analyzing", null);
+        }
+        private void AnalyzeAndOptimizeWeekendAndHomeVisit(object sender, MyEventArgs e)
+        {
+            IProgress intf = (IProgress)sender;
+            intf.SetText("Analysing + Optimizing (weekends) - " + poule.serie.name + poule.name);
+            poule.SnapShot(klvv);
+            poule.AnalyzeAndOptimizeWeekends(klvv, intf);
+            klvv.Evaluate(null);
+            if (intf.Cancelled()) return;
+
+        }
     }
 }

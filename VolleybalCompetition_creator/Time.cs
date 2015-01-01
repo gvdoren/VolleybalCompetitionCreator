@@ -56,7 +56,7 @@ namespace VolleybalCompetition_creator
         }
         public static bool operator !=(Time t1, Time t2)
         {
-            return t1.Hours != t2.Hours || t1.Minutes != t2.Minutes;
+            return ((Object)t1) == null || ((Object)t2) == null || t1.Hours != t2.Hours || t1.Minutes != t2.Minutes;
         }
         public override int GetHashCode()
         {

@@ -174,7 +174,7 @@ namespace VolleybalCompetition_creator
             {
                 if (conflict_cost > 0)
                 {
-                    if (weekends.Count > 1)//12)
+                    if (weekends.Count > 10)//12)
                     {
                         List<Weekend> result = new List<Weekend>(weekends);
                         for (int i = 0; i < weekends.Count / 2; i++)
@@ -364,6 +364,7 @@ namespace VolleybalCompetition_creator
                 }
             }
         }
+
         public int[,] AnalyzeTeamAssignment(Klvv klvv, IProgress intf)
         {
             int[,] score = new int[maxTeams+1,maxTeams+1];
@@ -406,6 +407,61 @@ namespace VolleybalCompetition_creator
                     index1++;
                 }
                 teams = resultTeams;
+                klvv.Evaluate(null);
+            }
+            return score;
+        }
+        public void AnalyzeAndOptimizeWeekends(Klvv klvv, IProgress intf)
+        {
+            SnapShot(klvv);
+            int best_score = 1000;
+            int[,] table = AnalyzeWeekends(klvv, intf);
+            /*
+            Team[] used = new Team[maxTeams];
+            for (int i = 0; i < maxTeams; i++) used[i] = null;
+            AnalyzeAndOptimizeTeamAssignmentRecursive(klvv, intf, table, used, 0, ref best_score, new List<Team>(teams), 0);
+            teams = resultTeams;
+            */
+            klvv.Evaluate(null);
+        }
+        public int[,] AnalyzeWeekends(Klvv klvv, IProgress intf)
+        {
+            const int maxWeekends = 10;
+            if (weekends.Count != maxWeekends) throw (new Exception("Only usable for poule with 10 weekends"));
+            int[,] score = new int[maxWeekends + 1, 5 + 1];
+            List<Weekend> fixedOrderList = new List<Weekend>(weekends);
+            MakeDirty();
+            if (serie.optimizable)
+            {
+                for (int k = 0; k < 5; k++)
+                {
+                    weekends.Insert(5, weekends[0]);
+                    weekends.RemoveAt(0);
+                    weekends.Add(weekends[5]);
+                    weekends.RemoveAt(5);
+                    //klvv.EvaluateRelatedConstraints(this);
+                    klvv.Evaluate(null);
+                    for(int index=0; index<maxWeekends; index++)
+                    {
+                        score[index, (index + 4 - k) % 5] = weekends[index].conflict;
+                    }
+                }
+                Console.Write("{0,30}", "Weekends:");
+                for (int k = 1; k <= 5; k++)
+                {
+                    Console.Write("{0,4}", "p-" + k.ToString());
+                }
+                Console.WriteLine();
+                for (int index = 0; index < maxWeekends; index++)
+                {
+                    Console.Write("{0,30}", "Weekend "+(index+1).ToString());
+                    for (int k = 0; k < 5; k++)
+                    {
+                        Console.Write("{0,4}", score[index, k]);
+                    }
+                    Console.WriteLine();
+                }
+                weekends = resultWeekends;
                 klvv.Evaluate(null);
             }
             return score;

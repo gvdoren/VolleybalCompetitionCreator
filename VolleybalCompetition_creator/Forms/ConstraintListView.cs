@@ -50,7 +50,7 @@ namespace VolleybalCompetition_creator
                     {
 
                         state.selectedConstraint = state.showConstraints[0];
-                        objectListView1.SelectObject(state.selectedConstraint);
+                        objectListView1.SelectObject(state.selectedConstraint,true);
                     }
                     else
                     {
@@ -161,20 +161,10 @@ namespace VolleybalCompetition_creator
 
         private void objectListView1_SelectionChanged(object sender, EventArgs e)
         {
-            ConstraintView constraintView = null;
             Constraint constraint = objectListView1.SelectedObject as Constraint;
             //this.DockPanel.
             // check whether the PouleView is already existing
-            foreach (DockContent content in this.DockPanel.Contents)
-            {
-                ConstraintView temp = content as ConstraintView;
-                if (temp != null)
-                {
-                    constraintView = temp;
-                    constraintView.Activate();
-
-                }
-            }
+            ConstraintView constraintView = (ConstraintView)this.DockPanel.Contents.FirstOrDefault(d => (d as ConstraintView) != null);
             if (constraintView == null)
             {
                 constraintView = new ConstraintView(klvv, state);

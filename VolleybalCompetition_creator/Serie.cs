@@ -13,22 +13,24 @@ namespace VolleybalCompetition_creator
         {
             get
             {
-                foreach (Poule poule in poules.Values)
+                foreach (Poule poule in poules)
                 {
                     if (poule.imported == true) return true;
                 }
                 return false;
             }
         }
+        Klvv klvv = null;
         public string name { get; set; }
         public int id { get; set; }
-        public Dictionary<string, Poule> poules = new Dictionary<string, Poule>();
+        public List<Poule> poules = new List<Poule>();
         public bool Nationaal = false;
         public bool Provinciaal { get { return name == "1D" || name == "2D" || name == "3D" || name == "4D" || name == "1H" || name == "2H" || name == "3H" || name == "2H_ZR" || name == "PSD"; } }
         public bool Gewestelijk { get { return Nationaal == false && Provinciaal == false; } }
         
-        public Serie(int id, string name) 
+        public Serie(int id, string name, Klvv klvv) 
         { 
+            this.klvv = klvv;
             this.id = id; 
             this.name = name;
             optimizable = true; 
@@ -37,26 +39,11 @@ namespace VolleybalCompetition_creator
             homeVisitChangeAllowed = Gewestelijk;
             reserve = (name == "1H" || name == "2H" || name == "1D" || name == "2D" || Nationaal);
         }
-        public List<Team> teams = new List<Team>();
-        public bool AddTeam(Team team)
-        {
-            if (teams.Contains(team) == false)
-            {
-                if (team.serie != null) team.serie.RemoveTeam(team);
-                teams.Add(team);
-                team.serie = this;
-                return true;
-            }
-            return false;
-        }
-        public bool RemoveTeam(Team team)
-        {
-            teams.Remove(team);
-            team.serie = null;
-            return true;
+        
+        public List<Team> teams {
+            get { return klvv.teams.FindAll(t => t.serie == this && t.deleted == false); }
         }
         private bool _optimizable;
-        
         private bool _weekOptimizable;
         private bool _homeVisitOptimizable;
         public bool optimizable { get { return _optimizable & evaluated & imported == false; } set { _optimizable = value; } }

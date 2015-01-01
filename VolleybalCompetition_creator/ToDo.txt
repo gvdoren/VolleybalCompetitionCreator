@@ -47,4 +47,39 @@ ToDo:
 - af en toe wordt de 'cost' hoger. Hoe kan dat. Welke constraint wordt niet meegenomen in de related constraints?
 - Extra info vvb gebruiken bij importeren 
 
+
+Full optimisation for poules with at most 6 teams?
+- Per heen, en terug ronde.
+- 1e team = 3.6 Miljoen  mogelijkheden 
+- 2e team = 40.320
+- 3e team = 720
+- 4e team = 24
+- 5e team = 2
+Totaal: 10113169489920000 mogelijkheden
+
+
+32768 mogelijkheden om heen en terug te verdelen.
+- heen ronde:
+- 1e team: 5! = 120
+- 2e team: 4! = 24
+- 3! = 6
+- 2! = 2
+
+
+30!/27! *27!/24!
+
+Groepjes van 3 verdelen:
+30*20*10 * 27*17*7 
+
+Analyze + optimize van weekenden + uit/thuis:
+5 keer ronddraaien (x5) + optimaliseren van uit/thuis (x8) = 40.
+Dit geeft 8 tabellen van (10x5) (of 1 waarbij min is bijgehouden)
+
+
+
+
+
+
+
+
  

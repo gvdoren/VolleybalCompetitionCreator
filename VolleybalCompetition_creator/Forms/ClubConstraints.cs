@@ -129,8 +129,9 @@ namespace VolleybalCompetition_creator
         }
         private void UpdateTeamsTab()
         {
-            objectListView1.SetObjects(club.teams);
-            objectListView1.BuildList(true);
+            objectListView1.SetObjects(club.teams,true);
+            objectListView1_SelectionChanged(null, null); // otherwise it is not triggered for some reason.
+            //objectListView1.BuildList(true);
             if (club.groupingWithClub == null) comboBox2.SelectedIndex = 0;
             else comboBox2.SelectedItem = club.groupingWithClub;
         }
@@ -294,7 +295,7 @@ namespace VolleybalCompetition_creator
                     {
                         Serie newSerie = (Serie)diag.Selection.obj;
                         if (team.poule != null) team.poule.RemoveTeam(team);
-                        newSerie.AddTeam(team);
+                        team.serie = newSerie;
                         klvv.MakeDirty();
                     }
                     objectListView1.BuildList(true);
@@ -420,7 +421,9 @@ namespace VolleybalCompetition_creator
         private void objectListView1_SelectionChanged(object sender, EventArgs e)
         {
             button1.Enabled = (objectListView1.SelectedObject != null);
-            button4.Enabled = (objectListView1.SelectedObject != null);
+            button4.Enabled = (objectListView1.SelectedObject != null && ((Team)objectListView1.SelectedObject).deleted == false);
+            button5.Enabled = (objectListView1.SelectedObject != null && ((Team)objectListView1.SelectedObject).deleted == true);
+            button5.Visible = (objectListView1.SelectedObject != null && ((Team)objectListView1.SelectedObject).deleted == true);
         }
 
         private void objectListView2_SelectionChanged(object sender, EventArgs e)
@@ -441,11 +444,11 @@ namespace VolleybalCompetition_creator
         private void button4_Click(object sender, EventArgs e)
         {
             Team t = (Team)objectListView1.SelectedObject;
-            string s = string.Format("Het team '{0}' van club '{1}' in serie '{2}' wordt volledig verwijderd. Wil je dat?", t.name, t.club.name, t.serie.name);
+            string s = string.Format("Het team '{0}' van club '{1}' in serie '{2}' wordt volledig verwijderd. Wil je dat? Undelete is mogelijk, maar het team moet opnieuw in een poule ingedeeld worden.", t.name, t.club.name, t.serie.name);
             DialogResult dialogResult = MessageBox.Show(s, "Delete team", MessageBoxButtons.YesNo);
             if (dialogResult == DialogResult.Yes)
             {
-                t.RemoveTeam(klvv);
+                t.DeleteTeam(klvv);
             }
             UpdateTeamsTab();
             UpdateTeamConstraints();
@@ -457,11 +460,27 @@ namespace VolleybalCompetition_creator
         private void objectListView1_FormatRow(object sender, FormatRowEventArgs e)
         {
             Team t = (Team)e.Model;
-            int count = t.club.teams.Count(te => te.name == t.name && t.serie == te.serie);
+            int count = t.club.teams.Count(te => te.name == t.name && t.serie == te.serie && t.serie.imported == false);
             if (count > 1)
             {
                 e.Item.BackColor = Color.Red;
             }
+            if (t.deleted)
+            {
+                e.Item.Font = new Font(e.Item.Font, FontStyle.Strikeout); 
+            }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            Team t = (Team)objectListView1.SelectedObject;
+            t.UndeleteTeam(klvv);
+            UpdateTeamsTab();
+            UpdateTeamConstraints();
+            klvv.RenewConstraints();
+            klvv.Evaluate(null);
+            klvv.Changed();
+
         }
     }
 }

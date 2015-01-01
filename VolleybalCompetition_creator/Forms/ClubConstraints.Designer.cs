@@ -65,6 +65,8 @@
             this.olvColumn11 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
@@ -113,11 +115,12 @@
             this.objectListView1.FullRowSelect = true;
             this.objectListView1.GridLines = true;
             this.objectListView1.HasCollapsibleGroups = false;
+            this.objectListView1.HideSelection = false;
             this.objectListView1.Location = new System.Drawing.Point(3, 209);
             this.objectListView1.MultiSelect = false;
             this.objectListView1.Name = "objectListView1";
             this.objectListView1.ShowGroups = false;
-            this.objectListView1.Size = new System.Drawing.Size(729, 274);
+            this.objectListView1.Size = new System.Drawing.Size(729, 230);
             this.objectListView1.TabIndex = 0;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
@@ -139,6 +142,7 @@
             // 
             this.olvColumn17.AspectName = "poule.name";
             this.olvColumn17.CellPadding = null;
+            this.olvColumn17.IsEditable = false;
             this.olvColumn17.Text = "Poule";
             // 
             // olvColumn2
@@ -358,7 +362,7 @@
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button2.Enabled = false;
-            this.button2.Location = new System.Drawing.Point(657, 551);
+            this.button2.Location = new System.Drawing.Point(657, 509);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 10;
@@ -370,7 +374,7 @@
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.Enabled = false;
-            this.button1.Location = new System.Drawing.Point(657, 521);
+            this.button1.Location = new System.Drawing.Point(657, 479);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 9;
@@ -396,11 +400,11 @@
             this.olvColumn11});
             this.objectListView2.FullRowSelect = true;
             this.objectListView2.HideSelection = false;
-            this.objectListView2.Location = new System.Drawing.Point(3, 518);
+            this.objectListView2.Location = new System.Drawing.Point(3, 479);
             this.objectListView2.MultiSelect = false;
             this.objectListView2.Name = "objectListView2";
             this.objectListView2.ShowGroups = false;
-            this.objectListView2.Size = new System.Drawing.Size(632, 123);
+            this.objectListView2.Size = new System.Drawing.Size(632, 162);
             this.objectListView2.TabIndex = 8;
             this.objectListView2.UseCompatibleStateImageBehavior = false;
             this.objectListView2.View = System.Windows.Forms.View.Details;
@@ -447,7 +451,7 @@
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button3.Enabled = false;
-            this.button3.Location = new System.Drawing.Point(621, 489);
+            this.button3.Location = new System.Drawing.Point(621, 447);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(111, 23);
             this.button3.TabIndex = 9;
@@ -458,7 +462,7 @@
             // 
             this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button4.Enabled = false;
-            this.button4.Location = new System.Drawing.Point(504, 489);
+            this.button4.Location = new System.Drawing.Point(504, 447);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(111, 23);
             this.button4.TabIndex = 9;
@@ -466,12 +470,38 @@
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
+            // button5
+            // 
+            this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button5.Enabled = false;
+            this.button5.Location = new System.Drawing.Point(504, 447);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(111, 23);
+            this.button5.TabIndex = 9;
+            this.button5.Text = "Undelete Team";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Visible = false;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
+            // label2
+            // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(11, 456);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(169, 13);
+            this.label2.TabIndex = 11;
+            this.label2.Text = "Special Team Requirements:";
+            // 
             // InschrijvingenView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1004, 642);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.button2);
+            this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button1);
@@ -536,6 +566,8 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
         private BrightIdeasSoftware.OLVColumn olvColumn17;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Label label2;
 
     }
 }

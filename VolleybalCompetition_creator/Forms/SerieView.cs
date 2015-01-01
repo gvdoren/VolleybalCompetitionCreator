@@ -79,9 +79,9 @@ namespace VolleybalCompetition_creator
                 foreach (object obj in objectListView2.SelectedObjects)
                 {
                     Poule p = obj as Poule;
-                    if (serie.poules.ContainsValue(p)) selectedPoules.Add(p);
+                    if (serie.poules.Contains(p)) selectedPoules.Add(p);
                 }
-                objectListView2.SetObjects(serie.poules.Values);
+                objectListView2.SetObjects(serie.poules);
                 objectListView2.SelectedObjects = selectedPoules;
             }
             else
@@ -196,7 +196,7 @@ namespace VolleybalCompetition_creator
                 {
                     p.RemoveTeam(team);
                 }
-                serie.poules.Remove(p.name);
+                serie.poules.Remove(p);
                 klvv.poules.Remove(p);
             }
             //UpdateSerieList();
@@ -211,7 +211,7 @@ namespace VolleybalCompetition_creator
             if (comboBox1.SelectedItem != null)
             {
                 char Letter = 'A';
-                List<Poule> poules = serie.poules.Values.ToList();
+                List<Poule> poules = serie.poules.ToList();
                 poules.Sort(delegate(Poule p1, Poule p2) { return p1.name.CompareTo(p2.name); });
                 foreach (Poule p in poules)
                 {
@@ -225,7 +225,7 @@ namespace VolleybalCompetition_creator
                 {
                     poule.weekends.Add(new Weekend(we.Saturday));
                 }
-                serie.poules.Add(poule.name, poule);
+                serie.poules.Add(poule);
                 if (poule.serie.Gewestelijk) 
                     poule.CreateMatches();
                 else 
@@ -260,7 +260,7 @@ namespace VolleybalCompetition_creator
             {
                 SelectedPoules.Add(p);
             }
-            if (SelectedPoules.Count == 0) SelectedPoules.AddRange(serie.poules.Values);
+            if (SelectedPoules.Count == 0) SelectedPoules.AddRange(serie.poules);
 
             int minimumTeams = serie.teams.Count / serie.poules.Count;
             foreach (Team team in serie.teams)
@@ -344,7 +344,7 @@ namespace VolleybalCompetition_creator
             {
                 if (serie.optimizable)
                 {
-                    foreach (Poule poule in serie.poules.Values)
+                    foreach (Poule poule in serie.poules)
                     {
                         List<Weekend> weekends = klvv.annorama.GetReeks(poule.maxTeams.ToString());
                         if (weekends.Count < (poule.maxTeams - 1) * 2)
@@ -391,7 +391,7 @@ namespace VolleybalCompetition_creator
                 if (columnindex == 1)
                 {
                     List<Selection> list = new List<Selection>();
-                    foreach (Poule poule in serie.poules.Values)
+                    foreach (Poule poule in serie.poules)
                     {
                         Selection sel = new Selection(poule.name, poule);
                         if (poule == team.poule) sel.selected = true;
@@ -468,7 +468,7 @@ namespace VolleybalCompetition_creator
             });
             // Eerst alles leeg
             int maxTeams = 0;
-            foreach (Poule p in serie.poules.Values)
+            foreach (Poule p in serie.poules)
             {
                 maxTeams += p.maxTeams;
             }
@@ -483,7 +483,7 @@ namespace VolleybalCompetition_creator
                 return;
             }
             List<Poule> poules = new List<Poule>();
-            poules.AddRange(serie.poules.Values);
+            poules.AddRange(serie.poules);
             poules.Sort(delegate(Poule p1, Poule p2)
             {
                 return p1.name.CompareTo(p2.name);
@@ -513,7 +513,7 @@ namespace VolleybalCompetition_creator
             {
                 if (team.poule == null) color = Color.Red;
             }
-            foreach (Poule poule in serie.poules.Values)
+            foreach (Poule poule in serie.poules)
             {
                 if (poule.TeamCount > poule.maxTeams) color = Color.Red;
                 if (poule.TeamCount <= poule.maxTeams - 2 && color != Color.Red) color = Color.Orange;
@@ -534,7 +534,7 @@ namespace VolleybalCompetition_creator
             DialogResult dialogResult = MessageBox.Show(s, "Delete team", MessageBoxButtons.YesNo);
             if (dialogResult == DialogResult.Yes)
             {
-                t.RemoveTeam(klvv);
+                t.DeleteTeam(klvv);
             }
 
             klvv.RenewConstraints();

@@ -52,7 +52,7 @@ namespace VolleybalCompetition_creator
             if (hit.Item != null)
             {
                 Team team = objectListView1.GetModelObject(hit.Item.Index) as Team;
-                if (team != null)
+                if (team != null && team.poule != null)
                 {
                     // check whether the PouleView is already existing
                     foreach (DockContent content in this.DockPanel.Contents)

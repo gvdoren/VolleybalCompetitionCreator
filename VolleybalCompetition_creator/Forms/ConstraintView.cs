@@ -53,10 +53,11 @@ namespace VolleybalCompetition_creator
             Constraint constraint = state.selectedConstraint;
             if (constraint != null)
             {
-                objectListView1.Objects = constraint.conflictMatches;
+                objectListView1.SetObjects(constraint.conflictMatches, true);
+                //objectListView1.Objects = constraint.conflictMatches;
                 this.Text = constraint.Title;
                 label1.Text = "Conflict wedstrijden (" + constraint.conflictMatches.Count.ToString() + ")";
-                objectListView1.BuildList(true);
+                //objectListView1.BuildList(true);
                 richTextBox2.Clear();
                 foreach (string str in constraint.GetTextDescription())
                 {

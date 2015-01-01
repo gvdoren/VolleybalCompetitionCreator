@@ -22,6 +22,7 @@ namespace VolleybalCompetition_creator
         public bool Optimizable { get { return FixedSchema == false; } }
         public int FixedSchemaNumber = 0;
         public bool FixedSchema { get { return FixedSchemaNumber > 0; } }
+        public bool deleted { get; set; }
         public string email;
         public string NotAtSameTimeId
         {
@@ -104,11 +105,23 @@ namespace VolleybalCompetition_creator
         {
             return name != "----";
         }
+        public void DeleteTeam(Klvv klvv)
+        {
+            deleted = true; // only keep it in the club administration.
+            if (poule != null) poule.RemoveTeam(this);
+            //if (serie != null) serie.RemoveTeam(this);
+        }
+        public void UndeleteTeam(Klvv klvv)
+        {
+            deleted = false;
+            //serie.AddTeam(this);
+            klvv.AddTeam(this);
+        }
         public void RemoveTeam(Klvv klvv)
         {
             if (club != null)  club.RemoveTeam(this);
             if (poule != null) poule.RemoveTeam(this);
-            if (serie != null) serie.RemoveTeam(this);
+            //if (serie != null) serie.RemoveTeam(this);
             klvv.RemoveTeam(this);
         }
         public List<DateTime> plannedMatches = new List<DateTime>();
