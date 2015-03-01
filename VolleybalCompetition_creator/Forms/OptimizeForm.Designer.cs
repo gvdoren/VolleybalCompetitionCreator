@@ -38,10 +38,10 @@
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.button5 = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.button6 = new System.Windows.Forms.Button();
+            this.button7 = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -133,7 +133,7 @@
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Location = new System.Drawing.Point(7, 109);
+            this.button2.Location = new System.Drawing.Point(7, 51);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(117, 23);
             this.button2.TabIndex = 2;
@@ -163,19 +163,6 @@
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
-            // checkBox1
-            // 
-            this.checkBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Checked = true;
-            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox1.Location = new System.Drawing.Point(618, 303);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(112, 17);
-            this.checkBox1.TabIndex = 5;
-            this.checkBox1.Text = "Continuing forever";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            // 
             // button5
             // 
             this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -191,6 +178,7 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.button6);
+            this.groupBox1.Controls.Add(this.button7);
             this.groupBox1.Controls.Add(this.button1);
             this.groupBox1.Controls.Add(this.button2);
             this.groupBox1.Location = new System.Drawing.Point(614, 4);
@@ -203,13 +191,24 @@
             // button6
             // 
             this.button6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button6.Location = new System.Drawing.Point(7, 48);
+            this.button6.Location = new System.Drawing.Point(7, 80);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(117, 23);
             this.button6.TabIndex = 3;
             this.button6.Text = "Optimize Home/Visit";
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.button6_Click);
+            // 
+            // button7
+            // 
+            this.button7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button7.Location = new System.Drawing.Point(7, 109);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(117, 23);
+            this.button7.TabIndex = 1;
+            this.button7.Text = "Optimize Forever";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
             // groupBox2
             // 
@@ -231,7 +230,6 @@
             this.ClientSize = new System.Drawing.Size(775, 527);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.objectListView1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "OptimizeForm";
@@ -240,7 +238,6 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -254,12 +251,12 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
         private BrightIdeasSoftware.OLVColumn olvColumn4;
         private BrightIdeasSoftware.OLVColumn olvColumn5;
         private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button button7;
     }
 }

@@ -81,7 +81,7 @@ namespace VolleybalCompetition_creator
                         klvv.Changed();
                     }
                 }
-            } while (checkBox1.Checked && klvv.LastTotalConflicts<score);
+            } while (klvv.LastTotalConflicts<score);
         }
         private void OptimizePoulesCompleted(object sender, MyEventArgs e)
         {
@@ -133,7 +133,7 @@ namespace VolleybalCompetition_creator
                     }
                     klvv.Changed();
                 }
-            } while (checkBox1.Checked && teamList.Count > 0 && klvv.LastTotalConflicts<score);
+            } while (teamList.Count > 0 && klvv.LastTotalConflicts<score);
 
         }
 
@@ -185,7 +185,7 @@ namespace VolleybalCompetition_creator
                     }
                     klvv.Changed();
                 }
-            } while (checkBox1.Checked && pouleList.Count > 0 && klvv.LastTotalConflicts<score);
+            } while (pouleList.Count > 0 && klvv.LastTotalConflicts<score);
 
         }
 
@@ -230,7 +230,7 @@ namespace VolleybalCompetition_creator
                     }
                     klvv.Changed();
                 }
-            } while (checkBox1.Checked && teamList.Count > 0 && klvv.LastTotalConflicts<score);
+            } while (teamList.Count > 0 && klvv.LastTotalConflicts<score);
 
         }
         
@@ -405,10 +405,31 @@ namespace VolleybalCompetition_creator
                         klvv.Changed();
                     }
                 }
-            } while (checkBox1.Checked && klvv.LastTotalConflicts < score);
+            } while (klvv.LastTotalConflicts < score);
         }
 
-
+        private void button7_Click(object sender, EventArgs e)
+        {
+            ProgressDialog diag = new ProgressDialog();
+            diag.WorkFunction += OptimizePoulesForever;
+            diag.CompletionFunction += OptimizePoulesCompleted;
+            diag.Start("Optimizing", null);
+        }
+        private void OptimizePoulesForever(object sender, MyEventArgs e)
+        {
+            do
+            {
+                int i = 0;
+                IProgress intf = (IProgress)sender;
+                OptimizePoules(sender, e);
+                Console.WriteLine(string.Format("{0}. Optimize Poules finished: {1}", i, klvv.TotalConflicts()));
+                if (intf.Cancelled()) return;
+                OptimizeTeams(sender, e);
+                Console.WriteLine(string.Format("{0}. Optimize Team finished: {1}", i, klvv.TotalConflicts()));
+                if (intf.Cancelled()) return;
+                i++;
+            } while (true);
+        }
     }
 
 }

@@ -15,10 +15,25 @@ namespace VolleybalCompetition_creator
             InitializeComponent();
             this.Text = String.Format("About {0}", AssemblyTitle);
             this.labelProductName.Text = AssemblyProduct;
-            this.labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
+            
             this.labelCopyright.Text = AssemblyCopyright;
             this.labelCompanyName.Text = AssemblyCompany;
             this.textBoxDescription.Text = AssemblyDescription;
+            try
+            {
+                if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
+                {
+                    this.labelVersion.Text = String.Format("Version {0}", System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion);
+                }
+                else
+                {
+                    this.labelVersion.Text = "Version: Not published";
+                }
+            }
+            catch 
+            {
+                this.labelVersion.Text = "Version: Not published (Running from debugger)";
+            }
         }
 
         #region Assembly Attribute Accessors

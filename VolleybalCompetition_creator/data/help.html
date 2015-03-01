@@ -1,0 +1,242 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+</head>
+<body>
+  <h1>Volleybal Competition Creator</h1>
+  <h3>Inhoudsopgave</h3>
+<ul>
+<li><a href="#doel">Doel van het programma</a></li>
+<li><a href="#type conflicten">Type conflicten</a></li>
+<li><a href="#groepen">Groepen</a></li>
+<li><a href="#doel">Doel van het programma</a></li>
+<li><a href="#doel">Doel van het programma</a></li>
+</ul>
+  <p>&nbsp;</p>
+  <a name="doel" ></a>
+  <h3>Doel van het programma</h3>
+  <p>Dit programma is gemaakt om volleybal competities te creeeren, rekening houdend met:</p>
+  <ul>
+    <li>De ingeschreven teams. Elk team heeft de volgende informatie:
+      <ul>
+        <li>Serie (bv. 1e provinciaal heren)</li>
+        <li>Standaard dag + tijd (bv. Zaterdag 20:00)</li>
+        <li>Sporthal waar de wedstrijden gespeeld worden</li>
+        <li>Groep: X of Y. Meer uitleg zie <a href="#groepen">groepen</a></li>
+      </ul>
+    </li>
+    <li>Anorama: De competitie weekenden die zijn vastgelegd voor de verschillende reeksen</li>
+    <li>Beschikbaarheid sporthal</li>
+    <li>Poule indeling: welke teams in welke poule zitten.</li>
+    <li>Externe competitie: Nationale teams worden ingedeeld buiten deze competitie om. Echter, dit legt wel beperkingen op op de zaalbeschikbaarheid, meespelen van spelers, etc.</li>
+  </ul>
+  <p>Wat het programma doet is een competitie genereren en uitrekenen wat voor conflicten er zijn (bv. een wedstrijd op een dag dat de sporthal niet beschikbaar is). Vervolgens wordt er geprobeerd door de wedstrijden aan te passen (bv. uit/thuis wisselen, andere datum), het aantal conflicten te reduceren. Bij het reduceren van de conflicten wordt een soort 'fairness' gehanteerd. Je kunt je voorstellen dat het totaal aantal conflicten minimaal is, maar dat alle conflicten bij 1 club komen te liggen, of bij 1 team. Deze fairness houdt rekening met:</p>
+  <ul>
+    <li> Aantal conflicten per club (relatief tov het aantal teams in de club)</li>
+    <li>Aantal conflicten per team (relatief tov het aantal wedstrijden van het team)</li>
+  </ul>
+  <h3>Gebruik volledig nieuwe competitie</h3>
+  <p>Om een nieuwe competitie aan te maken, moet je de volgende stappen doorlopen:</p>
+  <ol>
+    <li><a href="#creeer nieuwe competitie">Maak een nieuwe competitie</a></li>
+    <li><a href="#importeer registraties">Importeer de team-registraties</a> </li>
+    <li><a href="#anorama">Vul de anorama in voor elk weekend &amp; voor elke reeks</a></li>
+    <li><a href="#poules indelen">Wijs de teams aan poules toe</a></li>
+    <li><a href="#competitie importeren">Importeer een bestaande (nationale) competitie</a></li>
+    <li><a href="#optimaliseer">Optimaliseer de competitie</a></li>
+  </ol>
+  <a name="creeer nieuwe competitie"/>
+<h4>Maak een nieuwe competitie</h4>
+  <p>Hiermee introduceer je alleen een nieuw bestand waar alles in wordt opgeslagen. Dit kan eenvoudig met File-New. Hierna moet je het jaar selecteren (bv 2014) waarvoor je de competitie wilt maken.</p>
+  <a name="importeer registraties"/>
+<h4>Importeer de team-registraties</h4>
+<p>Er zijn twee manieren om de registraties binnen te halen:</p>
+  <ol>
+    <li>File - Import - KLVV Registrations: er wordt dan gevraagd een file aan te geven (die je waarschijnlijk van te voren van de site hebt gesaved.</li>
+    <li>File - Import - http://klvv.be/server/restricted/registrations/registrationsXML.php: Hiermee haal je het direct van de website af</li>
+  </ol>
+  <p>Nadat je de registraties hebt geimporteerd is het zaak ze te controleren:</p>
+  <ul>
+    <li>Zijn de series goed. Dit is vooral voor de senioren teams. Klopt de reeks die ze hebben ingeschreven.</li>
+    <li>Zijn de X en Y groepen logisch ingedeeld</li>
+    <li>Vrije tekst:
+      <ul>
+        <li>Eetfestijnen en andere verzoeken kunnen vertaald worden in </li>
+      </ul>
+    </li>
+  </ul>
+<p>TODO: nationale teams. Eerst importeren nationale teams, dan teams toewijzen aan clubs</p>
+  <a name="anorama"/>
+<h4>Anorama invullen</h4>
+<p>Voor elke reeks (aantallen teams in de reeks) moet je de weekenden invullen waarop deze reeks speelt. Voor de senioren teams moet je dit invullen voor het gehele jaar. Voor de jeugd reeksen alleen voor de heen (of terug) reeks, afhankelijk of je de competitie aan het maken bent voor de heen (of terug) reeks. </p>
+<p>De anorama moet ingevuld zijn voordat je poules aanmaakt. Bij het creeren van een poule (met een bepaald aantal teams) wordt namelijk de anorama gebruikt om te bepalen op welke weekenden gespeeld mag worden. Als je na het creeeren van een poule de anorama veranderd heeft dat geen invloed meer op de bestaand poules. Alleen op de poules die nog gecreeerd worden. Dit kan gebruikt worden als poules voor de tweede helft van het seizoen gecreeerd worden. Je past de anorama aan voor de data voor de tweede helft, en creeerd dan de poules voor de tweede helft. De bestaande senioren poules die het hele jaar duren blijven onveranderd.</p>
+<h4></h4>
+  <a name="poules indelen"/>
+<h4>Poules indelen</h4>
+  <p>Onder Edit-Poule zit de poule manager. Je hebt de volgende opties:</p>
+  <ul>
+    <li>Poule creeeren: Je moet hiervoor eerst de juiste serie selecteren, en het max. aantal teams dat in de poule komt. Als je nu op creeer poule drukt, dan wordt op basis hiervan het basis-schema voor de poule gekozen.</li>
+    <li>Poule verwijderen: Selecteer de poule, en druk op delete poule. De teams die in deze poule zaten, blijven bestaan maar verliezen hun poule en moeten opnieuw aan een poule worden toegewezen.</li>
+    <li>Team indelen in poules: Selecteer de poule, selecteer de team(s) en druk op 'assign team(s)'. </li>
+    <li>Automatisch teams indelen: Indien je veel teams moet indelen kan het handig zijn om eerst het juiste aantal poules te creeeren, and dan met 'automatic divide' de teams in te verdelen over de poules.</li>
+    <li>Optimalizeren: nadat de teams zijn ingedeeld, kun je met behulp van 'Optimize distance' de verdeling van de teams over de poules optimaliseren mbt de afstand. De poules worden zo ingedeeld dat de totale afstand die de teams moeten afleggen minimaal is. In praktijk komt dit erop neer dat teams die vlak bij elkaar wonen in 1 poule worden gestopt. Hierbij kun je aangeven of meerdere teams van 1 club in 1 poule mogen (wat optimaal voor de afstand is), of dat deze verdeeld moeten worden over de poules (indien mogelijk).<br />
+    Als er poules geselecteerd zijn, vind de herverdeling (optimalisatie) van teams alleen plaats binnen de geselecteerde poules. Als er geen poules zijn geselecteerd, dan vindt de optimalisatie plaats over alle poules.</li>
+    <li>Reset-schema: Dan worden alle schema's van de poules in de serie weer naar default terug gezet en de optimalisatie van het schema teniet gedaan. Deze functionaliteit heeft eigenlijk niets te maken met het indelen van poules.</li>
+  </ul>
+  <p>Als poules in de tweede helft van het jaar worden ingedeeld, dan is de uitslag van de eerste helft van belang. Hiervoor kunnen de uitslagen van de eerste helft worden geimporteerd (File-Import-Ranking). Dan komt er achter elk team een getal te staan, bv. 1.56. Dit betekend dat het team 1e is geworden in de eerste helft. Het tweede getal is gerelateerd aan het aantal punten dat een team gehaald heeft. Echter, hoe kleiner dit getal, des te meer punten het team gehaald heeft. Dit is counter-intuitief maar is zo gekozen zodat je de teams kunt sorteren op dit getal: hoe kleiner hoe beter. Een team met 1.56 is dus een minder betere eerste dan een team met 1.75 omdat ze meer punten hebben gehaald in de eerste reeks.</p>
+<p>Als je deze scores gebruikt om de teams te sorteren kun je eenvoudig in de tweede helft de eerste 6 teams in de eerste poule, de tweede 6 in de tweede poule, enz.</p>
+  <a name="competitie importeren"/>
+<h4>Bestaande competitie importeren</h4>
+<p>Er zijn 2 redenen waarom een bestaande competitie wordt geimporteerd:</p>
+<ol>
+  <li>De provinciale competitie moet zich aanpassen aan de nationale competitie. Hiervoor wordt de nationale competitie geimporteerd.</li>
+  <li>In de tweede helft van het jaar wordt de jeugd competitie opnieuw gemaakt. Deze moet zich aanpassen aan de al bestaande competitie van de senioren, en aan de nationale competitie. Hiervoor moeten de senioren competitie en nationale competitie worden geimporteerd.</li>
+</ol>
+<p>Het is belangrijk om te weten wanneer wedstrijden van geimporteerde competities zijn omdat men kan aangeven dat een team tegelijk met een team van de geimporteerde competitie moet spelen. Verder is het natuurlijk zo dat je niet de wedstrijden van de geimporteerde competitie kan veranderen, deze worden beschouwd als gegeven.</p>
+<p>Het importeren van een competitie bestaat uit twee delen:</p>
+<ol>
+  <li>Inlezen van de competitie van een website, vervolgens wordt hier een .csv file van gemaakt (file - import - Convert KLVV site to CSV of Covert VVB site to CSV).</li>
+  <li>Inlezen van de gegeneerde.csv file in het programma</li>
+</ol>
+<p>Reden voor deze tussenstap is dat redelijk eenvoudig ook voor een andere website deze .csv gemaakt kan worden, en dan ook als input gebruikt kan worden.</p>
+<p>Indien een competitie wordt geimporteerd, kan niet altijd vastgesteld worden bij welke club teams horen. Op sites worden teams en clubs namelijk niet altijd exact hetzelfde geschreven. Indien teams in de nationale competitie worden geimporteerd, dan wordn alle teams aan de club 'Nationaal' toegekend. Echter, voor de clubs die meedoen met de provinciale competitie, moeten hun teams niet bij de 'Nationaal' club zitten, maar bij de eigen club. Dit kun je doen door de nationale club te selecten, en dan 'Edit-Club registrations'. Je krijgt dan alle teams in die bij de nationale club zitten. Door een team te selecteren, en op de club te dubbel clicken, kun je de club kiezen waar dit team echt bij hoort. Meer informatie over wijzigen van teams van een club zie</p>
+<p>Na het inlezen van de VVB site, zijn de wedstrijden + teams ingelezen. Echter, de teams zijn niet aan een club toegewezen</p>
+  <a name="optimaliseer"/>
+<h4>Competitie optimaliseren</h4>
+<p>&nbsp;</p>
+<a name="type conflicten" ></a>
+<h3>Type conflicten</h3>
+<p>De generatie van de competitie wordt in goede banen geleid door conflicten te definieren, die een bepaalde penalty-kosten introduceren. Omdat het programma probeert de totale kosten te minimaliseren zal het aantal conflicten geminimaliseert worden. </p>
+<ul>
+  <li>ConstraintSporthallNotAvailable: Dit conflict geeft aan als een wedstrijd gepland is in een sporthal die niet beschikbaar is.</li>
+  <li>ConstraintSchemaTooClose: Dit conflict geeft aan als de heen en terug wedstrijd te dicht bij elkaar gepland is.</li>
+  <li>ConstraintSchemaTooManyHomeAfterEachOther: Dit conflict geeft aan als er meer dan 3 thuis (of uit) wedstrijden na elkaar gepland zijn.</li>
+  <li>ConstraintPouleInconsistent: Hier wordt de definitie van een conflict misbruikt om een interne inconsistentie van het programma (=bug) aan te geven.</li>
+  <li>ConstraintNoPouleAssigned: Dit conflict geeft aan dat er teams zijn die nog niet ingedeeld zijn in een poule.</li>
+  <li>ConstraintPouleTwoTeamsOfSameClub: Indien er in 1 poule twee teams van 1 club zitten, dan moeten zij het eerste weekend van de heen, en terugronde tegen elkaar spelen. Dit conflict geeft aan indien de wedstrijden zo gepland zijn dat hier niet aan wordt voldaan. </li>
+  <li>ConstraintPouleOddEvenWeek: In het programma kan worden aangegeven dat een team alleen op even (of oneven) weekenden kan spelen. Het is aanbevolen deze functionaliteit niet te gebruiken omdat dit de kwaliteit van de totale competitie zal verslechteren. Het is ook niet nodig, omdat een club met de beschikbaarheid van de sporthal kan aangeven wanneer er gespeeld kan worden. Dit conflict geeft aan als oneven/even is aangegeven, maar een thuiswedstrijd is anders gepland. </li>
+  <li>ConstraintDifferentGroupsInSameWeekend: Dit conflict geeft aan als er wedstrijden op een dag gepland zijn niet allemaal in 1 groep zitten, maar verspreid over X en Y. </li>
+  <li>ConstraintNotAllInSameHomeWeekend: Dit conflict geeft aan als voor een club die alleen maar teams in 1 groep heeft, maar meer thuisweekenden heeft dan het minimale aantal weekenden.</li>
+  <li>ConstraintPlayAtSameTime: Je kunt in het tool aangeven of je niet wilt dat wedstrijden van twee teams tegelijk vallen (bv. coach speelt zelf ook). Met tegelijk wordt bedoeld dat het niet mogelijk is om te reizen tussentijds. Dit conflict geeft als de wedstrijden overlappen of tekort na elkaar gepland zijn.</li>
+  <li>ConstraintSpecialTeamRequirement: Je kunt in het tool aangeven of een team op een specifieke datum niet uit/thuis, of juist wel thuis moet spelen. Hiermee kun je bijvoorbeeld ingeven dat een team thuis moet spelen omdat ook het eetfestijn dat weekend is. Dit conflict geeft aan als aan zo'n special eis niet voldaan wordt.</li>
+  <li>ConstraintPouleFullLastTwoWeekends: Voor volwassen reeksen geld dat iedereen de laatste twee weekenden moet spelen. Dit conflict geeft aan als dit niet het geval is.</li>
+  <li>ConstraintClubTooManyConflicts: Het programma probeert de pijn te verdelen over alle clubs. Dit conflict geeft aan dat een club relatief veel conflicten heeft. Zoals ook met andere conflicten probeert het programma dit te voorkomen, waardoor er een balans komt over de clubs.</li>
+  <li>ConstraintTeamTooManyConflicts: Het programma probeert de pijn te verdelen over alle teams. Dit conflict geeft aan dat een team relatief veel conflicten heeft. Zoals ook met andere conflicten probeert het programma dit te voorkomen, waardoor er een balans komt over de team en voorkomt dat niet 1 team de pineut is.</li>
+</ul>
+<p>In de tabel is aangegeven welke conflict gerelateerd zijn aan de info die men op de website ingeeft, hoe zwaar elk conflict meeweegt.</p>
+<table width="100%" border="1">
+    <tr>
+      <th scope="col"><div align="left"></div></th>
+      <th scope="col">Beschikbaar op internet</th>
+      <th scope="col">Zwaarte</th>
+      <th scope="col">Opmerkingen</th>
+    </tr>
+    <tr>
+      <th scope="row"><div align="left">ConstraintSporthallNotAvailable</div></th>
+      <td>Ja, via beschikbaarheid sporthallen</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <th scope="row"><div align="left">ConstraintSchemaTooClose</div></th>
+      <td>Intern</td>
+      <td>&nbsp;</td>
+      <td>Schema generatie: niet toegestaan</td>
+    </tr>
+    <tr>
+      <th scope="row"><div align="left">ConstraintSchemaTooManyHomeAfterEachOther</div></th>
+      <td>Intern</td>
+      <td>&nbsp;</td>
+      <td>Schema generatie</td>
+    </tr>
+    <tr>
+      <th scope="row"><div align="left">ConstraintPouleInconsistent</div></th>
+      <td>Intern</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <th scope="row"><div align="left">ConstraintNoPouleAssigned</div></th>
+      <td>Nee, alleen in het tool zelf</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <th scope="row"><div align="left">ConstraintPouleTwoTeamsOfSameClub</div></th>
+      <td>Intern</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <th scope="row"><div align="left">ConstraintPouleOddEvenWeek</div></th>
+      <td>Nee, alleen in het tool zelf</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <th scope="row"><div align="left">ConstraintDifferentGroupsInSameWeekend</div></th>
+      <td>Ja, via groep X of Y</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <th scope="row"><div align="left">ConstraintNotAllInSameHomeWeekend</div></th>
+      <td>Ja, indien alleen X (of Y) in een club</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <th scope="row"><div align="left">ConstraintPlayAtSameTime</div></th>
+      <td>Nee, alleen via tool</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <th scope="row"><div align="left">ConstraintSpecialTeamRequirement</div></th>
+      <td>Nee, alleen via tool</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <th scope="row"><div align="left">ConstraintPouleFullLastTwoWeekends</div></th>
+      <td>Intern</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <th scope="row"><div align="left">ConstraintClubTooManyConflicts</div></th>
+      <td>Intern</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <th scope="row"><div align="left">ConstraintTeamTooManyConflicts</div></th>
+      <td>Intern</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+</table>
+<p>&nbsp;</p>
+
+<p></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+  <a name="groepen" ></a>
+  <h3>Groepen</h3>
+<p>Vaak komt het voor dat een club op 1 dag in het weekend de sporthal tot zijn beschikking heeft. Stel dat het 2 senioren teams heeft die men om en om wil laten spelen omdat er maar 1 team tegelijk in de sporthal kan spelen. Om dit aan te geven kunnen de teams in twee groepen verdeeld worden: X en Y. Het programma zal proberen om teams in X niet op dezelfde dag te laten spelen als teams in Y. Een club kan bijvoorbeeld de volgende teams samenstellen:</p>
+<ul>
+  <li>Dames team: zaterdag 20:00, groep X</li>
+  <li>Heren team: zaterdag 20:00, groep Y</li>
+</ul>
+<p>Hierdoor zullen de teams om en om spelen. Dit mechanisme is geintroduceerd om te voorkomen dat ze op dezelfde dag spelen. Echter, het kan ook gebruikt worden om teams op dezelfde dag te laten spelen:</p>
+<ul>
+  <li>Clubs met alle teams in X (of Y): In dit geval zal het programma het aantal thuisweekenden minimaliseren. Dit wil zeggen dat het probeert alle teams op dezelfde dag te laten spelen, om zodoende weekends te creeeren waarop helemaal geen team thuisspeelt.</li>
+  <li>Clubs met X en Y teams: Doordat er typisch elke week wedstrijden zijn omdat X en Y niet op dezelfde dag spelen, ontstaan er zaterdagen (of zondagen) waarop X-teams spelen, en zaterdagen waarop Y-teams spelen omdat het niet op dezelfde dag mag. Mocht er nu nog een scholieren jongens team zijn waarvan spelers ook met het heren team mee spelen, dan kan het scholieren team ook in groep Y ingedeeld worden. Dit team mag niet tegelijk met de X, dus zal op de Y-zaterdagen terecht komen.</li>
+</ul>
+<h4>Team inschrijvingen wijzigen</h4>
+<p>&nbsp;</p>
+</body>
+</html>

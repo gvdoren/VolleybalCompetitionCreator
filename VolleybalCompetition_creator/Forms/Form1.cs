@@ -626,6 +626,23 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             }
         }
 
+        private void helpToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Help help = new Help();
+            help.ShowDialog();
+        }
+
+        private void licenseToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            LicenseView license = new LicenseView(klvv);
+            license.ShowDialog();
+        }
+
+        private void aboutToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            AboutBox1 about = new AboutBox1();
+            about.ShowDialog();
+        }
 
 
     }

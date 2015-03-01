@@ -1,20 +1,4 @@
-﻿- Immutable poules
-  * gemaakt om een bestaande competitie in te lezen.
-
-- Aantal teams & selectie in Anorama. Koppelen? Ja
-
-- automatisch saven om de 10 minuten.
-
-- Group A&B volledig vertalen naar group X&Y
-
-- Optimalisatie mbv Analyse (alleen nuttig voor grote poules die niet brute force bepaald kunnen worden):
-   * Snellere evaluatie, waardoor meer mogelijkheden kunnen worden bekeken. Is het dan mogelijk om alle mogelijkheden te beschouwen (+ afbreken van dure mogelijkheden)
-   * Analyse is niet geheel 'betrouwbaar', team score representeerd niet de overall score verbetering:
-     - Indien er net een omslag is of de X of Y teams dominant zijn (mogelijk toch bij alle teams tellen).
-	 - Een lege plek in de poule, heeft invloed. Waar staat ie toevallig met roteren
-	 - 
-
-Belangrijk:
+﻿Belangrijk:
 - zet op de site er expliciet bij dat ze aangeven of hun nationale teams in X of Y of nogroup zit.
 - Eventueel naar alle clubs de indeling in reeksen sturen voordat de kalender wordt gemaakt.
 - Week eerder de sluitingsdatum. (eerste week poules indelen, en terugkoppelen)
@@ -24,56 +8,20 @@ Belangrijk:
    - Probeer de pijn te verdelen (XY groups opt, evt. daarna met HomeVisit opt).
    - Indien meerdere poules kan het helpen ze naar een andere poule te verplaatsen
 
-- Inlezen van registratie:
-   * Wat is veranderd, meenemen, dus oude registratie intact laten. 
-       Voordeel: nationale reeksen blijven bestaan.
-	   Risico: wedstrijd-wijzigingen van senioren ploegen worden niet meegenomen.
-	   Alleen jeugd-exporteren.
-
-
-Terug inlezen van de competitie. Waar heb ik last van:
- - Verandering van de poule (2H_ZR : B -> A)
- - Wisselen van twee teams van een club van poules (Helchteren A + B) in MM reeks
- - Wisselen van twee teams van een club van poules (Stalvoc Beverlo A + B) in KH reeks
- Gefixed aan het schema lokaal, zodat het overeen stemt met wat op de site staat.
- - Afstanden sporthallen outdated. Moet van site afkomen.
- - Teams die forfait hadden gegeven, staan toch terug in de lijst (heeft Bram deze wel weggehaald?)
-
-
 ToDo:
-- Bij inschrijvingen kun je aangeven dat je een team 'terugtrekt'. Forfait, of naar de tweede ronde, of een team verkeerd ingegeven.
+- Testen: deleted teams
 - Afstand sporthallen
 - reeks met een 2 toevoegen: a2, b2
 - af en toe wordt de 'cost' hoger. Hoe kan dat. Welke constraint wordt niet meegenomen in de related constraints?
 - Extra info vvb gebruiken bij importeren 
+- Group A&B volledig vertalen naar group X&Y
+- Immutable poules
+  * gemaakt om een bestaande competitie in te lezen.
+- Aantal teams & selectie in Anorama. Koppelen? Ja
+- automatisch saven om de 10 minuten.
+- Niet gebruikte constraints verwijderen
+- Een net viewModel introduceren
 
-
-Full optimisation for poules with at most 6 teams?
-- Per heen, en terug ronde.
-- 1e team = 3.6 Miljoen  mogelijkheden 
-- 2e team = 40.320
-- 3e team = 720
-- 4e team = 24
-- 5e team = 2
-Totaal: 10113169489920000 mogelijkheden
-
-
-32768 mogelijkheden om heen en terug te verdelen.
-- heen ronde:
-- 1e team: 5! = 120
-- 2e team: 4! = 24
-- 3! = 6
-- 2! = 2
-
-
-30!/27! *27!/24!
-
-Groepjes van 3 verdelen:
-30*20*10 * 27*17*7 
-
-Analyze + optimize van weekenden + uit/thuis:
-5 keer ronddraaien (x5) + optimaliseren van uit/thuis (x8) = 40.
-Dit geeft 8 tabellen van (10x5) (of 1 waarbij min is bijgehouden)
 
 
 

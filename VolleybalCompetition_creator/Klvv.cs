@@ -17,6 +17,7 @@ namespace VolleybalCompetition_creator
 {
     public class Klvv
     {
+        public Security.LicenseKey licenseKey;
         WebClient wc = null;
         public bool stateNotSaved = false;
         public void MakeDirty() { stateNotSaved = true; }
@@ -133,6 +134,9 @@ namespace VolleybalCompetition_creator
         }
         public Klvv(int year)
         {
+            string Key = VolleybalCompetition_creator.Properties.Settings.Default.LicenseKey;
+            licenseKey = new Security.LicenseKey(Key);
+            
             ServicePointManager.DefaultConnectionLimit = int.MaxValue;
             HttpWebRequest.DefaultWebProxy = null;
             WebRequest.DefaultWebProxy = null;
@@ -309,9 +313,9 @@ namespace VolleybalCompetition_creator
         }
         public void ConvertKLVVCompetitionToCSV(string filename)
         {
-            StreamWriter writer = new StreamWriter(filename);
-
+            List<KeyValuePair<string, string>> output = new List<KeyValuePair<string, string>>();
             Dictionary<int, int> registrationMapping = new Dictionary<int, int>();
+            Dictionary<int, int> clubMapping = new Dictionary<int, int>();
             string url3 = "http://klvv.be/server/series.php?season=2014-2015&trophy=false";
             var json3 = wc.DownloadString(url3);
             JArray Sorts = JArray.Parse(json3);
@@ -329,7 +333,9 @@ namespace VolleybalCompetition_creator
                         {
                             int teamId = int.Parse(team["teamId"].ToString());
                             int registrationId = int.Parse(team["registrationId"].ToString());
+                            int clubId = int.Parse(team["clubId"].ToString());
                             registrationMapping.Add(teamId, registrationId);
+                            clubMapping.Add(teamId, clubId);
                         }
                     }
                 }
@@ -370,6 +376,7 @@ namespace VolleybalCompetition_creator
                                 int homeTeamId = registrationMapping[(int)match["homeTeamId"]];
                                 string visitorTeamName = (string)match["visitorTeam"];
                                 int visitorTeamId = registrationMapping[(int)match["visitorTeamId"]];
+                                int visitorClubId = clubMapping[(int)match["visitorTeamId"]];
                                 string sporthal = "-";
                                 int sporthalId = -1;
                                 try
@@ -388,13 +395,36 @@ namespace VolleybalCompetition_creator
                                 string aanvangsuur = datetime.ToShortTimeString();
                                 string thuisclubname = club.name;
                                 int thuisclubId = club.Id;
-                                writer.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13}, ,",
-                                     serieName, serieId, pouleName, "-1", homeTeamName, homeTeamId, visitorTeamName, visitorTeamId, sporthal, sporthalId, date, aanvangsuur, thuisclubname, thuisclubId);
+                                string line = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13}, ,{14}",
+                                     serieName, serieId, pouleName, "-1", homeTeamName, homeTeamId, visitorTeamName, visitorTeamId, sporthal, sporthalId, date, aanvangsuur, thuisclubname, thuisclubId, visitorClubId);
+                                output.Add(new KeyValuePair<string,string>(serieName+pouleName, line));
  
                             }
                         }
                     }
                 }
+            }
+            List<Selection> selection = new List<Selection>();
+            List<string> selected = new List<string>();
+            foreach(KeyValuePair<string, string> kvp in output)
+            {
+                if(selected.Contains(kvp.Key) == false)
+                {
+
+                    selected.Add(kvp.Key);
+                    Selection sel = new Selection(kvp.Key);
+                    sel.selected = true;
+                    selection.Add(sel);
+                }
+            }
+            SelectionDialog diag = new SelectionDialog(selection,true);
+            diag.ShowDialog();
+            selection = diag.Selections;
+            StreamWriter writer = new StreamWriter(filename);
+            foreach(KeyValuePair<string, string> kvp in output)
+            {
+                Selection s = selection.Find(sel => sel.label == kvp.Key);
+                if(s != null) writer.WriteLine(kvp.Value);
             }
             writer.Close();
         }
@@ -495,7 +525,7 @@ namespace VolleybalCompetition_creator
             const int timeIndex = 11;
             //const int homeClubIndex = 12;
             const int homeClubIdIndex = 13;
-            const int visitorClubIndex = 14;
+            //const int visitorClubIndex = 14;
             const int visitorClubIdIndex = 15;
 
             string[] lines = System.IO.File.ReadAllLines(fileName);
@@ -518,11 +548,15 @@ namespace VolleybalCompetition_creator
                 {
                     System.Windows.Forms.MessageBox.Show(string.Format("Club id '{0}' is unknown", homeClubId));
                 }
-                int visitorClubId = int.Parse(parameters[visitorClubIdIndex]);
-                Club visitorClub = clubs.Find(s => s.Id == visitorClubId);
-                if (visitorClub == null)
+                Club visitorClub = null;
+                if (parameters[visitorClubIdIndex].Length > 0)
                 {
-                    System.Windows.Forms.MessageBox.Show(string.Format("Club id '{0}' is unknown", visitorClubId));
+                    int visitorClubId = int.Parse(parameters[visitorClubIdIndex]);
+                    visitorClub = clubs.Find(s => s.Id == visitorClubId);
+                    if (visitorClub == null)
+                    {
+                        System.Windows.Forms.MessageBox.Show(string.Format("Club id '{0}' is unknown", visitorClubId));
+                    }
                 }
                 int sporthalId = int.Parse(parameters[sporthallIdIndex]);
                 Sporthal sporthal = sporthalls.Find(s => s.id == sporthalId);
@@ -604,13 +638,13 @@ namespace VolleybalCompetition_creator
                         }
                         teams.Add(team);
                         team.sporthal = homeClub.sporthalls[0]; // just first sporthal.
-                        poule.AddTeam(team);
                         //serie.AddTeam(team);
                         homeClub.AddTeam(team);
                     }
+                    poule.AddTeam(team);
                 }
                 // visitor teams (sommige competities hebben geen heen, en terug reeks
-                if (parameters[visitorTeamIndex].Length > 0)
+                if (parameters[visitorTeamIndex].Length > 0 && visitorClub != null)
                 {
                     int teamId = int.Parse(parameters[visitorTeamIdIndex]);
                     Team team = null;
@@ -653,10 +687,10 @@ namespace VolleybalCompetition_creator
                         }
                         teams.Add(team);
                         team.sporthal = visitorClub.sporthalls[0]; // just first sporthal.
-                        poule.AddTeam(team);
                         //serie.AddTeam(team);
                         visitorClub.AddTeam(team);
                     }
+                    poule.AddTeam(team);
                 }
             }
             // Add matches
@@ -715,7 +749,7 @@ namespace VolleybalCompetition_creator
                 if (cl == null)
                 {
                     System.Windows.Forms.MessageBox.Show(string.Format("Club id '{0}' is unknown", clubId));
-                }
+                } else
                 {
                     XAttribute attr = club.Attribute("LinkedClub");
                     if (attr != null)

@@ -414,7 +414,7 @@ namespace VolleybalCompetition_creator
         public void AnalyzeAndOptimizeWeekends(Klvv klvv, IProgress intf)
         {
             SnapShot(klvv);
-            int best_score = 1000;
+            //int best_score = 1000;
             int[,] table = AnalyzeWeekends(klvv, intf);
             /*
             Team[] used = new Team[maxTeams];
