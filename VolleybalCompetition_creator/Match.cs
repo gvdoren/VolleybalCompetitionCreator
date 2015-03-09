@@ -31,16 +31,10 @@ namespace VolleybalCompetition_creator
                 if (homeTeam.club != m.homeTeam.club) delta += 1.5; // extra reistijd
                 DateTime st1 = datetime;
                 DateTime en1 = st1.AddHours(delta);
-                if (serie.Reserve())
-                {
-                    st1 = st1.AddHours(-2); // reserve wedstrijd
-                }
+                st1 = st1.AddHours(-serie.extraTimeBefore); // reserve wedstrijd
                 DateTime st2 = m.datetime;
                 DateTime en2 = st2.AddHours(delta);
-                if (m.serie.Reserve())
-                {
-                    st2 = st2.AddHours(-2); // reserve wedstrijd
-                }
+                st2 = st2.AddHours(-m.serie.extraTimeBefore); // reserve wedstrijd
                 if (st1 <= en2 && en1 >= st2)
                 {
                     return true;

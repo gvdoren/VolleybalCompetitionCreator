@@ -94,9 +94,8 @@ namespace VolleybalCompetition_creator
             }
 
 
-            if (error) label1.ForeColor = Color.Red;
-            else label1.ForeColor = Color.Black;
-            label1.Text = "Conflicts: " + conflicts.ToString();
+            if (error) label2.ForeColor = Color.Red;
+            else label2.ForeColor = Color.Black;
             double percentage = 0;
             if (totalMatches > 0)
             {
@@ -107,7 +106,7 @@ namespace VolleybalCompetition_creator
             {
                 percentage = 0;
             }
-            label2.Text = "Conflict-matches: " + conflictMatches.ToString() + string.Format(" ({0:F1}%)",percentage);
+            label2.Text = "Conflict-matches: " + conflictMatches.ToString() + string.Format(" ({0:F1}%)     Cost: {1}", percentage, conflicts.ToString());
         }
         private void objectListView1_MouseClick(object sender, MouseEventArgs e)
         {

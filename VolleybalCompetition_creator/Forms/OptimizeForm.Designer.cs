@@ -91,7 +91,7 @@
             this.olvColumn2.AspectName = "optimizable";
             this.olvColumn2.CellPadding = null;
             this.olvColumn2.CheckBoxes = true;
-            this.olvColumn2.Text = "Optimize";
+            this.olvColumn2.Text = "Number";
             // 
             // olvColumn4
             // 
@@ -99,7 +99,7 @@
             this.olvColumn4.CellPadding = null;
             this.olvColumn4.CheckBoxes = true;
             this.olvColumn4.FillsFreeSpace = true;
-            this.olvColumn4.Text = "Optimize Week order";
+            this.olvColumn4.Text = "Weekends";
             this.olvColumn4.Width = 120;
             // 
             // olvColumn5
@@ -108,7 +108,7 @@
             this.olvColumn5.CellPadding = null;
             this.olvColumn5.CheckBoxes = true;
             this.olvColumn5.FillsFreeSpace = true;
-            this.olvColumn5.Text = "Optimize Home/Visit order";
+            this.olvColumn5.Text = "Home/Visit";
             this.olvColumn5.Width = 140;
             // 
             // olvColumn3

@@ -50,12 +50,14 @@ namespace VolleybalCompetition_creator
         public bool Dirty = true;
         public static Club CreateNullClub()
         {
-            Club club = new Club();
-            club.name = "----";
+            Club club = new Club(-2, "----", "");
             return club;
         }
-        public Club()
+        public Club(int id, string name, string stamNumber)
         {
+            this.Id = id;
+            this.name = name;
+            this.Stamnumber = stamNumber;
         }
         public override string ToString()
         {

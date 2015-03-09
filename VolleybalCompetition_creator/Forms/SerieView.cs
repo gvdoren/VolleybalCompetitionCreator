@@ -132,7 +132,7 @@ namespace VolleybalCompetition_creator
                 foreach (Team t in serie.teams)
                 {
                     string letter = "X";
-                    if (t.sporthal != null)
+                    if (t.sporthal != null && Math.Abs(t.sporthal.lat) > 0.01 && Math.Abs(t.sporthal.lng) > 0.01)
                     {
                         if (t.poule != null)
                         {
@@ -401,16 +401,19 @@ namespace VolleybalCompetition_creator
                     SelectionDialog diag = new SelectionDialog(list);
                     diag.Text = "Select the poule:";
                     diag.ShowDialog();
-                    Poule newPoule = (Poule)diag.Selection.obj;
-                    if (diag.Ok && newPoule != team.poule)
+                    if (diag.Ok)
                     {
-                        if(team.poule != null) team.poule.RemoveTeam(team);
-                        if (newPoule != null)
+                        Poule newPoule = (Poule)diag.Selection.obj;
+                        if (newPoule != team.poule)
                         {
-                            newPoule.AddTeam(team);
+                            if (team.poule != null) team.poule.RemoveTeam(team);
+                            if (newPoule != null)
+                            {
+                                newPoule.AddTeam(team);
+                            }
+                            klvv.Evaluate(null);
+                            klvv.Changed();
                         }
-                        klvv.Evaluate(null);
-                        klvv.Changed();
                     }
                     //objectListView1.BuildList(true);
                     //UpdateTeamList();

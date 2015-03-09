@@ -33,6 +33,7 @@ namespace VolleybalCompetition_creator
             InitializeComponent();
             // reading club-constraints
             klvv = new Klvv(DateTime.Now.Year);
+            
             Text = string.Format("Volleyball competition creation tool ({0})", klvv.year);
 
             this.WindowState = FormWindowState.Maximized;
@@ -235,43 +236,13 @@ namespace VolleybalCompetition_creator
 
         private void perTypeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            saveFileDialog1 = new SaveFileDialog();
-            saveFileDialog1.FileName = "ConflictReportPerType.csv";
-            saveFileDialog1.InitialDirectory = BaseDirectory;
-            saveFileDialog1.FileOk += new CancelEventHandler(saveFileDialog1_FileOk);
-            saveFileDialog1.ShowDialog();
         }
-        public void saveFileDialog1_FileOk(object sender, CancelEventArgs e)
-        {
-            klvv.WriteConflictReportPerType(saveFileDialog1.FileName);
-        }
-
         private void perClubToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            saveFileDialog1 = new SaveFileDialog();
-            saveFileDialog1.FileName = "ConflictReportPerClub.txt";
-            saveFileDialog1.InitialDirectory = BaseDirectory;
-            saveFileDialog1.FileOk += new CancelEventHandler(saveFileDialog1_FileOk1);
-            saveFileDialog1.ShowDialog();
-        }
-        public void saveFileDialog1_FileOk1(object sender, CancelEventArgs e)
-        {
-            klvv.WriteConflictReportPerClub(saveFileDialog1.FileName);
         }
 
         private void perClubToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            DateTime now = DateTime.Now;
-            saveFileDialog1 = new SaveFileDialog();
-            saveFileDialog1.FileName = string.Format("CompetitionPerClub{0:00}{1:00}{2:00}_{3:00}{4:00}.csv", now.Year, now.Month, now.Day, now.Hour, now.Minute);
-            saveFileDialog1.Filter = "Comma-separated (*.csv)|*.csv";
-            saveFileDialog1.InitialDirectory = BaseDirectory;
-            saveFileDialog1.FileOk += new CancelEventHandler(saveFileDialog1_FileOk2);
-            saveFileDialog1.ShowDialog();
-        }
-        public void saveFileDialog1_FileOk2(object sender, CancelEventArgs e)
-        {
-            klvv.WriteCompetitionPerClub(saveFileDialog1.FileName);
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -347,7 +318,6 @@ namespace VolleybalCompetition_creator
 
         private void kLVVTeamSubscriptionsklvvbeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string MyDocuments = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             klvv.ImportTeamSubscriptions(XDocument.Load("http://klvv.be/server/restricted/registrations/registrationsXML.php").Root);
         }
 
@@ -395,66 +365,14 @@ namespace VolleybalCompetition_creator
 
         private void poulesSeriescsvToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DateTime now = DateTime.Now;
-            saveFileDialog1 = new SaveFileDialog();
-            saveFileDialog1.FileName = string.Format("PouleSeries{0:00}{1:00}{2:00}_{3:00}{4:00}.csv", now.Year, now.Month, now.Day, now.Hour, now.Minute);
-            saveFileDialog1.Filter = "Comma-separated (*.csv)|*.csv";
-            saveFileDialog1.InitialDirectory = BaseDirectory;
-            saveFileDialog1.FileOk += new CancelEventHandler(saveFileDialog1_FileOk5);
-            saveFileDialog1.ShowDialog();
-        }
-        public void saveFileDialog1_FileOk5(object sender, CancelEventArgs e)
-        {
-            klvv.WriteSeriePoules(saveFileDialog1.FileName);
         }
 
         private void matchescsvToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DateTime now = DateTime.Now;
-            saveFileDialog1 = new SaveFileDialog();
-            saveFileDialog1.FileName = string.Format("Matches{0:00}{1:00}{2:00}_{3:00}{4:00}.csv", now.Year, now.Month, now.Day, now.Hour, now.Minute);
-            saveFileDialog1.Filter = "Comma-separated (*.csv)|*.csv";
-            saveFileDialog1.InitialDirectory = BaseDirectory;
-            saveFileDialog1.FileOk += new CancelEventHandler(saveFileDialog1_FileOk6);
-            saveFileDialog1.ShowDialog();
-        }
-        public void saveFileDialog1_FileOk6(object sender, CancelEventArgs e)
-        {
-            List<Selection> selection = new List<Selection>();
-            foreach (Serie serie in klvv.series)
-            {
-                Selection sel = new Selection(serie.name);
-                sel.obj = serie;
-                sel.selected = (serie.imported == false);
-                selection.Add(sel);
-            }
-            SelectionDialog diag = new SelectionDialog(selection, true);
-            diag.ShowDialog();
-            if (diag.Ok)
-            {
-                List<Serie> series = new List<Serie>();
-                foreach (Selection sel in diag.Selections)
-                {
-                    if (sel.selected) series.Add((Serie)sel.obj);
-                }
-                klvv.WriteMatches(saveFileDialog1.FileName, series);
-            }
         }
 
         private void statisticscsvToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DateTime now = DateTime.Now;
-            saveFileDialog1 = new SaveFileDialog();
-            saveFileDialog1 = new SaveFileDialog();
-            saveFileDialog1.FileName = string.Format("Statistics{0:00}{1:00}{2:00}_{3:00}{4:00}.csv", now.Year, now.Month, now.Day, now.Hour, now.Minute);
-            saveFileDialog1.Filter = "Comma-separated (*.csv)|*.csv";
-            saveFileDialog1.InitialDirectory = BaseDirectory;
-            saveFileDialog1.FileOk += new CancelEventHandler(saveFileDialog1_FileOk7);
-            saveFileDialog1.ShowDialog();
-        }
-        public void saveFileDialog1_FileOk7(object sender, CancelEventArgs e)
-        {
-            klvv.WriteStatistics(saveFileDialog1.FileName);
         }
 
         private void vVBConvertToolStripMenuItem_Click(object sender, EventArgs e)
@@ -595,37 +513,6 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             klvv.CompareRegistrations(openFileDialog1.FileName, saveFileDialog1.FileName);
         }
 
-        private void load2ndProjectToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            openFileDialog1 = new OpenFileDialog();
-            openFileDialog1.Title = "Open comparison project";
-            openFileDialog1.FileName = "FullCompetition.xml";
-            openFileDialog1.Filter = "Xml (*.xml)|*.xml";
-            openFileDialog1.InitialDirectory = BaseDirectory;
-            openFileDialog1.FileOk += new CancelEventHandler(openFileDialog1_FileOk5);
-            openFileDialog1.ShowDialog();
-
-        }
-        public void openFileDialog1_FileOk5(object sender, CancelEventArgs e)
-        {
-            state.comparisonKlvv = klvv.LoadFullCompetitionIntern(openFileDialog1.FileName);
-            state.Changed();
-        }
-
-        private void comparisonOnOffToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (state.comparison == false)
-            {
-                comparisonOnOffToolStripMenuItem.Checked = true;
-                state.comparison = true;
-            }
-            else
-            {
-                comparisonOnOffToolStripMenuItem.Checked = false;
-                state.comparison = false;
-            }
-        }
-
         private void helpToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             Help help = new Help();
@@ -642,6 +529,122 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         {
             AboutBox1 about = new AboutBox1();
             about.ShowDialog();
+        }
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MySettings mySettings = MySettings.Load(BaseDirectory + @"\MySettings.xml");
+            Settings settings = new Settings(mySettings);
+            settings.Show();
+        }
+
+        private void conflictPerTypeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            saveFileDialog1 = new SaveFileDialog();
+            saveFileDialog1.FileName = "ConflictReportPerType.csv";
+            saveFileDialog1.InitialDirectory = BaseDirectory;
+            saveFileDialog1.FileOk += new CancelEventHandler(saveFileDialog1_FileOk);
+            saveFileDialog1.ShowDialog();
+        }
+        public void saveFileDialog1_FileOk(object sender, CancelEventArgs e)
+        {
+            klvv.WriteConflictReportPerType(saveFileDialog1.FileName);
+        }
+
+        private void conflictsPerClubToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            saveFileDialog1 = new SaveFileDialog();
+            saveFileDialog1.FileName = "ConflictReportPerClub.txt";
+            saveFileDialog1.InitialDirectory = BaseDirectory;
+            saveFileDialog1.FileOk += new CancelEventHandler(saveFileDialog1_FileOk1);
+            saveFileDialog1.ShowDialog();
+        }
+        public void saveFileDialog1_FileOk1(object sender, CancelEventArgs e)
+        {
+            klvv.WriteConflictReportPerClub(saveFileDialog1.FileName);
+        }
+
+        private void matchesPerClubcsvToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DateTime now = DateTime.Now;
+            saveFileDialog1 = new SaveFileDialog();
+            saveFileDialog1.FileName = string.Format("CompetitionPerClub{0:00}{1:00}{2:00}_{3:00}{4:00}.csv", now.Year, now.Month, now.Day, now.Hour, now.Minute);
+            saveFileDialog1.Filter = "Comma-separated (*.csv)|*.csv";
+            saveFileDialog1.InitialDirectory = BaseDirectory;
+            saveFileDialog1.FileOk += new CancelEventHandler(saveFileDialog1_FileOk2);
+            saveFileDialog1.ShowDialog();
+        }
+        public void saveFileDialog1_FileOk2(object sender, CancelEventArgs e)
+        {
+            klvv.WriteCompetitionPerClub(saveFileDialog1.FileName);
+
+        }
+
+        private void poulesSeriescsvToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            DateTime now = DateTime.Now;
+            saveFileDialog1 = new SaveFileDialog();
+            saveFileDialog1.FileName = string.Format("PouleSeries{0:00}{1:00}{2:00}_{3:00}{4:00}.csv", now.Year, now.Month, now.Day, now.Hour, now.Minute);
+            saveFileDialog1.Filter = "Comma-separated (*.csv)|*.csv";
+            saveFileDialog1.InitialDirectory = BaseDirectory;
+            saveFileDialog1.FileOk += new CancelEventHandler(saveFileDialog1_FileOk5);
+            saveFileDialog1.ShowDialog();
+        }
+        public void saveFileDialog1_FileOk5(object sender, CancelEventArgs e)
+        {
+            klvv.WriteSeriePoules(saveFileDialog1.FileName);
+
+        }
+
+        private void matchescsvToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            DateTime now = DateTime.Now;
+            saveFileDialog1 = new SaveFileDialog();
+            saveFileDialog1.FileName = string.Format("Matches{0:00}{1:00}{2:00}_{3:00}{4:00}.csv", now.Year, now.Month, now.Day, now.Hour, now.Minute);
+            saveFileDialog1.Filter = "Comma-separated (*.csv)|*.csv";
+            saveFileDialog1.InitialDirectory = BaseDirectory;
+            saveFileDialog1.FileOk += new CancelEventHandler(saveFileDialog1_FileOk6);
+            saveFileDialog1.ShowDialog();
+        }
+        public void saveFileDialog1_FileOk6(object sender, CancelEventArgs e)
+        {
+            List<Selection> selection = new List<Selection>();
+            foreach (Serie serie in klvv.series)
+            {
+                Selection sel = new Selection(serie.name);
+                sel.obj = serie;
+                sel.selected = (serie.imported == false);
+                selection.Add(sel);
+            }
+            SelectionDialog diag = new SelectionDialog(selection, true);
+            diag.ShowDialog();
+            if (diag.Ok)
+            {
+                List<Serie> series = new List<Serie>();
+                foreach (Selection sel in diag.Selections)
+                {
+                    if (sel.selected) series.Add((Serie)sel.obj);
+                }
+                klvv.WriteMatches(saveFileDialog1.FileName, series);
+            }
+
+        }
+
+        private void statisticscsvToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            DateTime now = DateTime.Now;
+            saveFileDialog1 = new SaveFileDialog();
+            saveFileDialog1 = new SaveFileDialog();
+            saveFileDialog1.FileName = string.Format("Statistics{0:00}{1:00}{2:00}_{3:00}{4:00}.csv", now.Year, now.Month, now.Day, now.Hour, now.Minute);
+            saveFileDialog1.Filter = "Comma-separated (*.csv)|*.csv";
+            saveFileDialog1.InitialDirectory = BaseDirectory;
+            saveFileDialog1.FileOk += new CancelEventHandler(saveFileDialog1_FileOk7);
+            saveFileDialog1.ShowDialog();
+        }
+        public void saveFileDialog1_FileOk7(object sender, CancelEventArgs e)
+        {
+            klvv.WriteStatistics(saveFileDialog1.FileName);
+
         }
 
 

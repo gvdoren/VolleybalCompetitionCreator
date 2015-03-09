@@ -135,7 +135,7 @@ namespace VolleybalCompetition_creator
             this.sporthal = sporthal;
             this.club = club;
             VisitorAlso = false;
-            cost = 70;
+            cost = MySettings.Settings.SporthalNotAvailableCost;
         }
         public override void Evaluate(Klvv klvv)
         {
@@ -161,12 +161,8 @@ namespace VolleybalCompetition_creator
                                 match.homeTeam.sporthal.NotAvailable.Contains(dt) == true &&
                                 match.RealMatch())
                             {
-                                if (match.poule.serie.Gewestelijk) cost = 20;
-                                else cost = 40;
-                                //if (club.conflict > club.teams.Count) cost *= 2;
-                                //if (club.conflict > club.teams.Count * 1.5) cost *= 2;
-                                //if (match.serie.Volwassenen == false) cost /= 2;
-
+                                if (match.poule.serie.Gewestelijk) cost = MySettings.Settings.SporthalNotAvailableGewestelijkCost;
+                                else cost = MySettings.Settings.SporthalNotAvailableCost;
                                 this.AddConflictMatch(VisitorHomeBoth.HomeOnly, match);
                             }
                         }
@@ -225,7 +221,7 @@ namespace VolleybalCompetition_creator
                             days = mindays-days;
                             if (days>0)
                             {
-                                cost =1000;
+                                cost = MySettings.Settings.MatchTooCloseCost;
                                 AddConflictMatch(VisitorHomeBoth.Both, match1, match2);
                             }
                         }
@@ -252,7 +248,7 @@ namespace VolleybalCompetition_creator
         {
             name = "Teveel thuis of uit wedstrijden na elkaar";
             this.poule = poule;
-            this.cost = 200;
+            this.cost = MySettings.Settings.MatchTooManyAfterEachOtherCost;
         }
         public override void Evaluate(Klvv klvv)
         {
@@ -302,7 +298,7 @@ namespace VolleybalCompetition_creator
                             home = true;
                         }
                     }
-                    if (maxMatches.Count >= 4)
+                    if (maxMatches.Count >= MySettings.Settings.MatchTooManyAfterEachOther)
                     {
                         foreach (Match match in maxMatches)
                         {
@@ -378,7 +374,7 @@ namespace VolleybalCompetition_creator
         {
             name = "Internal test - poule consistency";
             this.poule = poule;
-            cost = 10000;
+            cost = MySettings.Settings.InconsistentCost;
         }
         public override void Evaluate(Klvv klvv)
         {
@@ -510,7 +506,7 @@ namespace VolleybalCompetition_creator
         {
             name = "No poule assigned to team";
             this.club = club;
-            cost = 10000;
+            cost = MySettings.Settings.NoPouleAssignedCost;
         }
         public override void Evaluate(Klvv klvv)
         {
@@ -545,7 +541,7 @@ namespace VolleybalCompetition_creator
             name = "Teams van een club in één poule moeten op de eerste dag spelen";
             this.poule = poule;
             this.VisitorAlso = false;
-            this.cost = 1000;
+            this.cost = MySettings.Settings.TwoPoulesOfSameClubInPouleCost;
         }
         public override void Evaluate(Klvv klvv)
         {
@@ -585,42 +581,6 @@ namespace VolleybalCompetition_creator
                         }
                     }
                 }
-            }
-        }
-        public override string[] GetTextDescription()
-        {
-            List<string> result = new List<string>();
-            return result.ToArray();
-        }
-    }
-    class ConstraintPouleOddEvenWeek : Constraint
-    {
-        public override string Title
-        {
-            get
-            {
-                return name + " - " + poule.serie.name + poule.name;
-            }
-        }
-        public ConstraintPouleOddEvenWeek(Poule poule)
-        {
-            name = "Poule - Team staat niet op juiste week(even/oneven)";
-            this.poule = poule;
-            this.cost = 10;
-            VisitorAlso = false;
-        }
-        public override void Evaluate(Klvv klvv)
-        {
-            conflict_cost = 0;
-            conflictMatches.Clear();
-            foreach (Match match in poule.matches)
-            {
-                if (match.homeTeam.EvenOdd == Team.WeekendRestrictionEnum.Even && match.Weekend.Even == false ||
-                    match.homeTeam.EvenOdd == Team.WeekendRestrictionEnum.Odd && match.Weekend.Even == true)
-                {
-                    AddConflictMatch(VisitorHomeBoth.HomeOnly, match);
-                }
-
             }
         }
         public override string[] GetTextDescription()
@@ -693,8 +653,8 @@ namespace VolleybalCompetition_creator
                     for(int j=s;j<e;j++)
                     {
                         Match m = all_matches[j];
-                        if (m.poule.serie.Gewestelijk) cost = 20;
-                        else cost = 40;
+                        if (m.poule.serie.Gewestelijk) cost = MySettings.Settings.DifferentGroupsOnSameDayGewestelijkCost;
+                        else cost = MySettings.Settings.DifferentGroupsOnSameDayCost;
                         if (x && m.homeTeam.group == TeamGroups.GroupX && m.homeTeam.club == club)
                         {
                             
@@ -703,7 +663,7 @@ namespace VolleybalCompetition_creator
                                 Match m1 = all_matches[k];
                                 if (m1.homeTeam.group == TeamGroups.GroupY && m.Overlapp(m1))
                                 {
-                                    cost += 2; // indien de tijden overlappend zijn extra kosten
+                                    cost += MySettings.Settings.DifferentGroupsOnSameDayOverlappingExtraCost; // indien de tijden overlappend zijn extra kosten
                                 }
                             }
                             AddConflictMatch(VisitorHomeBoth.HomeOnly, m);
@@ -716,7 +676,7 @@ namespace VolleybalCompetition_creator
                                 Match m1 = all_matches[k];
                                 if (m1.homeTeam.group == TeamGroups.GroupX && m.Overlapp(m1))
                                 {
-                                    cost += 2; // indien de tijden overlappend zijn extra kosten
+                                    cost += MySettings.Settings.DifferentGroupsOnSameDayOverlappingExtraCost; // indien de tijden overlappend zijn extra kosten
                                 }
                             }
                             AddConflictMatch(VisitorHomeBoth.HomeOnly, m);
@@ -740,7 +700,7 @@ namespace VolleybalCompetition_creator
             this.club = club;
             name = "Niet iedereen in zelfde thuis-weekend";
             VisitorAlso = false;
-            cost = 5;
+            cost = MySettings.Settings.NotAllInSameWeekendCost;
         }
         public override void Evaluate(Klvv klvv)
         {
@@ -814,7 +774,7 @@ namespace VolleybalCompetition_creator
                         }
                         return l1count.CompareTo(l2count);
                     });
-                    int weekend_cost = 10;
+                    int weekend_cost = cost;
                     for (int i = 0; i < sortedCounts.Count / 2; i++)
                     {
                         foreach (Match match in sortedCounts[i])
@@ -846,6 +806,7 @@ namespace VolleybalCompetition_creator
             club = cl;
             VisitorAlso = false;
             name = "Teams spelen op hetzelfde uur";
+            cost = MySettings.Settings.PlayAtSameTime;
         }
         public override void Evaluate(Klvv klvv)
         {
@@ -891,20 +852,14 @@ namespace VolleybalCompetition_creator
                                         {
                                             if (m1.RealMatch() && m2.RealMatch())
                                             {
-                                                double delta = 1.99; // normale lengte wedstrijd
-                                                if (m1.homeTeam.club != m2.homeTeam.club) delta += 1.5; // extra reistijd
+                                                double delta = MySettings.Settings.NormalLengthMatch -0.01; // normale lengte wedstrijd
+                                                if (m1.homeTeam.club != m2.homeTeam.club) delta += MySettings.Settings.TravelingTime; // extra reistijd
                                                 DateTime st1 = m1.datetime;
                                                 DateTime en1 = st1.AddHours(delta);
-                                                if (m1.serie.Reserve())
-                                                {
-                                                    st1 = st1.AddHours(-2); // reserve wedstrijd
-                                                }
+                                                st1 = st1.AddHours(-m1.serie.extraTimeBefore); // reserve wedstrijd
                                                 DateTime st2 = m2.datetime;
                                                 DateTime en2 = st2.AddHours(delta);
-                                                if (m2.serie.Reserve())
-                                                {
-                                                    st2 = st2.AddHours(-2); // reserve wedstrijd
-                                                }
+                                                st2 = st2.AddHours(-m2.serie.extraTimeBefore); // reserve wedstrijd
                                                 if (st1 <= en2 && en1 >= st2)
                                                 {
                                                     this.AddConflictMatch(VisitorHomeBoth.HomeOnly, m1, m2);
@@ -927,54 +882,6 @@ namespace VolleybalCompetition_creator
             return result.ToArray();
         }
     }
-    // TODO: wordt nog niet gebruikt, niet nodig als er geen reserve dag is.
-    class ConstraintPouleFullLastTwoWeekends : Constraint
-    {
-        public override string Title
-        {
-            get
-            {
-                return name + " - " + poule.serie.name + poule.name;
-            }
-        }
-        public ConstraintPouleFullLastTwoWeekends(Poule poule)
-        {
-            name = "Last two weekends are not used";
-            this.poule = poule;
-            this.VisitorAlso = false;
-            this.cost = 1000;
-        }
-        public override void Evaluate(Klvv klvv)
-        {
-            conflict_cost = 0;
-            conflictMatches.Clear();
-            if (poule.evaluated)
-            {
-                if (poule.weekends.Count > ((poule.maxTeams - 1) * 2))
-                {
-                    int[] count = new int[poule.weekends.Count];
-                    foreach (Match match in poule.matches)
-                    {
-                        count[match.weekIndex]++;
-                    }
-                    if (count[poule.weekends.Count - 1] == 0 ||
-                       count[poule.weekends.Count - 2] == 0)
-                    {
-                        foreach (Match match in poule.matches)
-                        {
-                            //AddConflictMatch(VisitorHomeBoth.Both, match);
-                        }
-                    }
-                }
-            }
-        }
-        public override string[] GetTextDescription()
-        {
-            List<string> result = new List<string>();
-            return result.ToArray();
-        }
-    }
-
     class ConstraintClubTooManyConflicts : Constraint
     {
         public ConstraintClubTooManyConflicts(Club cl)
@@ -989,7 +896,7 @@ namespace VolleybalCompetition_creator
             conflictMatches.Clear();
             if (club.conflict > 0)
             {
-                conflict_cost += Math.Max(0, club.conflict - (club.teams.Count - 1)) * 80;
+                conflict_cost += Math.Max(0, club.conflict - (club.teams.Count - 1)) * MySettings.Settings.TooManyConflictsPerClubCosts;
             }
         }
         public override string[] GetTextDescription()
@@ -1017,7 +924,7 @@ namespace VolleybalCompetition_creator
             {
                 maxConflicts = ((team.poule.teams.Count - 1) / 3);
             }
-            conflict_cost += Math.Max(0, team.conflict - maxConflicts) * 80;
+            conflict_cost += Math.Max(0, team.conflict - maxConflicts) * MySettings.Settings.TooManyConflictsPerTeamCosts;
         }
         public override string[] GetTextDescription()
         {
@@ -1044,7 +951,7 @@ namespace VolleybalCompetition_creator
             this.team = team;
             this.club = team.club;
             VisitorAlso = false;
-            cost = 1;
+            cost = MySettings.Settings.DefaultCustomTeamConstraintCost;
             name = "Team conflict";
         }
         public override void Evaluate(Klvv klvv)

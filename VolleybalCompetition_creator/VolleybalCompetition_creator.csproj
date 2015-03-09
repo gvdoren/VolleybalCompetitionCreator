@@ -175,6 +175,12 @@
     <Compile Include="Forms\SelectionDialog.Designer.cs">
       <DependentUpon>SelectionDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Settings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Settings.Designer.cs">
+      <DependentUpon>Settings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\TeamListView.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -184,6 +190,7 @@
     <Compile Include="GlobalState.cs" />
     <Compile Include="Klvv.cs" />
     <Compile Include="Match.cs" />
+    <Compile Include="MySettings.cs" />
     <Compile Include="Poule.cs" />
     <Compile Include="Forms\PouleListView.cs">
       <SubType>Form</SubType>
@@ -273,6 +280,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SelectionDialog.resx">
       <DependentUpon>SelectionDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Settings.resx">
+      <DependentUpon>Settings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\TeamListView.resx">
       <DependentUpon>TeamListView.cs</DependentUpon>

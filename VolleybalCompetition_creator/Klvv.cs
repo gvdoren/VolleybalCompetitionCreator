@@ -18,6 +18,7 @@ namespace VolleybalCompetition_creator
     public class Klvv
     {
         public Security.LicenseKey licenseKey;
+        public MySettings settings;
         WebClient wc = null;
         public bool stateNotSaved = false;
         public void MakeDirty() { stateNotSaved = true; }
@@ -136,7 +137,6 @@ namespace VolleybalCompetition_creator
         {
             string Key = VolleybalCompetition_creator.Properties.Settings.Default.LicenseKey;
             licenseKey = new Security.LicenseKey(Key);
-            
             ServicePointManager.DefaultConnectionLimit = int.MaxValue;
             HttpWebRequest.DefaultWebProxy = null;
             WebRequest.DefaultWebProxy = null;
@@ -144,23 +144,11 @@ namespace VolleybalCompetition_creator
             wc.Proxy = null;
             this.year = year;
             this.annorama = new Anorama(year);
-            //System.Windows.Forms.MessageBox.Show("KLVV initialized" + System.Windows.Forms.Application.StartupPath);
-            
-            // Read series
-            //System.Windows.Forms.MessageBox.Show("KLVV reading series");
-            string classes_json = wc.DownloadString("http://klvv.be/server/seriesorts.php?trophy=false");
-            //string classes_json = File.ReadAllText(System.Windows.Forms.Application.StartupPath + @"/InputData/series.json"); // local copy
-            JArray classesObjects = JArray.Parse(classes_json);
-            char[] delimiters = new char[] { ':' };
-            foreach (JObject classesObject in classesObjects)
-            {
-                string name = classesObject["name"].ToString();
-                string[] parts = name.Split(delimiters, 2);
-                Serie newSerie = new Serie(int.Parse(classesObject["id"].ToString()),parts[0],this);
-                series.Add(newSerie);
-            }
-            // read sporthalls
-            //System.Windows.Forms.MessageBox.Show("KLVV reading sporthalls");
+
+
+            //ImportSporthalls(XDocument.Load("http://klvv.be/server/sporthallsXML.php").Root);
+
+
             string sporthalls_json = wc.DownloadString("http://klvv.be/server/sporthalls.php");
             //string sporthalls_json = File.ReadAllText(System.Windows.Forms.Application.StartupPath + @"/InputData/sporthalls.json"); // local copy
             JArray sporthallObjects = JArray.Parse(sporthalls_json);
@@ -169,18 +157,6 @@ namespace VolleybalCompetition_creator
                 Sporthal newSporthal = new Sporthal(int.Parse(sporthallObject["id"].ToString()),sporthallObject["name"].ToString());
                 sporthalls.Add(newSporthal);
                 string location = sporthallObject["googleLocation"].ToString();
-                /*  Lat & lng data op klvv niet volledig correct (of niet goed parse-baar)
-                 * Regex reg = new Regex(@"sll=([0-9\.]+),([0-9\.]+)");
-                if (reg.IsMatch(location))
-                {
-                    MatchCollection matches = reg.Matches(location);
-                    string first = matches[0].Groups[1].ToString();
-                    string second = matches[0].Groups[2].ToString();
-                    newSporthal.lat = double.Parse(first, CultureInfo.InvariantCulture);
-                    newSporthal.lng = double.Parse(second, CultureInfo.InvariantCulture);
-                }
-                 * */
-                
             }
             // lat & lng for each sporthal (must be included in the sporthalls.json
             //System.Windows.Forms.MessageBox.Show("KLVV reading sporthalls - lat & lng");
@@ -211,18 +187,8 @@ namespace VolleybalCompetition_creator
                 Sporthal sporthal = sporthalls.Find(s => s.id == id1);
                 if (sporthal != null) sporthal.distance.Add(id2, distance);
             }
-            // Read clubs
-            var json = wc.DownloadString("http://klvv.be/server/clubs.php");
-            //string json = File.ReadAllText(System.Windows.Forms.Application.StartupPath + @"/InputData/clubs.json"); // local copy
-            clubs = JsonConvert.DeserializeObject<List<Club>>(json);
-
-
-            /*
-                * ImportKLVVCompetition();
-                * ImportTeamSubscriptions();
-                * ImportVVBCompetition();
-                * RenewConstraints();
-                * */
+ 
+            clubs = new List<Club>();
 
             Serie unknownSerie = new Serie(-1, "Unknown",this);
             unknownSerie.Nationaal = true;
@@ -230,11 +196,9 @@ namespace VolleybalCompetition_creator
             series.Add(unknownSerie);
             Sporthal unknownSporthall = new Sporthal(-1, "Unknown");
             sporthalls.Add(unknownSporthall);
-            Club unknownClub = new Club();
-            unknownClub.Id = -1;
-            unknownClub.name = "Unknown";
+            Club unknownClub = new Club(-1,"Unknown","??");
             unknownClub.sporthalls.Add(new SporthallClub(unknownSporthall));
-            clubs.Add(unknownClub);
+            //clubs.Add(unknownClub);
 
             Evaluate(null);
             Changed();
@@ -739,157 +703,214 @@ namespace VolleybalCompetition_creator
             Evaluate(null);
             Changed();
         }
+
+        private void ImportSporthalls(XElement doc)
+        {
+            foreach (XElement sporthall in doc.Element("Sporthalls").Elements("Sporthall"))
+            {
+                int sporthallId = int.Parse(sporthall.Attribute("Id").Value.ToString());
+                string sporthallName = sporthall.Attribute("Name").Value.ToString();
+
+                Sporthal sh = sporthalls.Find(s => s.id == sporthallId);
+                if (sh == null)
+                {
+                    sh = new Sporthal(sporthallId, sporthallName);
+                    sporthalls.Add(sh);
+
+                    XAttribute latAttr = sporthall.Attribute("Latitude");
+                    XAttribute lngAttr = sporthall.Attribute("Longitude");
+                    double sporthallLatitude;
+                    double sporthallLongitude;
+                    if (latAttr != null && lngAttr != null)
+                    {
+                        bool ok1 = double.TryParse(latAttr.Value.ToString(), NumberStyles.Number, CultureInfo.InvariantCulture, out sporthallLatitude);
+                        bool ok2 = double.TryParse(lngAttr.Value.ToString(), NumberStyles.Number, CultureInfo.InvariantCulture, out sporthallLongitude);
+                        if (ok1 && ok2)
+                        {
+                            sh.lat = sporthallLatitude;
+                            sh.lng = sporthallLongitude;
+                        }
+                    }
+                }
+            }
+
+            foreach (XElement sporthall in doc.Element("Distances").Elements("Distance"))
+            {
+                int Id1 = int.Parse(sporthall.Attribute("Id1").Value.ToString());
+                int Id2 = int.Parse(sporthall.Attribute("Id2").Value.ToString());
+                int distance = int.Parse(sporthall.Attribute("Distance").Value.ToString());
+                int time = int.Parse(sporthall.Attribute("Time").Value.ToString());
+
+                Sporthal sporthal = sporthalls.Find(s => s.id == Id1);
+                if (sporthal != null) sporthal.distance.Add(Id2, distance);
+
+            }
+        }
         
+
         public void ImportTeamSubscriptions(XElement doc)
         {
             foreach (XElement club in doc.Elements("Club"))
             {
                 int clubId = int.Parse(club.Attribute("Id").Value);
+                string clubName = club.Attribute("Name").Value;
+                XAttribute attrStamNumber = club.Attribute("StamNumber");
+                string clubStamNumber = null;
+                if (attrStamNumber != null)
+                {
+                    clubStamNumber = club.Attribute("StamNumber").Value;
+                }
                 Club cl = clubs.Find(c => c.Id == clubId);
                 if (cl == null)
                 {
-                    System.Windows.Forms.MessageBox.Show(string.Format("Club id '{0}' is unknown", clubId));
-                } else
+                    cl = new Club(clubId, clubName, clubStamNumber);
+                    clubs.Add(cl);
+                } 
+                XAttribute attr = club.Attribute("LinkedClub");
+                if (attr != null)
                 {
-                    XAttribute attr = club.Attribute("LinkedClub");
-                    if (attr != null)
+                    int groupClubId = int.Parse(attr.Value);
+                    Club groupedClub = clubs.Find(c => c.Id == groupClubId);
+                    if (groupedClub != null)
                     {
-                        int groupClubId = int.Parse(attr.Value);
-                        Club groupedClub = clubs.Find(c => c.Id == groupClubId);
-                        if (groupedClub != null)
-                        {
-                            groupedClub.groupingWithClub = cl;
-                            cl.groupingWithClub = groupedClub;
-                        }
-
+                        groupedClub.groupingWithClub = cl;
+                        cl.groupingWithClub = groupedClub;
                     }
 
-                    XElement freeformatconstraint = club.Element("FreeFormatConstraint");
+                }
 
-                    cl.FreeFormatConstraints = freeformatconstraint.Value;
+                XElement freeformatconstraint = club.Element("FreeFormatConstraint");
 
-                    if (club.Element("Sporthalls") != null)
+                cl.FreeFormatConstraints = freeformatconstraint.Value;
+
+                if (club.Element("Sporthalls") != null)
+                {
+                    foreach (var sporthal in club.Element("Sporthalls").Elements("Sporthall"))
                     {
-                        foreach (var sporthal in club.Element("Sporthalls").Elements("Sporthall"))
+                        var sporthallId = sporthal.Attribute("Id");
+                        int id = int.Parse(sporthallId.Value);
+                        if (id >= 1000000) id = -1; // TODO: need to be removed when files are converted
+                        SporthallClub sp = cl.sporthalls.Find(t => t.id == id);
+                        if (sp == null)
                         {
-                            var sporthallId = sporthal.Attribute("Id");
-                            int id = int.Parse(sporthallId.Value);
-                            if (id >= 1000000) id = -1; // TODO: need to be removed when files are converted
-                            SporthallClub sp = cl.sporthalls.Find(t => t.id == id);
+                            sp = cl.sporthalls.Find(t => t.id == id);
                             if (sp == null)
                             {
-                                sp = cl.sporthalls.Find(t => t.id == id);
-                                if (sp == null)
+                                Sporthal sp1 = sporthalls.Find(s => s.id == id);
+                                if (sp1 == null)
                                 {
-                                    Sporthal sp1 = sporthalls.Find(s => s.id == id);
-                                    if (sp1 == null)
-                                    {
-                                        System.Windows.Forms.MessageBox.Show(string.Format("Sporthal id {0} not known known", id));
-                                    }
-                                    sp = new SporthallClub(sp1);
-                                    cl.sporthalls.Add(sp);
+                                    System.Windows.Forms.MessageBox.Show(string.Format("Sporthal id {0} not known known", id));
                                 }
+                                sp = new SporthallClub(sp1);
+                                cl.sporthalls.Add(sp);
                             }
-                            //clear original dates (for re-reading the subscriptions)
-                            sp.NotAvailable.Clear();
-                            foreach (var date in sporthal.Element("NotAvailable").Elements("Date"))
-                            {
-                                DateTime dt = DateTime.Parse(date.Value.ToString());
-                                if (sp.NotAvailable.Contains(dt) == false) sp.NotAvailable.Add(dt);
-
-                            }
-                            if(cl.sporthalls.Contains(sp)== false) cl.sporthalls.Add(sp);
                         }
-                    }
-
-                    foreach (var team in club.Element("Teams").Elements("Team"))
-                    {
-                        var teamId = team.Attribute("Id");
-                        int id = int.Parse(teamId.Value);
-                        string serieIdstr = team.Attribute("SerieSortId").Value;
-                        // string seriePrefix = team.Attribute("SeriePrefix").Value;
-                        // if (seriePrefix.StartsWith("Be") == false)
+                        //clear original dates (for re-reading the subscriptions)
+                        sp.NotAvailable.Clear();
+                        foreach (var date in sporthal.Element("NotAvailable").Elements("Date"))
                         {
-                            int serieId = int.Parse(serieIdstr);
-                            string teamName = team.Attribute("TeamName").Value;
-                            Serie serie = series.Find(s => s.id == serieId);
-                            if (serie == null)
-                            {
-                                System.Windows.Forms.MessageBox.Show(string.Format("Serie {0} voor team {1} is niet bekend", serieId, teamName));
-                                Environment.Exit(0);
-                            }
-                            // Search both on name & id, since the national Id's are not unique.
-                            Team te = null;
-                            if(id>=0) te= cl.teams.Find(t => t.Id == id && t.serie == serie);
-                            else te = cl.teams.Find(t => t.Id == id && t.name == teamName && t.serie == serie);
-                            int sporthalId = int.Parse(team.Attribute("SporthallId").Value);
-                            if (sporthalId >= 1000000) sporthalId = -1;  //ToDo: remove when files are converted
+                            DateTime dt = DateTime.Parse(date.Value.ToString());
+                            if (sp.NotAvailable.Contains(dt) == false) sp.NotAvailable.Add(dt);
 
-                            SporthallClub sporthall = cl.sporthalls.Find(sp => sp.id == sporthalId);
-                            if (sporthall == null)
-                            {
-                                // TODO: loopt door elkaar. Moet iets bedenken van 'onbekende sporthal'. Dat is beter gedefinieerd.
-                                if (sporthall == null)
-                                {
-                                    sporthall = new SporthallClub(new Sporthal(sporthalId, "Unknown"));
-                                    cl.sporthalls.Add(sporthall);
-                                }
-                            }
-                            if (te == null)
-                            {
-                                te = new Team(id, teamName, null, serie, cl);
-                                teams.Add(te);
-                                //serie.AddTeam(te);
-                                
-                            }
-                            else
-                            {
-                                // not removing poule. Used for re-reading subscriptions
-                                //if (te.poule != null) te.poule.RemoveTeam(te);
-                            }
-                            // new team, or check on changed data (re-reading subscriptions)
-                            string DayString = team.Attribute("Day").Value;
-                            if (DayString == "7") DayString = "0";
-                            DayOfWeek day = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), DayString);
-                            Time time = new Time(DateTime.Parse(team.Attribute("StartTime").Value));
-                            te.sporthal = sporthall;
-                            te.defaultDay = day;
-                            te.defaultTime = time;
-                            string teamGroup = team.Attribute("Group").Value;
-                            te.group = TeamGroups.NoGroup;
-                            if (teamGroup == "A") te.group = TeamGroups.GroupX;
-                            if (teamGroup == "B") te.group = TeamGroups.GroupY;
-                            XAttribute attrDel = team.Attribute("Deleted");
-                            if (attrDel != null && attrDel.Value == "true") te.DeleteTeam(this); // remains only in the club administration.
-                            XAttribute attrNot = team.Attribute("NotAtSameTime");
-                            te.NotAtSameTime = null;
-                            if (attrNot != null)
-                            {
-                                int idNot = int.Parse(attrNot.Value);
-                                te.NotAtSameTime = cl.teams.Find(t => t.Id == idNot);
-                            }
-                            attrNot = team.Attribute("FixedSchemaIndex");
-                            if (attrNot != null)
-                            {
-                                int idFix = int.Parse(attrNot.Value);
-                                te.FixedSchemaNumber = idFix;
-                            }
-                            attrNot = team.Attribute("EvenOdd");
-                            if (attrNot != null)
-                            {
-                                string EvenOdd = attrNot.Value;
-                                te.EvenOdd = Team.WeekendRestrictionEnum.All;
-                                if (EvenOdd == "Even") te.EvenOdd = Team.WeekendRestrictionEnum.Even;
-                                if (EvenOdd == "Odd") te.EvenOdd = Team.WeekendRestrictionEnum.Odd;
-                            }
-                            attrNot = team.Attribute("ContactEmail");
-                            if (attrNot != null)
-                            {
-                                te.email = attrNot.Value;
-                            }
+                        }
+                        if(cl.sporthalls.Contains(sp)== false) cl.sporthalls.Add(sp);
+                    }
+                }
+
+                foreach (var team in club.Element("Teams").Elements("Team"))
+                {
+                    var teamId = team.Attribute("Id");
+                    int id = int.Parse(teamId.Value);
+                    XAttribute attr1 = team.Attribute("SerieSortId");
+                    if (attr1 == null) attr1 = team.Attribute("SerieId");
+                    int serieId = int.Parse(attr1.Value);
+                    string seriePrefix = team.Attribute("SerieName").Value;
+                    Serie serie = series.Find(s => s.id == serieId);
+                    if (serie == null)
+                    {
+                        serie = new Serie(serieId, seriePrefix,this);
+                        series.Add(serie);
+                    }
+                    string teamName = team.Attribute("TeamName").Value;
+                    // Search both on name & id, since the national Id's are not unique.
+                    Team te = null;
+                    if(id>=0) te= cl.teams.Find(t => t.Id == id && t.serie == serie);
+                    else te = cl.teams.Find(t => t.Id == id && t.name == teamName && t.serie == serie);
+                    int sporthalId = int.Parse(team.Attribute("SporthallId").Value);
+                    if (sporthalId >= 1000000) sporthalId = -1;  //ToDo: remove when files are converted
+
+                    SporthallClub sporthall = cl.sporthalls.Find(sp => sp.id == sporthalId);
+                    if (sporthall == null)
+                    {
+                        // TODO: loopt door elkaar. Moet iets bedenken van 'onbekende sporthal'. Dat is beter gedefinieerd.
+                        if (sporthall == null)
+                        {
+                            sporthall = new SporthallClub(new Sporthal(sporthalId, "Unknown"));
+                            cl.sporthalls.Add(sporthall);
                         }
                     }
-                 }
+                    if (te == null)
+                    {
+                        te = new Team(id, teamName, null, serie, cl);
+                        teams.Add(te);
+                        //serie.AddTeam(te);
+                                
+                    }
+                    else
+                    {
+                        // not removing poule. Used for re-reading subscriptions
+                        //if (te.poule != null) te.poule.RemoveTeam(te);
+                    }
+                    // new team, or check on changed data (re-reading subscriptions)
+                    string DayString = team.Attribute("Day").Value;
+                    if (DayString == "7") DayString = "0";
+                    DayOfWeek day = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), DayString);
+                    Time time = new Time(DateTime.Parse(team.Attribute("StartTime").Value));
+                    te.sporthal = sporthall;
+                    te.defaultDay = day;
+                    te.defaultTime = time;
+                    string teamGroup = team.Attribute("Group").Value;
+                    te.group = TeamGroups.NoGroup;
+                    if (teamGroup == "A") te.group = TeamGroups.GroupX;
+                    if (teamGroup == "B") te.group = TeamGroups.GroupY;
+                    if (teamGroup == "X") te.group = TeamGroups.GroupX;
+                    if (teamGroup == "Y") te.group = TeamGroups.GroupY;
+                    XAttribute attrDel = team.Attribute("Deleted");
+                    if (attrDel != null && attrDel.Value == "true") te.DeleteTeam(this); // remains only in the club administration.
+                    XAttribute attrNot = team.Attribute("NotAtSameTime");
+                    te.NotAtSameTime = null;
+                    if (attrNot != null)
+                    {
+                        int idNot = int.Parse(attrNot.Value);
+                        te.NotAtSameTime = cl.teams.Find(t => t.Id == idNot);
+                    }
+                    XAttribute attrExtraTime = team.Attribute("extraTimeBefore"); // bijvoorbeeld voor reserve wedstrijd 
+                    if (attrExtraTime != null)
+                    {
+                        double extraTime;
+                        bool ok = double.TryParse(attrExtraTime.Value.ToString(), NumberStyles.Number, CultureInfo.InvariantCulture, out extraTime);
+                        if (ok) serie.extraTimeBefore = extraTime;
+                    }
+                    attrNot = team.Attribute("FixedSchemaIndex");
+                    if (attrNot != null)
+                    {
+                        int idFix = int.Parse(attrNot.Value);
+                        te.FixedSchemaNumber = idFix;
+                    }
+                    attrNot = team.Attribute("EvenOdd");
+                    if (attrNot != null)
+                    {
+                        string EvenOdd = attrNot.Value;
+                        te.EvenOdd = Team.WeekendRestrictionEnum.All;
+                        if (EvenOdd == "Even") te.EvenOdd = Team.WeekendRestrictionEnum.Even;
+                        if (EvenOdd == "Odd") te.EvenOdd = Team.WeekendRestrictionEnum.Odd;
+                    }
+                    attrNot = team.Attribute("ContactEmail");
+                    if (attrNot != null)
+                    {
+                        te.email = attrNot.Value;
+                    }
+                }
             }
             RenewConstraints();
             Evaluate(null);
@@ -913,6 +934,7 @@ namespace VolleybalCompetition_creator
                     writer.WriteStartElement("Club");
                     writer.WriteAttributeString("Id", club.Id.ToString());
                     writer.WriteAttributeString("Name", club.name);
+                    if(club.Stamnumber != null) writer.WriteAttributeString("StamNumber", club.Stamnumber);
                     if (club.groupingWithClub != null) writer.WriteAttributeString("LinkedClub", club.groupingWithClub.Id.ToString());
                     writer.WriteElementString("FreeFormatConstraint", club.FreeFormatConstraints);
                     writer.WriteStartElement("Sporthalls");
@@ -942,15 +964,16 @@ namespace VolleybalCompetition_creator
                         if (unknown_also || team.serie.id >= 0) // Nationale teams eruit filteren?
                         {
                             string groupLetter = "0";
-                            if (team.group == TeamGroups.GroupX) groupLetter = "A";
-                            if (team.group == TeamGroups.GroupY) groupLetter = "B";
+                            if (team.group == TeamGroups.GroupX) groupLetter = "X";
+                            if (team.group == TeamGroups.GroupY) groupLetter = "Y";
                             writer.WriteStartElement("Team");
                             writer.WriteAttributeString("TeamName", team.name);
                             writer.WriteAttributeString("Id", team.Id.ToString());
                             writer.WriteAttributeString("StartTime", team.defaultTime.ToString());
                             writer.WriteAttributeString("Day", team.defaultDay.ToString());
-                            writer.WriteAttributeString("SerieSortId", team.serie.id.ToString());
+                            writer.WriteAttributeString("SerieId", team.serie.id.ToString());
                             writer.WriteAttributeString("SerieName", team.serie.name);
+                            if (team.serie.extraTimeBefore > 0.01) writer.WriteAttributeString("extraTimeBefore", team.serie.extraTimeBefore.ToString());
                             writer.WriteAttributeString("Group", groupLetter);
                             writer.WriteAttributeString("SporthallId", team.sporthal.id.ToString());
                             writer.WriteAttributeString("SporthallName", team.sporthal.name);
@@ -976,8 +999,8 @@ namespace VolleybalCompetition_creator
                 {
                     writer.WriteStartElement("Serie");
                     writer.WriteAttributeString("Name", poule.name);
-                    writer.WriteAttributeString("SerieSort", poule.serie.id.ToString());
-                    writer.WriteAttributeString("SerieSortName", poule.serie.name);
+                    writer.WriteAttributeString("SerieId", poule.serie.id.ToString());
+                    writer.WriteAttributeString("SerieName", poule.serie.name);
                     writer.WriteEndElement();
                 }
             }
@@ -1024,8 +1047,8 @@ namespace VolleybalCompetition_creator
                         if (match.RealMatch())
                         {
                             writer.WriteStartElement("Match");
-                            writer.WriteAttributeString("SerieSortName", match.poule.serie.name);
-                            writer.WriteAttributeString("SerieSortId", match.poule.serie.id.ToString());
+                            writer.WriteAttributeString("SerieName", match.poule.serie.name);
+                            writer.WriteAttributeString("SerieId", match.poule.serie.id.ToString());
                             writer.WriteAttributeString("SerieName", match.poule.name);
                             writer.WriteAttributeString("homeTeamName", match.homeTeam.name);
                             writer.WriteAttributeString("homeTeamId", match.homeTeam.Id.ToString());
@@ -1266,11 +1289,11 @@ namespace VolleybalCompetition_creator
             {
                 writer.WriteStartElement("Poule");
                 writer.WriteAttributeString("Name", poule.name);
-                writer.WriteAttributeString("SerieSortId", poule.serie.id.ToString());
+                writer.WriteAttributeString("SerieId", poule.serie.id.ToString());
                 writer.WriteAttributeString("SerieName", poule.serie.name);
                 if (poule.imported)
                 {
-                    writer.WriteAttributeString("SerieSortImported", "true");
+                    writer.WriteAttributeString("SerieImported", "true");
                     writer.WriteAttributeString("Imported", "true");
                 }
                 writer.WriteAttributeString("MaxTeams", poule.maxTeams.ToString());
@@ -1383,9 +1406,17 @@ namespace VolleybalCompetition_creator
             {
                 string PouleName = poule.Attribute("Name").Value;
                 string SerieName = poule.Attribute("SerieName").Value;
-                int SerieId = int.Parse(poule.Attribute("SerieSortId").Value);
+                XAttribute attr1 = poule.Attribute("SerieSortId");
+                if (attr1 == null) attr1 = poule.Attribute("SerieId");
+                int SerieId = int.Parse(attr1.Value);
                 Serie serie = series.Find(s => s.id == SerieId);
-                XAttribute imported = poule.Attribute("SerieSortImported");
+                if (serie == null)
+                {
+                    serie = new Serie(SerieId, SerieName, this);
+                    series.Add(serie);
+                }
+                XAttribute imported = poule.Attribute("SerieImported");
+                if(imported == null) imported = poule.Attribute("SerieSortImported");
                 Poule po = poules.Find(p => p.serie == serie && p.name == PouleName);
                 XAttribute attr = poule.Attribute("MaxTeams");
                 int maxTeams = int.Parse(attr.Value);

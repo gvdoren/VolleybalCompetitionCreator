@@ -28,21 +28,21 @@
         /// </summary>
         private void InitializeComponent()
         {
-            WeifenLuo.WinFormsUI.Docking.DockPanelSkin dockPanelSkin5 = new WeifenLuo.WinFormsUI.Docking.DockPanelSkin();
-            WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin autoHideStripSkin5 = new WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient13 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient29 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin dockPaneStripSkin5 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient dockPaneStripGradient5 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient30 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient14 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient31 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient dockPaneStripToolWindowGradient5 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient32 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient33 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient15 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient34 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient35 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPanelSkin dockPanelSkin15 = new WeifenLuo.WinFormsUI.Docking.DockPanelSkin();
+            WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin autoHideStripSkin15 = new WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient43 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient99 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin dockPaneStripSkin15 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient dockPaneStripGradient15 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient100 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient44 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient101 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient dockPaneStripToolWindowGradient15 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient102 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient103 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient45 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient104 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient105 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.invoerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -58,17 +58,13 @@
             this.exportCompetitionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.competitionxmlForKlvvsiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clubRegistrationsKlvvsitexmlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.perClubToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.poulesSeriescsvToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.matchescsvToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.statisticscsvToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.utilitiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clubteamVergelijkingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.kLVVConvertToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.vVBConvertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.compareToAnotherProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.load2ndProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.comparisonOnOffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reportToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.conflictPerTypeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.conflictsPerClubToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.manageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.anoramaToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.poulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -77,17 +73,19 @@
             this.clubsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.seriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.constraintsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.reportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.perTypeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.perClubToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.teamsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optimizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.licenseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.matchesPerClubcsvToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.poulesSeriescsvToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.matchescsvToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.statisticscsvToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -100,52 +98,52 @@
             this.dockPanel.Location = new System.Drawing.Point(0, 27);
             this.dockPanel.Name = "dockPanel";
             this.dockPanel.Size = new System.Drawing.Size(640, 238);
-            dockPanelGradient13.EndColor = System.Drawing.SystemColors.ControlLight;
-            dockPanelGradient13.StartColor = System.Drawing.SystemColors.ControlLight;
-            autoHideStripSkin5.DockStripGradient = dockPanelGradient13;
-            tabGradient29.EndColor = System.Drawing.SystemColors.Control;
-            tabGradient29.StartColor = System.Drawing.SystemColors.Control;
-            tabGradient29.TextColor = System.Drawing.SystemColors.ControlDarkDark;
-            autoHideStripSkin5.TabGradient = tabGradient29;
-            autoHideStripSkin5.TextFont = new System.Drawing.Font("Segoe UI", 9F);
-            dockPanelSkin5.AutoHideStripSkin = autoHideStripSkin5;
-            tabGradient30.EndColor = System.Drawing.SystemColors.ControlLightLight;
-            tabGradient30.StartColor = System.Drawing.SystemColors.ControlLightLight;
-            tabGradient30.TextColor = System.Drawing.SystemColors.ControlText;
-            dockPaneStripGradient5.ActiveTabGradient = tabGradient30;
-            dockPanelGradient14.EndColor = System.Drawing.SystemColors.Control;
-            dockPanelGradient14.StartColor = System.Drawing.SystemColors.Control;
-            dockPaneStripGradient5.DockStripGradient = dockPanelGradient14;
-            tabGradient31.EndColor = System.Drawing.SystemColors.ControlLight;
-            tabGradient31.StartColor = System.Drawing.SystemColors.ControlLight;
-            tabGradient31.TextColor = System.Drawing.SystemColors.ControlText;
-            dockPaneStripGradient5.InactiveTabGradient = tabGradient31;
-            dockPaneStripSkin5.DocumentGradient = dockPaneStripGradient5;
-            dockPaneStripSkin5.TextFont = new System.Drawing.Font("Segoe UI", 9F);
-            tabGradient32.EndColor = System.Drawing.SystemColors.ActiveCaption;
-            tabGradient32.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient32.StartColor = System.Drawing.SystemColors.GradientActiveCaption;
-            tabGradient32.TextColor = System.Drawing.SystemColors.ActiveCaptionText;
-            dockPaneStripToolWindowGradient5.ActiveCaptionGradient = tabGradient32;
-            tabGradient33.EndColor = System.Drawing.SystemColors.Control;
-            tabGradient33.StartColor = System.Drawing.SystemColors.Control;
-            tabGradient33.TextColor = System.Drawing.SystemColors.ControlText;
-            dockPaneStripToolWindowGradient5.ActiveTabGradient = tabGradient33;
-            dockPanelGradient15.EndColor = System.Drawing.SystemColors.ControlLight;
-            dockPanelGradient15.StartColor = System.Drawing.SystemColors.ControlLight;
-            dockPaneStripToolWindowGradient5.DockStripGradient = dockPanelGradient15;
-            tabGradient34.EndColor = System.Drawing.SystemColors.InactiveCaption;
-            tabGradient34.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient34.StartColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            tabGradient34.TextColor = System.Drawing.SystemColors.InactiveCaptionText;
-            dockPaneStripToolWindowGradient5.InactiveCaptionGradient = tabGradient34;
-            tabGradient35.EndColor = System.Drawing.Color.Transparent;
-            tabGradient35.StartColor = System.Drawing.Color.Transparent;
-            tabGradient35.TextColor = System.Drawing.SystemColors.ControlDarkDark;
-            dockPaneStripToolWindowGradient5.InactiveTabGradient = tabGradient35;
-            dockPaneStripSkin5.ToolWindowGradient = dockPaneStripToolWindowGradient5;
-            dockPanelSkin5.DockPaneStripSkin = dockPaneStripSkin5;
-            this.dockPanel.Skin = dockPanelSkin5;
+            dockPanelGradient43.EndColor = System.Drawing.SystemColors.ControlLight;
+            dockPanelGradient43.StartColor = System.Drawing.SystemColors.ControlLight;
+            autoHideStripSkin15.DockStripGradient = dockPanelGradient43;
+            tabGradient99.EndColor = System.Drawing.SystemColors.Control;
+            tabGradient99.StartColor = System.Drawing.SystemColors.Control;
+            tabGradient99.TextColor = System.Drawing.SystemColors.ControlDarkDark;
+            autoHideStripSkin15.TabGradient = tabGradient99;
+            autoHideStripSkin15.TextFont = new System.Drawing.Font("Segoe UI", 9F);
+            dockPanelSkin15.AutoHideStripSkin = autoHideStripSkin15;
+            tabGradient100.EndColor = System.Drawing.SystemColors.ControlLightLight;
+            tabGradient100.StartColor = System.Drawing.SystemColors.ControlLightLight;
+            tabGradient100.TextColor = System.Drawing.SystemColors.ControlText;
+            dockPaneStripGradient15.ActiveTabGradient = tabGradient100;
+            dockPanelGradient44.EndColor = System.Drawing.SystemColors.Control;
+            dockPanelGradient44.StartColor = System.Drawing.SystemColors.Control;
+            dockPaneStripGradient15.DockStripGradient = dockPanelGradient44;
+            tabGradient101.EndColor = System.Drawing.SystemColors.ControlLight;
+            tabGradient101.StartColor = System.Drawing.SystemColors.ControlLight;
+            tabGradient101.TextColor = System.Drawing.SystemColors.ControlText;
+            dockPaneStripGradient15.InactiveTabGradient = tabGradient101;
+            dockPaneStripSkin15.DocumentGradient = dockPaneStripGradient15;
+            dockPaneStripSkin15.TextFont = new System.Drawing.Font("Segoe UI", 9F);
+            tabGradient102.EndColor = System.Drawing.SystemColors.ActiveCaption;
+            tabGradient102.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
+            tabGradient102.StartColor = System.Drawing.SystemColors.GradientActiveCaption;
+            tabGradient102.TextColor = System.Drawing.SystemColors.ActiveCaptionText;
+            dockPaneStripToolWindowGradient15.ActiveCaptionGradient = tabGradient102;
+            tabGradient103.EndColor = System.Drawing.SystemColors.Control;
+            tabGradient103.StartColor = System.Drawing.SystemColors.Control;
+            tabGradient103.TextColor = System.Drawing.SystemColors.ControlText;
+            dockPaneStripToolWindowGradient15.ActiveTabGradient = tabGradient103;
+            dockPanelGradient45.EndColor = System.Drawing.SystemColors.ControlLight;
+            dockPanelGradient45.StartColor = System.Drawing.SystemColors.ControlLight;
+            dockPaneStripToolWindowGradient15.DockStripGradient = dockPanelGradient45;
+            tabGradient104.EndColor = System.Drawing.SystemColors.InactiveCaption;
+            tabGradient104.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
+            tabGradient104.StartColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            tabGradient104.TextColor = System.Drawing.SystemColors.InactiveCaptionText;
+            dockPaneStripToolWindowGradient15.InactiveCaptionGradient = tabGradient104;
+            tabGradient105.EndColor = System.Drawing.Color.Transparent;
+            tabGradient105.StartColor = System.Drawing.Color.Transparent;
+            tabGradient105.TextColor = System.Drawing.SystemColors.ControlDarkDark;
+            dockPaneStripToolWindowGradient15.InactiveTabGradient = tabGradient105;
+            dockPaneStripSkin15.ToolWindowGradient = dockPaneStripToolWindowGradient15;
+            dockPanelSkin15.DockPaneStripSkin = dockPaneStripSkin15;
+            this.dockPanel.Skin = dockPanelSkin15;
             this.dockPanel.TabIndex = 0;
             // 
             // menuStrip1
@@ -171,8 +169,8 @@
             this.saveToolStripMenuItem,
             this.importToolStripMenuItem,
             this.exportCompetitionToolStripMenuItem,
-            this.utilitiesToolStripMenuItem,
-            this.compareToAnotherProjectToolStripMenuItem});
+            this.reportToolStripMenuItem1,
+            this.utilitiesToolStripMenuItem});
             this.invoerToolStripMenuItem.Name = "invoerToolStripMenuItem";
             this.invoerToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.invoerToolStripMenuItem.Text = "File";
@@ -250,56 +248,24 @@
             // 
             this.exportCompetitionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.competitionxmlForKlvvsiteToolStripMenuItem,
-            this.clubRegistrationsKlvvsitexmlToolStripMenuItem,
-            this.perClubToolStripMenuItem1,
-            this.poulesSeriescsvToolStripMenuItem,
-            this.matchescsvToolStripMenuItem,
-            this.statisticscsvToolStripMenuItem});
+            this.clubRegistrationsKlvvsitexmlToolStripMenuItem});
             this.exportCompetitionToolStripMenuItem.Name = "exportCompetitionToolStripMenuItem";
             this.exportCompetitionToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
-            this.exportCompetitionToolStripMenuItem.Text = "Export Competition";
+            this.exportCompetitionToolStripMenuItem.Text = "Export";
             // 
             // competitionxmlForKlvvsiteToolStripMenuItem
             // 
             this.competitionxmlForKlvvsiteToolStripMenuItem.Name = "competitionxmlForKlvvsiteToolStripMenuItem";
-            this.competitionxmlForKlvvsiteToolStripMenuItem.Size = new System.Drawing.Size(287, 22);
-            this.competitionxmlForKlvvsiteToolStripMenuItem.Text = "Generated Competition - Klvv-site (.xml)";
+            this.competitionxmlForKlvvsiteToolStripMenuItem.Size = new System.Drawing.Size(231, 22);
+            this.competitionxmlForKlvvsiteToolStripMenuItem.Text = "Generated Competition (.xml)";
             this.competitionxmlForKlvvsiteToolStripMenuItem.Click += new System.EventHandler(this.competitionxmlForKlvvsiteToolStripMenuItem_Click);
             // 
             // clubRegistrationsKlvvsitexmlToolStripMenuItem
             // 
             this.clubRegistrationsKlvvsitexmlToolStripMenuItem.Name = "clubRegistrationsKlvvsitexmlToolStripMenuItem";
-            this.clubRegistrationsKlvvsitexmlToolStripMenuItem.Size = new System.Drawing.Size(287, 22);
-            this.clubRegistrationsKlvvsitexmlToolStripMenuItem.Text = "Club Registrations - klvv-site (.xml)";
+            this.clubRegistrationsKlvvsitexmlToolStripMenuItem.Size = new System.Drawing.Size(231, 22);
+            this.clubRegistrationsKlvvsitexmlToolStripMenuItem.Text = "Club Registrations (.xml)";
             this.clubRegistrationsKlvvsitexmlToolStripMenuItem.Click += new System.EventHandler(this.clubRegistrationsKlvvsitexmlToolStripMenuItem_Click);
-            // 
-            // perClubToolStripMenuItem1
-            // 
-            this.perClubToolStripMenuItem1.Name = "perClubToolStripMenuItem1";
-            this.perClubToolStripMenuItem1.Size = new System.Drawing.Size(287, 22);
-            this.perClubToolStripMenuItem1.Text = "Per Club (.csv)";
-            this.perClubToolStripMenuItem1.Click += new System.EventHandler(this.perClubToolStripMenuItem1_Click);
-            // 
-            // poulesSeriescsvToolStripMenuItem
-            // 
-            this.poulesSeriescsvToolStripMenuItem.Name = "poulesSeriescsvToolStripMenuItem";
-            this.poulesSeriescsvToolStripMenuItem.Size = new System.Drawing.Size(287, 22);
-            this.poulesSeriescsvToolStripMenuItem.Text = "Poules+Series (.csv)";
-            this.poulesSeriescsvToolStripMenuItem.Click += new System.EventHandler(this.poulesSeriescsvToolStripMenuItem_Click);
-            // 
-            // matchescsvToolStripMenuItem
-            // 
-            this.matchescsvToolStripMenuItem.Name = "matchescsvToolStripMenuItem";
-            this.matchescsvToolStripMenuItem.Size = new System.Drawing.Size(287, 22);
-            this.matchescsvToolStripMenuItem.Text = "Matches (.csv)";
-            this.matchescsvToolStripMenuItem.Click += new System.EventHandler(this.matchescsvToolStripMenuItem_Click);
-            // 
-            // statisticscsvToolStripMenuItem
-            // 
-            this.statisticscsvToolStripMenuItem.Name = "statisticscsvToolStripMenuItem";
-            this.statisticscsvToolStripMenuItem.Size = new System.Drawing.Size(287, 22);
-            this.statisticscsvToolStripMenuItem.Text = "Statistics (.csv)";
-            this.statisticscsvToolStripMenuItem.Click += new System.EventHandler(this.statisticscsvToolStripMenuItem_Click);
             // 
             // utilitiesToolStripMenuItem
             // 
@@ -332,28 +298,32 @@
             this.vVBConvertToolStripMenuItem.Text = "Convert VVB-site to CSV";
             this.vVBConvertToolStripMenuItem.Click += new System.EventHandler(this.vVBConvertToolStripMenuItem_Click);
             // 
-            // compareToAnotherProjectToolStripMenuItem
+            // reportToolStripMenuItem1
             // 
-            this.compareToAnotherProjectToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.load2ndProjectToolStripMenuItem,
-            this.comparisonOnOffToolStripMenuItem});
-            this.compareToAnotherProjectToolStripMenuItem.Name = "compareToAnotherProjectToolStripMenuItem";
-            this.compareToAnotherProjectToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
-            this.compareToAnotherProjectToolStripMenuItem.Text = "Compare to another project";
+            this.reportToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.conflictPerTypeToolStripMenuItem,
+            this.conflictsPerClubToolStripMenuItem,
+            this.matchesPerClubcsvToolStripMenuItem,
+            this.poulesSeriescsvToolStripMenuItem1,
+            this.matchescsvToolStripMenuItem1,
+            this.statisticscsvToolStripMenuItem1});
+            this.reportToolStripMenuItem1.Name = "reportToolStripMenuItem1";
+            this.reportToolStripMenuItem1.Size = new System.Drawing.Size(221, 22);
+            this.reportToolStripMenuItem1.Text = "Reports";
             // 
-            // load2ndProjectToolStripMenuItem
+            // conflictPerTypeToolStripMenuItem
             // 
-            this.load2ndProjectToolStripMenuItem.Name = "load2ndProjectToolStripMenuItem";
-            this.load2ndProjectToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.load2ndProjectToolStripMenuItem.Text = "Load 2nd project";
-            this.load2ndProjectToolStripMenuItem.Click += new System.EventHandler(this.load2ndProjectToolStripMenuItem_Click);
+            this.conflictPerTypeToolStripMenuItem.Name = "conflictPerTypeToolStripMenuItem";
+            this.conflictPerTypeToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.conflictPerTypeToolStripMenuItem.Text = "Conflict per Type (.csv)";
+            this.conflictPerTypeToolStripMenuItem.Click += new System.EventHandler(this.conflictPerTypeToolStripMenuItem_Click);
             // 
-            // comparisonOnOffToolStripMenuItem
+            // conflictsPerClubToolStripMenuItem
             // 
-            this.comparisonOnOffToolStripMenuItem.Name = "comparisonOnOffToolStripMenuItem";
-            this.comparisonOnOffToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.comparisonOnOffToolStripMenuItem.Text = "Comparison On/Off";
-            this.comparisonOnOffToolStripMenuItem.Click += new System.EventHandler(this.comparisonOnOffToolStripMenuItem_Click);
+            this.conflictsPerClubToolStripMenuItem.Name = "conflictsPerClubToolStripMenuItem";
+            this.conflictsPerClubToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.conflictsPerClubToolStripMenuItem.Text = "Conflicts per Club (.csv)";
+            this.conflictsPerClubToolStripMenuItem.Click += new System.EventHandler(this.conflictsPerClubToolStripMenuItem_Click);
             // 
             // manageToolStripMenuItem
             // 
@@ -392,7 +362,6 @@
             this.clubsToolStripMenuItem,
             this.seriesToolStripMenuItem,
             this.constraintsToolStripMenuItem,
-            this.reportToolStripMenuItem,
             this.teamsToolStripMenuItem});
             this.viewsToolStripMenuItem.Name = "viewsToolStripMenuItem";
             this.viewsToolStripMenuItem.Size = new System.Drawing.Size(66, 20);
@@ -419,29 +388,6 @@
             this.constraintsToolStripMenuItem.Text = "Constraints";
             this.constraintsToolStripMenuItem.Click += new System.EventHandler(this.constraintsToolStripMenuItem_Click);
             // 
-            // reportToolStripMenuItem
-            // 
-            this.reportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.perTypeToolStripMenuItem,
-            this.perClubToolStripMenuItem});
-            this.reportToolStripMenuItem.Name = "reportToolStripMenuItem";
-            this.reportToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
-            this.reportToolStripMenuItem.Text = "Report";
-            // 
-            // perTypeToolStripMenuItem
-            // 
-            this.perTypeToolStripMenuItem.Name = "perTypeToolStripMenuItem";
-            this.perTypeToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
-            this.perTypeToolStripMenuItem.Text = "Per type";
-            this.perTypeToolStripMenuItem.Click += new System.EventHandler(this.perTypeToolStripMenuItem_Click);
-            // 
-            // perClubToolStripMenuItem
-            // 
-            this.perClubToolStripMenuItem.Name = "perClubToolStripMenuItem";
-            this.perClubToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
-            this.perClubToolStripMenuItem.Text = "Per club";
-            this.perClubToolStripMenuItem.Click += new System.EventHandler(this.perClubToolStripMenuItem_Click);
-            // 
             // teamsToolStripMenuItem
             // 
             this.teamsToolStripMenuItem.Name = "teamsToolStripMenuItem";
@@ -459,38 +405,76 @@
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.helpToolStripMenuItem.Checked = true;
+            this.helpToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.helpToolStripMenuItem1,
             this.aboutToolStripMenuItem,
-            this.licenseToolStripMenuItem});
+            this.licenseToolStripMenuItem,
+            this.settingsToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
             // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.FileName = "openFileDialog1";
-            // 
             // helpToolStripMenuItem1
             // 
             this.helpToolStripMenuItem1.Name = "helpToolStripMenuItem1";
-            this.helpToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.helpToolStripMenuItem1.Size = new System.Drawing.Size(116, 22);
             this.helpToolStripMenuItem1.Text = "Help";
             this.helpToolStripMenuItem1.Click += new System.EventHandler(this.helpToolStripMenuItem1_Click);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click_1);
             // 
             // licenseToolStripMenuItem
             // 
             this.licenseToolStripMenuItem.Name = "licenseToolStripMenuItem";
-            this.licenseToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.licenseToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.licenseToolStripMenuItem.Text = "License";
             this.licenseToolStripMenuItem.Click += new System.EventHandler(this.licenseToolStripMenuItem_Click_1);
+            // 
+            // settingsToolStripMenuItem
+            // 
+            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.settingsToolStripMenuItem.Text = "Settings";
+            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // matchesPerClubcsvToolStripMenuItem
+            // 
+            this.matchesPerClubcsvToolStripMenuItem.Name = "matchesPerClubcsvToolStripMenuItem";
+            this.matchesPerClubcsvToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.matchesPerClubcsvToolStripMenuItem.Text = "Matches per Club (.csv)";
+            this.matchesPerClubcsvToolStripMenuItem.Click += new System.EventHandler(this.matchesPerClubcsvToolStripMenuItem_Click);
+            // 
+            // poulesSeriescsvToolStripMenuItem1
+            // 
+            this.poulesSeriescsvToolStripMenuItem1.Name = "poulesSeriescsvToolStripMenuItem1";
+            this.poulesSeriescsvToolStripMenuItem1.Size = new System.Drawing.Size(200, 22);
+            this.poulesSeriescsvToolStripMenuItem1.Text = "Poules + Series (.csv)";
+            this.poulesSeriescsvToolStripMenuItem1.Click += new System.EventHandler(this.poulesSeriescsvToolStripMenuItem1_Click);
+            // 
+            // matchescsvToolStripMenuItem1
+            // 
+            this.matchescsvToolStripMenuItem1.Name = "matchescsvToolStripMenuItem1";
+            this.matchescsvToolStripMenuItem1.Size = new System.Drawing.Size(200, 22);
+            this.matchescsvToolStripMenuItem1.Text = "Matches (.csv)";
+            this.matchescsvToolStripMenuItem1.Click += new System.EventHandler(this.matchescsvToolStripMenuItem1_Click);
+            // 
+            // statisticscsvToolStripMenuItem1
+            // 
+            this.statisticscsvToolStripMenuItem1.Name = "statisticscsvToolStripMenuItem1";
+            this.statisticscsvToolStripMenuItem1.Size = new System.Drawing.Size(200, 22);
+            this.statisticscsvToolStripMenuItem1.Text = "Statistics (.csv)";
+            this.statisticscsvToolStripMenuItem1.Click += new System.EventHandler(this.statisticscsvToolStripMenuItem1_Click);
             // 
             // Form1
             // 
@@ -524,12 +508,8 @@
         private System.Windows.Forms.ToolStripMenuItem anoramaToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem poulesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem subscriptionsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem reportToolStripMenuItem;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
-        private System.Windows.Forms.ToolStripMenuItem perTypeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem perClubToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportCompetitionToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem perClubToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
@@ -539,9 +519,6 @@
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem kLVVTeamSubscriptionsklvvbeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem competitionxmlForKlvvsiteToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem poulesSeriescsvToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem matchescsvToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem statisticscsvToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cSVCompetitionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem teamsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clubRegistrationsKlvvsitexmlToolStripMenuItem;
@@ -551,12 +528,17 @@
         private System.Windows.Forms.ToolStripMenuItem clubteamVergelijkingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem kLVVConvertToCSVToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem vVBConvertToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem compareToAnotherProjectToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem load2ndProjectToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem comparisonOnOffToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem licenseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem reportToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem conflictPerTypeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem conflictsPerClubToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem matchesPerClubcsvToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem poulesSeriescsvToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem matchescsvToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem statisticscsvToolStripMenuItem1;
     }
 }
 

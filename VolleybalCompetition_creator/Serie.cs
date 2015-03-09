@@ -8,7 +8,6 @@ namespace VolleybalCompetition_creator
 {
     public class Serie:ConstraintAdmin
     {
-        private bool reserve = false;
         public bool imported
         {
             get
@@ -35,9 +34,9 @@ namespace VolleybalCompetition_creator
             this.name = name;
             optimizable = true; 
             evaluated = true;
+            extraTimeBefore = 0; // geen reserve match
             weekOrderChangeAllowed = Gewestelijk;
             homeVisitChangeAllowed = Gewestelijk;
-            reserve = (name == "1H" || name == "2H" || name == "1D" || name == "2D" || Nationaal);
         }
         
         public List<Team> teams {
@@ -50,10 +49,7 @@ namespace VolleybalCompetition_creator
         public bool weekOrderChangeAllowed { get { return optimizable && _weekOptimizable; } set { _weekOptimizable = value; } }
         public bool homeVisitChangeAllowed { get { return optimizable && _homeVisitOptimizable; } set { _homeVisitOptimizable = value; } }
         public bool evaluated { get; set; }
-        public bool Reserve()
-        {
-            return reserve;
-        }
+        public double extraTimeBefore { get; set; }
     }
     
 

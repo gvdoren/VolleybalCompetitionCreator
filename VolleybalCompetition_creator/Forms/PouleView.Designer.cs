@@ -356,6 +356,7 @@
             this.button9.TabIndex = 11;
             this.button9.Text = "Optimize team";
             this.button9.UseVisualStyleBackColor = true;
+            this.button9.Visible = false;
             this.button9.Click += new System.EventHandler(this.button9_Click);
             // 
             // button10
@@ -366,6 +367,7 @@
             this.button10.TabIndex = 12;
             this.button10.Text = "Optimize poule";
             this.button10.UseVisualStyleBackColor = true;
+            this.button10.Visible = false;
             this.button10.Click += new System.EventHandler(this.button10_Click);
             // 
             // button11
@@ -376,6 +378,7 @@
             this.button11.TabIndex = 13;
             this.button11.Text = "Analyse";
             this.button11.UseVisualStyleBackColor = true;
+            this.button11.Visible = false;
             this.button11.Click += new System.EventHandler(this.button11_Click);
             // 
             // button12
@@ -386,6 +389,7 @@
             this.button12.TabIndex = 14;
             this.button12.Text = "A + O";
             this.button12.UseVisualStyleBackColor = true;
+            this.button12.Visible = false;
             this.button12.Click += new System.EventHandler(this.button12_Click);
             // 
             // button13
@@ -397,6 +401,7 @@
             this.button13.TabIndex = 15;
             this.button13.Text = "Optimize";
             this.button13.UseVisualStyleBackColor = true;
+            this.button13.Visible = false;
             this.button13.Click += new System.EventHandler(this.button13_Click);
             // 
             // button14
@@ -408,6 +413,7 @@
             this.button14.TabIndex = 7;
             this.button14.Text = "A + O";
             this.button14.UseVisualStyleBackColor = true;
+            this.button14.Visible = false;
             this.button14.Click += new System.EventHandler(this.button14_Click);
             // 
             // PouleView

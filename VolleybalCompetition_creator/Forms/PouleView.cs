@@ -195,10 +195,17 @@ namespace VolleybalCompetition_creator
 
         private void button4_Click(object sender, EventArgs e)
         {
-            ProgressDialog diag = new ProgressDialog();
-            diag.WorkFunction += OptimizeTeamAssignment;
-            diag.CompletionFunction += OptimizeTeamAssignmentCompleted; 
-            diag.Start("Optimizing teams", null);
+            if (poule.serie.optimizable == false)
+            {
+                System.Windows.Forms.MessageBox.Show("Not allowed to change numbers in schema");
+            }
+            else
+            {
+                ProgressDialog diag = new ProgressDialog();
+                diag.WorkFunction += OptimizeTeamAssignment;
+                diag.CompletionFunction += OptimizeTeamAssignmentCompleted;
+                diag.Start("Optimizing teams", null);
+            }
         }
         private void OptimizeWeekAssignment(object sender, MyEventArgs e)
         {
@@ -284,6 +291,7 @@ namespace VolleybalCompetition_creator
             {
                 poule.SnapShot(klvv);
                 poule.OptimizeHomeVisitor(klvv);
+                poule.OptimizeHomeVisitorReverse(klvv);
                 klvv.Changed();
             }
         }
