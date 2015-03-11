@@ -8,119 +8,124 @@ using System.Xml.Linq;
 
 namespace VolleybalCompetition_creator
 {
-    public class AnoramaWeekend
+    public class AnnoramaReeks
     {
-        public const int MaxReeksen = 10;
+        public string Name;
+        public int Count;
+        public List<AnnoramaWeekend> weekends = new List<AnnoramaWeekend>();
+    }
+    
+    public class AnnoramaWeekend
+    {
         public Weekend weekend;
-        public bool[] reeksen = new bool[MaxReeksen];
-        public AnoramaWeekend(Weekend we)
+        public bool match;
+        public AnnoramaWeekend(Weekend we, bool match)
         {
-            this.weekend = we;
-            for (int i = 0; i < MaxReeksen; i++) reeksen[i] = true;
+            weekend = we;
+            this.match = match;
         }
     }
 
-    public class Anorama
+    public class Annorama
     {
         public string title;
-        public List<AnoramaWeekend> weekends = new List<AnoramaWeekend>();
-        public List<string> reeksen = new List<string>();
-        public Anorama(int year)
+        public List<AnnoramaReeks> reeksen = new List<AnnoramaReeks>();
+        public DateTime start;
+        public DateTime end;
+        public Annorama(int year)
         {
+            reeksen.Clear();
+            start = new DateTime(year, 9, 1);
+            end = new DateTime(year + 1, 5, 1);
+            title = string.Format("Annorama Seizoen {0}-{1}", year, year + 1);
             try
             {
                 ReadXML(year);
             }
             catch
             {
-                CreateAnorama(year);
             }
         }
-        public void CreateAnorama(int year)
+        public AnnoramaReeks GetReeks(string name)
         {
-            weekends.Clear();
-            reeksen.Clear();
-            Weekend weekend = new Weekend(new DateTime(year, 9, 1));
-            DateTime end = new DateTime(year + 1, 5, 1);
+            return reeksen.Find(w => w.Name == name);
+        }
+        public AnnoramaReeks CreateReeks(string name, int count)
+        {
+            AnnoramaReeks reeks = new AnnoramaReeks();
+            reeks.Name = name;
+            reeks.Count = count;
+            Weekend weekend = new Weekend(start);
+            DateTime current = start;
             while (weekend.Saturday < end)
             {
-                weekends.Add(new AnoramaWeekend(weekend));
-                weekend = new Weekend(weekend.Saturday.AddDays(7));
+                reeks.weekends.Add(new AnnoramaWeekend(weekend, false));
+                current = current.AddDays(7);
+                weekend = new Weekend(current);
             }
-            title = string.Format("Anorama Seizoen {0}-{1}", year, year + 1);
-            CreateReeks("14");
-            CreateReeks("12");
-            CreateReeks("10");
-            CreateReeks("8");
-            CreateReeks("6");
-            CreateReeks("4");
-        }
-        public List<Weekend> GetReeks(string name)
-        {
-            List<AnoramaWeekend> we = weekends.FindAll((w => w.reeksen[reeksen.FindIndex(n => n == name)] == true));
-            return we.Select(w => w.weekend).ToList();
-        }
-        public void CreateReeks(string name)
-        {
-            reeksen.Add(name);
+            reeksen.Add(reeks);
+            return reeks;
         }
         public void WriteXML(int year)
         {
             string BaseDirectory = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\CompetitionCreator";
-            using (XmlWriter writer = XmlWriter.Create(string.Format("{0}\\Anorama{1}.xml", BaseDirectory, year)))
+            using (XmlWriter writer = XmlWriter.Create(string.Format("{0}\\Annorama{1}.xml", BaseDirectory, year)))
             {
                 writer.WriteStartDocument();
-                writer.WriteStartElement("Anorama");
+                writer.WriteStartElement("Annorama");
                 writer.WriteAttributeString("Title", title);
+                writer.WriteAttributeString("Start", start.ToShortDateString());
+                writer.WriteAttributeString("End", end.ToShortDateString());
                 writer.WriteStartElement("Reeksen");
-                foreach (string reeks in reeksen)
+                int i=0;
+                foreach (AnnoramaReeks reeks in reeksen)
                 {
-                    writer.WriteElementString("Reeks", reeks);
-                }
-                writer.WriteEndElement();
-                writer.WriteStartElement("Weekends");
-                foreach (AnoramaWeekend weekend in weekends)
-                {
-                    writer.WriteStartElement("Weekend");
-                    writer.WriteAttributeString("Date", weekend.weekend.Saturday.ToShortDateString());
-                    for (int i = 0; i < reeksen.Count; i++)
+                    writer.WriteStartElement("Reeks");
+                    writer.WriteAttributeString("Name", reeks.Name);
+                    writer.WriteAttributeString("Count", reeks.Count.ToString());
+                    writer.WriteStartElement("Weekends");
+                    foreach (AnnoramaWeekend weekend in reeks.weekends)
                     {
-                        writer.WriteStartElement("Reeks");
-                        writer.WriteAttributeString("name", reeksen[i]);
-                        writer.WriteAttributeString("value", weekend.reeksen[i].ToString());
+                        writer.WriteStartElement("Weekend");
+                        writer.WriteAttributeString("Date", weekend.weekend.Saturday.ToShortDateString());
+                        writer.WriteAttributeString("Match", weekend.match.ToString());
                         writer.WriteEndElement();
+
                     }
+                    i++;
+                    writer.WriteEndElement();
                     writer.WriteEndElement();
                 }
                 writer.WriteEndElement();
                 writer.WriteEndElement();
                 writer.WriteEndDocument();
             }
-
         }
         public void ReadXML(int year)
         {
             string BaseDirectory = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\CompetitionCreator";
-            XElement Anorama = XElement.Load(string.Format("{0}\\Anorama{1}.xml", BaseDirectory, year));
-            title = Anorama.Attribute("Title").Value;
-            IEnumerable<XElement> Reeksen = Anorama.Element("Reeksen").Elements("Reeks");
+            XElement Annorama = XElement.Load(string.Format("{0}\\Annorama{1}.xml", BaseDirectory, year));
+            title = Annorama.Attribute("Title").Value;
+            start = DateTime.Parse(Annorama.Attribute("Start").Value.ToString());
+            end = DateTime.Parse(Annorama.Attribute("End").Value.ToString());
+            reeksen.Clear();
+            IEnumerable<XElement> Reeksen = Annorama.Element("Reeksen").Elements("Reeks");
+            int i = 0;
             foreach (XElement reeks in Reeksen)
             {
-                reeksen.Add(reeks.Value);
-            }
-            IEnumerable<XElement> Weekends = Anorama.Element("Weekends").Elements("Weekend");
-            foreach (XElement Weekend in Weekends)
-            {
-                DateTime dt = DateTime.Parse(Weekend.Attribute("Date").Value);
-                AnoramaWeekend anoramaweekend = new AnoramaWeekend(new Weekend(dt));
-                IEnumerable<XElement> Reeksen1 = Weekend.Elements("Reeks");
-                foreach (XElement reeks1 in Reeksen1)
+                string name = reeks.Attribute("Name").Value;
+                int count = int.Parse(reeks.Attribute("Count").Value);
+                AnnoramaReeks re = CreateReeks(name, count);
+                IEnumerable<XElement> Weekends = reeks.Element("Weekends").Elements("Weekend");
+                foreach (XElement Weekend in Weekends)
                 {
-                    string name = reeks1.Attribute("name").Value;
-                    int index = this.reeksen.FindIndex(r => r == name);
-                    anoramaweekend.reeksen[index] = bool.Parse(reeks1.Attribute("value").Value);
+                    DateTime dt = DateTime.Parse(Weekend.Attribute("Date").Value);
+                    Weekend we = new Weekend(dt);
+                    bool match = bool.Parse(Weekend.Attribute("Match").Value.ToString());
+                    AnnoramaWeekend anWeekend = re.weekends.Find(w => w.weekend.Saturday == we.Saturday);
+                    anWeekend.match = match;
                 }
-                weekends.Add(anoramaweekend);
+                i++;
             }
         }
     }

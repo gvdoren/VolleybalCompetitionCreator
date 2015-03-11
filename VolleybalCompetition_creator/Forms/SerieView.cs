@@ -29,9 +29,9 @@ namespace VolleybalCompetition_creator
             this.state = state;
             InitializeComponent();
             objectListView1.SetObjects(klvv.series);
-            foreach (string reeks in klvv.annorama.reeksen)
+            foreach (AnnoramaReeks reeks in klvv.annorama.reeksen)
             {
-                comboBox1.Items.Add(reeks);
+                comboBox1.Items.Add(reeks.Name);
             }
             if (comboBox1.Items.Count > 0) comboBox1.SelectedIndex = 0;
             klvv.OnMyChange += state_OnMyChange;
@@ -171,7 +171,6 @@ namespace VolleybalCompetition_creator
         {
             button2.Enabled = (objectListView2.SelectedObjects.Count >= 1);
             button3.Enabled = (objectListView2.SelectedObjects.Count == 1 && objectListView3.SelectedObjects.Count>0);
-            button5.Enabled = (objectListView1.SelectedObjects.Count >= 1);
             poule = (Poule)objectListView2.SelectedObject;
         }
         private void objectListView3_SelectionChanged(object sender, EventArgs e)
@@ -217,13 +216,13 @@ namespace VolleybalCompetition_creator
                 {
                     if (p.name == Letter.ToString()) Letter++;
                 }
-                List<Weekend> weekends = klvv.annorama.GetReeks(comboBox1.SelectedItem.ToString());
+                List<AnnoramaWeekend> weekends = klvv.annorama.GetReeks(comboBox1.SelectedItem.ToString()).weekends;
 
                 int teamCount = int.Parse(comboBox1.SelectedItem.ToString());
                 Poule poule = new Poule(Letter.ToString(), teamCount,serie);
-                foreach (Weekend we in weekends)
+                foreach (AnnoramaWeekend we in weekends)
                 {
-                    poule.weekends.Add(new Weekend(we.Saturday));
+                    if(we.match) poule.weekends.Add(new Weekend(we.weekend.Saturday));
                 }
                 serie.poules.Add(poule);
                 if (poule.serie.Gewestelijk) 
@@ -336,42 +335,6 @@ namespace VolleybalCompetition_creator
             klvv.RenewConstraints();
             klvv.Evaluate(null);
             klvv.Changed();
-        }
-
-        private void button5_Click(object sender, EventArgs e)
-        {
-            foreach(Serie serie in objectListView1.SelectedObjects)
-            {
-                if (serie.optimizable)
-                {
-                    foreach (Poule poule in serie.poules)
-                    {
-                        List<Weekend> weekends = klvv.annorama.GetReeks(poule.maxTeams.ToString());
-                        if (weekends.Count < (poule.maxTeams - 1) * 2)
-                        {
-                            System.Windows.Forms.MessageBox.Show(string.Format("Number of weekends in anorama ({0}) not sufficient for schema ({1})", weekends.Count, (poule.maxTeams - 1) * 2));
-                        }
-                        if (weekends.Count != (poule.maxTeams - 1) * 2)
-                        {
-                            //System.Windows.Forms.MessageBox.Show(string.Format("Number of weekends in anorama ({0}) do not match with schema ({1})", weekends.Count, (poule.maxTeams - 1) * 2));
-                        }
-                        poule.weekends.Clear();
-                        foreach (Weekend we in weekends)
-                        {
-                            poule.weekends.Add(new Weekend(we.Saturday));
-                        }
-                        poule.matches.Clear();
-                        if (poule.serie.Gewestelijk) 
-                            poule.CreateMatches();
-                        else 
-                            poule.CreateMatchesFromSchemaFiles();
-                        klvv.RenewConstraints();
-                        klvv.Evaluate(null);
-                        klvv.Changed();
-
-                    }
-                }
-            }
         }
 
         private void SerieView_FormClosed(object sender, FormClosedEventArgs e)

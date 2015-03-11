@@ -25,6 +25,9 @@ Settings opslaan in project:
 - Reeks: 
 	- welke klasse (nationaal/provinciaal/regionaal): Gerelateerd aan cost-functie
 	- Welke optimalisatie mag per reeks
+	- Ranking
+	- Annorama op basis van aantal teams
+
 
 
 

@@ -16,29 +16,38 @@ namespace VolleybalCompetition_creator
     {
         Klvv klvv = null;
         GlobalState state;
+        List<Weekend> weekends = new List<Weekend>();
         public AnoramaView(Klvv klvv, GlobalState state)
         {
             this.klvv = klvv;
             this.state = state;
             InitializeComponent();
-            objectListView1.SetObjects(klvv.annorama.weekends);
+            DateTime current = klvv.annorama.start;
+            Weekend weekend = new Weekend(current);
+            while (weekend.Saturday < klvv.annorama.end)
+            {
+                weekends.Add(weekend);
+                current = current.AddDays(7);
+                weekend = new Weekend(current);
+            }
+            objectListView1.SetObjects(weekends);
             UpdateForm();
         }
         private void UpdateForm()
         {
             while (objectListView1.AllColumns.Count > 1) objectListView1.AllColumns.RemoveAt(1);
             while (objectListView1.Columns.Count > 1) objectListView1.Columns.RemoveAt(1);
-            for (int i = 0; i < klvv.annorama.reeksen.Count; i++)
+            foreach(AnnoramaReeks reeks in klvv.annorama.reeksen)
             {
                 BrightIdeasSoftware.OLVColumn olvColumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
                 objectListView1.AllColumns.Add(olvColumn);
                 objectListView1.Columns.Add(olvColumn);
                 //olvColumn.AspectName = string.Format("reeks{0}",i);
-                olvColumn.AspectGetter = new DelegateObject(i).getter;
-                olvColumn.AspectPutter = new DelegateObject(i).putter;
+                olvColumn.AspectGetter = new DelegateObject(reeks).getter;
+                olvColumn.AspectPutter = new DelegateObject(reeks).putter;
                 olvColumn.CellPadding = null;
                 olvColumn.CheckBoxes = true;
-                olvColumn.Text = klvv.annorama.reeksen[i];
+                olvColumn.Text = reeks.Name;
                 olvColumn.Width = 25;
                 olvColumn.AutoResize(ColumnHeaderAutoResizeStyle.HeaderSize);
             }
@@ -50,7 +59,7 @@ namespace VolleybalCompetition_creator
             DialogResult dialogResult = MessageBox.Show("Bij het creeren van een nieuwe anorama gaat de oude verloren. Wil je dit?", "Nieuwe anorama", MessageBoxButtons.YesNo);
             if (dialogResult == DialogResult.Yes)
             {
-                klvv.annorama.CreateAnorama(klvv.year);
+                klvv.annorama = new Annorama(klvv.year);
                 klvv.annorama.WriteXML(klvv.year);
             }
             UpdateForm();
@@ -58,42 +67,48 @@ namespace VolleybalCompetition_creator
 
         private void objectListView1_SubItemChecking_1(object sender, SubItemCheckingEventArgs e)
         {
-            AnoramaWeekend weekend = (AnoramaWeekend)e.RowObject;
-            weekend.reeksen[e.Column.Index-1] = (e.NewValue == CheckState.Checked); 
+            Weekend weekend = (Weekend)e.RowObject;
+            klvv.annorama.reeksen[e.Column.Index-1].weekends.Find(w => w.weekend.Saturday == weekend.Saturday).match = (e.NewValue == CheckState.Checked); 
             klvv.annorama.WriteXML(klvv.year);
-
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            InputForm form = new InputForm("Creeer weekend reeks voor de anorama", "Geef een naam (bv. 14, of 12)");
+            InputForm form = new InputForm("Creeer weekend reeks voor de anorama", "Geef een naam voor de anorama-reeks");
             form.ShowDialog();
             if (form.Result)
             {
-                klvv.annorama.CreateReeks(form.GetInputString());
-                UpdateForm();
-                klvv.annorama.WriteXML(klvv.year);
+                InputForm form1 = new InputForm("Voor hoeveel teams is dit", "Geef het max. aantal teams voor in deze anorama-reeks");
+                form1.ShowDialog();
+                if(form1.Result)
+                {
+                    int count = 0;
+                    if (int.TryParse(form1.GetInputString(), out count))
+                    {
+                        klvv.annorama.CreateReeks(form.GetInputString(),count);
+                        UpdateForm();
+                        klvv.annorama.WriteXML(klvv.year);
+                    }
+                }
             }
 
         }
     }
     class DelegateObject
     {
-        int index = 0;
         public AspectPutterDelegate putter = null;
         public AspectGetterDelegate getter = null;
-        public DelegateObject(int i)
+        public DelegateObject(AnnoramaReeks reeks)
         {
-            index = i;
             putter = delegate(object rowObject, object newValue)
             {
-                AnoramaWeekend we = (AnoramaWeekend)rowObject;
-                we.reeksen[index] = (bool)newValue;
+                Weekend we = (Weekend)rowObject;
+                reeks.weekends.Find(w => w.weekend.Saturday == we.Saturday).match = (bool)newValue;
             };
             getter = delegate(object rowObject) 
             { 
-                AnoramaWeekend we = (AnoramaWeekend)rowObject; 
-                return we.reeksen[index]; 
+                Weekend we = (Weekend)rowObject; 
+                return reeks.weekends.Find(w => w.weekend.Saturday == we.Saturday).match;
             };
         }
         

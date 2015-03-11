@@ -39,8 +39,8 @@
             // objectListView1
             // 
             this.objectListView1.AllColumns.Add(this.olvColumn1);
-            this.objectListView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)));
+            this.objectListView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.objectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumn1});
             this.objectListView1.GridLines = true;
@@ -58,7 +58,7 @@
             // 
             // olvColumn1
             // 
-            this.olvColumn1.AspectName = "weekend.Saturday";
+            this.olvColumn1.AspectName = "Saturday";
             this.olvColumn1.AspectToStringFormat = "{0:dd-MM-yyyy}";
             this.olvColumn1.CellPadding = null;
             this.olvColumn1.FillsFreeSpace = true;
@@ -91,7 +91,6 @@
             this.button2.TabIndex = 4;
             this.button2.Text = "Create Column";
             this.button2.UseVisualStyleBackColor = true;
-            this.button2.Visible = false;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // AnoramaView

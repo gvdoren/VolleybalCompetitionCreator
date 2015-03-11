@@ -55,7 +55,7 @@ namespace VolleybalCompetition_creator
             teams.Remove(team);
             MakeDirty();
         }
-        public Anorama annorama = new Anorama(DateTime.Now.Year);
+        public Annorama annorama = new Annorama(DateTime.Now.Year);
         public List<Constraint> constraints = new List<Constraint>();
         public List<Sporthal> sporthalls = new List<Sporthal>();
         public void Optimize()
@@ -143,7 +143,7 @@ namespace VolleybalCompetition_creator
             wc = new WebClient();
             wc.Proxy = null;
             this.year = year;
-            this.annorama = new Anorama(year);
+            this.annorama = new Annorama(year);
 
 
             //ImportSporthalls(XDocument.Load("http://klvv.be/server/sporthallsXML.php").Root);
