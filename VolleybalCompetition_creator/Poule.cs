@@ -9,8 +9,12 @@ namespace VolleybalCompetition_creator
     {
         // Temp lists for snapshot
         public bool imported = false;
-        public bool optimizable { get { return serie != null && serie.optimizable && evaluated; } }
-        public bool evaluated { get { return serie != null && serie.evaluated && imported == false; } }
+
+        public bool optimizable { get { return serie != null && serie.optimizableNumber && imported == false; } }
+        public bool optimizableWeekends { get { return serie != null && serie.optimizableWeekends && imported == false; } }
+        public bool optimizableHomeVisit { get { return serie != null && serie.optimizableHomeVisit && imported == false; } }
+
+        public bool evaluated { get { return imported == false; } }
         List<Team> resultTeams = new List<Team>();
         List<Weekend> resultWeekends = new List<Weekend>();
         List<Match> resultMatches = new List<Match>();
@@ -105,7 +109,7 @@ namespace VolleybalCompetition_creator
             {
                 foreach (Team t2 in teams)
                 {
-                    if(t2.RealTeam()) distance += t1.sporthal.sporthall.Distance(t2.sporthal.sporthall);
+                    if(t2.RealTeam() && t1.sporthal != null) distance += t1.sporthal.sporthall.Distance(t2.sporthal.sporthall);
                 }
             }
             if (TeamCount > 1)
@@ -170,7 +174,7 @@ namespace VolleybalCompetition_creator
         public void OptimizeWeekends(Klvv klvv, IProgress intf)
         {
             MakeDirty();
-            if (serie.optimizable && serie.weekOrderChangeAllowed)
+            if (optimizableWeekends)
             {
                 if (conflict_cost > 0)
                 {
@@ -303,7 +307,7 @@ namespace VolleybalCompetition_creator
         public void OptimizeTeam(Klvv klvv, IProgress intf,Team team)
         {
             MakeDirty();
-            if (serie.optimizable)
+            if (serie.optimizableNumber)
             {
                 if (conflict_cost > 0)
                 {
@@ -335,7 +339,7 @@ namespace VolleybalCompetition_creator
         public void OptimizeTeamAssignment(Klvv klvv, IProgress intf)
         {
             MakeDirty();
-            if (serie.optimizable)
+            if (optimizable)
             {
                 if (conflict_cost > 0)
                 {
@@ -370,7 +374,7 @@ namespace VolleybalCompetition_creator
             int[,] score = new int[maxTeams+1,maxTeams+1];
             List<Team> fixedOrderList = new List<Team>(teams);
             MakeDirty();
-            if (serie.optimizable)
+            if (optimizable)
             {
                 for(int k = 1;k<=maxTeams;k++)
                 {
@@ -431,7 +435,7 @@ namespace VolleybalCompetition_creator
             int[,] score = new int[maxWeekends + 1, 5 + 1];
             List<Weekend> fixedOrderList = new List<Weekend>(weekends);
             MakeDirty();
-            if (serie.optimizable)
+            if (optimizableWeekends)
             {
                 for (int k = 0; k < 5; k++)
                 {
@@ -509,7 +513,7 @@ namespace VolleybalCompetition_creator
         public void OptimizeFullTeamAssignment(Klvv klvv, IProgress intf)
         {
             MakeDirty();
-            if (serie.optimizable)
+            if (optimizable)
             {
                 if (conflict_cost > 0)
                 {
@@ -563,7 +567,7 @@ namespace VolleybalCompetition_creator
         }
         public void SwitchHomeTeamVisitorTeam(Klvv klvv, Match match)
         {
-            if (optimizable && serie.homeVisitChangeAllowed && match.Optimizable)
+            if (optimizableHomeVisit)
             {
                 Match match2 = null;
                 Match match1 = null;
@@ -608,7 +612,7 @@ namespace VolleybalCompetition_creator
         public void OptimizeHomeVisitor(Klvv klvv)
         {
             MakeDirty();
-            if (serie.optimizable && serie.homeVisitChangeAllowed)
+            if (optimizableHomeVisit)
             {
                 foreach (Match match in matches)
                 {
@@ -628,7 +632,7 @@ namespace VolleybalCompetition_creator
         public void OptimizeHomeVisitorReverse(Klvv klvv)
         {
             MakeDirty();
-            if (serie.optimizable && serie.homeVisitChangeAllowed)
+            if (optimizableHomeVisit)
             {
                 List<Match> reverseMatches = new List<Match>(matches);
                 reverseMatches.Reverse();

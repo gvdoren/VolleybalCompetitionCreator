@@ -318,7 +318,12 @@ namespace VolleybalCompetition_creator
 
         private void kLVVTeamSubscriptionsklvvbeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            klvv.ImportTeamSubscriptions(XDocument.Load("http://klvv.be/server/restricted/registrations/registrationsXML.php").Root);
+            InputForm form = new InputForm("Input the URL of the website that has the registrations", "URL:", MySettings.Settings.RegistrationsXML);
+            form.ShowDialog();
+            if(form.Result == true)
+            {
+                klvv.ImportTeamSubscriptions(XDocument.Load(form.GetInputString()).Root);
+            }
         }
 
         private void clubRegistrationsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -464,20 +469,23 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
         private void importKLVVRankingToolStripMenuItem_Click(object sender, EventArgs e)
         {
-        
-            ProgressDialog diag = new ProgressDialog();
-            diag.WorkFunction += importKLVVRanking;
-            diag.CompletionFunction += importKLVVRankingCompleted;
-            diag.Start("Optimizing", null);
+            openFileDialog1 = new OpenFileDialog();
+            openFileDialog1.FileName = "Rankings.xml";
+            openFileDialog1.Filter = "Rankings (*.xml)|*.xml";
+            openFileDialog1.InitialDirectory = BaseDirectory;
+            openFileDialog1.FileOk += new CancelEventHandler(openFileDialog1_FileOk5);
+            openFileDialog1.ShowDialog();
         }
-        private void importKLVVRanking(object sender, MyEventArgs e)
+        public void openFileDialog1_FileOk5(object sender, CancelEventArgs e)
         {
-            IProgress intf = (IProgress)sender;
-            intf.SetText("Import ranking");
-            klvv.KLVVAddRanking(intf);
-        }
-        private void importKLVVRankingCompleted(object sender, MyEventArgs e)
-        {
+            try
+            {
+                klvv.ImportRanking(XDocument.Load(openFileDialog1.FileName).Root);
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show("Failed importing ranking. Error: " + exc.ToString());
+            }
             klvv.Evaluate(null);
             klvv.Changed();
         }
@@ -541,7 +549,8 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         private void conflictPerTypeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             saveFileDialog1 = new SaveFileDialog();
-            saveFileDialog1.FileName = "ConflictReportPerType.csv";
+            DateTime now = DateTime.Now;
+            saveFileDialog1.FileName = string.Format("ConflictReportPerType{0:00}{1:00}{2:00}_{3:00}{4:00}.csv", now.Year, now.Month, now.Day, now.Hour, now.Minute); 
             saveFileDialog1.InitialDirectory = BaseDirectory;
             saveFileDialog1.FileOk += new CancelEventHandler(saveFileDialog1_FileOk);
             saveFileDialog1.ShowDialog();
@@ -554,7 +563,8 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         private void conflictsPerClubToolStripMenuItem_Click(object sender, EventArgs e)
         {
             saveFileDialog1 = new SaveFileDialog();
-            saveFileDialog1.FileName = "ConflictReportPerClub.txt";
+            DateTime now = DateTime.Now;
+            saveFileDialog1.FileName = string.Format("ConflictReportPerClub{0:00}{1:00}{2:00}_{3:00}{4:00}.csv", now.Year, now.Month, now.Day, now.Hour, now.Minute); 
             saveFileDialog1.InitialDirectory = BaseDirectory;
             saveFileDialog1.FileOk += new CancelEventHandler(saveFileDialog1_FileOk1);
             saveFileDialog1.ShowDialog();
@@ -645,6 +655,25 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         {
             klvv.WriteStatistics(saveFileDialog1.FileName);
 
+        }
+
+        private void importRankingWebsiteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            InputForm form = new InputForm("Input the URL of the website that has the ranking", "URL:", MySettings.Settings.RankingXML);
+            form.ShowDialog();
+            if (form.Result == true)
+            {
+                try
+                {
+                    klvv.ImportRanking(XDocument.Load(form.GetInputString()).Root);
+                }
+                catch (Exception exc)
+                {
+                    MessageBox.Show("Failed importing ranking. Error: " + exc.ToString());
+                }
+                klvv.Evaluate(null);
+                klvv.Changed();
+            }
         }
 
 

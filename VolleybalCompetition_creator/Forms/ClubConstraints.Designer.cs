@@ -195,12 +195,12 @@
             // 
             // olvColumn8
             // 
-            this.olvColumn8.AspectName = "FixedSchemaNumber";
+            this.olvColumn8.AspectName = "";
             this.olvColumn8.CellPadding = null;
             this.olvColumn8.DisplayIndex = 5;
             this.olvColumn8.IsVisible = false;
             this.olvColumn8.MinimumWidth = 25;
-            this.olvColumn8.Text = "Fixed-Schema";
+            this.olvColumn8.Text = "---";
             this.olvColumn8.Width = 40;
             // 
             // olvColumn10

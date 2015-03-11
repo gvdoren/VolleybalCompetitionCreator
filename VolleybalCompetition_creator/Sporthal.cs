@@ -23,7 +23,11 @@ namespace VolleybalCompetition_creator
         }
         public int Distance(Sporthal sporthal)
         {
-            if (sporthal != null && distance.ContainsKey(sporthal.id)) return distance[sporthal.id];
+            if (sporthal != null)
+            {
+                if (distance.ContainsKey(sporthal.id)) return distance[sporthal.id];
+                else throw new Exception(string.Format("No distance info available from {0} to {1}", name, sporthal.name));
+            }
             return 0;
         }
     }

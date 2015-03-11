@@ -17,11 +17,12 @@ namespace VolleybalCompetition_creator
             return textBox1.Text;
             
         }
-        public InputForm(string Title, string Label)
+        public InputForm(string Title, string Label, string def = "")
         {
             InitializeComponent();
             this.Text = Title;
             label1.Text = Label;
+            textBox1.Text = def;
             AcceptButton = button1;
             CancelButton = button2;
         }

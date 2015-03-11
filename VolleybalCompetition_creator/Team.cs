@@ -19,9 +19,6 @@ namespace VolleybalCompetition_creator
         public Serie serie = null;
         public string seriePouleName { get { return serie.name + ((poule!= null)?poule.name:"-"); } }
         public Time defaultTime;
-        public bool Optimizable { get { return FixedSchema == false; } }
-        public int FixedSchemaNumber = 0;
-        public bool FixedSchema { get { return FixedSchemaNumber > 0; } }
         public bool deleted { get; set; }
         public string email;
         public string NotAtSameTimeId
@@ -64,8 +61,12 @@ namespace VolleybalCompetition_creator
         public int AvgDistance { 
             get
             {
-                if (poule != null) return poule.CalculateDistances(this);
-                else return 0;
+                try
+                {
+                    if (poule != null) return poule.CalculateDistances(this);
+                    else return 0;
+                }
+                catch { return 0; }
             }
         }
         public Team(int Id, string name, Poule poule, Serie serie, Club club) 

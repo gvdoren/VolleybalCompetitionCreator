@@ -21,18 +21,20 @@ ToDo:
 
 
 
-Settings opslaan in project:
-- Reeks: 
-	- welke klasse (nationaal/provinciaal/regionaal): Gerelateerd aan cost-functie
-	- Welke optimalisatie mag per reeks
-	- Ranking
-	- Annorama op basis van aantal teams
 
-
-
+- Settings opslaan in project: Reeks: welke klasse (nationaal/provinciaal/regionaal): Gerelateerd aan cost-functie
+- import competitie
+- license: gebruik vereenvoudigen (automatische mail?, of via website form), #teams vs feature in de licentie?
+- diagnostics toevoegen
+- installatie van website, met uitzetten anti-virus
+- obfuscator
+- Documentatie:
+  - formaat types
+  - gebruikers handleiding
 
 KLVV-site:
 - A&B -> X&Y helemaal doorvoeren
+- Update klvv-site-import competitie
 
 
 

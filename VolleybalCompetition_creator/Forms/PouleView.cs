@@ -195,7 +195,11 @@ namespace VolleybalCompetition_creator
 
         private void button4_Click(object sender, EventArgs e)
         {
-            if (poule.serie.optimizable == false)
+            if (poule.imported)
+            {
+                System.Windows.Forms.MessageBox.Show("Not allowed to change numbers in schema of an imported poule");
+            }
+            else if (poule.optimizable == false)
             {
                 System.Windows.Forms.MessageBox.Show("Not allowed to change numbers in schema");
             }
@@ -268,7 +272,11 @@ namespace VolleybalCompetition_creator
 
         private void button5_Click(object sender, EventArgs e)
         {
-            if (poule.serie.homeVisitChangeAllowed == false)
+            if (poule.imported)
+            {
+                System.Windows.Forms.MessageBox.Show("Not allowed to change home/visit for imported poules");
+            }
+            else if (poule.optimizableHomeVisit == false)
             {
                 System.Windows.Forms.MessageBox.Show("Not allowed to change home/visit");
             }
@@ -283,7 +291,11 @@ namespace VolleybalCompetition_creator
 
         private void button6_Click(object sender, EventArgs e)
         {
-            if (poule.serie.homeVisitChangeAllowed == false)
+            if (poule.imported)
+            {
+                System.Windows.Forms.MessageBox.Show("Not allowed to change home/visit for imported poules");
+            }
+            else if (poule.optimizableHomeVisit == false)
             {
                 System.Windows.Forms.MessageBox.Show("Not allowed to change home/visit");
             }
@@ -330,7 +342,11 @@ namespace VolleybalCompetition_creator
         }
         private void Switch1_Click(object sender, EventArgs e)
         {
-            if (poule.serie.weekOrderChangeAllowed == false)
+            if (poule.imported)
+            {
+                System.Windows.Forms.MessageBox.Show("Not allowed to change week ordering for an imported poule");
+            }
+            else if (poule.optimizableWeekends == false)
             {
                 System.Windows.Forms.MessageBox.Show("Not allowed to change week ordering");
             }
@@ -363,7 +379,11 @@ namespace VolleybalCompetition_creator
 
         private void button8_Click(object sender, EventArgs e)
         {
-            if (poule.serie.weekOrderChangeAllowed == false)
+            if (poule.imported)
+            {
+                System.Windows.Forms.MessageBox.Show("Not allowed to change week ordering for imported teams");
+            }
+            else if (poule.optimizableWeekends == false)
             {
                 System.Windows.Forms.MessageBox.Show("Not allowed to change week ordering");
             }
@@ -456,7 +476,11 @@ namespace VolleybalCompetition_creator
 
         private void button13_Click(object sender, EventArgs e)
         {
-            if (poule.serie.homeVisitChangeAllowed == false)
+            if (poule.imported)
+            {
+                System.Windows.Forms.MessageBox.Show("Not allowed to change home/visit for imported teams");
+            }
+            else if (poule.optimizableHomeVisit == false)
             {
                 System.Windows.Forms.MessageBox.Show("Not allowed to change home/visit");
             }

@@ -29,19 +29,15 @@ namespace VolleybalCompetition_creator
             Serie serie = (Serie)e.RowObject;
             if (e.Column.Index == 1)
             {
-                serie.optimizable = (e.NewValue == CheckState.Checked);
+                serie.optimizableNumber = (e.NewValue == CheckState.Checked);
             }
             else if (e.Column.Index == 2)
             {
-                serie.weekOrderChangeAllowed = (e.NewValue == CheckState.Checked);
+                serie.optimizableWeekends = (e.NewValue == CheckState.Checked);
             }
             else if (e.Column.Index == 3)
             {
-                serie.homeVisitChangeAllowed = (e.NewValue == CheckState.Checked);
-            }
-            else if (e.Column.Index == 4)
-            {
-                serie.evaluated = (e.NewValue == CheckState.Checked);
+                serie.optimizableHomeVisit = (e.NewValue == CheckState.Checked);
             }
             klvv.Evaluate(null);
             klvv.Changed();
@@ -261,115 +257,24 @@ namespace VolleybalCompetition_creator
         private void button5_Click(object sender, EventArgs e)
         {
             ProgressDialog diag = new ProgressDialog();
-            diag.WorkFunction += OptimizeGroupsSelectedClubs;
+            diag.WorkFunction += OptimizeClubsForever;
             diag.CompletionFunction += OptimizePoulesCompleted;
             diag.Start("Optimizing", null);
         }
-        private void OptimizeGroupsSelectedClubs(object sender, MyEventArgs e)
+        private void OptimizeClubsForever(object sender, MyEventArgs e)
         {
-            IProgress intf = (IProgress)sender;
-            ConstraintDifferentGroupsInSameWeekend constraint = null;
-            int clubindex = 0;
-            foreach (Club club in state.selectedClubs)
+            do
             {
-                intf.SetText(string.Format("Optimizing - {0} ({1}/{2})",club.name,clubindex,state.selectedClubs.Count));
-                intf.Progress(clubindex++, state.selectedClubs.Count);
-                // find the constraint for this club
-                foreach(Constraint constr in klvv.constraints)
-                {
-                    ConstraintDifferentGroupsInSameWeekend con = constr as ConstraintDifferentGroupsInSameWeekend;
-                    if(con != null && con.club == club)
-                    {
-                        constraint = con;
-                    }
-                }
-                DateTime date = new DateTime();
-                List<Match> done = new List<Match>();
-                List<DateTime> givenUp = new List<DateTime>();
-                if (constraint != null)
-                {
-                    while (constraint.conflictMatches.Count > 0)
-                    {
-                        if (intf.Cancelled()) return;
-                        constraint.conflictMatches.Sort(delegate(Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
-                        int index = 0;
-                        while (index < constraint.conflictMatches.Count &&
-                              constraint.conflictMatches[index].datetime.Date <= date) index++;
-                        if (index >= constraint.conflictMatches.Count) break;
-                        date = constraint.conflictMatches[index].datetime.Date;
-                        List<Match> matchesDate = new List<Match>(constraint.conflictMatches.FindAll(m => m.datetime.Date == date));
-                        // Try switch
-                        // - Team komt niet meer terug in conflicten => solved
-                        // - Aantal 
-                        int Acount = matchesDate.Count(m => m.homeTeam.group == TeamGroups.GroupX);
-                        int Bcount = matchesDate.Count(m => m.homeTeam.group == TeamGroups.GroupY);
-                        TeamGroups focusGroup = Acount < Bcount ? TeamGroups.GroupX : TeamGroups.GroupY;
-                        List<Match> focusMatches = new List<Match>(matchesDate.FindAll(m => m.homeTeam.group == focusGroup));
-                        foreach (Match match in focusMatches)
-                        {
-                            match.poule.SwitchHomeTeamVisitorTeam(klvv, match);
-                        }
-                        klvv.Evaluate(null);
-                        bool undo = false;
-                        foreach (Match match1 in constraint.conflictMatches)
-                        {
-                            if (match1.datetime.Date < date && givenUp.Contains(match1.datetime.Date) == false)
-                            {
-                                undo = true;
-                            }
-                        }
-                        if (undo)
-                        {
-                            // undo change since it was not succesfull
-                            foreach (Match match in focusMatches)
-                            {
-                                match.poule.SwitchHomeTeamVisitorTeam(klvv, match);
-                            }
-                            focusGroup = Acount >= Bcount ? TeamGroups.GroupX : TeamGroups.GroupY;
-                            focusMatches = new List<Match>(matchesDate.FindAll(m => m.homeTeam.group == focusGroup));
-                            foreach (Match match in focusMatches)
-                            {
-                                match.poule.SwitchHomeTeamVisitorTeam(klvv, match);
-                            }
-                            klvv.Evaluate(null);
-                            undo = false;
-                            foreach (Match match1 in constraint.conflictMatches)
-                            {
-                                if (match1.datetime.Date < date && givenUp.Contains(match1.datetime.Date) == false)
-                                {
-                                    undo = true;
-                                }
-                            }
-                            if (undo)
-                            {
-                                // undo change since it was not succesfull
-                                foreach (Match match in focusMatches)
-                                {
-                                    match.poule.SwitchHomeTeamVisitorTeam(klvv, match);
-                                }
-                                givenUp.Add(date);
-                                klvv.Evaluate(null);
-                                foreach (Match match in matchesDate)
-                                {
-                                    if (done.Contains(match) == false)
-                                    {
-                                        done.Add(match);
-                                        int before = constraint.conflictMatches.Count;
-                                        match.poule.SwitchHomeTeamVisitorTeam(klvv, match);
-                                        klvv.Evaluate(null);
-                                        if (before < constraint.conflictMatches.Count)
-                                        {
-                                            match.poule.SwitchHomeTeamVisitorTeam(klvv, match);
-                                            klvv.Evaluate(null);
-                                        }
-                                    }
-                                }
-
-                            }
-                        }
-                    }
-                }
-            }
+                int i = 0;
+                IProgress intf = (IProgress)sender;
+                OptimizePoulesSelectedClubs(sender, e);
+                Console.WriteLine(string.Format("{0}. Optimize Poules selected clubs finished: {1}", i, klvv.TotalConflicts()));
+                if (intf.Cancelled()) return;
+                OptimizeTeamsSelectedClubs(sender, e);
+                Console.WriteLine(string.Format("{0}. Optimize Team finished: {1}", i, klvv.TotalConflicts()));
+                if (intf.Cancelled()) return;
+                i++;
+            } while (true);
         }
 
         private void button6_Click(object sender, EventArgs e)

@@ -32,23 +32,23 @@ namespace VolleybalCompetition_creator
             this.klvv = klvv;
             this.id = id; 
             this.name = name;
-            optimizable = true; 
-            evaluated = true;
+            optimizableNumber = true;
+            optimizableHomeVisit = false;
+            optimizableWeekends = false;
             extraTimeBefore = 0; // geen reserve match
-            weekOrderChangeAllowed = Gewestelijk;
-            homeVisitChangeAllowed = Gewestelijk;
+            //weekOrderChangeAllowed = Gewestelijk;
+            //homeVisitChangeAllowed = Gewestelijk;
         }
         
         public List<Team> teams {
             get { return klvv.teams.FindAll(t => t.serie == this && t.deleted == false); }
         }
-        private bool _optimizable;
-        private bool _weekOptimizable;
-        private bool _homeVisitOptimizable;
-        public bool optimizable { get { return _optimizable & evaluated & imported == false; } set { _optimizable = value; } }
-        public bool weekOrderChangeAllowed { get { return optimizable && _weekOptimizable; } set { _weekOptimizable = value; } }
-        public bool homeVisitChangeAllowed { get { return optimizable && _homeVisitOptimizable; } set { _homeVisitOptimizable = value; } }
-        public bool evaluated { get; set; }
+        //private bool _optimizable;
+        //private bool _weekOptimizable;
+        //private bool _homeVisitOptimizable;
+        public bool optimizableNumber;// { get { return _optimizable & evaluated & imported == false; } set { _optimizable = value; } }
+        public bool optimizableWeekends;// { get { return optimizable && _weekOptimizable; } set { _weekOptimizable = value; } }
+        public bool optimizableHomeVisit;// { get { return optimizable && _homeVisitOptimizable; } set { _homeVisitOptimizable = value; } }
         public double extraTimeBefore { get; set; }
     }
     

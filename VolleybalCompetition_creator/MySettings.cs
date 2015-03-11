@@ -152,6 +152,17 @@ namespace VolleybalCompetition_creator
         [DefaultValue(10000)]
         public int NoPouleAssignedCost { get; set; }
 
+        [Category("File locations")]
+        [DisplayName("Default registrations url")]
+        [Description("Hier kun je aangeven waar de inschrijvingen vandaan moeten komen.")]
+        [DefaultValue("http://klvv.be/server/restricted/registrations/registrationsXML.php")]
+        public string RegistrationsXML { get; set; }
+        [Category("File locations")]
+        [DisplayName("Default ranking url")]
+        [Description("Hier kun je aangeven waar de ranking vandaan moet komen. ")]
+        [DefaultValue("http://klvv.be/server/restricted/registrations/rankingXML.php")]
+        public string RankingXML { get; set; }
+
     }
 
 }

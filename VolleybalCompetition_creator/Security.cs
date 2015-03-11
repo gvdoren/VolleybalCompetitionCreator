@@ -226,6 +226,11 @@ namespace Security
         DateTime date;// = new DateTime(2000,0,0);
         string user;
         string key;
+        public enum FeatureType 
+        {
+            FirstFeature = 0,
+            SecondFeature
+        };
         public LicenseKey(string Key)
         {
             key = Key;
@@ -256,9 +261,19 @@ namespace Security
             catch {}
             return returnvalue;
         }
+        public bool Feature(FeatureType feature)
+        {
+            string result = StringCipher.Decrypt(key, FingerPrint.Value());
+            string[] delimiters = new string[] { "|||" };
+            string[] results = result.Split(delimiters, StringSplitOptions.None);
+            if (results.Length <= 3) return false;
+            string featureString = results[3];
+            if (featureString.Length <= (int)feature) return false;
+            return featureString[(int)feature] == '1';
+        }
         static public string Create(string user, string fingerprint, DateTime date)
         {
-            string total = date.ToShortDateString() + "|||" + user + "|||" + fingerprint;
+            string total = date.ToShortDateString() + "|||" + user + "|||" + fingerprint+ "|||";
             return StringCipher.Encrypt(total, fingerprint);
         }
         public DateTime ValidUntil()

@@ -90,16 +90,6 @@ namespace VolleybalCompetition_creator
                 return poule.weekends[weekIndex];
             }
         }
-        public bool Optimizable
-        {
-            get
-            {
-                bool result = true;
-                if (homeTeam != null && homeTeam.Optimizable == false) result = false;
-                if (visitorTeam != null && visitorTeam.Optimizable == false) result = false;
-                return result;
-            }
-        }
 
         public int homeTeamIndex;
         public int visitorTeamIndex;

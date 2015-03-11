@@ -33,7 +33,6 @@
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn5 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
@@ -54,7 +53,6 @@
             this.objectListView1.AllColumns.Add(this.olvColumn2);
             this.objectListView1.AllColumns.Add(this.olvColumn4);
             this.objectListView1.AllColumns.Add(this.olvColumn5);
-            this.objectListView1.AllColumns.Add(this.olvColumn3);
             this.objectListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -63,8 +61,8 @@
             this.olvColumn1,
             this.olvColumn2,
             this.olvColumn4,
-            this.olvColumn5,
-            this.olvColumn3});
+            this.olvColumn5});
+            this.objectListView1.GridLines = true;
             this.objectListView1.Location = new System.Drawing.Point(13, 13);
             this.objectListView1.Name = "objectListView1";
             this.objectListView1.OwnerDraw = true;
@@ -82,42 +80,40 @@
             this.olvColumn1.AspectName = "name";
             this.olvColumn1.CellPadding = null;
             this.olvColumn1.FillsFreeSpace = true;
+            this.olvColumn1.Hyperlink = true;
             this.olvColumn1.MinimumWidth = 60;
             this.olvColumn1.Text = "Serie";
             this.olvColumn1.Width = 80;
             // 
             // olvColumn2
             // 
-            this.olvColumn2.AspectName = "optimizable";
+            this.olvColumn2.AspectName = "optimizableNumber";
             this.olvColumn2.CellPadding = null;
             this.olvColumn2.CheckBoxes = true;
+            this.olvColumn2.MaximumWidth = 80;
+            this.olvColumn2.MinimumWidth = 80;
             this.olvColumn2.Text = "Number";
+            this.olvColumn2.Width = 100;
             // 
             // olvColumn4
             // 
-            this.olvColumn4.AspectName = "weekOrderChangeAllowed";
+            this.olvColumn4.AspectName = "optimizableWeekends";
             this.olvColumn4.CellPadding = null;
             this.olvColumn4.CheckBoxes = true;
-            this.olvColumn4.FillsFreeSpace = true;
+            this.olvColumn4.MaximumWidth = 80;
+            this.olvColumn4.MinimumWidth = 80;
             this.olvColumn4.Text = "Weekends";
-            this.olvColumn4.Width = 120;
+            this.olvColumn4.Width = 100;
             // 
             // olvColumn5
             // 
-            this.olvColumn5.AspectName = "homeVisitChangeAllowed";
+            this.olvColumn5.AspectName = "optimizableHomeVisit";
             this.olvColumn5.CellPadding = null;
             this.olvColumn5.CheckBoxes = true;
-            this.olvColumn5.FillsFreeSpace = true;
+            this.olvColumn5.MaximumWidth = 80;
+            this.olvColumn5.MinimumWidth = 80;
             this.olvColumn5.Text = "Home/Visit";
-            this.olvColumn5.Width = 140;
-            // 
-            // olvColumn3
-            // 
-            this.olvColumn3.AspectName = "evaluated";
-            this.olvColumn3.AspectToStringFormat = "";
-            this.olvColumn3.CellPadding = null;
-            this.olvColumn3.CheckBoxes = true;
-            this.olvColumn3.Text = "Evaluate";
+            this.olvColumn5.Width = 100;
             // 
             // button1
             // 
@@ -170,7 +166,7 @@
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(135, 23);
             this.button5.TabIndex = 6;
-            this.button5.Text = "Optimize XY Group";
+            this.button5.Text = "Optimize Forever";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
@@ -246,7 +242,6 @@
         private BrightIdeasSoftware.ObjectListView objectListView1;
         private BrightIdeasSoftware.OLVColumn olvColumn1;
         private BrightIdeasSoftware.OLVColumn olvColumn2;
-        private BrightIdeasSoftware.OLVColumn olvColumn3;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
