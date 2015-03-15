@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+</head>
+<body>
+  <h1>Competition Creator</h1>
+  <h3>System requirements</h3>
+  <p>The competition creator runs on Windows (Vista, Windows 7, Windows 8). It requires the .NET framework 4 to be installed. When this is not installed, it can be installed for free from <a href="http://www.microsoft.com/en-US/download/details.aspx?id=17851">here</a>. No special HW requirements are imposed. If your computer is fast, the optimization process will go faster, and vice versa. Having a large screen is a pro, since the Competition Creator can show a lot of information at the same time on the screen.</p>
+  <h3>Installation</h3>
+  <p>There are different ways to install the Competition Creator:</p>
+  <ul>
+  <li>Zip-file: Simply extract the file somewhere on your system. The CompetitionCreator file can immediately be started.</li>
+  <li>From competitioncreator.doren.be: This is slightly more complex, for the following reasons:
+  <ul>
+	<li>The virus-scanner has to be turned of during download. It does not trust executables coming from the web, and it blocks the execution of it. If your virus-scanner is not temporarily disabled, the installation process ends with a 'Cannot start application' because the download did not succeed.</li>
+	<li>Windows does not trust the executable. It is not 'signed', so that windows can check its origin. How windows handles this is dependent on the version:
+	  <ul>
+	    <li>Windows Vista: ??</li>
+	    <li>Windows 7: When pressing install, an executable is downloaded. Depending on your browser you will be asked whether you really want to execute the program because it can potentially 'Harm' your computere.</li>
+	    <li>Windows 8: ??</li>
+	    </ul>
+	  </li>
+	</ul>
+  </li>
+  </ul>
+  <p></p>
+  <h3>License</h3>
+  <p>Competition creator has a license that is restricted to a single computer. When the application is installed on a computer, an license can be requested. Based on a unique hardware Id a license is created with an expiring date. Typically, the license is valid for one year.</p>
+  <p>Without license, the tool is fully functional except that the data cannot be saved or exported. So you can expiriment with the capabilities: import registrations, optimize a competition, but not saving or exporting the generated competition.</p>
+  <h3>Updates</h3>
+<p>The Competition Creator checks for updates that are published when starting the application. When you decide to update, turn your virus-scanner temporarily off, and update. When updates are published these are backwards compatible, i.e. your existing data can still be used. </p>
+  <h3>Data inputs</h3>
+  <p>The Competition Creator requires different input data to support different options. In the table below, the required inputs are shown:</p>
+  <table width="100%" border="1" cellspacing="0">
+    <caption>
+      Inputs vs Options
+    </caption>
+    <tr>
+      <th scope="col"><div align="left"></div></th>
+      <th scope="col">Registrations</th>
+      <th scope="col">Distances</th>
+      <th scope="col">Ranking</th>
+      <th scope="col">Competition Import</th>
+      <th scope="col">&nbsp;</th>
+    </tr>
+    <tr>
+      <th scope="row"><div align="left">Standard generation of competition</div></th>
+      <td>x</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <th scope="row">&nbsp;</th>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <th scope="row"><div align="left">Divide teams in a serie in poules</div></th>
+      <td>x</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <th scope="row"><div align="left">Divide teams in a serie in poules and optimize on distance</div></th>
+      <td>x</td>
+      <td>x</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <th scope="row"><div align="left">Divide teams in a serie in poules based on a previous ranking</div></th>
+      <td>x</td>
+      <td>&nbsp;</td>
+      <td>x</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <th scope="row"><div align="left"></div></th>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <th scope="row"><div align="left">Generation of a competition taking into account an external competition</div></th>
+      <td>x</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>x</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <th scope="row"><div align="left"></div></th>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+  </table>
+  <h4>Registrations input</h4>
+  <p>The registrations input is an XML based file that contains all basic information on team subscriptions:</p>
+    <ul>
+  <li>Clubs, and per club:
+    <ul>
+      <li>Id: Integer used as reference for the club. Typically, the key-index used in the database that handles the subscriptions</li>
+      <li>Name: Name of the club</li>
+      <li>StamNumber: This is a unique string that represents the club. It becomes essential when importing other competitions in which the club also participate. In this import, this stamNumber should be identical otherwise the tool cannot recognize it is the same team.</li>
+      <li>Teams that are subscribed, per team:
+        <ul>
+          <li>Id</li>
+          <li>Name</li>
+          <li>Group (X or Y)</li>
+          <li>SerieId: Serie in which this team is registrated</li>
+          <li>SerieName: Serie in which this team is registrated</li>
+          <li>Day (6=saterday, 7=sunday): Default day on which the team plays</li>
+          <li>StartTime: Default time on which the team plays</li>
+          <li>SporthallId: Sporthall in which the team plays. It must be one of the sporthalls that is used by the club</li>
+          <li>ContactEmail: Who is the contact person.</li>
+        </ul>
+      </li>
+      <li>Sporthalls that are used by the club. Per sporthal:
+        <ul>
+          <li>Id</li>
+          <li>Name</li>
+          <li>The days that the sporthall is not available. </li>
+        </ul>
+      </li>
+      <li>Free format text: Allowing clubs to enter free format text that can be shown in the Competition Creator. Typically not all constraints can be handled programatically, and this allows for a backdoor.</li>
+    </ul>
+  </li>
+</ul>
+<p>An example of a registrations input XML can be found <a href="http://competitioncreator.doren.be/Examples/registrations.xml">here</a>.</p>
+<h4>Distances input</h4>
+<p>When more than one poule is created in a serie, there is freedom how to divide the teams in this serie over de poules. One of the options is to divide it optimally based on the distance, i.e. cluster the teams in a poule that live close together. For this function the distances between sporthalls are required. Typically, this is information that can be retrieved from Google Maps, but due to limitations on the number of requests that is allowed per day, this information has to be stored and feed into the program. The distances input contains:</p>
+<ul>
+  <li>Sporthalls, and per sporthal:
+    <ul>
+      <li>Id</li>
+      <li>Name</li>
+      <li>Adress</li>
+      <li>City</li>
+      <li>Latitude: Coordinate to enable displaying the sporthal on google maps</li>
+      <li>Longitude: Coordinate to enable displaying the sporthal on google maps</li>
+    </ul>
+  </li>
+  <li>Distances, and per distance
+    <ul>
+      <li>Id1: Id of first sporthal</li>
+      <li>Id2: Id of second sporthal</li>
+      <li>Time: Time it takes to travel from the first sporthal to the second in minutes</li>
+      <li>Distance: Distance between the two sporthalls.</li>
+    </ul>
+  </li>
+</ul>
+<p>The list of distances is bi-directional. So both the distance from 1 to 2, and the distance from 2 to 1 must be included in the list. When the list of distances is not complete for all sporthalls, or is completely absent in the distances input, the distances between sporthalls will be calculated on the Latitude and Longitude. This will  be less accurate, but sufficient to have a good division in poules. Note that when the distances are not specified, the section &quot;&lt;Distances&gt;&lt;/Distances&gt; must be present anyhow.</p>
+<p>An example of a distances input XML can be found  <a href="http://competitioncreator.doren.be/Examples/sporthalls.xml">here</a>.</p>
+<h4>Ranking input</h4>
+<p>When in the second half of the year series of the competition are re-divided based on the ranking of the first half, the ranking can be imported. After the ranking is imported, it can be used to sort the poules within a serie to easily re-create the poules in a serie based on the rankings. The ranking is again a XML file with the following information:</p>
+<ul>
+  <li>Rankings, with for each ranking:
+    <ul>
+      <li>SerieId: Id of the Serie the ranking belongs to</li>
+      <li>SerieName: Name of the Serie the ranking belongs to</li>
+      <li>PouleName: Name of the Poule the ranking belongs to</li>
+      <li>TeamId: The Id of the Team where this ranking is from</li>
+      <li>TeamName: The Name of the Team</li>
+      <li>Ranking: The actual ranking (1, 2, ....)</li>
+      <li>Score: The number of points that a team has achieved. This number is used to determine for teams from different poules that have the same ranking who is the best.</li>
+    </ul>
+  </li>
+</ul>
+<p>An example of a ranking input XML can be found <a href="http://competitioncreator.doren.be/Examples/ranking.xml">here</a>.</p>
+<h4>Competition Import  input</h4>
+<p></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+  <p></p>
+  <p>&nbsp;</p>
+  <p>&nbsp;</p>
+  <p>&nbsp;</p>
+</body>
+</html>

@@ -1,0 +1,58 @@
+﻿Belangrijk:
+- zet op de site er expliciet bij dat ze aangeven of hun nationale teams in X of Y of nogroup zit.
+- Eventueel naar alle clubs de indeling in reeksen sturen voordat de kalender wordt gemaakt.
+- Week eerder de sluitingsdatum. (eerste week poules indelen, en terugkoppelen)
+- Check data van anorama.
+   * Mag een reserve-datum gebruikt worden!!
+- Check of er teams bijzitten met relatief veel conflicts (bv 6 of 7). 
+   - Probeer de pijn te verdelen (XY groups opt, evt. daarna met HomeVisit opt).
+   - Indien meerdere poules kan het helpen ze naar een andere poule te verplaatsen
+
+ToDo:
+- Testen: deleted teams
+- Afstand sporthallen
+- reeks met een 2 toevoegen: a2, b2
+- af en toe wordt de 'cost' hoger. Hoe kan dat. Welke constraint wordt niet meegenomen in de related constraints?
+- Aantal teams & selectie in Anorama. Koppelen? Ja
+- automatisch saven om de 10 minuten.
+- Een net viewModel introduceren
+- andere dagen dan zaterdag/zondag ondersteunen ?
+- mechanisme om backwards compatible te zijn (vooral project-files)
+
+High:
+- KLVV namen verwijderen (bv saven naar file)
+- diagnostics toevoegen
+   - vooral bij inlezen van files, url's etc.
+- basis installatie (Windows 7, windows 8)
+- Documentatie:
+  - formaat types ()
+  - gebruikers handleiding
+
+Medium:
+- version in project-file.
+- obfuscator
+
+Low:
+
+
+- import competitie
+- license: gebruik vereenvoudigen (automatische mail?, of via website form), #teams vs feature in de licentie?
+- installatie van website, met uitzetten anti-virus
+
+
+KLVV-site:
+- A&B -> X&Y helemaal doorvoeren
+- Update klvv-site-import competitie
+
+
+
+
+
+
+
+
+Syntax-changes:
+1.0.0.83:
+ - Subscriptions: TeamName --> Name
+
+ 

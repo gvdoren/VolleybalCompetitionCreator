@@ -1,8 +1,0 @@
-﻿- Immutable poules
-
-
-- Clubs die sporthal delen kun je niet uitdrukken
-- club constraints voor de sporthal zijn bij de sporthal opgeslagen. Echter, die worden gedeeld door meerdere clubs.
-
-- Aantal teams & selectie in Anorama. Koppelen? Ja
-- Check dat alle teams voldoende matchen spelen (ook check van tool zelf).
