@@ -65,7 +65,7 @@ namespace CompetitionCreator
                 if(_settings == null)
                 {
                     string BaseDirectory = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)+@"\CompetitionCreator";
-                    _settings = Load(BaseDirectory+@"\settings.xml");
+                    _settings = Load(BaseDirectory+@"\MySettings.xml");
                 }
                 return _settings; 
             }
@@ -155,6 +155,10 @@ namespace CompetitionCreator
         [DisplayName("Constraint.Custom.Team.Constraint.Default.Cost")]
         [DefaultValue(1)]
         public int DefaultCustomTeamConstraintCost { get; set; }
+        [Category("Constraints")]
+        [DisplayName("Constraint.Fixed.Index.Constraint.Cost")]
+        [DefaultValue(10000)]
+        public int FixedIndexConstraintCost { get; set; }
 
         [TypeConverter(typeof(ExpandableObjectConverter))]
         public IntCountSettings countSettings { get; set; }
@@ -178,6 +182,11 @@ namespace CompetitionCreator
         [Description("Hier kun je aangeven waar de ranking vandaan moet komen. ")]
         [DefaultValue("http://klvv.be/server/restricted/registrations/rankingXML.php")]
         public string RankingXML { get; set; }
+        [Category("File locations")]
+        [DisplayName("Default sporthal url")]
+        [Description("Hier kun je aangeven waar de sporthal info (afstanden) vandaan moet komen. ")]
+        [DefaultValue("http://klvv.be/server/sporthallsXML.php")]
+        public string sporthalXML { get; set; }
 
     }
 

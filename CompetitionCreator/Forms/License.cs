@@ -11,22 +11,22 @@ namespace CompetitionCreator
 {
     public partial class LicenseView : Form
     {
-        Model klvv;
-        public LicenseView(Model klvv)
+        Model model;
+        public LicenseView(Model model)
         {
             InitializeComponent();
-            this.klvv = klvv;
+            this.model = model;
             ShowInfo();
         }
         private void ShowInfo()
         {
             label1.Text = "Computer: " + Security.FingerPrint.Value();
-            if (klvv.licenseKey.Valid())
+            if (model.licenseKey.Valid())
             {
                 string expired = "";
-                if (klvv.licenseKey.ValidUntil() < DateTime.Now) expired = " (Expired)";
-                label2.Text = "Licensed until: " + klvv.licenseKey.ValidUntil() + expired;
-                label3.Text = "User:  " + klvv.licenseKey.ValidUser();
+                if (model.licenseKey.ValidUntil() < DateTime.Now) expired = " (Expired)";
+                label2.Text = "Licensed until: " + model.licenseKey.ValidUntil() + expired;
+                label3.Text = "User:  " + model.licenseKey.ValidUser();
             }
             else
             {
@@ -39,6 +39,14 @@ namespace CompetitionCreator
         private void button1_Click(object sender, EventArgs e)
         {
             Clipboard.SetText(Security.FingerPrint.Value());
+            string user = "";
+            string oldLicense = "";
+            if (model.licenseKey.Valid())
+            {
+                user = model.licenseKey.ValidUser();
+                oldLicense = Properties.Settings.Default.LicenseKey;
+            }
+            System.Diagnostics.Process.Start(string.Format("http://competitioncreator.doren.be/license.php?HwId={0}&user={1}&oldLicense={2}",Security.FingerPrint.Value(), user, oldLicense));
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -56,7 +64,7 @@ namespace CompetitionCreator
                     CompetitionCreator.Properties.Settings.Default.LicenseKey = tempKey.Key();
                     CompetitionCreator.Properties.Settings.Default.Save();
                     textBox1.Clear();
-                    klvv.licenseKey = tempKey;
+                    model.licenseKey = tempKey;
                     ShowInfo();
                     MessageBox.Show("License is updated");
                 }

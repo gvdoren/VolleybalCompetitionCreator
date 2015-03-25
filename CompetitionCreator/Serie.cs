@@ -19,7 +19,7 @@ namespace CompetitionCreator
                 return false;
             }
         }
-        Model klvv = null;
+        Model model = null;
         public string name { get; set; }
         public int id { get; set; }
         public List<Poule> poules = new List<Poule>();
@@ -30,32 +30,31 @@ namespace CompetitionCreator
             get {
                 return _importance;
             }
-            set { _importance = value; klvv.Changed(); klvv.Evaluate(null); }
+            set { _importance = value; model.Changed(); model.Evaluate(null); }
         }
         public bool Nationaal = false;
         
-        public Serie(int id, string name, Model klvv) 
+        public Serie(int id, string name, Model model) 
         { 
-            this.klvv = klvv;
+            this.model = model;
             this.id = id; 
             this.name = name;
             optimizableNumber = true;
             optimizableHomeVisit = false;
             optimizableWeekends = false;
+            optimizableMatch = true;
             extraTimeBefore = 0;
             importance = ImportanceLevels.Medium;
             // geen reserve match
         }
         
         public List<Team> teams {
-            get { return klvv.teams.FindAll(t => t.serie == this && t.deleted == false); }
+            get { return model.teams.FindAll(t => t.serie == this && t.deleted == false); }
         }
-        //private bool _optimizable;
-        //private bool _weekOptimizable;
-        //private bool _homeVisitOptimizable;
-        public bool optimizableNumber;// { get { return _optimizable & evaluated & imported == false; } set { _optimizable = value; } }
-        public bool optimizableWeekends;// { get { return optimizable && _weekOptimizable; } set { _weekOptimizable = value; } }
-        public bool optimizableHomeVisit;// { get { return optimizable && _homeVisitOptimizable; } set { _homeVisitOptimizable = value; } }
+        public bool optimizableNumber;
+        public bool optimizableWeekends;
+        public bool optimizableHomeVisit;
+        public bool optimizableMatch;
         public double extraTimeBefore { get; set; }
     }
     

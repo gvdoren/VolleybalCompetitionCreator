@@ -12,14 +12,14 @@ namespace CompetitionCreator
 {
     public partial class ConstraintView : DockContent
     {
-        Model klvv = null;
+        Model model = null;
         GlobalState state = null;
-        public ConstraintView(Model klvv, GlobalState state)
+        public ConstraintView(Model model, GlobalState state)
         {
-            this.klvv = klvv;
+            this.model = model;
             this.state = state;
             InitializeComponent();
-            klvv.OnMyChange += state_OnMyChange;
+            model.OnMyChange += state_OnMyChange;
             objectListView1.ShowGroups = false;
             state.OnMyChange += state_OnMyChange;
             UpdateTabPage2();
@@ -27,18 +27,18 @@ namespace CompetitionCreator
         }
         public void state_OnMyChange(object source, MyEventArgs e)
         {
-            if (e.klvv != null)
+            if (e.model != null)
             {
-                klvv.OnMyChange -= state_OnMyChange;
-                klvv = e.klvv;
-                klvv.OnMyChange += state_OnMyChange;
+                model.OnMyChange -= state_OnMyChange;
+                model = e.model;
+                model.OnMyChange += state_OnMyChange;
             }
             if (InvokeRequired)
             {
                 this.Invoke(new Action(() => state_OnMyChange(source, e)));
                 return;
             }
-            lock (klvv)
+            lock (model)
             {
                 UpdateTabPage2();
             }
@@ -87,7 +87,7 @@ namespace CompetitionCreator
                             }
                         }
                     }
-                    PouleView pouleView = new PouleView(klvv, state, match.poule);
+                    PouleView pouleView = new PouleView(model, state, match.poule);
                     pouleView.Show(this.DockPanel);
                 }
             }
@@ -97,7 +97,7 @@ namespace CompetitionCreator
 
         private void ConstraintView_FormClosed(object sender, FormClosedEventArgs e)
         {
-            klvv.OnMyChange -= state_OnMyChange;
+            model.OnMyChange -= state_OnMyChange;
             state.OnMyChange -= state_OnMyChange;
         }
     }

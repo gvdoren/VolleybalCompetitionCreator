@@ -13,34 +13,34 @@ namespace CompetitionCreator
 {
     public partial class TeamListView : DockContent
     {
-        Model klvv = null;
+        Model model = null;
         GlobalState state;
-        public TeamListView(Model klvv, GlobalState state)
+        public TeamListView(Model model, GlobalState state)
         {
-            this.klvv = klvv;
+            this.model = model;
             this.state = state;
             InitializeComponent();
-            objectListView1.SetObjects(klvv.teams);
+            objectListView1.SetObjects(model.teams);
             state.OnMyChange += new MyEventHandler(state_OnMyChange); 
-            klvv.OnMyChange += state_OnMyChange;
+            model.OnMyChange += state_OnMyChange;
         }
         public void state_OnMyChange(object source, MyEventArgs e)
         {
-            if (e.klvv != null)
+            if (e.model != null)
             {
-                klvv.OnMyChange -= state_OnMyChange;
-                klvv = e.klvv;
-                klvv.OnMyChange += state_OnMyChange;
+                model.OnMyChange -= state_OnMyChange;
+                model = e.model;
+                model.OnMyChange += state_OnMyChange;
             }
             if (InvokeRequired)
             {
                 this.Invoke(new Action(() => state_OnMyChange(source, e)));
                 return;
             }
-            lock (klvv)
+            lock (model)
             {
                 // Niet nodig? teams veranderen niet. Selected team is anders deselected
-                // objectListView1.SetObjects(klvv.teams);
+                // objectListView1.SetObjects(model.teams);
                 objectListView1.BuildList(true);
                 Refresh();
             }
@@ -67,7 +67,7 @@ namespace CompetitionCreator
                             }
                         }
                     }
-                    PouleView pouleView = new PouleView(klvv, state, team.poule);
+                    PouleView pouleView = new PouleView(model, state, team.poule);
                     pouleView.Show(this.DockPanel);
                 }
             };
@@ -76,7 +76,7 @@ namespace CompetitionCreator
         private void TeamListView_FormClosed(object sender, FormClosedEventArgs e)
         {
             state.OnMyChange -= new MyEventHandler(state_OnMyChange);
-            klvv.OnMyChange -= state_OnMyChange;
+            model.OnMyChange -= state_OnMyChange;
         }
 
         private void objectListView1_CellClick(object sender, CellClickEventArgs e)

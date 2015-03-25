@@ -74,7 +74,7 @@ namespace CompetitionCreator
         public int cost = 1;
         public int conflict_cost = 0;
         public abstract string[] GetTextDescription();
-        public abstract void Evaluate(Model klvv);
+        public abstract void Evaluate(Model model);
         public virtual string Title 
         { 
             get 
@@ -137,7 +137,7 @@ namespace CompetitionCreator
             VisitorAlso = false;
             cost = MySettings.Settings.SporthalNotAvailableCostLow;
         }
-        public override void Evaluate(Model klvv)
+        public override void Evaluate(Model model)
         {
             conflict_cost = 0;
             conflictMatches.Clear();
@@ -196,7 +196,7 @@ namespace CompetitionCreator
             name = "Heen en Terug te dicht bij elkaar";
             this.poule = poule;
         }
-        public override void Evaluate(Model klvv)
+        public override void Evaluate(Model model)
         {
             conflict_cost = 0;
             conflictMatches.Clear();
@@ -218,7 +218,7 @@ namespace CompetitionCreator
                             // Of (delen door 6)
                             // 12 - teams: 22 weeks -> 3.xx weeks -> 4 weeks
                             // 6 teams: 11 weeks -> 1.9 weeks -> 2 weeks
-                            double mindays = ((poule.weekends.Count * 7) / 6);
+                            double mindays = (((poule.weekendsFirst.Count + poule.weekendsSecond.Count) * 7) / 6);
                             days = mindays-days;
                             if (days>0)
                             {
@@ -251,7 +251,7 @@ namespace CompetitionCreator
             this.poule = poule;
             this.cost = MySettings.Settings.MatchTooManyAfterEachOtherCostLow;
         }
-        public override void Evaluate(Model klvv)
+        public override void Evaluate(Model model)
         {
             conflict_cost = 0;
             conflictMatches.Clear();
@@ -378,7 +378,7 @@ namespace CompetitionCreator
             this.poule = poule;
             cost = MySettings.Settings.InconsistentCost;
         }
-        public override void Evaluate(Model klvv)
+        public override void Evaluate(Model model)
         {
             if (Number % 1000 == 0 || error == true) // Deze test niet elke keer uitvoeren.
             {
@@ -510,7 +510,7 @@ namespace CompetitionCreator
             this.club = club;
             cost = MySettings.Settings.NoPouleAssignedCost;
         }
-        public override void Evaluate(Model klvv)
+        public override void Evaluate(Model model)
         {
             conflict_cost = 0;
             conflictMatches.Clear();
@@ -545,7 +545,7 @@ namespace CompetitionCreator
             this.VisitorAlso = false;
             this.cost = MySettings.Settings.TwoPoulesOfSameClubInPouleCost;
         }
-        public override void Evaluate(Model klvv)
+        public override void Evaluate(Model model)
         {
             conflict_cost = 0;
             conflictMatches.Clear();
@@ -565,15 +565,9 @@ namespace CompetitionCreator
                                         (m.homeTeam == t2 && m.visitorTeam == t1)
                                         )
                                     {
-                                        List<DateTime> sortedDateTimes = new List<DateTime>();
-                                        foreach (Weekend w in poule.weekends)
-                                        {
-                                            sortedDateTimes.Add(w.Saturday);
-                                        }
-                                        sortedDateTimes.Sort();
-                                        int weekIndex = sortedDateTimes.FindIndex(d => d == m.Weekend.Saturday);
-                                        int startSecondHalf = poule.weekends.Count / 2;
-                                        if (weekIndex != 0 && weekIndex != startSecondHalf)
+                                        int weekIndexFirst = poule.weekendsFirst.FindIndex(d => d.Saturday == m.Weekend.Saturday);
+                                        int weekIndexSecond = poule.weekendsSecond.FindIndex(d => d.Saturday == m.Weekend.Saturday);
+                                        if (weekIndexFirst != 0 || weekIndexSecond != 0)
                                         {
                                             AddConflictMatch(VisitorHomeBoth.HomeOnly,m);
                                         }
@@ -599,7 +593,7 @@ namespace CompetitionCreator
             VisitorAlso = false;
             name = "Teams in verschillende groupen spelen op dezelfde dag";
         }
-        public override void Evaluate(Model klvv)
+        public override void Evaluate(Model model)
         {
             conflict_cost = 0;
             conflictMatches.Clear();
@@ -705,15 +699,15 @@ namespace CompetitionCreator
             VisitorAlso = false;
             cost = MySettings.Settings.NotAllInSameWeekendCost;
         }
-        public override void Evaluate(Model klvv)
+        public override void Evaluate(Model model)
         {
             // TODO: skip if poule is not related to club.
             conflict_cost = 0;
             conflictMatches.Clear();
-            EvaluateForDay(klvv, DayOfWeek.Saturday);
-            EvaluateForDay(klvv, DayOfWeek.Sunday);
+            EvaluateForDay(model, DayOfWeek.Saturday);
+            EvaluateForDay(model, DayOfWeek.Sunday);
         }
-        public void EvaluateForDay(Model klvv, DayOfWeek day)
+        public void EvaluateForDay(Model model, DayOfWeek day)
         {
             List<Team> listTeams = new List<Team>();
             listTeams.AddRange(club.teams.FindAll(t =>t.defaultDay == day));
@@ -811,7 +805,7 @@ namespace CompetitionCreator
             name = "Teams spelen op hetzelfde uur";
             cost = MySettings.Settings.PlayAtSameTime;
         }
-        public override void Evaluate(Model klvv)
+        public override void Evaluate(Model model)
         {
             conflict_cost = 0;
             conflictMatches.Clear();
@@ -893,7 +887,7 @@ namespace CompetitionCreator
             VisitorAlso = false;
             name = "Relatief veel conflict tov teams";
         }
-        public override void Evaluate(Model klvv)
+        public override void Evaluate(Model model)
         {
             conflict_cost = 0;
             conflictMatches.Clear();
@@ -918,7 +912,7 @@ namespace CompetitionCreator
             VisitorAlso = false;
             name = "Relatief veel conflict tov # thuismatchen";
         }
-        public override void Evaluate(Model klvv)
+        public override void Evaluate(Model model)
         {
             conflict_cost = 0;
             conflictMatches.Clear();
@@ -943,6 +937,45 @@ namespace CompetitionCreator
         } 
 
     }
+    class ConstraintTeamFixedNumber : Constraint
+    {
+        public ConstraintTeamFixedNumber(Team team)
+        {
+            this.team = team;
+            poule = team.poule;
+            VisitorAlso = false;
+            name = "Team staat niet op zijn vaste index in het schema";
+            cost = 0;
+        }
+        public override void Evaluate(Model model)
+        {
+            conflict_cost = 0;
+            conflictMatches.Clear();
+            if (team.poule != null)
+            {
+                if (team.fixedNumber > team.poule.teams.Count || team.fixedNumber <= 0 || team.poule.teams[team.fixedNumber - 1] != team)
+                {
+                    team.AddConflict(this);
+                    team.poule.AddConflict(this);
+                    team.club.AddConflict(this);
+                    conflict_cost += MySettings.Settings.FixedIndexConstraintCost;
+                 }
+            }
+        }
+        public override string[] GetTextDescription()
+        {
+            List<string> result = new List<string>();
+            return result.ToArray();
+        }
+        public override string Context
+        {
+            get
+            {
+                return team.name;
+            }
+        }
+
+    }
     public class TeamConstraint : Constraint
     {
         public Serie serie { get { return team.serie; } }
@@ -957,7 +990,7 @@ namespace CompetitionCreator
             cost = MySettings.Settings.DefaultCustomTeamConstraintCost;
             name = "Team conflict";
         }
-        public override void Evaluate(Model klvv)
+        public override void Evaluate(Model model)
         {
             conflict_cost = 0;
             conflictMatches.Clear();

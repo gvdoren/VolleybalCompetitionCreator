@@ -14,27 +14,27 @@ namespace CompetitionCreator
 {
     public partial class InschrijvingenView : DockContent
     {
-        Model klvv = null;
+        Model model = null;
         GlobalState state;
         Club club;
         SporthallClub sporthal;
-        public InschrijvingenView(Model klvv, GlobalState state)
+        public InschrijvingenView(Model model, GlobalState state)
         {
             this.Text = "Inschrijvingen";
-            this.klvv = klvv;
+            this.model = model;
             this.state = state;
             InitializeComponent();
             comboBox2.Items.Add("Not shared");
-            foreach (Club cl in klvv.clubs)
+            foreach (Club cl in model.clubs)
             {
                 comboBox2.Items.Add(cl);
             }
             comboBox2.SelectedIndex = 0;
             state.OnMyChange += new MyEventHandler(state_OnMyChange);
             if (state.selectedClubs.Count > 0) SetClub(state.selectedClubs[0]);
-            objectListView2.SetObjects(klvv.constraints.FindAll(c => (c as TeamConstraint) != null && c.club == club));
+            objectListView2.SetObjects(model.constraints.FindAll(c => (c as TeamConstraint) != null && c.club == club));
                         
-            //klvv.OnMyChange += state_OnMyChange;
+            //model.OnMyChange += state_OnMyChange;
         }
 
 
@@ -61,18 +61,18 @@ namespace CompetitionCreator
         }
         public void state_OnMyChange(object source, MyEventArgs e)
         {
-            if (e.klvv != null)
+            if (e.model != null)
             {
-                klvv.OnMyChange -= state_OnMyChange;
-                klvv = e.klvv;
-                klvv.OnMyChange += state_OnMyChange;
+                model.OnMyChange -= state_OnMyChange;
+                model = e.model;
+                model.OnMyChange += state_OnMyChange;
             }
             if (InvokeRequired)
             {
                 this.Invoke(new Action(() => state_OnMyChange(source, e)));
                 return;
             }
-            lock (klvv)
+            lock (model)
             {
                 if (state.selectedClubs.Count > 0 && state.selectedClubs[0] != club)
                 {
@@ -137,7 +137,7 @@ namespace CompetitionCreator
         }
         private void UpdateTeamConstraints()
         {
-            objectListView2.SetObjects(klvv.constraints.FindAll(c => (c as TeamConstraint) != null && c.club == club)); 
+            objectListView2.SetObjects(model.constraints.FindAll(c => (c as TeamConstraint) != null && c.club == club)); 
             objectListView2.BuildList(true);
             
         }
@@ -180,9 +180,9 @@ namespace CompetitionCreator
                 }
             }
  
-            klvv.Evaluate(null);
+            model.Evaluate(null);
             //state.Changed();
-            klvv.Changed();
+            model.Changed();
         }
 
         private void dataGridView3_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -223,9 +223,9 @@ namespace CompetitionCreator
 
         private void objectListView1_ItemsChanged(object sender, ItemsChangedEventArgs e)
         {
-            klvv.Evaluate(null);
+            model.Evaluate(null);
             //state.Changed();
-            klvv.Changed();
+            model.Changed();
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -247,27 +247,27 @@ namespace CompetitionCreator
                     club.groupingWithClub = (Club)comboBox2.SelectedItem;
                     club.groupingWithClub.groupingWithClub = club;
                 }
-                klvv.Evaluate(null);
-                klvv.Changed();
+                model.Evaluate(null);
+                model.Changed();
             }
         }
         private void ClubConstraints_FormClosed(object sender, FormClosedEventArgs e)
         {
             state.OnMyChange -= new MyEventHandler(state_OnMyChange);
-            //klvv.OnMyChange -= state_OnMyChange;
+            //model.OnMyChange -= state_OnMyChange;
 
         }
 
         private void objectListView1_CellEditFinishing(object sender, CellEditEventArgs e)
         {
-            klvv.Evaluate(null);
-            klvv.Changed();
+            model.Evaluate(null);
+            model.Changed();
         }
 
         private void objectListView1_CellClick(object sender, CellClickEventArgs e)
         {
-            klvv.Evaluate(null);
-            klvv.Changed();
+            model.Evaluate(null);
+            model.Changed();
 
         }
 
@@ -282,7 +282,7 @@ namespace CompetitionCreator
                 if (columnindex == 0)
                 {
                     List<Selection> list = new List<Selection>();
-                    foreach (Serie serie in klvv.series)
+                    foreach (Serie serie in model.series)
                     {
                         Selection sel = new Selection(serie.name, serie);
                         if (serie == team.serie) sel.selected = true;
@@ -296,7 +296,7 @@ namespace CompetitionCreator
                         Serie newSerie = (Serie)diag.Selection.obj;
                         if (team.poule != null) team.poule.RemoveTeam(team);
                         team.serie = newSerie;
-                        klvv.MakeDirty();
+                        model.MakeDirty();
                     }
                     objectListView1.BuildList(true);
                 }
@@ -316,7 +316,7 @@ namespace CompetitionCreator
                     {
                         SporthallClub sporthal = (SporthallClub)diag.Selection.obj;
                         team.sporthal = sporthal;
-                        klvv.MakeDirty();
+                        model.MakeDirty();
                     }
                     objectListView1.BuildList(true);
 
@@ -341,14 +341,14 @@ namespace CompetitionCreator
                     {
                         string newName = diag.Selection.label;
                         team.name = newName;
-                        klvv.MakeDirty();
+                        model.MakeDirty();
                     }
                     objectListView1.BuildList(true);
                 }
                 if (columnindex == olvColumn14.Index) // club
                 {
                     List<Selection> list = new List<Selection>();
-                    foreach (Club club in klvv.clubs)
+                    foreach (Club club in model.clubs)
                     {
                         Selection sel = new Selection(club.name, club);
                         if (club == team.club) sel.selected = true;
@@ -361,7 +361,7 @@ namespace CompetitionCreator
                     {
                         Club newClub = (Club)diag.Selection.obj;
                         newClub.AddTeam(team);
-                        klvv.MakeDirty();
+                        model.MakeDirty();
                     }
                     objectListView1.BuildList(true);
 
@@ -384,13 +384,13 @@ namespace CompetitionCreator
                     {
                         Time newTime = (Time)diag.Selection.obj;
                         team.defaultTime = newTime;
-                        klvv.MakeDirty();
+                        model.MakeDirty();
                     }
                     objectListView1.BuildList(true);
                 }
             }
-            klvv.Evaluate(null);
-            klvv.Changed();
+            model.Evaluate(null);
+            model.Changed();
         }
         private void button1_Click_1(object sender, EventArgs e)
         {
@@ -398,7 +398,7 @@ namespace CompetitionCreator
             if (team != null)
             {
                 TeamConstraint prevCon = null;
-                foreach (Constraint c in klvv.constraints)
+                foreach (Constraint c in model.constraints)
                 {
                     TeamConstraint con = c as TeamConstraint;
                     if (con != null && con.club == team.club) prevCon = con;
@@ -410,12 +410,12 @@ namespace CompetitionCreator
                     tc.homeVisitNone = prevCon.homeVisitNone;
                     tc.cost = prevCon.cost;
                 }
-                klvv.constraints.Add(tc);
-                objectListView2.SetObjects(klvv.constraints.FindAll(c => c.club == club && ((c as TeamConstraint) != null)));
+                model.constraints.Add(tc);
+                objectListView2.SetObjects(model.constraints.FindAll(c => c.club == club && ((c as TeamConstraint) != null)));
                 objectListView2.BuildList(true);
             }
-            klvv.Evaluate(null);
-            klvv.Changed();
+            model.Evaluate(null);
+            model.Changed();
         }
 
         private void objectListView1_SelectionChanged(object sender, EventArgs e)
@@ -434,11 +434,11 @@ namespace CompetitionCreator
         private void button2_Click(object sender, EventArgs e)
         {
             TeamConstraint tc = (TeamConstraint)objectListView2.SelectedObject;
-            klvv.constraints.Remove(tc);
-            objectListView2.SetObjects(klvv.constraints.FindAll(c => (c as TeamConstraint) != null && c.club == club));
+            model.constraints.Remove(tc);
+            objectListView2.SetObjects(model.constraints.FindAll(c => (c as TeamConstraint) != null && c.club == club));
             objectListView1.BuildList(true);
-            klvv.Evaluate(null);
-            klvv.Changed();
+            model.Evaluate(null);
+            model.Changed();
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -448,13 +448,13 @@ namespace CompetitionCreator
             DialogResult dialogResult = MessageBox.Show(s, "Delete team", MessageBoxButtons.YesNo);
             if (dialogResult == DialogResult.Yes)
             {
-                t.DeleteTeam(klvv);
+                t.DeleteTeam(model);
             }
             UpdateTeamsTab();
             UpdateTeamConstraints();
-            klvv.RenewConstraints();
-            klvv.Evaluate(null);
-            klvv.Changed();
+            model.RenewConstraints();
+            model.Evaluate(null);
+            model.Changed();
         }
 
         private void objectListView1_FormatRow(object sender, FormatRowEventArgs e)
@@ -474,12 +474,12 @@ namespace CompetitionCreator
         private void button5_Click(object sender, EventArgs e)
         {
             Team t = (Team)objectListView1.SelectedObject;
-            t.UndeleteTeam(klvv);
+            t.UndeleteTeam(model);
             UpdateTeamsTab();
             UpdateTeamConstraints();
-            klvv.RenewConstraints();
-            klvv.Evaluate(null);
-            klvv.Changed();
+            model.RenewConstraints();
+            model.Evaluate(null);
+            model.Changed();
 
         }
     }

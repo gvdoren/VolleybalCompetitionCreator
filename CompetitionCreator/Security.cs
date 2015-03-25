@@ -6,6 +6,7 @@ using System.Collections;
 using System.Text;
 using System.IO;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace Security
 {
@@ -228,7 +229,7 @@ namespace Security
         string key;
         public enum FeatureType 
         {
-            FirstFeature = 0,
+            Above1000Teams = 0,
             SecondFeature
         };
         public LicenseKey(string Key)
@@ -271,9 +272,14 @@ namespace Security
             if (featureString.Length <= (int)feature) return false;
             return featureString[(int)feature] == '1';
         }
-        static public string Create(string user, string fingerprint, DateTime date)
+        static public string Create(string user, string fingerprint, DateTime date, List<FeatureType> features)
         {
-            string total = date.ToShortDateString() + "|||" + user + "|||" + fingerprint+ "|||";
+            StringBuilder sb = new StringBuilder("000000");
+            foreach (FeatureType f in features)
+            {
+                sb[(int)f] = '1';
+            }
+            string total = date.ToShortDateString() + "|||" + user + "|||" + fingerprint+ "|||"+sb.ToString();
             return StringCipher.Encrypt(total, fingerprint);
         }
         public DateTime ValidUntil()

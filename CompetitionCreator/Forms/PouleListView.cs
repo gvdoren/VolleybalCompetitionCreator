@@ -13,53 +13,53 @@ namespace CompetitionCreator
 {
     public partial class PouleListView : DockContent
     {
-        Model klvv = null;
+        Model model = null;
         SerieFilter serieFilter;
         GlobalState state;
-        public PouleListView(Model klvv, GlobalState state)
+        public PouleListView(Model model, GlobalState state)
         {
-            this.klvv = klvv;
+            this.model = model;
             this.state = state;
-            this.serieFilter = new SerieFilter(klvv,state);
+            this.serieFilter = new SerieFilter(model,state);
             InitializeComponent();
-            objectListView1.SetObjects(klvv.poules);
+            objectListView1.SetObjects(model.poules);
             objectListView1.ModelFilter = serieFilter;
             //objectListView1.Activation = ItemActivation.TwoClick;
             objectListView1.UseFiltering = true;
             state.OnMyChange += new MyEventHandler(state_OnMyChange); 
-            klvv.OnMyChange += state_OnMyChange;
+            model.OnMyChange += state_OnMyChange;
         }
         public void state_OnMyChange(object source, MyEventArgs e)
         {
-            if (e.klvv != null)
+            if (e.model != null)
             {
-                klvv.OnMyChange -= state_OnMyChange;
-                klvv = e.klvv;
-                klvv.OnMyChange += state_OnMyChange;
+                model.OnMyChange -= state_OnMyChange;
+                model = e.model;
+                model.OnMyChange += state_OnMyChange;
             }
             if (InvokeRequired)
             {
                 this.Invoke(new Action(() => state_OnMyChange(source, e)));
                 return;
             }
-            /*if (klvv.poules.Count != objectListView1.Items.Count)
+            /*if (model.poules.Count != objectListView1.Items.Count)
             {
-                objectListView1.SetObjects(klvv.poules);
+                objectListView1.SetObjects(model.poules);
             }*/
-            lock (klvv)
+            lock (model)
             {
-                objectListView1.SetObjects(klvv.poules);
+                objectListView1.SetObjects(model.poules);
                 objectListView1.BuildList(true);
                 Refresh();
             }
         }
         public class SerieFilter: IModelFilter 
         {
-            Model klvv = null;
+            Model model = null;
             GlobalState state = null;
-            public SerieFilter(Model klvv,GlobalState state)
+            public SerieFilter(Model model,GlobalState state)
             {
-                this.klvv = klvv;
+                this.model = model;
                 this.state = state;
             }
             public bool Filter(object modelObject)
@@ -98,7 +98,7 @@ namespace CompetitionCreator
                             }
                         }
                     }
-                    PouleView pouleView = new PouleView(klvv, state, poule);
+                    PouleView pouleView = new PouleView(model, state, poule);
                     pouleView.Show(this.DockPanel);
                 }
             };
@@ -128,7 +128,7 @@ namespace CompetitionCreator
         private void PouleListView_FormClosed(object sender, FormClosedEventArgs e)
         {
             state.OnMyChange -= new MyEventHandler(state_OnMyChange);
-            klvv.OnMyChange -= state_OnMyChange;
+            model.OnMyChange -= state_OnMyChange;
 
         }
 

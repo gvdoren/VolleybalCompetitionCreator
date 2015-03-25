@@ -13,10 +13,12 @@ namespace CompetitionCreator
         public bool optimizable { get { return serie != null && serie.optimizableNumber && imported == false; } }
         public bool optimizableWeekends { get { return serie != null && serie.optimizableWeekends && imported == false; } }
         public bool optimizableHomeVisit { get { return serie != null && serie.optimizableHomeVisit && imported == false; } }
+        public bool optimizableMatch { get { return serie != null && serie.optimizableMatch && imported == false; } }
 
         public bool evaluated { get { return imported == false; } }
         List<Team> resultTeams = new List<Team>();
-        List<Weekend> resultWeekends = new List<Weekend>();
+        List<Weekend> resultWeekendsFirst = new List<Weekend>();
+        List<Weekend> resultWeekendsSecond = new List<Weekend>();
         List<Match> resultMatches = new List<Match>();
         public List<Constraint> relatedConstraints = new List<Constraint>();
         int minConflicts = 0;
@@ -88,40 +90,31 @@ namespace CompetitionCreator
             this.name = name; 
         }
         public string fullName { get { return serie.name + name; ;} }
-        public List<Weekend> weekends = new List<Weekend>();
-        public int AddWeekend(DateTime date)
-        {
-            int year = 0;
-            int weekNr = 0;
-            Weekend.Convert(date, ref year, ref weekNr);
-            int index = weekends.FindIndex(w => w.WeekNr == weekNr && w.Year == year);
-            if (index < 0)
-            {
-                index = weekends.Count;
-                weekends.Add(new Weekend(year, weekNr));
-            }
-            return index;
-        }
+        public List<Weekend> weekendsFirst = new List<Weekend>();
+        public List<Weekend> weekendsSecond = new List<Weekend>();
         public int CalculateDistances(Team t1)
         {
             int distance = 0;
+            int extraTeam = 1;
             if (t1.sporthal != null)
             {
                 foreach (Team t2 in teams)
                 {
                     if(t2.RealTeam() && t1.sporthal != null) distance += t1.sporthal.sporthall.Distance(t2.sporthal.sporthall);
+                    if (t2 == t1) extraTeam = 0; // zit al in de teamcount
                 }
             }
             if (TeamCount > 1)
             {
-                distance = (distance / (TeamCount - 1));
+                distance = (distance / (extraTeam+TeamCount - 1));
             }
             return distance;
         }
         
         public int FindWeekendNrInSchema(int year, int weekNr)
         {
-            int index = weekends.FindIndex(w => w.WeekNr == weekNr && w.Year == year);
+            int index = weekendsFirst.FindIndex(w => w.WeekNr == weekNr && w.Year == year);
+            if(index<0) index = weekendsSecond.FindIndex(w => w.WeekNr == weekNr && w.Year == year);
             return index;
         }
         public List<Match> matches = new List<Match>();
@@ -142,10 +135,10 @@ namespace CompetitionCreator
             }
         }
 
-        public void CalculateRelatedConstraints(Model klvv)
+        public void CalculateRelatedConstraints(Model model)
         {
             relatedConstraints = new List<Constraint>();
-            //foreach (Constraint con in klvv.constraints)
+            //foreach (Constraint con in model.constraints)
             //{
             //    if (con.poule == this) relatedConstraints.Add(con);
             //}
@@ -161,7 +154,7 @@ namespace CompetitionCreator
                     if (clubs.Contains(relatedClub) == false) clubs.Add(relatedClub);
                 }
             }
-            foreach (Constraint con in klvv.constraints)
+            foreach (Constraint con in model.constraints)
             {
                 if (clubs.Contains(con.club) || 
                     con.poule == this || 
@@ -171,37 +164,39 @@ namespace CompetitionCreator
 
         }
 
-        public void OptimizeWeekends(Model klvv, IProgress intf)
+        public void OptimizeWeekends(Model model, IProgress intf)
         {
             MakeDirty();
             if (optimizableWeekends)
             {
+                //SnapShot(model);
                 if (conflict_cost > 0)
                 {
-                    if (weekends.Count > 10)//12)
+                    if (weekendsFirst.Count > 5)//12)
                     {
-                        List<Weekend> result = new List<Weekend>(weekends);
-                        for (int i = 0; i < weekends.Count / 2; i++)
+                        List<Weekend> result = new List<Weekend>(weekendsFirst);
+                        for (int i = 0; i < weekendsFirst.Count; i++)
                         {
-                            intf.Progress(i, weekends.Count);
-                            for (int j = i+1; j < weekends.Count / 2; j++)
+                            intf.Progress(i, (weekendsFirst.Count + weekendsSecond.Count));
+                            for (int j = i + 1; j < weekendsFirst.Count; j++)
                             {
-                                Swap(weekends, i, j);
-                                SnapShotIfImproved(klvv);
-                                Swap(weekends, i, j);
+                                Swap(weekendsFirst, i, j);
+                                SnapShotIfImproved(model);
+                                Swap(weekendsFirst, i, j);
                             }
-                            weekends = resultWeekends;
+                            weekendsFirst = resultWeekendsFirst;
                         }
-                        for (int i = weekends.Count / 2; i < weekends.Count; i++)
+                        result = new List<Weekend>(weekendsSecond);
+                        for (int i = 0; i < weekendsSecond.Count; i++)
                         {
-                            intf.Progress(i, weekends.Count);
-                            for (int j = i+1; j < weekends.Count; j++)
+                            intf.Progress(i, (weekendsFirst.Count + weekendsSecond.Count));
+                            for (int j = i + 1; j < weekendsSecond.Count; j++)
                             {
-                                Swap(weekends, i, j);
-                                SnapShotIfImproved(klvv);
-                                Swap(weekends, i, j);
+                                Swap(weekendsSecond, i, j);
+                                SnapShotIfImproved(model);
+                                Swap(weekendsSecond, i, j);
                             }
-                            weekends = resultWeekends;
+                            weekendsSecond = resultWeekendsSecond;
                         }
                     }
                     else // full optimalisation
@@ -209,59 +204,66 @@ namespace CompetitionCreator
                         // First optimize first half
                         try
                         {
-
-                            List<Weekend> firstHalf = new List<Weekend>();
-                            List<Weekend> lastHalf = new List<Weekend>();
-                            for (int i = 0; i < weekends.Count / 2; i++) firstHalf.Add(weekends[i]);
-                            for (int i = weekends.Count / 2; i < weekends.Count; i++) lastHalf.Add(weekends[i]);
-                            List<Weekend> remaining = new List<Weekend>(firstHalf);
-                            weekends = new List<Weekend>();
-                            GenerateWeekendCombination(klvv, new List<Weekend>(), lastHalf, remaining, intf);
+                            List<Weekend> remaining = weekendsFirst;
+                            weekendsFirst = new List<Weekend>();
+                            GenerateWeekendCombination(model, ref weekendsFirst, remaining, intf);
+                            weekendsFirst = resultWeekendsFirst;
                             
-
-                            firstHalf.Clear();
-                            lastHalf.Clear();
-                            for (int i = 0; i < weekends.Count / 2; i++) firstHalf.Add(weekends[i]);
-                            for (int i = weekends.Count / 2; i < weekends.Count; i++) lastHalf.Add(weekends[i]);
-                            remaining = new List<Weekend>(lastHalf);
-                            weekends = new List<Weekend>(); 
-                            GenerateWeekendCombination(klvv, firstHalf, new List<Weekend>(), remaining, intf);
+                            remaining = weekendsSecond;
+                            weekendsSecond = new List<Weekend>();
+                            GenerateWeekendCombination(model, ref weekendsSecond, remaining, intf);
+                            weekendsSecond = resultWeekendsSecond;
                         }
                         catch { }
-                        weekends = resultWeekends;
                     }
-                    klvv.Evaluate(null);
                 }
             }
         }
-        private bool SnapShotIfImproved(Model klvv)
+        public bool SnapShotIfImproved(Model model, bool equalAllowed = true)
         {
             bool snapshot = false;
-            klvv.EvaluateRelatedConstraints(this);
-            int total = klvv.TotalConflicts();
-            if (total <= klvv.LastTotalConflicts)
+            model.EvaluateRelatedConstraints(this);
+            int total = model.TotalConflicts();
+            if (total < model.LastTotalConflicts || (equalAllowed && total == model.LastTotalConflicts))
             {
                 snapshot = true;
-                klvv.LastTotalConflicts = total;
+                model.LastTotalConflicts = total;
             }
 
             if(snapshot)
             {
                 resultTeams = new List<Team>(teams);
-                resultWeekends = new List<Weekend>(weekends);
+                resultWeekendsFirst = new List<Weekend>(weekendsFirst);
+                resultWeekendsSecond = new List<Weekend>(weekendsSecond);
                 resultMatches = CopyMatches();
                 minConflicts = conflict_cost;
-                klvv.stateNotSaved = true; 
+                model.stateNotSaved = true; 
             }
             return snapshot;
         }
-        public void SnapShot(Model klvv)
+        bool snapShotTaken = false;
+        public void SnapShot(Model model)
         {
-            klvv.Evaluate(null);
+            if (snapShotTaken == true)
+            {
+                snapShotTaken = true;
+            }
+            snapShotTaken = true;
+            model.Evaluate(null);
             resultTeams = new List<Team>(teams);
-            resultWeekends = new List<Weekend>(weekends);
+            resultWeekendsFirst = new List<Weekend>(weekendsFirst);
+            resultWeekendsSecond = new List<Weekend>(weekendsSecond);
             resultMatches = CopyMatches();
             minConflicts = conflict_cost;
+        }
+        public void CopyAndClearSnapShot(Model model)
+        {
+            teams = resultTeams;
+            weekendsFirst = resultWeekendsFirst;
+            weekendsSecond = resultWeekendsSecond;
+            matches = resultMatches;
+            snapShotTaken = false;
+            model.Evaluate(null);
         }
 
         private void Swap(List<Weekend> list, int i, int j)
@@ -273,30 +275,26 @@ namespace CompetitionCreator
             list.RemoveAt(j);
             list.Insert(j, ti);
         }
-        private void GenerateWeekendCombination(Model klvv, List<Weekend> firstHalf, List<Weekend> lastHalf, List<Weekend> remainingWeekends, IProgress intf)
+        private void GenerateWeekendCombination(Model model, ref List<Weekend> firstHalf, List<Weekend> remainingWeekends, IProgress intf)
         {
             if (remainingWeekends.Count > 0)
             {
                 for (int i = 0; i < remainingWeekends.Count; i++)
                 {
-                    if (weekends.Count == 0)
+                    if (firstHalf.Count == 0)
                     {
                         intf.Progress(i, remainingWeekends.Count - 1);
                     }
-                    weekends.Add(remainingWeekends[0]);
+                    firstHalf.Add(remainingWeekends[0]);
                     remainingWeekends.RemoveAt(0);
-                    GenerateWeekendCombination(klvv, firstHalf, lastHalf, remainingWeekends, intf);
-                    remainingWeekends.Add(weekends[weekends.Count - 1]);
-                    weekends.RemoveAt(weekends.Count - 1);
+                    GenerateWeekendCombination(model, ref firstHalf, remainingWeekends, intf);
+                    remainingWeekends.Add(firstHalf[firstHalf.Count - 1]);
+                    firstHalf.RemoveAt(firstHalf.Count - 1);
                 }
             }
             else
             {
-                weekends.InsertRange(0, firstHalf);
-                weekends.AddRange(lastHalf);
-                SnapShotIfImproved(klvv);
-                weekends.RemoveRange(0, firstHalf.Count);
-                weekends.RemoveRange(weekends.Count - lastHalf.Count, lastHalf.Count);
+                SnapShotIfImproved(model);
                 if (intf.Cancelled())
                 {
                     throw new Exception("Cancelled");
@@ -304,13 +302,14 @@ namespace CompetitionCreator
             }
 
         }
-        public void OptimizeTeam(Model klvv, IProgress intf,Team team)
+        public void OptimizeTeam(Model model, IProgress intf,Team team)
         {
             MakeDirty();
             if (serie.optimizableNumber)
             {
                 if (conflict_cost > 0)
                 {
+                    SnapShot(model);
                     int teamindex = teams.FindIndex(t => t == team);
                     for (int i = 0; i < maxTeams; i++)
                     {
@@ -318,9 +317,9 @@ namespace CompetitionCreator
                         {
                             intf.Progress(i, teams.Count);
                             Swap(teams, i, teamindex);
-                            OptimizeWeekends(klvv, intf);
-                            OptimizeHomeVisitor(klvv);
-                            //SnapShotIfImproved(klvv, ref minConflict);
+                            OptimizeWeekends(model, intf);
+                            OptimizeHomeVisitor(model);
+                            //SnapShotIfImproved(model, ref minConflict);
                             Swap(teams, i, teamindex); // swap back
                         }
                         if (intf.Cancelled())
@@ -328,15 +327,12 @@ namespace CompetitionCreator
                             break;
                         }
                     }
-                    teams = resultTeams;
-                    weekends =resultWeekends;
-                    matches = resultMatches;
-                    klvv.Evaluate(null);
+                    CopyAndClearSnapShot(model);
                 }
             }
         }
 
-        public void OptimizeTeamAssignment(Model klvv, IProgress intf)
+        public void OptimizeTeamAssignment(Model model, IProgress intf)
         {
             MakeDirty();
             if (optimizable)
@@ -345,7 +341,7 @@ namespace CompetitionCreator
                 {
                     if (maxTeams <= 6)
                     {
-                        OptimizeFullTeamAssignment(klvv, intf);
+                        OptimizeFullTeamAssignment(model, intf);
                     }
                     else // semi-optimisation.
                     {
@@ -357,19 +353,18 @@ namespace CompetitionCreator
                                 if (j != i)
                                 {
                                     Swap(teams, i, j);
-                                    SnapShotIfImproved(klvv);
+                                    SnapShotIfImproved(model);
                                     Swap(teams, i, j);
                                 }
                             }
                         }
                     }
                     teams = resultTeams;
-                    klvv.Evaluate(null);
                 }
             }
         }
 
-        public int[,] AnalyzeTeamAssignment(Model klvv, IProgress intf)
+        public int[,] AnalyzeTeamAssignment(Model model, IProgress intf)
         {
             int[,] score = new int[maxTeams+1,maxTeams+1];
             List<Team> fixedOrderList = new List<Team>(teams);
@@ -385,7 +380,7 @@ namespace CompetitionCreator
                     {
                         Swap(teams, i, i+1);
                     }*/
-                    klvv.EvaluateRelatedConstraints(this);
+                    model.EvaluateRelatedConstraints(this);
                     int index = 0;
                     foreach (Team team in fixedOrderList)
                     {
@@ -411,106 +406,27 @@ namespace CompetitionCreator
                     index1++;
                 }
                 teams = resultTeams;
-                klvv.Evaluate(null);
             }
             return score;
         }
-        public void AnalyzeAndOptimizeWeekends(Model klvv, IProgress intf)
+        public void OptimizeIndividualMatches(Model model)
         {
-            SnapShot(klvv);
-            //int best_score = 1000;
-            int[,] table = AnalyzeWeekends(klvv, intf);
-            /*
-            Team[] used = new Team[maxTeams];
-            for (int i = 0; i < maxTeams; i++) used[i] = null;
-            AnalyzeAndOptimizeTeamAssignmentRecursive(klvv, intf, table, used, 0, ref best_score, new List<Team>(teams), 0);
-            teams = resultTeams;
-            */
-            klvv.Evaluate(null);
-        }
-        public int[,] AnalyzeWeekends(Model klvv, IProgress intf)
-        {
-            const int maxWeekends = 10;
-            if (weekends.Count != maxWeekends) throw (new Exception("Only usable for poule with 10 weekends"));
-            int[,] score = new int[maxWeekends + 1, 5 + 1];
-            List<Weekend> fixedOrderList = new List<Weekend>(weekends);
             MakeDirty();
-            if (optimizableWeekends)
+            if (optimizableMatch)
             {
-                for (int k = 0; k < 5; k++)
+                // Only meaningfull when having spare weekends
+                if (weekendsFirst.Count + weekendsSecond.Count > 2 * (TeamCount - 1))
                 {
-                    weekends.Insert(5, weekends[0]);
-                    weekends.RemoveAt(0);
-                    weekends.Add(weekends[5]);
-                    weekends.RemoveAt(5);
-                    //klvv.EvaluateRelatedConstraints(this);
-                    klvv.Evaluate(null);
-                    for(int index=0; index<maxWeekends; index++)
+                    foreach (Match m in matches)
                     {
-                        score[index, (index + 4 - k) % 5] = weekends[index].conflict;
+                        m.OptimizeIndividual(model);
                     }
+                    matches = resultMatches;
                 }
-                Console.Write("{0,30}", "Weekends:");
-                for (int k = 1; k <= 5; k++)
-                {
-                    Console.Write("{0,4}", "p-" + k.ToString());
-                }
-                Console.WriteLine();
-                for (int index = 0; index < maxWeekends; index++)
-                {
-                    Console.Write("{0,30}", "Weekend "+(index+1).ToString());
-                    for (int k = 0; k < 5; k++)
-                    {
-                        Console.Write("{0,4}", score[index, k]);
-                    }
-                    Console.WriteLine();
-                }
-                weekends = resultWeekends;
-                klvv.Evaluate(null);
             }
-            return score;
         }
 
-        public void AnalyzeAndOptimizeTeamAssignment(Model klvv, IProgress intf)
-        {
-            SnapShot(klvv);
-            int best_score = 1000;
-            int[,] table = AnalyzeTeamAssignment(klvv, intf);
-            Team[] used = new Team[maxTeams];
-            for(int i = 0;i<maxTeams;i++) used[i] = null;
-            AnalyzeAndOptimizeTeamAssignmentRecursive(klvv, intf, table, used, 0, ref best_score, new List<Team>(teams), 0);
-            teams = resultTeams;
-            klvv.Evaluate(null);
-        }
-        public void AnalyzeAndOptimizeTeamAssignmentRecursive(Model klvv, IProgress intf, int[,] table, Team[] used, int team, ref int best_score,List<Team> newTeamList, int score)
-        {
-            if (score < best_score && intf.Cancelled() == false)
-            {
-                if (team < maxTeams)
-                {
-                    for (int i = 0; i < maxTeams; i++)
-                    {
-                        if (team == 0) intf.Progress(i, maxTeams);
-                        if (used[i] == null)
-                        {
-                            used[i] = teams[team];
-                            AnalyzeAndOptimizeTeamAssignmentRecursive(klvv, intf, table, used, team + 1, ref best_score, new List<Team>(teams), score + table[team, i]);
-                            used[i] = null;
-                        }
-                    }
-                }
-                else
-                { // improved best-score
-                    Console.WriteLine("score: {0}", score);
-                    best_score = score;
-                    List<Team> temp = teams;
-                    teams = new List<Team>(used);
-                    SnapShotIfImproved(klvv);
-                    teams = temp;
-                }
-            }
-        }
-        public void OptimizeFullTeamAssignment(Model klvv, IProgress intf)
+        public void OptimizeFullTeamAssignment(Model model, IProgress intf)
         {
             MakeDirty();
             if (optimizable)
@@ -521,7 +437,7 @@ namespace CompetitionCreator
                     teams = new List<Team>();
                     try
                     {
-                        GenerateTeamCombination(klvv, temp, intf);
+                        GenerateTeamCombination(model, temp, intf);
                     }
                     catch { }
                     teams = resultTeams;
@@ -538,7 +454,7 @@ namespace CompetitionCreator
             list.RemoveAt(j);
             list.Insert(j,ti);
         }
-        private void GenerateTeamCombination(Model klvv, List<Team> remainingTeams, IProgress intf)
+        private void GenerateTeamCombination(Model model, List<Team> remainingTeams, IProgress intf)
         {
             if (remainingTeams.Count > 0)
             {
@@ -550,14 +466,14 @@ namespace CompetitionCreator
                     }
                     teams.Add(remainingTeams[0]);
                     remainingTeams.RemoveAt(0);
-                    GenerateTeamCombination(klvv, remainingTeams, intf);
+                    GenerateTeamCombination(model, remainingTeams, intf);
                     remainingTeams.Add(teams[teams.Count - 1]);
                     teams.RemoveAt(teams.Count - 1);
                 }
             }
             else
             {
-                SnapShotIfImproved(klvv);
+                SnapShotIfImproved(model);
                 if (intf.Cancelled())
                 {
                     throw new Exception("Cancelled");
@@ -565,7 +481,7 @@ namespace CompetitionCreator
             }
 
         }
-        public void SwitchHomeTeamVisitorTeam(Model klvv, Match match)
+        public void SwitchHomeTeamVisitorTeam(Model model, Match match)
         {
             if (optimizableHomeVisit)
             {
@@ -609,7 +525,7 @@ namespace CompetitionCreator
         }
 
 
-        public void OptimizeHomeVisitor(Model klvv)
+        public void OptimizeHomeVisitor(Model model)
         {
             MakeDirty();
             if (optimizableHomeVisit)
@@ -618,18 +534,17 @@ namespace CompetitionCreator
                 {
                     if (match.conflict_cost > 0)
                     {
-                        SwitchHomeTeamVisitorTeam(klvv, match);
-                        if (SnapShotIfImproved(klvv) == false)
+                        SwitchHomeTeamVisitorTeam(model, match);
+                        if (SnapShotIfImproved(model) == false)
                         { // switch back
-                            SwitchHomeTeamVisitorTeam(klvv, match);
+                            SwitchHomeTeamVisitorTeam(model, match);
                         }
                     }
                 }
                 matches = resultMatches;
-                klvv.Evaluate(null);
             }
         }
-        public void OptimizeHomeVisitorReverse(Model klvv)
+        public void OptimizeHomeVisitorReverse(Model model)
         {
             MakeDirty();
             if (optimizableHomeVisit)
@@ -640,15 +555,14 @@ namespace CompetitionCreator
                 {
                     if (match.conflict_cost > 0)
                     {
-                        SwitchHomeTeamVisitorTeam(klvv, match);
-                        if (SnapShotIfImproved(klvv) == false)
+                        SwitchHomeTeamVisitorTeam(model, match);
+                        if (SnapShotIfImproved(model) == false)
                         { // switch back
-                            SwitchHomeTeamVisitorTeam(klvv, match);
+                            SwitchHomeTeamVisitorTeam(model, match);
                         }
                     }
                 }
                 matches = resultMatches;
-                klvv.Evaluate(null);
             }
         }
         public void CreateMatchesFromSchemaFiles()

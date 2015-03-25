@@ -17,7 +17,7 @@ namespace CompetitionCreator
 {
     public partial class Form1 : Form
     {
-        Model klvv = null;
+        Model model = null;
         GlobalState state = new GlobalState();
         string BaseDirectory = "";
             
@@ -32,28 +32,28 @@ namespace CompetitionCreator
             //Weekend.Test();
             InitializeComponent();
             // reading club-constraints
-            klvv = new Model(DateTime.Now.Year);
+            model = new Model(DateTime.Now.Year);
             
-            Text = string.Format("Competition Creator Tool ({0})", klvv.year);
+            Text = string.Format("Competition Creator Tool ({0})", model.year);
 
             this.WindowState = FormWindowState.Maximized;
-            ClubListView clubview = new ClubListView(klvv,state);
+            ClubListView clubview = new ClubListView(model,state);
             clubview.ShowHint = DockState.DockLeft;
             clubview.Show(dockPanel);
 
-            //SerieView serieview = new SerieView(klvv, state);
+            //SerieView serieview = new SerieView(model, state);
             //serieview.ShowHint = DockState.DockRight;
             //serieview.Show(dockPanel);
             //serieview.Show(clubview.Pane, DockAlignment.Right, 0.35);
-            //SerieTreeView serietreeview = new SerieTreeView(klvv, state);
+            //SerieTreeView serietreeview = new SerieTreeView(model, state);
             //serietreeview.ShowHint = DockState.DockRight;
             //serietreeview.Show(dockPanel);
             
-            PouleListView pouleListview = new PouleListView(klvv, state);
+            PouleListView pouleListview = new PouleListView(model, state);
             pouleListview.ShowHint = DockState.DockLeft;
             pouleListview.Show(clubview.Pane, DockAlignment.Right, 0.5);
             //pouleListview.Show(dockPanel);
-            ConstraintListView constraintListview = new ConstraintListView(klvv, state);
+            ConstraintListView constraintListview = new ConstraintListView(model, state);
             constraintListview.ShowHint = DockState.DockRight;
             constraintListview.Show(dockPanel);
             dockPanel.DockRightPortion = 500;
@@ -62,28 +62,28 @@ namespace CompetitionCreator
             {
                 ListTeam.Add(string.Format("Team {0}",i+1));
             }
-            klvv.OnMyChange += state_OnMyChange;
+            model.OnMyChange += state_OnMyChange;
             state.OnMyChange += state_OnMyChange;
-            klvv.OpenLastProject();
+            model.OpenLastProject();
         }
         public void state_OnMyChange(object source, MyEventArgs e)
         {
-            if (e.klvv != null)
+            if (e.model != null)
             {
-                klvv.OnMyChange -= state_OnMyChange;
-                klvv = e.klvv;
+                model.OnMyChange -= state_OnMyChange;
+                model = e.model;
                 state.Clear();
-                klvv.OnMyChange += state_OnMyChange;
+                model.OnMyChange += state_OnMyChange;
             }
             if (InvokeRequired)
             {
                 this.Invoke(new Action(() => state_OnMyChange(source, e)));
                 return;
             }
-            lock (klvv)
+            lock (model)
             {
-                string changed = klvv.stateNotSaved ? "*" : "";
-                this.Text = string.Format("Competition Creator Tool ({0}{1})", klvv.savedFileName, changed);
+                string changed = model.stateNotSaved ? "*" : "";
+                this.Text = string.Format("Competition Creator Tool ({0}{1})", model.savedFileName, changed);
             }
         }
 
@@ -100,7 +100,7 @@ namespace CompetitionCreator
                     return;
                 }
             }
-            clubview = new ClubListView(klvv, state);
+            clubview = new ClubListView(model, state);
             clubview.ShowHint = DockState.DockLeft;
             
             clubview.Show(this.dockPanel);
@@ -119,7 +119,7 @@ namespace CompetitionCreator
                     return;
                 }
             }
-            pouleListView = new PouleListView(klvv, state);
+            pouleListView = new PouleListView(model, state);
             pouleListView.ShowHint = DockState.DockLeft;
             pouleListView.Show(this.dockPanel);
 
@@ -137,7 +137,7 @@ namespace CompetitionCreator
                     return;
                 }
             }
-            clubview = new ClubListView(klvv, state);
+            clubview = new ClubListView(model, state);
             clubview.ShowHint = DockState.DockLeft;
 
             clubview.Show(this.dockPanel);
@@ -155,7 +155,7 @@ namespace CompetitionCreator
                     return;
                 }
             }
-            optimizeForm = new OptimizeForm(klvv, state);
+            optimizeForm = new OptimizeForm(model, state);
             optimizeForm.Show(this.dockPanel);
 
         }
@@ -178,7 +178,7 @@ namespace CompetitionCreator
                     return;
                 }
             }
-            constraintView = new ConstraintListView(klvv, state);
+            constraintView = new ConstraintListView(model, state);
             constraintView.ShowHint = DockState.DockRight;
             constraintView.Show(this.dockPanel);
         }
@@ -195,7 +195,7 @@ namespace CompetitionCreator
                     return;
                 }
             }
-            anorama = new AnoramaView(klvv, state);
+            anorama = new AnoramaView(model, state);
             anorama.Show(this.dockPanel);
 
 
@@ -213,7 +213,7 @@ namespace CompetitionCreator
                     return;
                 }
             }
-            serieView = new SerieView(klvv, state);
+            serieView = new SerieView(model, state);
             serieView.Show(this.dockPanel);
 
         }
@@ -230,7 +230,7 @@ namespace CompetitionCreator
                     return;
                 }
             }
-            clubConstraints = new InschrijvingenView(klvv, state);
+            clubConstraints = new InschrijvingenView(model, state);
             clubConstraints.Show(this.dockPanel);
         }
 
@@ -257,7 +257,7 @@ namespace CompetitionCreator
         }
         public void saveFileDialog1_FileOk3(object sender, CancelEventArgs e)
         {
-            klvv.WriteProject(saveFileDialog1.FileName);
+            model.WriteProject(saveFileDialog1.FileName);
         }
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
@@ -272,7 +272,7 @@ namespace CompetitionCreator
         }
         public void openFileDialog1_FileOk1(object sender, CancelEventArgs e)
         {
-            klvv.LoadFullCompetition(openFileDialog1.FileName);
+            model.LoadFullCompetition(openFileDialog1.FileName);
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
@@ -285,10 +285,10 @@ namespace CompetitionCreator
                 bool ok = int.TryParse(form.GetInputString(), out year);
                 if (ok)
                 {
-                    Model newKlvv = new Model(year);
-                    klvv.Changed(newKlvv);
-                    newKlvv.Evaluate(null);
-                    newKlvv.Changed();
+                    Model newModel = new Model(year);
+                    model.Changed(newModel);
+                    newModel.Evaluate(null);
+                    newModel.Changed();
                 }
             }
 
@@ -305,7 +305,7 @@ namespace CompetitionCreator
                     return;
                 }
             }
-            teamListView = new TeamListView(klvv, state);
+            teamListView = new TeamListView(model, state);
             teamListView.ShowHint = DockState.DockLeft;
             teamListView.Show(this.dockPanel);
 
@@ -313,31 +313,31 @@ namespace CompetitionCreator
 
         private void saveToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            klvv.WriteProject(klvv.savedFileName);
+            model.WriteProject(model.savedFileName);
         }
 
-        private void kLVVTeamSubscriptionsklvvbeToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ImportSubscriptionsmodelbeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             InputForm form = new InputForm("Input the URL of the website that has the registrations", "URL:", MySettings.Settings.RegistrationsXML);
             form.ShowDialog();
             if(form.Result == true)
             {
-                klvv.ImportTeamSubscriptions(XDocument.Load(form.GetInputString()).Root);
+                model.ImportTeamSubscriptions(XDocument.Load(form.GetInputString()).Root);
             }
         }
 
         private void clubRegistrationsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string MyDocuments = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            klvv.WriteClubConstraints(MyDocuments + "\\ClubRegistrations.xml");
+            model.WriteClubConstraints(MyDocuments + "\\ClubRegistrations.xml");
         }
 
-        private void competitionxmlForKlvvsiteToolStripMenuItem_Click(object sender, EventArgs e)
+        private void exportCompetitionToolStripMenuItem_Click(object sender, EventArgs e)
         {
            
             DateTime now = DateTime.Now;
             saveFileDialog1 = new SaveFileDialog();
-            saveFileDialog1.FileName = string.Format("ExportToKlvv{0:00}{1:00}{2:00}_{3:00}{4:00}.xml", now.Year, now.Month, now.Day, now.Hour, now.Minute);
+            saveFileDialog1.FileName = string.Format("ExportedCompetition{0:00}{1:00}{2:00}_{3:00}{4:00}.xml", now.Year, now.Month, now.Day, now.Hour, now.Minute);
             saveFileDialog1.Filter = "Xml (*.xml)|*.xml";
             saveFileDialog1.InitialDirectory = BaseDirectory;
             saveFileDialog1.FileOk += new CancelEventHandler(saveFileDialog1_FileOk4);
@@ -346,7 +346,7 @@ namespace CompetitionCreator
         public void saveFileDialog1_FileOk4(object sender, CancelEventArgs e)
         {
             List<Selection> selection = new List<Selection>();
-            foreach (Serie serie in klvv.series)
+            foreach (Serie serie in model.series)
             {
                 Selection sel = new Selection(serie.name);
                 sel.obj = serie;
@@ -364,7 +364,7 @@ namespace CompetitionCreator
                     if (sel.selected) series.Add((Serie)sel.obj);
                 }
 
-                klvv.WriteExportToKLVVXml(saveFileDialog1.FileName, series);
+                model.WriteExportCompetitionXml(saveFileDialog1.FileName, series);
             }
         }
 
@@ -393,7 +393,7 @@ namespace CompetitionCreator
         }
         public void saveFileDialog1_FileOk9(object sender, CancelEventArgs e)
         {
-            klvv.ConvertVVBCompetitionToCSV(saveFileDialog1.FileName);
+            model.ConvertVVBCompetitionToCSV(saveFileDialog1.FileName);
         }
 
         private void cSVCompetitionToolStripMenuItem_Click(object sender, EventArgs e)
@@ -407,7 +407,7 @@ namespace CompetitionCreator
         }
         public void openFileDialog1_FileOk2(object sender, CancelEventArgs e)
         {
-            klvv.ImportCSV(openFileDialog1.FileName);
+            model.ImportCSV(openFileDialog1.FileName);
         }
         private void subscriptionsToolStripMenuItem1_Click(object sender, EventArgs e)
         {
@@ -420,10 +420,10 @@ namespace CompetitionCreator
         }
         public void openFileDialog1_FileOk3(object sender, CancelEventArgs e)
         {
-            klvv.ImportTeamSubscriptions(XDocument.Load(openFileDialog1.FileName).Root);
+            model.ImportTeamSubscriptions(XDocument.Load(openFileDialog1.FileName).Root);
         }
 
-        private void kLVVConvertToCSVToolStripMenuItem_Click(object sender, EventArgs e)
+        private void convertKlvvToCSVToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DateTime now = DateTime.Now;
             saveFileDialog1 = new SaveFileDialog();
@@ -436,12 +436,12 @@ namespace CompetitionCreator
         }
         public void saveFileDialog1_FileOk8(object sender, CancelEventArgs e)
         {
-            klvv.ConvertKLVVCompetitionToCSV(saveFileDialog1.FileName);
+            model.ConvertKLVVCompetitionToCSV(saveFileDialog1.FileName);
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (klvv.stateNotSaved)
+            if (model.stateNotSaved)
             {
                 DialogResult result = MessageBox.Show("Competition changed. Do you want to save the competition first?", "Closing application",
 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -452,11 +452,11 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             }
         }
 
-        private void clubRegistrationsKlvvsitexmlToolStripMenuItem_Click(object sender, EventArgs e)
+        private void exportRegistrationsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DateTime now = DateTime.Now;
             saveFileDialog1 = new SaveFileDialog();
-            saveFileDialog1.FileName = string.Format("ExportToKlvv_registrations{0:00}{1:00}{2:00}_{3:00}{4:00}.xml", now.Year, now.Month, now.Day, now.Hour, now.Minute);
+            saveFileDialog1.FileName = string.Format("ExportedRegistrations{0:00}{1:00}{2:00}_{3:00}{4:00}.xml", now.Year, now.Month, now.Day, now.Hour, now.Minute);
             saveFileDialog1.Filter = "Xml (*.xml)|*.xml";
             saveFileDialog1.InitialDirectory = BaseDirectory;
             saveFileDialog1.FileOk += new CancelEventHandler(saveFileDialog1_FileOk10);
@@ -464,10 +464,10 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         }
         public void saveFileDialog1_FileOk10(object sender, CancelEventArgs e)
         {
-            klvv.WriteClubConstraints(saveFileDialog1.FileName,false /* zonder nationale teams*/); 
+            model.WriteClubConstraints(saveFileDialog1.FileName,false /* zonder nationale teams*/); 
         }
 
-        private void importKLVVRankingToolStripMenuItem_Click(object sender, EventArgs e)
+        private void importRankingToolStripMenuItem_Click(object sender, EventArgs e)
         {
             openFileDialog1 = new OpenFileDialog();
             openFileDialog1.FileName = "Rankings.xml";
@@ -480,14 +480,14 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         {
             try
             {
-                klvv.ImportRanking(XDocument.Load(openFileDialog1.FileName).Root);
+                model.ImportRanking(XDocument.Load(openFileDialog1.FileName).Root);
             }
             catch (Exception exc)
             {
                 MessageBox.Show("Failed importing ranking. Error: " + exc.ToString());
             }
-            klvv.Evaluate(null);
-            klvv.Changed();
+            model.Evaluate(null);
+            model.Changed();
         }
 
         private void helpToolStripMenuItem_Click(object sender, EventArgs e)
@@ -518,7 +518,7 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         }
         public void saveFileDialog1_FileOk11(object sender, CancelEventArgs e)
         {
-            klvv.CompareRegistrations(openFileDialog1.FileName, saveFileDialog1.FileName);
+            model.CompareRegistrations(openFileDialog1.FileName, saveFileDialog1.FileName);
         }
 
         private void helpToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -529,7 +529,7 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
         private void licenseToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-            LicenseView license = new LicenseView(klvv);
+            LicenseView license = new LicenseView(model);
             license.ShowDialog();
         }
 
@@ -541,8 +541,7 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MySettings mySettings = MySettings.Load(BaseDirectory + @"\MySettings.xml");
-            Settings settings = new Settings(mySettings);
+            Settings settings = new Settings(MySettings.Settings);
             settings.Show();
         }
 
@@ -557,7 +556,7 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         }
         public void saveFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
-            klvv.WriteConflictReportPerType(saveFileDialog1.FileName);
+            model.WriteConflictReportPerType(saveFileDialog1.FileName);
         }
 
         private void conflictsPerClubToolStripMenuItem_Click(object sender, EventArgs e)
@@ -571,7 +570,7 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         }
         public void saveFileDialog1_FileOk1(object sender, CancelEventArgs e)
         {
-            klvv.WriteConflictReportPerClub(saveFileDialog1.FileName);
+            model.WriteConflictReportPerClub(saveFileDialog1.FileName);
         }
 
         private void matchesPerClubcsvToolStripMenuItem_Click(object sender, EventArgs e)
@@ -586,7 +585,7 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         }
         public void saveFileDialog1_FileOk2(object sender, CancelEventArgs e)
         {
-            klvv.WriteCompetitionPerClub(saveFileDialog1.FileName);
+            model.WriteCompetitionPerClub(saveFileDialog1.FileName);
 
         }
 
@@ -602,7 +601,7 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         }
         public void saveFileDialog1_FileOk5(object sender, CancelEventArgs e)
         {
-            klvv.WriteSeriePoules(saveFileDialog1.FileName);
+            model.WriteSeriePoules(saveFileDialog1.FileName);
 
         }
 
@@ -619,7 +618,7 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         public void saveFileDialog1_FileOk6(object sender, CancelEventArgs e)
         {
             List<Selection> selection = new List<Selection>();
-            foreach (Serie serie in klvv.series)
+            foreach (Serie serie in model.series)
             {
                 Selection sel = new Selection(serie.name);
                 sel.obj = serie;
@@ -635,7 +634,7 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 {
                     if (sel.selected) series.Add((Serie)sel.obj);
                 }
-                klvv.WriteMatches(saveFileDialog1.FileName, series);
+                model.WriteMatches(saveFileDialog1.FileName, series);
             }
 
         }
@@ -653,7 +652,7 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         }
         public void saveFileDialog1_FileOk7(object sender, CancelEventArgs e)
         {
-            klvv.WriteStatistics(saveFileDialog1.FileName);
+            model.WriteStatistics(saveFileDialog1.FileName);
 
         }
 
@@ -665,37 +664,39 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             {
                 try
                 {
-                    klvv.ImportRanking(XDocument.Load(form.GetInputString()).Root);
+                    model.ImportRanking(XDocument.Load(form.GetInputString()).Root);
                 }
                 catch (Exception exc)
                 {
                     MessageBox.Show("Failed importing ranking. Error: " + exc.ToString());
                 }
-                klvv.Evaluate(null);
-                klvv.Changed();
+                model.Evaluate(null);
+                model.Changed();
             }
         }
 
         private void invoerToolStripMenuItem_DropDownOpened(object sender, EventArgs e)
         {
             DateTime last = DateTime.Now;
-            foreach(Poule poule in klvv.poules)
+            foreach(Poule poule in model.poules)
             {
-                DateTime l1 = poule.weekends[poule.weekends.Count-1].Saturday;
+                DateTime l1 = poule.weekendsSecond[poule.weekendsSecond.Count-1].Saturday;
                 if(l1<last) last = l1;
             }
-            if (klvv.licenseKey.Valid() == false ||
-                DateTime.Now > klvv.licenseKey.ValidUntil()||
-                last > klvv.licenseKey.ValidUntil())
+            if (model.licenseKey.Valid() == false ||
+                DateTime.Now > model.licenseKey.ValidUntil()||
+                last > model.licenseKey.ValidUntil() ||
+                (model.teams.Count > 1000 && model.licenseKey.Feature(Security.LicenseKey.FeatureType.Above1000Teams) == false)
+                )
             {
-                this.exportCompetitionToolStripMenuItem.Enabled = false;
+                this.exportToolStripMenuItem.Enabled = false;
                 this.importToolStripMenuItem.Enabled = false;
                 this.saveToolStripMenuItem.Enabled = false;
                 this.saveToolStripMenuItem1.Enabled = false;
                 this.reportToolStripMenuItem1.Enabled = false;
             } else 
             {
-                this.exportCompetitionToolStripMenuItem.Enabled = true;
+                this.exportToolStripMenuItem.Enabled = true;
                 this.importToolStripMenuItem.Enabled = true;
                 this.saveToolStripMenuItem.Enabled = true;
                 this.saveToolStripMenuItem1.Enabled = true;

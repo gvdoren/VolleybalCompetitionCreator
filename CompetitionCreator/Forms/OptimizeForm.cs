@@ -14,14 +14,14 @@ namespace CompetitionCreator
 {
     public partial class OptimizeForm : DockContent
     {
-       Model klvv = null;
+       Model model = null;
         GlobalState state;
-        public OptimizeForm(Model klvv, GlobalState state)
+        public OptimizeForm(Model model, GlobalState state)
         {
-            this.klvv = klvv;
+            this.model = model;
             this.state = state;
             InitializeComponent();
-            objectListView1.SetObjects(klvv.series);
+            objectListView1.SetObjects(model.series);
          }
 
         private void objectListView1_SubItemChecking(object sender, SubItemCheckingEventArgs e)
@@ -39,8 +39,8 @@ namespace CompetitionCreator
             {
                 serie.optimizableHomeVisit = (e.NewValue == CheckState.Checked);
             }
-            klvv.Evaluate(null);
-            klvv.Changed();
+            model.Evaluate(null);
+            model.Changed();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -55,34 +55,34 @@ namespace CompetitionCreator
             int score;
             do
             {
-                score = klvv.LastTotalConflicts;
-                foreach (Poule poule in klvv.poules)
+                score = model.LastTotalConflicts;
+                Console.WriteLine("OptimizePoules: score: {0}", score);
+                foreach (Poule poule in model.poules)
                 {
                     if (poule.serie != null && poule.optimizable == true)
                     {
                         {
-                            lock (klvv)
+                            lock (model)
                             {
                                 IProgress intf = (IProgress)sender;
                                 intf.SetText("Optimizing - " + poule.serie.name + poule.name);
-                                poule.SnapShot(klvv);
-                                poule.OptimizeTeamAssignment(klvv, intf);
-                                poule.OptimizeHomeVisitor(klvv);
-                                poule.OptimizeHomeVisitorReverse(klvv);
-                                poule.OptimizeWeekends(klvv, intf);
-                                klvv.Evaluate(null);
+                                poule.SnapShot(model);
+                                poule.OptimizeTeamAssignment(model, intf);
+                                poule.OptimizeHomeVisitor(model);
+                                poule.OptimizeHomeVisitorReverse(model);
+                                poule.OptimizeWeekends(model, intf);
+                                poule.CopyAndClearSnapShot(model);
+                                Console.WriteLine(" - {1}:totalConflicts: {0}", model.TotalConflicts(), poule.fullName);
                                 if (intf.Cancelled()) return;
                             }
                         }
-                        klvv.Changed();
+                        model.Changed();
                     }
                 }
-            } while (klvv.LastTotalConflicts<score);
+            } while (model.LastTotalConflicts<score);
         }
         private void OptimizePoulesCompleted(object sender, MyEventArgs e)
         {
-            klvv.Evaluate(null);
-            klvv.Changed();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -99,9 +99,10 @@ namespace CompetitionCreator
             int score;
             do
             {
-                score = klvv.LastTotalConflicts;
+                score = model.LastTotalConflicts;
+                Console.WriteLine("OptimizeTeams: score: {0}", score);
                 teamList = new List<Team>();
-                foreach (Poule poule in klvv.poules)
+                foreach (Poule poule in model.poules)
                 {
                     if (poule.optimizable)
                     {
@@ -119,17 +120,17 @@ namespace CompetitionCreator
                 foreach (Team team in teamList)
                 {
                     {
-                        lock (klvv)
+                        lock (model)
                         {
                             intf.SetText("Optimizing - " + team.poule.serie.name + team.poule.name + " - " + team.name);
-                            team.poule.SnapShot(klvv);
-                            team.poule.OptimizeTeam(klvv, intf, team);
+                            team.poule.OptimizeTeam(model, intf, team);
                             if (intf.Cancelled()) return;
                         }
                     }
-                    klvv.Changed();
+                    Console.WriteLine(" - {1}:totalConflicts: {0}", model.TotalConflicts(), team.poule.fullName);
+                    model.Changed();
                 }
-            } while (teamList.Count > 0 && klvv.LastTotalConflicts<score);
+            } while (teamList.Count > 0 && model.LastTotalConflicts<score);
 
         }
 
@@ -146,7 +147,7 @@ namespace CompetitionCreator
             int score;
             do
             {
-                score = klvv.LastTotalConflicts;
+                score = model.LastTotalConflicts;
                  pouleList = new List<Poule>();
                 foreach (Club club in state.selectedClubs)
                 {
@@ -166,22 +167,22 @@ namespace CompetitionCreator
                 foreach (Poule poule in pouleList)
                 {
                     {
-                        lock (klvv)
+                        lock (model)
                         {
                             IProgress intf = (IProgress)sender;
                             intf.SetText("Optimizing - " + poule.serie.name + poule.name);
-                            poule.SnapShot(klvv);
-                            poule.OptimizeTeamAssignment(klvv, intf);
-                            //poule.AnalyzeAndOptimizeTeamAssignment(klvv, intf);
-                            poule.OptimizeHomeVisitor(klvv);
-                            poule.OptimizeWeekends(klvv, intf);
-                            klvv.Evaluate(null);
+                            poule.SnapShot(model);
+                            poule.OptimizeTeamAssignment(model, intf);
+                            //poule.AnalyzeAndOptimizeTeamAssignment(model, intf);
+                            poule.OptimizeHomeVisitor(model);
+                            poule.OptimizeWeekends(model, intf);
+                            poule.CopyAndClearSnapShot(model);
                             if (intf.Cancelled()) return;
                         }
                     }
-                    klvv.Changed();
+                    model.Changed();
                 }
-            } while (pouleList.Count > 0 && klvv.LastTotalConflicts<score);
+            } while (pouleList.Count > 0 && model.LastTotalConflicts<score);
 
         }
 
@@ -198,7 +199,7 @@ namespace CompetitionCreator
             int score;
             do
             {
-                score = klvv.LastTotalConflicts;
+                score = model.LastTotalConflicts;
                 IProgress intf = (IProgress)sender;
                 teamList = new List<Team>();
                 foreach (Club club in state.selectedClubs)
@@ -216,17 +217,16 @@ namespace CompetitionCreator
                 foreach (Team team in teamList)
                 {
                     {
-                        lock (klvv)
+                        lock (model)
                         {
                             intf.SetText("Optimizing - " + team.poule.serie.name + team.poule.name + " - " + team.name);
-                            team.poule.SnapShot(klvv);
-                            team.poule.OptimizeTeam(klvv, intf, team);
+                            team.poule.OptimizeTeam(model, intf, team);
                             if (intf.Cancelled()) return;
                         }
                     }
-                    klvv.Changed();
+                    model.Changed();
                 }
-            } while (teamList.Count > 0 && klvv.LastTotalConflicts<score);
+            } while (teamList.Count > 0 && model.LastTotalConflicts<score);
 
         }
         
@@ -268,10 +268,10 @@ namespace CompetitionCreator
                 int i = 0;
                 IProgress intf = (IProgress)sender;
                 OptimizePoulesSelectedClubs(sender, e);
-                Console.WriteLine(string.Format("{0}. Optimize Poules selected clubs finished: {1}", i, klvv.TotalConflicts()));
+                Console.WriteLine(string.Format("{0}. Optimize Poules selected clubs finished: {1}", i, model.TotalConflicts()));
                 if (intf.Cancelled()) return;
                 OptimizeTeamsSelectedClubs(sender, e);
-                Console.WriteLine(string.Format("{0}. Optimize Team finished: {1}", i, klvv.TotalConflicts()));
+                Console.WriteLine(string.Format("{0}. Optimize Team finished: {1}", i, model.TotalConflicts()));
                 if (intf.Cancelled()) return;
                 i++;
             } while (true);
@@ -289,28 +289,28 @@ namespace CompetitionCreator
             int score;
             do
             {
-                score = klvv.LastTotalConflicts;
-                foreach (Poule poule in klvv.poules)
+                score = model.LastTotalConflicts;
+                foreach (Poule poule in model.poules)
                 {
                     if (poule.serie != null && poule.optimizable == true)
                     {
                         {
-                            lock (klvv)
+                            lock (model)
                             {
                                 IProgress intf = (IProgress)sender;
                                 intf.SetText("Optimizing - " + poule.serie.name + poule.name);
-                                poule.SnapShot(klvv);
-                                //poule.OptimizeTeamAssignment(klvv, intf);
-                                poule.OptimizeHomeVisitor(klvv);
-                                //poule.OptimizeWeekends(klvv, intf);
-                                klvv.Evaluate(null);
+                                poule.SnapShot(model);
+                                //poule.OptimizeTeamAssignment(model, intf);
+                                poule.OptimizeHomeVisitor(model);
+                                //poule.OptimizeWeekends(model, intf);
+                                poule.CopyAndClearSnapShot(model);
                                 if (intf.Cancelled()) return;
                             }
                         }
-                        klvv.Changed();
+                        model.Changed();
                     }
                 }
-            } while (klvv.LastTotalConflicts < score);
+            } while (model.LastTotalConflicts < score);
         }
 
         private void button7_Click(object sender, EventArgs e)
@@ -327,10 +327,10 @@ namespace CompetitionCreator
                 int i = 0;
                 IProgress intf = (IProgress)sender;
                 OptimizePoules(sender, e);
-                Console.WriteLine(string.Format("{0}. Optimize Poules finished: {1}", i, klvv.TotalConflicts()));
+                Console.WriteLine(string.Format("{0}. Optimize Poules finished: {1}", i, model.TotalConflicts()));
                 if (intf.Cancelled()) return;
                 OptimizeTeams(sender, e);
-                Console.WriteLine(string.Format("{0}. Optimize Team finished: {1}", i, klvv.TotalConflicts()));
+                Console.WriteLine(string.Format("{0}. Optimize Team finished: {1}", i, model.TotalConflicts()));
                 if (intf.Cancelled()) return;
                 i++;
             } while (true);

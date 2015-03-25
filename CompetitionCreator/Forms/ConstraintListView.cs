@@ -13,36 +13,36 @@ namespace CompetitionCreator
 {
     public partial class ConstraintListView : DockContent, IModelFilter
     {
-        Model klvv;
+        Model model;
         GlobalState state;
-        public ConstraintListView(Model klvv, GlobalState state)
+        public ConstraintListView(Model model, GlobalState state)
         {
-            this.klvv = klvv;
+            this.model = model;
             this.state = state;
             InitializeComponent();
-            objectListView1.SetObjects(klvv.constraints);
+            objectListView1.SetObjects(model.constraints);
             objectListView1.ModelFilter = this;
             objectListView1.UseFiltering = true;
             UpdateConflictCount();
-            klvv.OnMyChange += state_OnMyChange;
+            model.OnMyChange += state_OnMyChange;
             state.OnMyChange += state_OnMyChange;
             
         }
         public void state_OnMyChange(object source, MyEventArgs e)
         {
-            if (e.klvv != null)
+            if (e.model != null)
             {
-                klvv.OnMyChange -= state_OnMyChange;
-                klvv = e.klvv;
-                objectListView1.SetObjects(klvv.constraints);
-                klvv.OnMyChange += state_OnMyChange;
+                model.OnMyChange -= state_OnMyChange;
+                model = e.model;
+                objectListView1.SetObjects(model.constraints);
+                model.OnMyChange += state_OnMyChange;
             }
             if (InvokeRequired)
             {
                 this.Invoke(new Action(() => state_OnMyChange(source, e)));
                 return;
             }
-            lock (klvv)
+            lock (model)
             {
                 if (state.selectedConstraint != null && state.showConstraints.Contains(state.selectedConstraint) == false && state.selectedConstraint.error == false)
                 {
@@ -67,7 +67,7 @@ namespace CompetitionCreator
         {
             bool error = false;
             int conflicts = 0;
-            foreach (Constraint constraint in klvv.constraints)
+            foreach (Constraint constraint in model.constraints)
             {
                 conflicts += constraint.conflict_cost;
                 error |= constraint.error;
@@ -75,7 +75,7 @@ namespace CompetitionCreator
             }
             int totalMatches = 0;
             int conflictMatches = 0;
-            foreach (Poule poule in klvv.poules)
+            foreach (Poule poule in model.poules)
             {
                 if (poule.evaluated)
                 {
@@ -136,7 +136,7 @@ namespace CompetitionCreator
                     }
                     if (constraintView == null)
                     {
-                        constraintView = new ConstraintView(klvv, state);
+                        constraintView = new ConstraintView(model, state);
                         constraintView.Show(Pane, DockAlignment.Bottom, 0.4);
                     }
                     // Show the correct constraint
@@ -166,7 +166,7 @@ namespace CompetitionCreator
             ConstraintView constraintView = (ConstraintView)this.DockPanel.Contents.FirstOrDefault(d => (d as ConstraintView) != null);
             if (constraintView == null)
             {
-                constraintView = new ConstraintView(klvv, state);
+                constraintView = new ConstraintView(model, state);
                 constraintView.Show(Pane, DockAlignment.Bottom, 0.45);
             }
             // Show the correct constraint
@@ -179,21 +179,21 @@ namespace CompetitionCreator
 
         private void ConstraintListView_FormClosed(object sender, FormClosedEventArgs e)
         {
-            klvv.OnMyChange -= state_OnMyChange;
+            model.OnMyChange -= state_OnMyChange;
             state.OnMyChange -= state_OnMyChange;
 
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            klvv.Evaluate(null);
-            klvv.Changed();
+            model.Evaluate(null);
+            model.Changed();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             state.showConstraints.Clear();
-            foreach (Constraint con in klvv.constraints)
+            foreach (Constraint con in model.constraints)
             {
                 if (con.conflictMatches.Count > 0 || con.conflict_cost >0)
                 {

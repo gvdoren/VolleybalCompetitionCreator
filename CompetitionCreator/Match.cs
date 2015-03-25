@@ -8,14 +8,12 @@ namespace CompetitionCreator
 {
     public class Match: ConstraintAdmin
     {
-        private DateTime _datetime = new DateTime(0);
-        private bool specialDate { get { return _datetime.Ticks != 0; } }
         public int weekIndex = -1;
+        private int weekIndexIndividual = -1;
         public DateTime datetime 
         {
             get
             {
-                if (specialDate) return _datetime;
                 DateTime date= Weekend.Saturday;
                 date = date.AddDays(homeTeam.defaultDay == DayOfWeek.Saturday ? 0 : 1);
                 date = date.AddHours(homeTeam.defaultTime.Hours);
@@ -73,7 +71,6 @@ namespace CompetitionCreator
         public Time Time { 
             get 
             {
-                if (specialDate) return time;
                 return homeTeam.defaultTime; 
             }
             set 
@@ -87,7 +84,12 @@ namespace CompetitionCreator
         {
             get
             {
-                return poule.weekends[weekIndex];
+                // correct for individual corrections
+                int index = weekIndex;
+                if (weekIndexIndividual >= 0) index = weekIndexIndividual;
+
+                if (index < poule.weekendsFirst.Count) return poule.weekendsFirst[index];
+                else return poule.weekendsSecond[index - poule.weekendsFirst.Count];
             }
         }
 
@@ -98,25 +100,6 @@ namespace CompetitionCreator
         public bool RealMatch()
         {
             return homeTeam.RealTeam() && visitorTeam.RealTeam();
-        }
-        public Match(DateTime datetime, Team homeTeam, Team visitorTeam, Serie serie, Poule poule)
-        {
-            weekIndex = poule.AddWeekend(datetime);
-            this._datetime = datetime;
-            this.Time = new Time(datetime);
-            this.homeTeamIndex = poule.teams.FindIndex(t => t == homeTeam);
-            this.visitorTeamIndex = poule.teams.FindIndex(t => t == visitorTeam);
-            if (homeTeamIndex < 0)
-            {
-                Console.WriteLine("Negative");
-            }
-            if (visitorTeamIndex < 0)
-            {
-                Console.WriteLine("Negative");
-            }
-            this.serie = serie;
-            this.poule = poule;
-            
         }
         public Match(int weekIndex, int homeTeam, int visitorTeam, Serie serie, Poule poule)
         {
@@ -129,6 +112,7 @@ namespace CompetitionCreator
         public Match(Match match)
         {
             this.weekIndex = match.weekIndex;
+            this.weekIndexIndividual = match.weekIndexIndividual;
             this.homeTeamIndex = match.homeTeamIndex;
             this.visitorTeamIndex = match.visitorTeamIndex;
             this.serie = match.serie;
@@ -136,7 +120,57 @@ namespace CompetitionCreator
             this.conflict = match.conflict;
             this.conflict_cost = match.conflict_cost;
             this.time = match.time;
-            this._datetime = match._datetime;
+        }
+        public void OptimizeIndividual(Model model)
+        {
+            if (conflict_cost == 0 && weekIndexIndividual < 0) return;
+            if (weekIndexIndividual>=0)
+            { // try to get it back in the standard weekend 
+                int temp = weekIndexIndividual;
+                weekIndexIndividual = -1;
+                if (poule.SnapShotIfImproved(model) == false)
+                {
+                    weekIndexIndividual = temp;
+                }
+            }
+            List<Weekend> weekends = null;
+            int extraIndex = 0;
+            if (weekIndex < poule.weekendsFirst.Count)
+            {
+                extraIndex = 0;
+                weekends = poule.weekendsFirst;
+            } else 
+            {
+                extraIndex = poule.weekendsFirst.Count;
+                weekends = poule.weekendsSecond;
+            }
+            List<Weekend> weekendsCopy = new List<Weekend>(weekends);
+            // Find an alternative weekend
+            foreach(Match m in poule.matches)
+            {
+                if (m.RealMatch())
+                {
+                    if (m.homeTeamIndex == homeTeamIndex || m.visitorTeamIndex == homeTeamIndex ||
+                       m.homeTeamIndex == visitorTeamIndex || m.visitorTeamIndex == visitorTeamIndex)
+                    {
+                        weekendsCopy.Remove(m.Weekend);
+                    }
+                }
+            }
+            bool improved = false;
+            foreach (Weekend we in weekendsCopy)
+            {
+                int temp1 = weekIndexIndividual;
+                weekIndexIndividual = extraIndex + weekends.FindIndex(w => w.Saturday == we.Saturday);
+                if (poule.SnapShotIfImproved(model, false) == false)
+                {
+                    weekIndexIndividual = temp1;
+                }
+                else
+                {
+                    weekIndexIndividual = weekIndexIndividual;
+                }
+            }
         }
     }
 }

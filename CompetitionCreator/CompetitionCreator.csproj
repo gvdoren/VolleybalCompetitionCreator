@@ -192,7 +192,7 @@
       <DependentUpon>TeamListView.cs</DependentUpon>
     </Compile>
     <Compile Include="GlobalState.cs" />
-    <Compile Include="Klvv.cs" />
+    <Compile Include="Model.cs" />
     <Compile Include="Match.cs" />
     <Compile Include="MySettings.cs" />
     <Compile Include="Poule.cs" />
@@ -228,6 +228,10 @@
     <Compile Include="Team.cs" />
     <Compile Include="Time.cs" />
     <Compile Include="Weekend.cs" />
+    <Content Include="html\no_latlng.html">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="html\help.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
@@ -305,18 +309,6 @@
       <DependentUpon>SerieView.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
-    <Content Include="InputData\clubs.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="InputData\sporthallen.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="InputData\sporthalls.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="InputData\sporthal_afstanden.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="InputData\Schema10.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

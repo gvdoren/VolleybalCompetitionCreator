@@ -14,7 +14,7 @@ namespace CompetitionCreator
 {
     public partial class PouleView : DockContent
     {
-        Model klvv = null;
+        Model model = null;
         GlobalState state = null;
         public Poule poule = null;
         SimpleDropSink myDropSink = new SimpleDropSink();
@@ -24,9 +24,9 @@ namespace CompetitionCreator
         List<Weekend> selectedWeekends = new List<Weekend>();
         List<Match> selectedMatches = new List<Match>();
 
-        public PouleView(Model klvv, GlobalState state, Poule poule)
+        public PouleView(Model model, GlobalState state, Poule poule)
         {
-            this.klvv = klvv;
+            this.model = model;
             this.state = state;
             this.poule = poule;
             InitializeComponent();
@@ -48,25 +48,25 @@ namespace CompetitionCreator
             objectListView3.ShowGroups = false;
             objectListView3.HideSelection = false;
             objectListView3.SetObjects(weekmapping);
-            klvv.OnMyChange += state_OnMyChange;
+            model.OnMyChange += state_OnMyChange;
         }
         public void state_OnMyChange(object source, MyEventArgs e)
         {
-            if (e.klvv != null)
+            if (e.model != null)
             {
-                klvv.OnMyChange -= state_OnMyChange;
-                klvv = e.klvv;
-                klvv.OnMyChange += state_OnMyChange;
+                model.OnMyChange -= state_OnMyChange;
+                model = e.model;
+                model.OnMyChange += state_OnMyChange;
             }
             if (InvokeRequired)
             {
                 this.Invoke(new Action(() => state_OnMyChange(source, e)));
                 return;
             }
-            lock (klvv)
+            lock (model)
             {
                 // If dynamically the poule is removed.
-                if (klvv.poules.Contains(poule) == false)
+                if (model.poules.Contains(poule) == false)
                 {
                     Close();
                     return;
@@ -181,8 +181,8 @@ namespace CompetitionCreator
 
         void updateMatches()
         {
-            klvv.Evaluate(null);
-            klvv.Changed();
+            model.Evaluate(null);
+            model.Changed();
             objectListView2.Objects = poule.matches;
             objectListView2.BuildList();
             objectListView2.Refresh();
@@ -190,7 +190,7 @@ namespace CompetitionCreator
 
         private void PouleView_FormClosing(object sender, FormClosingEventArgs e)
         {
-            klvv.OnMyChange -= state_OnMyChange;
+            model.OnMyChange -= state_OnMyChange;
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -214,27 +214,29 @@ namespace CompetitionCreator
         private void OptimizeWeekAssignment(object sender, MyEventArgs e)
         {
             IProgress intf = (IProgress)sender;
-            poule.SnapShot(klvv);
-            poule.OptimizeWeekends(klvv, intf);
+            poule.SnapShot(model);
+            poule.OptimizeWeekends(model, intf);
+            poule.CopyAndClearSnapShot(model);
         }
         private void OptimizeWeekAssignmentCompleted(object sender, MyEventArgs e)
         {
 //            UpdateWeekMapping();
 //            objectListView3.SetObjects(weekmapping);
-            klvv.Evaluate(null);
-            klvv.Changed();
+            model.Evaluate(null);
+            model.Changed();
         }
         private void OptimizeTeamAssignment(object sender, MyEventArgs e)
         {
             IProgress intf = (IProgress)sender;
-            poule.SnapShot(klvv);
-            poule.OptimizeTeamAssignment(klvv, intf);
+            poule.SnapShot(model);
+            poule.OptimizeTeamAssignment(model, intf);
+            poule.CopyAndClearSnapShot(model);
         }
         private void OptimizeTeamAssignmentCompleted(object sender, MyEventArgs e)
         {
 //            objectListView1.SetObjects(poule.teams);
-            klvv.Evaluate(null);
-            klvv.Changed();
+            model.Evaluate(null);
+            model.Changed();
         }
 
         private void objectListView2_SelectionChanged(object sender, EventArgs e)
@@ -283,9 +285,9 @@ namespace CompetitionCreator
             else
             {
                 Match match1 = (Match)objectListView2.SelectedObject;
-                poule.SwitchHomeTeamVisitorTeam(klvv, match1);
-                klvv.Evaluate(null);
-                klvv.Changed();
+                poule.SwitchHomeTeamVisitorTeam(model, match1);
+                model.Evaluate(null);
+                model.Changed();
             }
         }
 
@@ -301,10 +303,11 @@ namespace CompetitionCreator
             }
             else
             {
-                poule.SnapShot(klvv);
-                poule.OptimizeHomeVisitor(klvv);
-                poule.OptimizeHomeVisitorReverse(klvv);
-                klvv.Changed();
+                poule.SnapShot(model);
+                poule.OptimizeHomeVisitor(model);
+                poule.OptimizeHomeVisitorReverse(model);
+                poule.CopyAndClearSnapShot(model);
+                model.Changed();
             }
         }
 
@@ -319,18 +322,27 @@ namespace CompetitionCreator
         private void UpdateWeekMapping()
         {
             weekmapping.Clear();
-            DateTime start = poule.weekends.Min(w => w.Saturday).AddDays(-7);
-            DateTime end = poule.weekends.Max(w => w.Saturday).AddDays(7);
+            DateTime start = poule.weekendsFirst.Min(w => w.Saturday).AddDays(-7);
+            DateTime end = poule.weekendsSecond.Max(w => w.Saturday).AddDays(7);
             for (DateTime date = start; date < end; date = date.AddDays(7))
             {
                 Weekend weekend = new Weekend(date);
                 int index = 0;
-                for (int j = 0; j < poule.weekends.Count; j++)
+                int k = 0;
+                for (int j = 0; j < poule.weekendsFirst.Count; j++, k++)
                 {
-                    if (poule.weekends[j].Saturday == date)
+                    if (poule.weekendsFirst[j].Saturday == date)
                     {
-                        weekend = poule.weekends[j];
-                        index = j+1;
+                        weekend = poule.weekendsFirst[j];
+                        index = k + 1;
+                    }
+                }
+                for (int j = 0; j < poule.weekendsSecond.Count; j++, k++)
+                {
+                    if (poule.weekendsSecond[j].Saturday == date)
+                    {
+                        weekend = poule.weekendsSecond[j];
+                        index = k + 1;
                     }
                 }
                 weekmapping.Add(weekend, index);
@@ -352,15 +364,16 @@ namespace CompetitionCreator
             }
             else
             {
-                KeyValuePair<Weekend, int> kvp1 = (KeyValuePair<Weekend, int>)objectListView3.SelectedObjects[0];
+                /*KeyValuePair<Weekend, int> kvp1 = (KeyValuePair<Weekend, int>)objectListView3.SelectedObjects[0];
                 KeyValuePair<Weekend, int> kvp2 = (KeyValuePair<Weekend, int>)objectListView3.SelectedObjects[1];
                 int index1 = kvp1.Value - 1;
                 int index2 = kvp2.Value - 1;
                 if (index1 >= 0) poule.weekends[index1] = kvp2.Key;
                 if (index2 >= 0) poule.weekends[index2] = kvp1.Key;
                 UpdateWeekMapping();
-                klvv.Evaluate(null);
-                klvv.Changed();
+                model.Evaluate(null);
+                model.Changed();
+                 */
             }
         }
         private void objectListView3_CellClick(object sender, CellClickEventArgs e)
@@ -374,6 +387,24 @@ namespace CompetitionCreator
                     constraints.AddRange(kvp.Key.conflictConstraints);
                 }
                 state.ShowConstraints(constraints);
+            }
+        }
+        private void optimizeMatch_Click(object sender, EventArgs e)
+        {
+            if (poule.imported)
+            {
+                System.Windows.Forms.MessageBox.Show("Not allowed to change home/visit for imported poules");
+            }
+            else if (poule.optimizableMatch == false)
+            {
+                System.Windows.Forms.MessageBox.Show("Not allowed to change individual match");
+            }
+            else
+            {
+                poule.SnapShot(model);
+                poule.OptimizeIndividualMatches(model);
+                poule.CopyAndClearSnapShot(model);
+                model.Changed();
             }
         }
 
@@ -409,13 +440,12 @@ namespace CompetitionCreator
         {
             IProgress intf = (IProgress)sender;
             intf.SetText("Optimizing team - ("+optimizeTeam.name+")");
-            poule.SnapShot(klvv);
-            poule.OptimizeTeam(klvv, intf, optimizeTeam);
+            poule.OptimizeTeam(model, intf, optimizeTeam);
         }
         private void OptimizeCompleted(object sender, MyEventArgs e)
         {
-            klvv.Evaluate(null);
-            klvv.Changed();
+            model.Evaluate(null);
+            model.Changed();
         }
 
         private void button10_Click(object sender, EventArgs e)
@@ -429,11 +459,12 @@ namespace CompetitionCreator
         {
             IProgress intf = (IProgress)sender;
             intf.SetText("Optimizing poule - " + poule.serie.name + poule.name);
-            poule.SnapShot(klvv);
-            poule.OptimizeTeamAssignment(klvv, intf);
-            poule.OptimizeHomeVisitor(klvv);
-            poule.OptimizeWeekends(klvv, intf);
-            klvv.Evaluate(null);
+            poule.SnapShot(model);
+            poule.OptimizeTeamAssignment(model, intf);
+            poule.OptimizeHomeVisitor(model);
+            poule.OptimizeWeekends(model, intf);
+            poule.CopyAndClearSnapShot(model);
+            model.Evaluate(null);
             if (intf.Cancelled()) return;
         }
 
@@ -448,31 +479,14 @@ namespace CompetitionCreator
         {
             IProgress intf = (IProgress)sender;
             intf.SetText("Analysing poule - " + poule.serie.name + poule.name);
-            poule.SnapShot(klvv);
-            poule.AnalyzeTeamAssignment(klvv, intf);
-            klvv.Evaluate(null);
+            poule.SnapShot(model);
+            poule.AnalyzeTeamAssignment(model, intf);
+            poule.CopyAndClearSnapShot(model);
+            model.Evaluate(null);
             if (intf.Cancelled()) return;
 
         }
 
-        private void button12_Click(object sender, EventArgs e)
-        {
-            optimizeTeam = (Team)objectListView1.SelectedObject;
-            ProgressDialog diag = new ProgressDialog();
-            diag.WorkFunction += AnalyzeAndOptimizePoule;
-            diag.CompletionFunction += OptimizeCompleted;
-            diag.Start("Analyzing", null);
-        }
-        private void AnalyzeAndOptimizePoule(object sender, MyEventArgs e)
-        {
-            IProgress intf = (IProgress)sender;
-            intf.SetText("Analysing + Optimizing - " + poule.serie.name + poule.name);
-            poule.SnapShot(klvv);
-            poule.AnalyzeAndOptimizeTeamAssignment(klvv, intf);
-            klvv.Evaluate(null);
-            if (intf.Cancelled()) return;
-
-        }
 
         private void button13_Click(object sender, EventArgs e)
         {
@@ -486,29 +500,12 @@ namespace CompetitionCreator
             }
             else
             {
-                poule.SnapShot(klvv);
-                poule.OptimizeHomeVisitorReverse(klvv);
-                klvv.Changed();
+                poule.SnapShot(model);
+                poule.OptimizeHomeVisitorReverse(model);
+                poule.CopyAndClearSnapShot(model);
+                model.Changed();
             }
         }
 
-        private void button14_Click(object sender, EventArgs e)
-        {
-            optimizeTeam = (Team)objectListView1.SelectedObject;
-            ProgressDialog diag = new ProgressDialog();
-            diag.WorkFunction += AnalyzeAndOptimizeWeekendAndHomeVisit;
-            diag.CompletionFunction += OptimizeCompleted;
-            diag.Start("Analyzing", null);
-        }
-        private void AnalyzeAndOptimizeWeekendAndHomeVisit(object sender, MyEventArgs e)
-        {
-            IProgress intf = (IProgress)sender;
-            intf.SetText("Analysing + Optimizing (weekends) - " + poule.serie.name + poule.name);
-            poule.SnapShot(klvv);
-            poule.AnalyzeAndOptimizeWeekends(klvv, intf);
-            klvv.Evaluate(null);
-            if (intf.Cancelled()) return;
-
-        }
     }
 }

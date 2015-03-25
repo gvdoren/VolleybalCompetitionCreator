@@ -67,6 +67,7 @@
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
+            this.olvColumn18 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
@@ -99,6 +100,7 @@
             this.objectListView1.AllColumns.Add(this.olvColumn7);
             this.objectListView1.AllColumns.Add(this.olvColumn0);
             this.objectListView1.AllColumns.Add(this.olvColumn14);
+            this.objectListView1.AllColumns.Add(this.olvColumn18);
             this.objectListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -111,7 +113,8 @@
             this.olvColumn5,
             this.olvColumn3,
             this.olvColumn0,
-            this.olvColumn14});
+            this.olvColumn14,
+            this.olvColumn18});
             this.objectListView1.FullRowSelect = true;
             this.objectListView1.GridLines = true;
             this.objectListView1.HasCollapsibleGroups = false;
@@ -494,6 +497,12 @@
             this.label2.TabIndex = 11;
             this.label2.Text = "Special Team Requirements:";
             // 
+            // olvColumn18
+            // 
+            this.olvColumn18.AspectName = "fixedNumber";
+            this.olvColumn18.CellPadding = null;
+            this.olvColumn18.Text = "Fixed Number";
+            // 
             // InschrijvingenView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -568,6 +577,7 @@
         private BrightIdeasSoftware.OLVColumn olvColumn17;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Label label2;
+        private BrightIdeasSoftware.OLVColumn olvColumn18;
 
     }
 }

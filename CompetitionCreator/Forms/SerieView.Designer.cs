@@ -264,6 +264,7 @@
             this.webBrowser1.Location = new System.Drawing.Point(0, 280);
             this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowser1.Name = "webBrowser1";
+            this.webBrowser1.ScriptErrorsSuppressed = true;
             this.webBrowser1.ScrollBarsEnabled = false;
             this.webBrowser1.Size = new System.Drawing.Size(491, 327);
             this.webBrowser1.TabIndex = 8;

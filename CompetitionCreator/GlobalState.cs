@@ -10,7 +10,6 @@ namespace CompetitionCreator
         public List<Club> selectedClubs = new List<Club>();
         public Constraint selectedConstraint = null;
         public List<Constraint> showConstraints = new List<Constraint>();
-        public Model comparisonKlvv = null;
         public bool comparison = false;
         public void ShowConstraints(List<Constraint> constraints)
         {
@@ -45,10 +44,10 @@ namespace CompetitionCreator
 
     public class MyEventArgs : EventArgs
     {
-        public Model klvv;
-        public MyEventArgs(Model klvv)
+        public Model model;
+        public MyEventArgs(Model model)
         {
-            this.klvv = klvv;
+            this.model = model;
         }
     }
 }

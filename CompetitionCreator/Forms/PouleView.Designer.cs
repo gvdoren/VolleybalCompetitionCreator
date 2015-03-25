@@ -61,6 +61,7 @@
             this.button12 = new System.Windows.Forms.Button();
             this.button13 = new System.Windows.Forms.Button();
             this.button14 = new System.Windows.Forms.Button();
+            this.button15 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView3)).BeginInit();
@@ -390,7 +391,6 @@
             this.button12.Text = "A + O";
             this.button12.UseVisualStyleBackColor = true;
             this.button12.Visible = false;
-            this.button12.Click += new System.EventHandler(this.button12_Click);
             // 
             // button13
             // 
@@ -414,7 +414,16 @@
             this.button14.Text = "A + O";
             this.button14.UseVisualStyleBackColor = true;
             this.button14.Visible = false;
-            this.button14.Click += new System.EventHandler(this.button14_Click);
+            // 
+            // button15
+            // 
+            this.button15.Location = new System.Drawing.Point(263, 310);
+            this.button15.Name = "button15";
+            this.button15.Size = new System.Drawing.Size(107, 23);
+            this.button15.TabIndex = 6;
+            this.button15.Text = "Optimize Match";
+            this.button15.UseVisualStyleBackColor = true;
+            this.button15.Click += new System.EventHandler(this.optimizeMatch_Click);
             // 
             // PouleView
             // 
@@ -431,6 +440,7 @@
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button14);
             this.Controls.Add(this.button5);
+            this.Controls.Add(this.button15);
             this.Controls.Add(this.button8);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.objectListView2);
@@ -487,5 +497,6 @@
         private System.Windows.Forms.Button button12;
         private System.Windows.Forms.Button button13;
         private System.Windows.Forms.Button button14;
+        private System.Windows.Forms.Button button15;
     }
 }

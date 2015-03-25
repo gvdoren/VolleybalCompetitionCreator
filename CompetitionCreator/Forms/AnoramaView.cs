@@ -14,17 +14,17 @@ namespace CompetitionCreator
 {
     public partial class AnoramaView : DockContent
     {
-        Model klvv = null;
+        Model model = null;
         GlobalState state;
         List<Weekend> weekends = new List<Weekend>();
-        public AnoramaView(Model klvv, GlobalState state)
+        public AnoramaView(Model model, GlobalState state)
         {
-            this.klvv = klvv;
+            this.model = model;
             this.state = state;
             InitializeComponent();
-            DateTime current = klvv.annorama.start;
+            DateTime current = model.annorama.start;
             Weekend weekend = new Weekend(current);
-            while (weekend.Saturday < klvv.annorama.end)
+            while (weekend.Saturday < model.annorama.end)
             {
                 weekends.Add(weekend);
                 current = current.AddDays(7);
@@ -37,7 +37,7 @@ namespace CompetitionCreator
         {
             while (objectListView1.AllColumns.Count > 1) objectListView1.AllColumns.RemoveAt(1);
             while (objectListView1.Columns.Count > 1) objectListView1.Columns.RemoveAt(1);
-            foreach(AnnoramaReeks reeks in klvv.annorama.reeksen)
+            foreach(AnnoramaReeks reeks in model.annorama.reeksen)
             {
                 BrightIdeasSoftware.OLVColumn olvColumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
                 objectListView1.AllColumns.Add(olvColumn);
@@ -52,15 +52,15 @@ namespace CompetitionCreator
                 olvColumn.AutoResize(ColumnHeaderAutoResizeStyle.HeaderSize);
             }
             objectListView1.BuildList(true);
-            label1.Text = klvv.annorama.title;
+            label1.Text = model.annorama.title;
         }
         private void button1_Click(object sender, EventArgs e)
         {
             DialogResult dialogResult = MessageBox.Show("Bij het creeren van een nieuwe anorama gaat de oude verloren. Wil je dit?", "Nieuwe anorama", MessageBoxButtons.YesNo);
             if (dialogResult == DialogResult.Yes)
             {
-                klvv.annorama = new Annorama(klvv.year);
-                klvv.annorama.WriteXML(klvv.year);
+                model.annorama = new Annorama(model.year);
+                model.annorama.WriteXML(model.year);
             }
             UpdateForm();
         }
@@ -68,8 +68,8 @@ namespace CompetitionCreator
         private void objectListView1_SubItemChecking_1(object sender, SubItemCheckingEventArgs e)
         {
             Weekend weekend = (Weekend)e.RowObject;
-            klvv.annorama.reeksen[e.Column.Index-1].weekends.Find(w => w.weekend.Saturday == weekend.Saturday).match = (e.NewValue == CheckState.Checked); 
-            klvv.annorama.WriteXML(klvv.year);
+            model.annorama.reeksen[e.Column.Index-1].weekends.Find(w => w.weekend.Saturday == weekend.Saturday).match = (e.NewValue == CheckState.Checked); 
+            model.annorama.WriteXML(model.year);
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -85,9 +85,9 @@ namespace CompetitionCreator
                     int count = 0;
                     if (int.TryParse(form1.GetInputString(), out count))
                     {
-                        klvv.annorama.CreateReeks(form.GetInputString(),count);
+                        model.annorama.CreateReeks(form.GetInputString(),count);
                         UpdateForm();
-                        klvv.annorama.WriteXML(klvv.year);
+                        model.annorama.WriteXML(model.year);
                     }
                 }
             }

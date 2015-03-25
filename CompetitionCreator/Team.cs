@@ -15,6 +15,7 @@ namespace CompetitionCreator
         public Club club { get; set; }
         public string Ranking { get; set;  }
         public SporthallClub sporthal { get; set; }
+        public int fixedNumber = -1;
         public Poule poule = null;
         public Serie serie = null;
         public string seriePouleName { get { return serie.name + ((poule!= null)?poule.name:"-"); } }
@@ -106,24 +107,24 @@ namespace CompetitionCreator
         {
             return name != "----";
         }
-        public void DeleteTeam(Model klvv)
+        public void DeleteTeam(Model model)
         {
             deleted = true; // only keep it in the club administration.
             if (poule != null) poule.RemoveTeam(this);
             //if (serie != null) serie.RemoveTeam(this);
         }
-        public void UndeleteTeam(Model klvv)
+        public void UndeleteTeam(Model model)
         {
             deleted = false;
             //serie.AddTeam(this);
-            klvv.AddTeam(this);
+            model.AddTeam(this);
         }
-        public void RemoveTeam(Model klvv)
+        public void RemoveTeam(Model model)
         {
             if (club != null)  club.RemoveTeam(this);
             if (poule != null) poule.RemoveTeam(this);
             //if (serie != null) serie.RemoveTeam(this);
-            klvv.RemoveTeam(this);
+            model.RemoveTeam(this);
         }
         public List<DateTime> plannedMatches = new List<DateTime>();
        

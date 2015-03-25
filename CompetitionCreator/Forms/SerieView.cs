@@ -16,45 +16,47 @@ namespace CompetitionCreator
 {
     public partial class SerieView : DockContent
     {
-        Model klvv = null;
+        Model model = null;
         GlobalState state;
         Serie serie = null;
         Poule poule = null;
         List<Team> teams = new List<Team>();
         string firstHalf;
         string secondHalf;
-        public SerieView(Model klvv, GlobalState state)
+        string noLatLng;
+        public SerieView(Model model, GlobalState state)
         {
-            this.klvv = klvv;
+            this.model = model;
             this.state = state;
             InitializeComponent();
-            objectListView1.SetObjects(klvv.series);
-            foreach (AnnoramaReeks reeks in klvv.annorama.reeksen)
+            objectListView1.SetObjects(model.series);
+            foreach (AnnoramaReeks reeks in model.annorama.reeksen)
             {
                 comboBox1.Items.Add(reeks.Name);
             }
             if (comboBox1.Items.Count > 0) comboBox1.SelectedIndex = 0;
-            klvv.OnMyChange += state_OnMyChange;
+            model.OnMyChange += state_OnMyChange;
             state.OnMyChange += state_OnMyChange;
             firstHalf = File.ReadAllText(@"html/html_first.html");
             secondHalf = File.ReadAllText(@"html/html_second.html");
+            noLatLng = File.ReadAllText(@"html/no_latlng.html");
             UpdateWebBrowser();
             UpdatePouleList();
         }
         public void state_OnMyChange(object source, MyEventArgs e)
         {
-            if (e.klvv != null)
+            if (e.model != null)
             {
-                klvv.OnMyChange -= state_OnMyChange;
-                klvv = e.klvv;
-                klvv.OnMyChange += state_OnMyChange;
+                model.OnMyChange -= state_OnMyChange;
+                model = e.model;
+                model.OnMyChange += state_OnMyChange;
             }
             if (InvokeRequired)
             {
                 this.Invoke(new Action(() => state_OnMyChange(source, e)));
                 return;
             }
-            lock (klvv)
+            lock (model)
             {
                 UpdateSerieList();
                 UpdatePouleList();
@@ -64,7 +66,7 @@ namespace CompetitionCreator
         }
         void UpdateSerieList()
         {
-            objectListView1.SetObjects(klvv.series,true);
+            objectListView1.SetObjects(model.series, true);
             if (serie != null)
             {
                 objectListView1.SelectedObject = serie;
@@ -101,7 +103,7 @@ namespace CompetitionCreator
             {
                 objectListView3.SetObjects(null);
             }
-            
+
             objectListView3.BuildList(false);
             objectListView3.SelectedObjects = teams;
             objectListView3_SelectionChanged(null, null);
@@ -116,10 +118,12 @@ namespace CompetitionCreator
                 {
                     webBrowser1.Document.Write(string.Empty);
                 }
+                webBrowser1.DocumentText = html;
             }
             catch (Exception)
-            { } // do nothing with this
-            webBrowser1.DocumentText = html;
+            {
+                MessageBox.Show("Error showing html. Possible cause: not internet connection.");
+            } // do nothing with this
         }
         void UpdateWebBrowser()
         {
@@ -127,8 +131,10 @@ namespace CompetitionCreator
             // create list of sporthalls
             if (serie != null)
             {
+                bool geoInfo = false;
                 string markers = "";
                 bool first = true;
+                button4.Enabled = true;
                 foreach (Team t in serie.teams)
                 {
                     string letter = "X";
@@ -142,14 +148,23 @@ namespace CompetitionCreator
                         double shift = 0.005 * (sl.Count(s => s == t.sporthal.sporthall));
                         double lng = t.sporthal.lng;
                         lat += shift;
-                        lng += shift*4;
+                        lng += shift * 4;
                         if (first == false) markers += ',';
                         markers += string.Format("['{0}',{1},{2},'{3}']\n", t.name, lat.ToString(CultureInfo.InvariantCulture), lng.ToString(CultureInfo.InvariantCulture), letter);
                         first = false;
                         sl.Add(t.sporthal.sporthall);
+                        geoInfo = true;
+                    }
+                    else
+                    {
+                        button4.Enabled = false;
                     }
                 }
-                DisplayHtml(firstHalf + markers + secondHalf);
+                if (geoInfo) DisplayHtml(firstHalf + markers + secondHalf);
+                else
+                {
+                    DisplayHtml(noLatLng);
+                }
             }
         }
         private void objectListView1_SelectionChanged(object sender, EventArgs e)
@@ -170,7 +185,7 @@ namespace CompetitionCreator
         private void objectListView2_SelectionChanged(object sender, EventArgs e)
         {
             button2.Enabled = (objectListView2.SelectedObjects.Count >= 1);
-            button3.Enabled = (objectListView2.SelectedObjects.Count == 1 && objectListView3.SelectedObjects.Count>0);
+            button3.Enabled = (objectListView2.SelectedObjects.Count == 1 && objectListView3.SelectedObjects.Count > 0);
             poule = (Poule)objectListView2.SelectedObject;
         }
         private void objectListView3_SelectionChanged(object sender, EventArgs e)
@@ -187,7 +202,7 @@ namespace CompetitionCreator
 
         private void button2_Click(object sender, EventArgs e)
         {// delete poule
-            
+
             foreach (Poule p in objectListView2.SelectedObjects)
             {
                 List<Team> tempList = new List<Team>(p.teams);
@@ -196,13 +211,13 @@ namespace CompetitionCreator
                     p.RemoveTeam(team);
                 }
                 serie.poules.Remove(p);
-                klvv.poules.Remove(p);
+                model.poules.Remove(p);
             }
             //UpdateSerieList();
             //UpdatePouleList();
-            klvv.RenewConstraints();
-            klvv.Evaluate(null);
-            klvv.Changed();
+            model.RenewConstraints();
+            model.Evaluate(null);
+            model.Changed();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -216,21 +231,41 @@ namespace CompetitionCreator
                 {
                     if (p.name == Letter.ToString()) Letter++;
                 }
-                List<AnnoramaWeekend> weekends = klvv.annorama.GetReeks(comboBox1.SelectedItem.ToString()).weekends;
+                List<AnnoramaWeekend> weekends = model.annorama.GetReeks(comboBox1.SelectedItem.ToString()).weekends;
 
-                int teamCount = int.Parse(comboBox1.SelectedItem.ToString());
-                Poule poule = new Poule(Letter.ToString(), teamCount,serie);
-                foreach (AnnoramaWeekend we in weekends)
-                {
-                    if(we.match) poule.weekends.Add(new Weekend(we.weekend.Saturday));
+                int teamCount = model.annorama.GetReeks(comboBox1.SelectedItem.ToString()).Count;
+                Poule poule = new Poule(Letter.ToString(), teamCount, serie);
+                int matchWeekends = weekends.Count(we => we.match == true);
+                int k = 0;
+                int i = 0;
+                while(k<matchWeekends/2)
+                { 
+                    AnnoramaWeekend we = weekends[i];
+                    if (we.match)
+                    {
+                        poule.weekendsFirst.Add(new Weekend(we.weekend.Saturday));
+                        k++;
+                    }
+                    i++;
                 }
+                while(k<matchWeekends)
+                { 
+                    AnnoramaWeekend we = weekends[i];
+                    if (we.match)
+                    {
+                        poule.weekendsSecond.Add(new Weekend(we.weekend.Saturday));
+                        k++;
+                    }
+                    i++;
+                }
+
                 serie.poules.Add(poule);
                 poule.CreateMatches();
                 //    poule.CreateMatchesFromSchemaFiles();
-                klvv.poules.Add(poule);
-                klvv.RenewConstraints();
-                klvv.Evaluate(null);
-                klvv.Changed();
+                model.poules.Add(poule);
+                model.RenewConstraints();
+                model.Evaluate(null);
+                model.Changed();
             }
         }
 
@@ -240,9 +275,9 @@ namespace CompetitionCreator
             {
                 poule.AddTeam(team);
             }
-            klvv.RenewConstraints();
-            klvv.Evaluate(null);
-            klvv.Changed();
+            model.RenewConstraints();
+            model.Evaluate(null);
+            model.Changed();
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -333,18 +368,18 @@ namespace CompetitionCreator
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
             }
-            klvv.RenewConstraints();
-            klvv.Evaluate(null);
-            klvv.Changed();
+            model.RenewConstraints();
+            model.Evaluate(null);
+            model.Changed();
         }
 
         private void SerieView_FormClosed(object sender, FormClosedEventArgs e)
         {
-            klvv.OnMyChange -= state_OnMyChange;
+            model.OnMyChange -= state_OnMyChange;
             state.OnMyChange -= state_OnMyChange;
         }
 
@@ -379,8 +414,8 @@ namespace CompetitionCreator
                             {
                                 newPoule.AddTeam(team);
                             }
-                            klvv.Evaluate(null);
-                            klvv.Changed();
+                            model.Evaluate(null);
+                            model.Changed();
                         }
                     }
                     //objectListView1.BuildList(true);
@@ -395,15 +430,15 @@ namespace CompetitionCreator
         {
             Poule poule = (Poule)e.Model;
             if (poule.TeamCount > poule.maxTeams) e.Item.BackColor = Color.Red;
-            if (poule.TeamCount <= poule.maxTeams-2) e.Item.BackColor = Color.Orange;
+            if (poule.TeamCount <= poule.maxTeams - 2) e.Item.BackColor = Color.Orange;
         }
 
         private void objectListView3_FormatCell(object sender, FormatCellEventArgs e)
         {
-            if (e.ColumnIndex == 1) 
-            { 
+            if (e.ColumnIndex == 1)
+            {
                 Team team = (Team)e.Model;
-                if (team.poule == null) e.SubItem.BackColor = Color.Orange; 
+                if (team.poule == null) e.SubItem.BackColor = Color.Orange;
             }
         }
 
@@ -414,7 +449,7 @@ namespace CompetitionCreator
             {
                 if (team.poule != null) team.poule.RemoveTeam(team);
                 tms.Add(team);
-            }            
+            }
             // 
             tms.Sort(delegate(Team t1, Team t2)
             {
@@ -460,20 +495,20 @@ namespace CompetitionCreator
                 return p1.name.CompareTo(p2.name);
             });
             int it = 0;
-            foreach(Poule p in poules)
+            foreach (Poule p in poules)
             {
                 double avg = Math.Ceiling(((double)remainingTeams) / remainingPoules);
-                for(int i=0;i<avg;i++)
+                for (int i = 0; i < avg; i++)
                 {
                     p.AddTeam(tms[it++]);
                     remainingTeams--;
                 }
                 remainingPoules--;
             }
- 
-            klvv.RenewConstraints();
-            klvv.Evaluate(null);
-            klvv.Changed();
+
+            model.RenewConstraints();
+            model.Evaluate(null);
+            model.Changed();
         }
 
         private void objectListView1_FormatRow(object sender, FormatRowEventArgs e)
@@ -505,14 +540,15 @@ namespace CompetitionCreator
             DialogResult dialogResult = MessageBox.Show(s, "Delete team", MessageBoxButtons.YesNo);
             if (dialogResult == DialogResult.Yes)
             {
-                t.DeleteTeam(klvv);
+                t.DeleteTeam(model);
             }
 
-            klvv.RenewConstraints();
-            klvv.Evaluate(null);
-            klvv.Changed();
+            model.RenewConstraints();
+            model.Evaluate(null);
+            model.Changed();
         }
 
-    
+
     }
 }
+ 
