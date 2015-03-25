@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 
 namespace CompetitionCreator
 {
+    //bla
     //{"Id":"11","Name":"Avoc Achel","LogoId":"11"}
     public class Club: ConstraintAdmin
     {
