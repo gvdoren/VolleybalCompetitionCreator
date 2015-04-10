@@ -152,11 +152,6 @@ namespace CompetitionCreator
             return state.showConstraints.Contains(constraint) || constraint.error;
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            objectListView1.BuildList(true);
-
-        }
 
         private void objectListView1_SelectionChanged(object sender, EventArgs e)
         {

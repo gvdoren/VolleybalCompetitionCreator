@@ -41,20 +41,23 @@
             this.objectListView1.AllColumns.Add(this.olvColumn1);
             this.objectListView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.objectListView1.CellEditActivation = BrightIdeasSoftware.ObjectListView.CellEditActivateMode.SingleClick;
             this.objectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumn1});
+            this.objectListView1.FullRowSelect = true;
             this.objectListView1.GridLines = true;
             this.objectListView1.Location = new System.Drawing.Point(12, 38);
+            this.objectListView1.MultiSelect = false;
             this.objectListView1.Name = "objectListView1";
             this.objectListView1.OwnerDraw = true;
             this.objectListView1.ShowGroups = false;
-            this.objectListView1.ShowImagesOnSubItems = true;
             this.objectListView1.Size = new System.Drawing.Size(522, 578);
             this.objectListView1.TabIndex = 0;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
-            this.objectListView1.UseSubItemCheckBoxes = true;
             this.objectListView1.View = System.Windows.Forms.View.Details;
-            this.objectListView1.SubItemChecking += new System.EventHandler<BrightIdeasSoftware.SubItemCheckingEventArgs>(this.objectListView1_SubItemChecking_1);
+            this.objectListView1.CellClick += new System.EventHandler<BrightIdeasSoftware.CellClickEventArgs>(this.objectListView1_CellClick);
+            this.objectListView1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.objectListView1_MouseClick);
+            this.objectListView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.objectListView1_MouseDoubleClick);
             // 
             // olvColumn1
             // 
@@ -62,7 +65,7 @@
             this.olvColumn1.AspectToStringFormat = "{0:dd-MM-yyyy}";
             this.olvColumn1.CellPadding = null;
             this.olvColumn1.FillsFreeSpace = true;
-            this.olvColumn1.Text = "Weekend";
+            this.olvColumn1.Text = "Week";
             // 
             // button1
             // 

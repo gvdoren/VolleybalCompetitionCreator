@@ -231,34 +231,42 @@ namespace CompetitionCreator
                 {
                     if (p.name == Letter.ToString()) Letter++;
                 }
-                List<AnnoramaWeekend> weekends = model.annorama.GetReeks(comboBox1.SelectedItem.ToString()).weekends;
-
-                int teamCount = model.annorama.GetReeks(comboBox1.SelectedItem.ToString()).Count;
+                AnnoramaReeks reeks = model.annorama.GetReeks(comboBox1.SelectedItem.ToString());
+                if(reeks == null) return;
+                List<AnnoramaWeek> weeks =reeks.weeks;
+                int teamCount = reeks.Count;
                 Poule poule = new Poule(Letter.ToString(), teamCount, serie);
-                int matchWeekends = weekends.Count(we => we.match == true);
+                int matchWeeks = 0;
+                weeks.ForEach(w => matchWeeks += w.weekNrs.Count);
+                if (matchWeeks < (teamCount - 1) * 2)
+                {
+                    MessageBox.Show("Deze annorama reeks heeft te weinig wedstrijden. ");
+                    return;
+                }
+                // Create the week lists
                 int k = 0;
-                int i = 0;
-                while(k<matchWeekends/2)
-                { 
-                    AnnoramaWeekend we = weekends[i];
-                    if (we.match)
-                    {
-                        poule.weekendsFirst.Add(new Weekend(we.weekend.Saturday));
-                        k++;
-                    }
-                    i++;
+                while (k < matchWeeks / 2)
+                {
+                    poule.weeksFirst.Add(null);
+                    k++;
                 }
-                while(k<matchWeekends)
-                { 
-                    AnnoramaWeekend we = weekends[i];
-                    if (we.match)
-                    {
-                        poule.weekendsSecond.Add(new Weekend(we.weekend.Saturday));
-                        k++;
-                    }
-                    i++;
+                while (k < matchWeeks)
+                {
+                    poule.weeksSecond.Add(null);
+                    k++;
                 }
-
+                // Assign the correct weeks
+                foreach(AnnoramaWeek anWeek in reeks.weeks)
+                {
+                    foreach(int i in anWeek.weekNrs)
+                    {
+                        Week newWeek = new Week(anWeek.week.Saturday);
+                        // hack to allow two weeks in one week for VVB
+                        if (anWeek.weekNrs.Count > 1 && i == anWeek.weekNrs[0]) newWeek.dayOverruled = true;
+                        if (i <= poule.weeksFirst.Count) poule.weeksFirst[i - 1] = newWeek;
+                        else poule.weeksSecond[i - 1 - poule.weeksFirst.Count] = newWeek;
+                    }
+                }
                 serie.poules.Add(poule);
                 poule.CreateMatches();
                 //    poule.CreateMatchesFromSchemaFiles();

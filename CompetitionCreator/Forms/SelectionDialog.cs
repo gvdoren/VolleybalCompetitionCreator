@@ -21,7 +21,12 @@ namespace CompetitionCreator
         public SelectionDialog(List<Selection> list, bool multi = false)
         {
             InitializeComponent();
-            if (multi) SetMultiSelect();
+            if (multi)
+            {
+                SetMultiSelect();
+                this.objectListView1.DragSource = new BrightIdeasSoftware.SimpleDragSource();
+                this.objectListView1.DropSink = new BrightIdeasSoftware.RearrangingDropSink(false);
+            }
             objectListView1.SetObjects(list);
             if (multi)
             {

@@ -11,14 +11,14 @@ namespace CompetitionCreator
         public bool imported = false;
 
         public bool optimizable { get { return serie != null && serie.optimizableNumber && imported == false; } }
-        public bool optimizableWeekends { get { return serie != null && serie.optimizableWeekends && imported == false; } }
+        public bool optimizableWeeks { get { return serie != null && serie.optimizableWeeks && imported == false; } }
         public bool optimizableHomeVisit { get { return serie != null && serie.optimizableHomeVisit && imported == false; } }
         public bool optimizableMatch { get { return serie != null && serie.optimizableMatch && imported == false; } }
 
         public bool evaluated { get { return imported == false; } }
         List<Team> resultTeams = new List<Team>();
-        List<Weekend> resultWeekendsFirst = new List<Weekend>();
-        List<Weekend> resultWeekendsSecond = new List<Weekend>();
+        List<Week> resultWeeksFirst = new List<Week>();
+        List<Week> resultWeeksSecond = new List<Week>();
         List<Match> resultMatches = new List<Match>();
         public List<Constraint> relatedConstraints = new List<Constraint>();
         int minConflicts = 0;
@@ -90,8 +90,8 @@ namespace CompetitionCreator
             this.name = name; 
         }
         public string fullName { get { return serie.name + name; ;} }
-        public List<Weekend> weekendsFirst = new List<Weekend>();
-        public List<Weekend> weekendsSecond = new List<Weekend>();
+        public List<Week> weeksFirst = new List<Week>();
+        public List<Week> weeksSecond = new List<Week>();
         public int CalculateDistances(Team t1)
         {
             int distance = 0;
@@ -111,12 +111,6 @@ namespace CompetitionCreator
             return distance;
         }
         
-        public int FindWeekendNrInSchema(int year, int weekNr)
-        {
-            int index = weekendsFirst.FindIndex(w => w.WeekNr == weekNr && w.Year == year);
-            if(index<0) index = weekendsSecond.FindIndex(w => w.WeekNr == weekNr && w.Year == year);
-            return index;
-        }
         public List<Match> matches = new List<Match>();
         public List<Match> CopyMatches()
         {
@@ -138,65 +132,99 @@ namespace CompetitionCreator
         public void CalculateRelatedConstraints(Model model)
         {
             relatedConstraints = new List<Constraint>();
-            //foreach (Constraint con in model.constraints)
-            //{
-            //    if (con.poule == this) relatedConstraints.Add(con);
-            //}
             List<Club> clubs = new List<Club>();
-            
+            List<Poule> poules = new List<Poule>();
+            poules.Add(this);
             foreach (Team team in teams)
             {
                 if (clubs.Contains(team.club) == false) clubs.Add(team.club);
-                // related club (via the grouping (sharing sporthall))
-                if (team.club.groupingWithClub != null)
-                {
-                    Club relatedClub = team.club.groupingWithClub;
-                    if (clubs.Contains(relatedClub) == false) clubs.Add(relatedClub);
-                }
             }
             foreach (Constraint con in model.constraints)
             {
-                if (clubs.Contains(con.club) || 
-                    con.poule == this || 
-                    teams.Contains(con.team)  
-                    ) relatedConstraints.Add(con);
+                if (con.RelatedTo(clubs) ||
+                    con.RelatedTo(poules)||
+                    con.RelatedTo(teams))
+                {
+                    relatedConstraints.Add(con);
+                }
+            }
+            // Dan krijg je de teams+clubs die via een constraint afhankelijkheid beinvloed worden
+            List<Team> extraTeams = new List<Team>();
+            List<Club> extraClubs = new List<Club>();
+            List<Poule> extraPoules = new List<Poule>();
+            foreach (Constraint con in relatedConstraints)
+            {
+                List<Team> teams1 = con.RelatedTeams();
+                foreach (Team t in teams1)
+                {
+                    if (teams.Contains(t) == false) extraTeams.Add(t);
+                }
+                List<Club> clubs1 = con.RelatedClubs();
+                foreach (Club c in clubs1)
+                {
+                    if (clubs.Contains(c) == false) extraClubs.Add(c);
+                }
+                // Zijn related poules relevant????
+                /*
+                List<Poule> poules1 = con.RelatedPoules();
+                foreach (Poule c in poules1)
+                {
+                    if (poules.Contains(c) == false) extraClubs.Add(c);
+                }*/
+            }
+            foreach (Constraint con in model.constraints)
+            {
+                if (con.RelatedTo(extraClubs) ||
+                    con.RelatedTo(extraPoules) ||
+                    con.RelatedTo(extraTeams))
+                {
+                    if (relatedConstraints.Contains(con) == false)
+                    {
+                        relatedConstraints.Add(con);
+                    }
+                }
             }
 
         }
 
-        public void OptimizeWeekends(Model model, IProgress intf)
+        public void OptimizeWeeks(Model model, IProgress intf)
         {
             MakeDirty();
-            if (optimizableWeekends)
+            if (optimizableWeeks)
             {
                 //SnapShot(model);
                 if (conflict_cost > 0)
                 {
-                    if (weekendsFirst.Count > 5)//12)
+                    if (weeksFirst.Count > 5)//12)
                     {
-                        List<Weekend> result = new List<Weekend>(weekendsFirst);
-                        for (int i = 0; i < weekendsFirst.Count; i++)
+                        List<Week> result = new List<Week>(weeksFirst);
+                        for (int i = 0; i < weeksFirst.Count; i++)
                         {
-                            intf.Progress(i, (weekendsFirst.Count + weekendsSecond.Count));
-                            for (int j = i + 1; j < weekendsFirst.Count; j++)
+                            intf.Progress(i, (weeksFirst.Count + weeksSecond.Count));
+                            for (int j = i + 1; j < weeksFirst.Count; j++)
                             {
-                                Swap(weekendsFirst, i, j);
+                                Swap(weeksFirst, i, j);
                                 SnapShotIfImproved(model);
-                                Swap(weekendsFirst, i, j);
+                                Swap(weeksFirst, i, j); 
+                                if (intf.Cancelled()) break;
+
                             }
-                            weekendsFirst = resultWeekendsFirst;
+                            weeksFirst = resultWeeksFirst;
+                            if (intf.Cancelled()) break;
                         }
-                        result = new List<Weekend>(weekendsSecond);
-                        for (int i = 0; i < weekendsSecond.Count; i++)
+                        result = new List<Week>(weeksSecond);
+                        for (int i = 0; i < weeksSecond.Count; i++)
                         {
-                            intf.Progress(i, (weekendsFirst.Count + weekendsSecond.Count));
-                            for (int j = i + 1; j < weekendsSecond.Count; j++)
+                            intf.Progress(i, (weeksFirst.Count + weeksSecond.Count));
+                            for (int j = i + 1; j < weeksSecond.Count; j++)
                             {
-                                Swap(weekendsSecond, i, j);
+                                Swap(weeksSecond, i, j);
                                 SnapShotIfImproved(model);
-                                Swap(weekendsSecond, i, j);
+                                Swap(weeksSecond, i, j);
+                                if (intf.Cancelled()) break;
                             }
-                            weekendsSecond = resultWeekendsSecond;
+                            weeksSecond = resultWeeksSecond;
+                            if (intf.Cancelled()) break;
                         }
                     }
                     else // full optimalisation
@@ -204,15 +232,15 @@ namespace CompetitionCreator
                         // First optimize first half
                         try
                         {
-                            List<Weekend> remaining = weekendsFirst;
-                            weekendsFirst = new List<Weekend>();
-                            GenerateWeekendCombination(model, ref weekendsFirst, remaining, intf);
-                            weekendsFirst = resultWeekendsFirst;
+                            List<Week> remaining = weeksFirst;
+                            weeksFirst = new List<Week>();
+                            GenerateWeekCombination(model, ref weeksFirst, remaining, intf);
+                            weeksFirst = resultWeeksFirst;
                             
-                            remaining = weekendsSecond;
-                            weekendsSecond = new List<Weekend>();
-                            GenerateWeekendCombination(model, ref weekendsSecond, remaining, intf);
-                            weekendsSecond = resultWeekendsSecond;
+                            remaining = weeksSecond;
+                            weeksSecond = new List<Week>();
+                            GenerateWeekCombination(model, ref weeksSecond, remaining, intf);
+                            weeksSecond = resultWeeksSecond;
                         }
                         catch { }
                     }
@@ -221,6 +249,10 @@ namespace CompetitionCreator
         }
         public bool SnapShotIfImproved(Model model, bool equalAllowed = true)
         {
+            if (snapShotTaken == false)
+            {
+                snapShotTaken = false;
+            }
             bool snapshot = false;
             model.EvaluateRelatedConstraints(this);
             int total = model.TotalConflicts();
@@ -233,8 +265,8 @@ namespace CompetitionCreator
             if(snapshot)
             {
                 resultTeams = new List<Team>(teams);
-                resultWeekendsFirst = new List<Weekend>(weekendsFirst);
-                resultWeekendsSecond = new List<Weekend>(weekendsSecond);
+                resultWeeksFirst = new List<Week>(weeksFirst);
+                resultWeeksSecond = new List<Week>(weeksSecond);
                 resultMatches = CopyMatches();
                 minConflicts = conflict_cost;
                 model.stateNotSaved = true; 
@@ -251,44 +283,49 @@ namespace CompetitionCreator
             snapShotTaken = true;
             model.Evaluate(null);
             resultTeams = new List<Team>(teams);
-            resultWeekendsFirst = new List<Weekend>(weekendsFirst);
-            resultWeekendsSecond = new List<Weekend>(weekendsSecond);
+            resultWeeksFirst = new List<Week>(weeksFirst);
+            resultWeeksSecond = new List<Week>(weeksSecond);
             resultMatches = CopyMatches();
             minConflicts = conflict_cost;
         }
         public void CopyAndClearSnapShot(Model model)
         {
+            if (snapShotTaken == false)
+            {
+                snapShotTaken = false;
+            }
+            snapShotTaken = false;
             teams = resultTeams;
-            weekendsFirst = resultWeekendsFirst;
-            weekendsSecond = resultWeekendsSecond;
+            weeksFirst = resultWeeksFirst;
+            weeksSecond = resultWeeksSecond;
             matches = resultMatches;
             snapShotTaken = false;
             model.Evaluate(null);
         }
 
-        private void Swap(List<Weekend> list, int i, int j)
+        private void Swap(List<Week> list, int i, int j)
         {
-            Weekend ti = list[i];
-            Weekend tj = list[j];
+            Week ti = list[i];
+            Week tj = list[j];
             list.RemoveAt(i);
             list.Insert(i, tj);
             list.RemoveAt(j);
             list.Insert(j, ti);
         }
-        private void GenerateWeekendCombination(Model model, ref List<Weekend> firstHalf, List<Weekend> remainingWeekends, IProgress intf)
+        private void GenerateWeekCombination(Model model, ref List<Week> firstHalf, List<Week> remainingWeeks, IProgress intf)
         {
-            if (remainingWeekends.Count > 0)
+            if (remainingWeeks.Count > 0)
             {
-                for (int i = 0; i < remainingWeekends.Count; i++)
+                for (int i = 0; i < remainingWeeks.Count; i++)
                 {
                     if (firstHalf.Count == 0)
                     {
-                        intf.Progress(i, remainingWeekends.Count - 1);
+                        intf.Progress(i, remainingWeeks.Count - 1);
                     }
-                    firstHalf.Add(remainingWeekends[0]);
-                    remainingWeekends.RemoveAt(0);
-                    GenerateWeekendCombination(model, ref firstHalf, remainingWeekends, intf);
-                    remainingWeekends.Add(firstHalf[firstHalf.Count - 1]);
+                    firstHalf.Add(remainingWeeks[0]);
+                    remainingWeeks.RemoveAt(0);
+                    GenerateWeekCombination(model, ref firstHalf, remainingWeeks, intf);
+                    remainingWeeks.Add(firstHalf[firstHalf.Count - 1]);
                     firstHalf.RemoveAt(firstHalf.Count - 1);
                 }
             }
@@ -297,7 +334,7 @@ namespace CompetitionCreator
                 SnapShotIfImproved(model);
                 if (intf.Cancelled())
                 {
-                    throw new Exception("Cancelled");
+                    //throw new Exception("Cancelled");
                 }
             }
 
@@ -317,8 +354,8 @@ namespace CompetitionCreator
                         {
                             intf.Progress(i, teams.Count);
                             Swap(teams, i, teamindex);
-                            OptimizeWeekends(model, intf);
-                            OptimizeHomeVisitor(model);
+                            OptimizeWeeks(model, intf);
+                            if (intf.Cancelled() == false) OptimizeHomeVisitor(model);
                             //SnapShotIfImproved(model, ref minConflict);
                             Swap(teams, i, teamindex); // swap back
                         }
@@ -356,7 +393,9 @@ namespace CompetitionCreator
                                     SnapShotIfImproved(model);
                                     Swap(teams, i, j);
                                 }
+                                if (intf.Cancelled()) break;
                             }
+                            if (intf.Cancelled()) break;
                         }
                     }
                     teams = resultTeams;
@@ -414,8 +453,8 @@ namespace CompetitionCreator
             MakeDirty();
             if (optimizableMatch)
             {
-                // Only meaningfull when having spare weekends
-                if (weekendsFirst.Count + weekendsSecond.Count > 2 * (TeamCount - 1))
+                // Only meaningfull when having spare weeks
+                if (weeksFirst.Count + weeksSecond.Count > 2 * (TeamCount - 1))
                 {
                     foreach (Match m in matches)
                     {
@@ -476,7 +515,7 @@ namespace CompetitionCreator
                 SnapShotIfImproved(model);
                 if (intf.Cancelled())
                 {
-                    throw new Exception("Cancelled");
+                    //throw new Exception("Cancelled");
                 }
             }
 

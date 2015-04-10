@@ -32,7 +32,7 @@ namespace CompetitionCreator
             comboBox2.SelectedIndex = 0;
             state.OnMyChange += new MyEventHandler(state_OnMyChange);
             if (state.selectedClubs.Count > 0) SetClub(state.selectedClubs[0]);
-            objectListView2.SetObjects(model.constraints.FindAll(c => (c as TeamConstraint) != null && c.club == club));
+            objectListView2.SetObjects(model.constraints.FindAll(c => (c as DateConstraint) != null && c.club == club));
                         
             //model.OnMyChange += state_OnMyChange;
         }
@@ -43,7 +43,8 @@ namespace CompetitionCreator
             dataGridView2.Rows.Clear();
             foreach (SporthallClub sporthal in club.sporthalls)
             {
-                dataGridView2.Rows.Add(sporthal);
+                if(sporthal.team!= null) dataGridView2.Rows.Add(sporthal,sporthal.team.Id);
+                else dataGridView2.Rows.Add(sporthal, "-");
 
             }
         }
@@ -102,9 +103,9 @@ namespace CompetitionCreator
                 sporthal = null;
                 dataGridView3.Enabled = false;
             }
-            UpdateWeekendsForm();
+            UpdateWeekForm();
         }
-        private void UpdateWeekendsForm()
+        private void UpdateWeekForm()
         {
             if (sporthal == null)
             {
@@ -121,8 +122,8 @@ namespace CompetitionCreator
                 dataGridView3.Rows.Clear();
                 for (DateTime current = begin; current < end; current = current.AddDays(7))
                 {
-                    Weekend w = new Weekend(current);
-                    dataGridView3.Rows.Add(w, sporthal.NotAvailable.Contains(w.Saturday) == false, sporthal.NotAvailable.Contains(w.Sunday) == false,w.EvenOdd.ToString());
+                    Week w = new Week(current);
+                    dataGridView3.Rows.Add(w, sporthal.NotAvailable.Contains(w.Saturday) == false, sporthal.NotAvailable.Contains(w.Sunday) == false,"-");
                 }
                 
             }
@@ -137,7 +138,7 @@ namespace CompetitionCreator
         }
         private void UpdateTeamConstraints()
         {
-            objectListView2.SetObjects(model.constraints.FindAll(c => (c as TeamConstraint) != null && c.club == club)); 
+            objectListView2.SetObjects(model.constraints.FindAll(c => (c as DateConstraint) != null && c.club == club)); 
             objectListView2.BuildList(true);
             
         }
@@ -151,7 +152,7 @@ namespace CompetitionCreator
             if (e.ColumnIndex > 0 && e.RowIndex >= 0)
             {
                 DataGridViewRow row = dataGridView3.Rows[e.RowIndex];
-                Weekend w = (Weekend)row.Cells[0].Value;
+                Week w = (Week)row.Cells[0].Value;
                 DataGridViewCheckBoxCell cell = (DataGridViewCheckBoxCell)row.Cells[e.ColumnIndex];
                 cell.TrueValue = true;
                 cell.FalseValue = false;
@@ -190,7 +191,7 @@ namespace CompetitionCreator
             if (e.ColumnIndex > 0 && e.RowIndex>=0)
             {
                 DataGridViewRow row = dataGridView3.Rows[e.RowIndex];
-                Weekend w = (Weekend)row.Cells[0].Value;
+                Week w = (Week)row.Cells[0].Value;
                 DataGridViewCheckBoxCell cell = (DataGridViewCheckBoxCell)row.Cells[e.ColumnIndex];
                 cell.TrueValue = true;
                 cell.FalseValue = false;
@@ -397,13 +398,13 @@ namespace CompetitionCreator
             Team team = (Team)objectListView1.SelectedObject;
             if (team != null)
             {
-                TeamConstraint prevCon = null;
+                DateConstraint prevCon = null;
                 foreach (Constraint c in model.constraints)
                 {
-                    TeamConstraint con = c as TeamConstraint;
+                    DateConstraint con = c as DateConstraint;
                     if (con != null && con.club == team.club) prevCon = con;
                 }
-                TeamConstraint tc = new TeamConstraint(team);
+                DateConstraint tc = new DateConstraint(team);
                 if (prevCon != null)
                 {
                     tc.date = prevCon.date;
@@ -411,7 +412,7 @@ namespace CompetitionCreator
                     tc.cost = prevCon.cost;
                 }
                 model.constraints.Add(tc);
-                objectListView2.SetObjects(model.constraints.FindAll(c => c.club == club && ((c as TeamConstraint) != null)));
+                objectListView2.SetObjects(model.constraints.FindAll(c => c.club == club && ((c as DateConstraint) != null)));
                 objectListView2.BuildList(true);
             }
             model.Evaluate(null);
@@ -424,6 +425,42 @@ namespace CompetitionCreator
             button4.Enabled = (objectListView1.SelectedObject != null && ((Team)objectListView1.SelectedObject).deleted == false);
             button5.Enabled = (objectListView1.SelectedObject != null && ((Team)objectListView1.SelectedObject).deleted == true);
             button5.Visible = (objectListView1.SelectedObject != null && ((Team)objectListView1.SelectedObject).deleted == true);
+            Team t = (Team)objectListView1.SelectedObject;
+            if(t!= null && t.sporthal!= null)
+            {
+                bool selected = false;
+                foreach(DataGridViewRow row in dataGridView2.Rows)
+                {
+                    SporthallClub sp = (SporthallClub)row.Cells[0].Value;
+                    if(t.sporthal == sp && sp.team == t)
+                    {
+                        dataGridView2.ClearSelection();
+                        row.Selected = true;
+                        dataGridView2.CurrentCell = row.Cells[0];
+                        selected = true;
+                    }
+                }
+                if(selected == false)
+                {
+                    foreach (DataGridViewRow row in dataGridView2.Rows)
+                    {
+                        SporthallClub sp = (SporthallClub)row.Cells[0].Value;
+                        if (t.sporthal == sp)
+                        {
+                            dataGridView2.ClearSelection();
+                            row.Selected = true;
+                            dataGridView2.CurrentCell = row.Cells[0];
+                            selected = true;
+                        }
+                    }
+
+                }
+                sporthal = t.sporthal;
+                dataGridView3.Enabled = true;
+            } else
+            {
+                dataGridView3.Enabled = false;
+            }
         }
 
         private void objectListView2_SelectionChanged(object sender, EventArgs e)
@@ -433,9 +470,9 @@ namespace CompetitionCreator
 
         private void button2_Click(object sender, EventArgs e)
         {
-            TeamConstraint tc = (TeamConstraint)objectListView2.SelectedObject;
+            DateConstraint tc = (DateConstraint)objectListView2.SelectedObject;
             model.constraints.Remove(tc);
-            objectListView2.SetObjects(model.constraints.FindAll(c => (c as TeamConstraint) != null && c.club == club));
+            objectListView2.SetObjects(model.constraints.FindAll(c => (c as DateConstraint) != null && c.club == club));
             objectListView1.BuildList(true);
             model.Evaluate(null);
             model.Changed();

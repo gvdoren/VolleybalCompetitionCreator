@@ -18,6 +18,7 @@ namespace CompetitionCreator
     public partial class Form1 : Form
     {
         Model model = null;
+        ImportExport importExport = new ImportExport();
         GlobalState state = new GlobalState();
         string BaseDirectory = "";
             
@@ -28,11 +29,17 @@ namespace CompetitionCreator
             {
                 Directory.CreateDirectory(BaseDirectory);
             }
-            //Weekend.Show();
-            //Weekend.Test();
             InitializeComponent();
             // reading club-constraints
             model = new Model(DateTime.Now.Year);
+            try
+            {
+                importExport.ImportSporthalls(model, XDocument.Load(MySettings.Settings.sporthalXML, LoadOptions.SetLineInfo|LoadOptions.SetBaseUri).Root);
+            }
+            catch
+            {
+                MessageBox.Show(string.Format("The specified URL for the sporthall distances ({0}) could not be found, is invalid, or no network connection is available. ", MySettings.Settings.sporthalXML));
+            }
             
             Text = string.Format("Competition Creator Tool ({0})", model.year);
 
@@ -64,7 +71,7 @@ namespace CompetitionCreator
             }
             model.OnMyChange += state_OnMyChange;
             state.OnMyChange += state_OnMyChange;
-            model.OpenLastProject();
+            importExport.OpenLastProject(model);
         }
         public void state_OnMyChange(object source, MyEventArgs e)
         {
@@ -257,7 +264,7 @@ namespace CompetitionCreator
         }
         public void saveFileDialog1_FileOk3(object sender, CancelEventArgs e)
         {
-            model.WriteProject(saveFileDialog1.FileName);
+            importExport.WriteProject(model, saveFileDialog1.FileName);
         }
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
@@ -272,7 +279,7 @@ namespace CompetitionCreator
         }
         public void openFileDialog1_FileOk1(object sender, CancelEventArgs e)
         {
-            model.LoadFullCompetition(openFileDialog1.FileName);
+            importExport.LoadFullCompetition(model, openFileDialog1.FileName);
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
@@ -286,6 +293,15 @@ namespace CompetitionCreator
                 if (ok)
                 {
                     Model newModel = new Model(year);
+                    try
+                    {
+                        importExport.ImportSporthalls(model, XDocument.Load(MySettings.Settings.sporthalXML, LoadOptions.SetLineInfo|LoadOptions.SetBaseUri).Root);
+                    }
+                    catch
+                    {
+                        MessageBox.Show(string.Format("The specified URL for the sporthall distances ({0}) could not be found, is invalid, or no network connection is available. ", MySettings.Settings.sporthalXML));
+                    }
+
                     model.Changed(newModel);
                     newModel.Evaluate(null);
                     newModel.Changed();
@@ -313,7 +329,7 @@ namespace CompetitionCreator
 
         private void saveToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            model.WriteProject(model.savedFileName);
+            importExport.WriteProject(model, model.savedFileName);
         }
 
         private void ImportSubscriptionsmodelbeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -322,14 +338,14 @@ namespace CompetitionCreator
             form.ShowDialog();
             if(form.Result == true)
             {
-                model.ImportTeamSubscriptions(XDocument.Load(form.GetInputString()).Root);
+                importExport.ImportTeamSubscriptions(model, XDocument.Load(form.GetInputString(), LoadOptions.SetLineInfo|LoadOptions.SetBaseUri).Root);
             }
         }
 
         private void clubRegistrationsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string MyDocuments = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            model.WriteClubConstraints(MyDocuments + "\\ClubRegistrations.xml");
+            importExport.WriteClubConstraints(model, MyDocuments + "\\ClubRegistrations.xml");
         }
 
         private void exportCompetitionToolStripMenuItem_Click(object sender, EventArgs e)
@@ -364,7 +380,7 @@ namespace CompetitionCreator
                     if (sel.selected) series.Add((Serie)sel.obj);
                 }
 
-                model.WriteExportCompetitionXml(saveFileDialog1.FileName, series);
+                importExport.WriteExportCompetitionXml(model, saveFileDialog1.FileName, series);
             }
         }
 
@@ -393,7 +409,7 @@ namespace CompetitionCreator
         }
         public void saveFileDialog1_FileOk9(object sender, CancelEventArgs e)
         {
-            model.ConvertVVBCompetitionToCSV(saveFileDialog1.FileName);
+            importExport.ConvertVVBCompetitionToCSV(model, saveFileDialog1.FileName);
         }
 
         private void cSVCompetitionToolStripMenuItem_Click(object sender, EventArgs e)
@@ -407,7 +423,7 @@ namespace CompetitionCreator
         }
         public void openFileDialog1_FileOk2(object sender, CancelEventArgs e)
         {
-            model.ImportCSV(openFileDialog1.FileName);
+            importExport.ImportCSV(model, openFileDialog1.FileName);
         }
         private void subscriptionsToolStripMenuItem1_Click(object sender, EventArgs e)
         {
@@ -420,7 +436,7 @@ namespace CompetitionCreator
         }
         public void openFileDialog1_FileOk3(object sender, CancelEventArgs e)
         {
-            model.ImportTeamSubscriptions(XDocument.Load(openFileDialog1.FileName).Root);
+            importExport.ImportTeamSubscriptions(model, XDocument.Load(openFileDialog1.FileName, LoadOptions.SetLineInfo|LoadOptions.SetBaseUri).Root);
         }
 
         private void convertKlvvToCSVToolStripMenuItem_Click(object sender, EventArgs e)
@@ -436,7 +452,7 @@ namespace CompetitionCreator
         }
         public void saveFileDialog1_FileOk8(object sender, CancelEventArgs e)
         {
-            model.ConvertKLVVCompetitionToCSV(saveFileDialog1.FileName);
+            importExport.ConvertKLVVCompetitionToCSV(model, saveFileDialog1.FileName);
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -464,7 +480,7 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         }
         public void saveFileDialog1_FileOk10(object sender, CancelEventArgs e)
         {
-            model.WriteClubConstraints(saveFileDialog1.FileName,false /* zonder nationale teams*/); 
+            importExport.WriteClubConstraints(model, saveFileDialog1.FileName, false /* zonder nationale teams*/); 
         }
 
         private void importRankingToolStripMenuItem_Click(object sender, EventArgs e)
@@ -480,7 +496,7 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         {
             try
             {
-                model.ImportRanking(XDocument.Load(openFileDialog1.FileName).Root);
+                importExport.ImportRanking(model, XDocument.Load(openFileDialog1.FileName, LoadOptions.SetLineInfo|LoadOptions.SetBaseUri).Root);
             }
             catch (Exception exc)
             {
@@ -518,7 +534,7 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         }
         public void saveFileDialog1_FileOk11(object sender, CancelEventArgs e)
         {
-            model.CompareRegistrations(openFileDialog1.FileName, saveFileDialog1.FileName);
+            importExport.CompareRegistrations(model, openFileDialog1.FileName, saveFileDialog1.FileName);
         }
 
         private void helpToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -556,7 +572,7 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         }
         public void saveFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
-            model.WriteConflictReportPerType(saveFileDialog1.FileName);
+            importExport.WriteConflictReportPerType(model, saveFileDialog1.FileName);
         }
 
         private void conflictsPerClubToolStripMenuItem_Click(object sender, EventArgs e)
@@ -570,7 +586,7 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         }
         public void saveFileDialog1_FileOk1(object sender, CancelEventArgs e)
         {
-            model.WriteConflictReportPerClub(saveFileDialog1.FileName);
+            importExport.WriteConflictReportPerClub(model, saveFileDialog1.FileName);
         }
 
         private void matchesPerClubcsvToolStripMenuItem_Click(object sender, EventArgs e)
@@ -585,7 +601,7 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         }
         public void saveFileDialog1_FileOk2(object sender, CancelEventArgs e)
         {
-            model.WriteCompetitionPerClub(saveFileDialog1.FileName);
+            importExport.WriteCompetitionPerClub(model, saveFileDialog1.FileName);
 
         }
 
@@ -601,7 +617,7 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         }
         public void saveFileDialog1_FileOk5(object sender, CancelEventArgs e)
         {
-            model.WriteSeriePoules(saveFileDialog1.FileName);
+            importExport.WriteSeriePoules(model, saveFileDialog1.FileName);
 
         }
 
@@ -634,7 +650,7 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 {
                     if (sel.selected) series.Add((Serie)sel.obj);
                 }
-                model.WriteMatches(saveFileDialog1.FileName, series);
+                importExport.WriteMatches(model, saveFileDialog1.FileName, series);
             }
 
         }
@@ -652,7 +668,7 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         }
         public void saveFileDialog1_FileOk7(object sender, CancelEventArgs e)
         {
-            model.WriteStatistics(saveFileDialog1.FileName);
+            importExport.WriteStatistics(model, saveFileDialog1.FileName);
 
         }
 
@@ -664,7 +680,7 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             {
                 try
                 {
-                    model.ImportRanking(XDocument.Load(form.GetInputString()).Root);
+                    importExport.ImportRanking(model, XDocument.Load(form.GetInputString(), LoadOptions.SetLineInfo|LoadOptions.SetBaseUri).Root);
                 }
                 catch (Exception exc)
                 {
@@ -680,7 +696,7 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             DateTime last = DateTime.Now;
             foreach(Poule poule in model.poules)
             {
-                DateTime l1 = poule.weekendsSecond[poule.weekendsSecond.Count-1].Saturday;
+                DateTime l1 = poule.weeksSecond[poule.weeksSecond.Count-1].Saturday;
                 if(l1<last) last = l1;
             }
             if (model.licenseKey.Valid() == false ||

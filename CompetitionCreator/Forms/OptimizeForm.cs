@@ -33,7 +33,7 @@ namespace CompetitionCreator
             }
             else if (e.Column.Index == 2)
             {
-                serie.optimizableWeekends = (e.NewValue == CheckState.Checked);
+                serie.optimizableWeeks = (e.NewValue == CheckState.Checked);
             }
             else if (e.Column.Index == 3)
             {
@@ -68,9 +68,9 @@ namespace CompetitionCreator
                                 intf.SetText("Optimizing - " + poule.serie.name + poule.name);
                                 poule.SnapShot(model);
                                 poule.OptimizeTeamAssignment(model, intf);
-                                poule.OptimizeHomeVisitor(model);
-                                poule.OptimizeHomeVisitorReverse(model);
-                                poule.OptimizeWeekends(model, intf);
+                                if (intf.Cancelled() == false) poule.OptimizeHomeVisitor(model);
+                                if (intf.Cancelled() == false) poule.OptimizeHomeVisitorReverse(model);
+                                if (intf.Cancelled() == false) poule.OptimizeWeeks(model, intf);
                                 poule.CopyAndClearSnapShot(model);
                                 Console.WriteLine(" - {1}:totalConflicts: {0}", model.TotalConflicts(), poule.fullName);
                                 if (intf.Cancelled()) return;
@@ -175,7 +175,7 @@ namespace CompetitionCreator
                             poule.OptimizeTeamAssignment(model, intf);
                             //poule.AnalyzeAndOptimizeTeamAssignment(model, intf);
                             poule.OptimizeHomeVisitor(model);
-                            poule.OptimizeWeekends(model, intf);
+                            poule.OptimizeWeeks(model, intf);
                             poule.CopyAndClearSnapShot(model);
                             if (intf.Cancelled()) return;
                         }
@@ -300,9 +300,7 @@ namespace CompetitionCreator
                                 IProgress intf = (IProgress)sender;
                                 intf.SetText("Optimizing - " + poule.serie.name + poule.name);
                                 poule.SnapShot(model);
-                                //poule.OptimizeTeamAssignment(model, intf);
                                 poule.OptimizeHomeVisitor(model);
-                                //poule.OptimizeWeekends(model, intf);
                                 poule.CopyAndClearSnapShot(model);
                                 if (intf.Cancelled()) return;
                             }

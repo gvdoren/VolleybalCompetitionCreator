@@ -103,12 +103,12 @@
             // 
             // olvColumn4
             // 
-            this.olvColumn4.AspectName = "optimizableWeekends";
+            this.olvColumn4.AspectName = "optimizableWeeks";
             this.olvColumn4.CellPadding = null;
             this.olvColumn4.CheckBoxes = true;
             this.olvColumn4.MaximumWidth = 80;
             this.olvColumn4.MinimumWidth = 80;
-            this.olvColumn4.Text = "Weekends";
+            this.olvColumn4.Text = "Weeks";
             this.olvColumn4.Width = 80;
             // 
             // olvColumn5

@@ -41,7 +41,7 @@ namespace CompetitionCreator
             this.name = name;
             optimizableNumber = true;
             optimizableHomeVisit = false;
-            optimizableWeekends = false;
+            optimizableWeeks = false;
             optimizableMatch = true;
             extraTimeBefore = 0;
             importance = ImportanceLevels.Medium;
@@ -52,7 +52,7 @@ namespace CompetitionCreator
             get { return model.teams.FindAll(t => t.serie == this && t.deleted == false); }
         }
         public bool optimizableNumber;
-        public bool optimizableWeekends;
+        public bool optimizableWeeks;
         public bool optimizableHomeVisit;
         public bool optimizableMatch;
         public double extraTimeBefore { get; set; }

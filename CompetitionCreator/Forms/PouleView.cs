@@ -19,9 +19,9 @@ namespace CompetitionCreator
         public Poule poule = null;
         SimpleDropSink myDropSink = new SimpleDropSink();
         ProgressDialog diag = new ProgressDialog();
-        Dictionary<Weekend, int> weekmapping = new Dictionary<Weekend, int>();
+        Dictionary<Week, int> weekmapping = new Dictionary<Week, int>();
         List<Team> selectedTeams = new List<Team>();
-        List<Weekend> selectedWeekends = new List<Weekend>();
+        List<Week> selectedWeeks = new List<Week>();
         List<Match> selectedMatches = new List<Match>();
 
         public PouleView(Model model, GlobalState state, Poule poule)
@@ -74,7 +74,7 @@ namespace CompetitionCreator
 
                 selectedTeams.Clear();
                 selectedMatches.Clear();
-                selectedWeekends.Clear();
+                selectedWeeks.Clear();
                 foreach (Object obj in objectListView1.SelectedObjects)
                 {
                     selectedTeams.Add((Team)obj);
@@ -90,14 +90,14 @@ namespace CompetitionCreator
                 objectListView2.SelectedObjects = selectedMatches;
                 foreach (Object obj in objectListView3.SelectedObjects)
                 {
-                    selectedWeekends.Add(((KeyValuePair<Weekend, int>)obj).Key);
+                    selectedWeeks.Add(((KeyValuePair<Week, int>)obj).Key);
                 }
                 UpdateWeekMapping();
                 objectListView3.BuildList(true);
                 foreach (Object obj in objectListView3.Objects)
                 {
-                    KeyValuePair<Weekend, int> kvp = (KeyValuePair<Weekend, int>)obj;
-                    if (selectedWeekends.Contains(kvp.Key) == true) objectListView3.SelectObject(obj);
+                    KeyValuePair<Week, int> kvp = (KeyValuePair<Week, int>)obj;
+                    if (selectedWeeks.Contains(kvp.Key) == true) objectListView3.SelectObject(obj);
                 }
             }
         }
@@ -215,7 +215,7 @@ namespace CompetitionCreator
         {
             IProgress intf = (IProgress)sender;
             poule.SnapShot(model);
-            poule.OptimizeWeekends(model, intf);
+            poule.OptimizeWeeks(model, intf);
             poule.CopyAndClearSnapShot(model);
         }
         private void OptimizeWeekAssignmentCompleted(object sender, MyEventArgs e)
@@ -314,38 +314,43 @@ namespace CompetitionCreator
         private void objectListView3_FormatRow(object sender, FormatRowEventArgs e)
         {
             
-            KeyValuePair<Weekend, int> kvp = (KeyValuePair<Weekend, int>)e.Model;
-            if (kvp.Value > 0) e.Item.SubItems[1].Text = "Week " + kvp.Value.ToString();
-            else e.Item.SubItems[1].Text = "----";
+            KeyValuePair<Week, int> kvp = (KeyValuePair<Week, int>)e.Model;
+            if (kvp.Value > 0) e.Item.SubItems[2].Text = "Week " + kvp.Value.ToString();
+            else e.Item.SubItems[2].Text = "----";
         }
 
         private void UpdateWeekMapping()
         {
             weekmapping.Clear();
-            DateTime start = poule.weekendsFirst.Min(w => w.Saturday).AddDays(-7);
-            DateTime end = poule.weekendsSecond.Max(w => w.Saturday).AddDays(7);
-            for (DateTime date = start; date < end; date = date.AddDays(7))
+            Week start = poule.weeksFirst.Min();
+            Week end = poule.weeksSecond.Max();
+            for (Week date = new Week(start.FirstDayInWeek); !(date > end); date = new Week(date.FirstDayInWeek.AddDays(7)))
             {
-                Weekend weekend = new Weekend(date);
-                int index = 0;
-                int k = 0;
-                for (int j = 0; j < poule.weekendsFirst.Count; j++, k++)
+                for (int i = 0; i < 2; i++)
                 {
-                    if (poule.weekendsFirst[j].Saturday == date)
+                    bool b = (i == 0);
+                    date.dayOverruled = b;
+                    int index = 0;
+                    int k = 0;
+                    for (int j = 0; j < poule.weeksFirst.Count; j++, k++)
                     {
-                        weekend = poule.weekendsFirst[j];
-                        index = k + 1;
+                        if (poule.weeksFirst[j] == date)
+                        {
+                            index = k + 1;
+                        }
+                    }
+                    for (int j = 0; j < poule.weeksSecond.Count; j++, k++)
+                    {
+                        if (poule.weeksSecond[j] == date)
+                        {
+                            index = k + 1;
+                        }
+                    }
+                    if (index > 0 || !b)
+                    {
+                        weekmapping.Add(new Week(date), index);
                     }
                 }
-                for (int j = 0; j < poule.weekendsSecond.Count; j++, k++)
-                {
-                    if (poule.weekendsSecond[j].Saturday == date)
-                    {
-                        weekend = poule.weekendsSecond[j];
-                        index = k + 1;
-                    }
-                }
-                weekmapping.Add(weekend, index);
             }
         }
         private void objectListView3_SelectionChanged(object sender, EventArgs e)
@@ -358,18 +363,18 @@ namespace CompetitionCreator
             {
                 System.Windows.Forms.MessageBox.Show("Not allowed to change week ordering for an imported poule");
             }
-            else if (poule.optimizableWeekends == false)
+            else if (poule.optimizableWeeks == false)
             {
                 System.Windows.Forms.MessageBox.Show("Not allowed to change week ordering");
             }
             else
             {
-                /*KeyValuePair<Weekend, int> kvp1 = (KeyValuePair<Weekend, int>)objectListView3.SelectedObjects[0];
-                KeyValuePair<Weekend, int> kvp2 = (KeyValuePair<Weekend, int>)objectListView3.SelectedObjects[1];
+                /*KeyValuePair<Week, int> kvp1 = (KeyValuePair<Week, int>)objectListView3.SelectedObjects[0];
+                KeyValuePair<Week, int> kvp2 = (KeyValuePair<Week, int>)objectListView3.SelectedObjects[1];
                 int index1 = kvp1.Value - 1;
                 int index2 = kvp2.Value - 1;
-                if (index1 >= 0) poule.weekends[index1] = kvp2.Key;
-                if (index2 >= 0) poule.weekends[index2] = kvp1.Key;
+                if (index1 >= 0) poule.weeks[index1] = kvp2.Key;
+                if (index2 >= 0) poule.weeks[index2] = kvp1.Key;
                 UpdateWeekMapping();
                 model.Evaluate(null);
                 model.Changed();
@@ -383,7 +388,7 @@ namespace CompetitionCreator
                 List<Constraint> constraints = new List<Constraint>();
                 foreach (Object obj in objectListView3.SelectedObjects)
                 {
-                    KeyValuePair<Weekend, int> kvp = (KeyValuePair<Weekend, int>)obj;
+                    KeyValuePair<Week, int> kvp = (KeyValuePair<Week, int>)obj;
                     constraints.AddRange(kvp.Key.conflictConstraints);
                 }
                 state.ShowConstraints(constraints);
@@ -414,7 +419,7 @@ namespace CompetitionCreator
             {
                 System.Windows.Forms.MessageBox.Show("Not allowed to change week ordering for imported teams");
             }
-            else if (poule.optimizableWeekends == false)
+            else if (poule.optimizableWeeks == false)
             {
                 System.Windows.Forms.MessageBox.Show("Not allowed to change week ordering");
             }
@@ -424,7 +429,7 @@ namespace CompetitionCreator
                 ProgressDialog diag = new ProgressDialog();
                 diag.WorkFunction += OptimizeWeekAssignment;
                 diag.CompletionFunction += OptimizeWeekAssignmentCompleted;
-                diag.Start("Optimizing weekends", null);
+                diag.Start("Optimizing weeks", null);
             }
         }
         Team optimizeTeam = null;
@@ -462,7 +467,7 @@ namespace CompetitionCreator
             poule.SnapShot(model);
             poule.OptimizeTeamAssignment(model, intf);
             poule.OptimizeHomeVisitor(model);
-            poule.OptimizeWeekends(model, intf);
+            poule.OptimizeWeeks(model, intf);
             poule.CopyAndClearSnapShot(model);
             model.Evaluate(null);
             if (intf.Cancelled()) return;

@@ -12,17 +12,45 @@ namespace CompetitionCreator
     {
         public string Name;
         public int Count;
-        public List<AnnoramaWeekend> weekends = new List<AnnoramaWeekend>();
+        public List<AnnoramaWeek> weeks = new List<AnnoramaWeek>();
     }
     
-    public class AnnoramaWeekend
+    public class AnnoramaWeek
     {
-        public Weekend weekend;
+        public Week week;
         public bool match;
-        public AnnoramaWeekend(Weekend we, bool match)
+        public List<int> weekNrs = new List<int>();
+        public AnnoramaWeek(Week we, bool match)
         {
-            weekend = we;
+            week = we;
             this.match = match;
+        }
+        public string weekNrString(int max)
+        {
+            if (weekNrs.Count == 0)
+            {
+                if (match) return "x";
+                else return "-";
+            }
+            else if (weekNrs.Count == 1)
+            {
+                string reserve = "";
+                if (weekNrs[0] > max) reserve = " R";
+                return weekNrs[0].ToString() + reserve;
+            }
+            else
+            {
+                string reserve = "";
+                if (weekNrs[0] > max) reserve = " R";
+                string returnString = weekNrs[0].ToString() + reserve;
+                for (int i = 1; i < weekNrs.Count; i++)
+                {
+                    reserve = "";
+                    if (weekNrs[i] > max) reserve = " R";
+                    returnString += ", " + weekNrs[i].ToString() + reserve;
+                }
+                return returnString;
+            }
         }
     }
 
@@ -55,13 +83,13 @@ namespace CompetitionCreator
             AnnoramaReeks reeks = new AnnoramaReeks();
             reeks.Name = name;
             reeks.Count = count;
-            Weekend weekend = new Weekend(start);
+            Week week = new Week(start);
             DateTime current = start;
-            while (weekend.Saturday < end)
+            while (week.FirstDayInWeek < end)
             {
-                reeks.weekends.Add(new AnnoramaWeekend(weekend, false));
+                reeks.weeks.Add(new AnnoramaWeek(week, false));
                 current = current.AddDays(7);
-                weekend = new Weekend(current);
+                week = new Week(current);
             }
             reeksen.Add(reeks);
             return reeks;
@@ -83,12 +111,18 @@ namespace CompetitionCreator
                     writer.WriteStartElement("Reeks");
                     writer.WriteAttributeString("Name", reeks.Name);
                     writer.WriteAttributeString("Count", reeks.Count.ToString());
-                    writer.WriteStartElement("Weekends");
-                    foreach (AnnoramaWeekend weekend in reeks.weekends)
+                    writer.WriteStartElement("Weeks");
+                    foreach (AnnoramaWeek week in reeks.weeks)
                     {
-                        writer.WriteStartElement("Weekend");
-                        writer.WriteAttributeString("Date", weekend.weekend.Saturday.ToShortDateString());
-                        writer.WriteAttributeString("Match", weekend.match.ToString());
+                        writer.WriteStartElement("Week");
+                        writer.WriteAttributeString("Date", week.week.Saturday.ToShortDateString());
+                        writer.WriteAttributeString("Match", week.match.ToString());
+                        writer.WriteStartElement("WeekNumbers");
+                        foreach (int weeknr in week.weekNrs)
+                        {
+                            writer.WriteElementString("Number", weeknr.ToString());
+                        }
+                        writer.WriteEndElement();
                         writer.WriteEndElement();
 
                     }
@@ -105,25 +139,29 @@ namespace CompetitionCreator
         {
             string BaseDirectory = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\CompetitionCreator";
             XElement Annorama = XElement.Load(string.Format("{0}\\Annorama{1}.xml", BaseDirectory, year));
-            title = Annorama.Attribute("Title").Value;
-            start = DateTime.Parse(Annorama.Attribute("Start").Value.ToString());
-            end = DateTime.Parse(Annorama.Attribute("End").Value.ToString());
+            title = ImportExport.StringAttribute(Annorama,"Title");
+            start = ImportExport.DateAttribute(Annorama, "Start");
+            end = ImportExport.DateAttribute(Annorama, "End");
             reeksen.Clear();
-            IEnumerable<XElement> Reeksen = Annorama.Element("Reeksen").Elements("Reeks");
+            IEnumerable<XElement> Reeksen = ImportExport.Element(Annorama, "Reeksen").Elements("Reeks");
             int i = 0;
             foreach (XElement reeks in Reeksen)
             {
-                string name = reeks.Attribute("Name").Value;
-                int count = int.Parse(reeks.Attribute("Count").Value);
+                string name = ImportExport.StringAttribute(reeks, "Name");
+                int count = ImportExport.IntegerAttribute(reeks, "Count");
                 AnnoramaReeks re = CreateReeks(name, count);
-                IEnumerable<XElement> Weekends = reeks.Element("Weekends").Elements("Weekend");
-                foreach (XElement Weekend in Weekends)
+                IEnumerable<XElement> Weeks = ImportExport.Element(reeks,"Weeks").Elements("Week");
+                foreach (XElement week in Weeks)
                 {
-                    DateTime dt = DateTime.Parse(Weekend.Attribute("Date").Value);
-                    Weekend we = new Weekend(dt);
-                    bool match = bool.Parse(Weekend.Attribute("Match").Value.ToString());
-                    AnnoramaWeekend anWeekend = re.weekends.Find(w => w.weekend.Saturday == we.Saturday);
-                    anWeekend.match = match;
+                    DateTime dt = ImportExport.DateAttribute(week, "Date");
+                    Week we = new Week(dt);
+                    bool match = ImportExport.BoolAttribute(week, "Match");
+                    AnnoramaWeek anWeek = re.weeks.Find(w => w.week == we);
+                    anWeek.match = match;
+                    foreach (XElement weeknr in week.Element("WeekNumbers").Elements("Number"))
+                    {
+                        anWeek.weekNrs.Add(int.Parse(weeknr.Value.ToString()));
+                    }
                 }
                 i++;
             }

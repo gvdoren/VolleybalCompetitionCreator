@@ -16,21 +16,21 @@ namespace CompetitionCreator
     {
         Model model = null;
         GlobalState state;
-        List<Weekend> weekends = new List<Weekend>();
+        List<Week> weeks = new List<Week>();
         public AnoramaView(Model model, GlobalState state)
         {
             this.model = model;
             this.state = state;
             InitializeComponent();
             DateTime current = model.annorama.start;
-            Weekend weekend = new Weekend(current);
-            while (weekend.Saturday < model.annorama.end)
+            Week week = new Week(current);
+            while (week.FirstDayInWeek < model.annorama.end)
             {
-                weekends.Add(weekend);
+                weeks.Add(week);
                 current = current.AddDays(7);
-                weekend = new Weekend(current);
+                week = new Week(current);
             }
-            objectListView1.SetObjects(weekends);
+            objectListView1.SetObjects(weeks);
             UpdateForm();
         }
         private void UpdateForm()
@@ -40,16 +40,18 @@ namespace CompetitionCreator
             foreach(AnnoramaReeks reeks in model.annorama.reeksen)
             {
                 BrightIdeasSoftware.OLVColumn olvColumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-                objectListView1.AllColumns.Add(olvColumn);
+                //objectListView1.AllColumns.Add(olvColumn);
                 objectListView1.Columns.Add(olvColumn);
                 //olvColumn.AspectName = string.Format("reeks{0}",i);
                 olvColumn.AspectGetter = new DelegateObject(reeks).getter;
-                olvColumn.AspectPutter = new DelegateObject(reeks).putter;
+                //olvColumn.AspectPutter = new DelegateObject(reeks).putter;
+                olvColumn.IsEditable = false;
                 olvColumn.CellPadding = null;
-                olvColumn.CheckBoxes = true;
+                olvColumn.CheckBoxes = false;
                 olvColumn.Text = reeks.Name;
                 olvColumn.Width = 25;
                 olvColumn.AutoResize(ColumnHeaderAutoResizeStyle.HeaderSize);
+                //olvColumn.AspectName = "weekNrString";
             }
             objectListView1.BuildList(true);
             label1.Text = model.annorama.title;
@@ -67,14 +69,14 @@ namespace CompetitionCreator
 
         private void objectListView1_SubItemChecking_1(object sender, SubItemCheckingEventArgs e)
         {
-            Weekend weekend = (Weekend)e.RowObject;
-            model.annorama.reeksen[e.Column.Index-1].weekends.Find(w => w.weekend.Saturday == weekend.Saturday).match = (e.NewValue == CheckState.Checked); 
+            Week week = (Week)e.RowObject;
+            model.annorama.reeksen[e.Column.Index-1].weeks.Find(w => w.week == week).match = (e.NewValue == CheckState.Checked); 
             model.annorama.WriteXML(model.year);
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            InputForm form = new InputForm("Creeer weekend reeks voor de anorama", "Geef een naam voor de anorama-reeks");
+            InputForm form = new InputForm("Creeer weken-reeks voor de anorama", "Geef een naam voor de anorama-reeks");
             form.ShowDialog();
             if (form.Result)
             {
@@ -93,6 +95,65 @@ namespace CompetitionCreator
             }
 
         }
+
+
+        private void objectListView1_MouseClick(object sender, MouseEventArgs e)
+        {
+        }
+
+        private void objectListView1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+        }
+
+        private void objectListView1_CellClick(object sender, CellClickEventArgs e)
+        {
+            if (e.Column.Index > model.annorama.reeksen.Count) return;
+            Week week = (Week)objectListView1.SelectedObject;
+            AnnoramaReeks reeks = model.annorama.reeksen[e.Column.Index-1];
+            AnnoramaWeek anWeek = reeks.weeks.Find(w => w.week == week);
+            if (anWeek != null)
+            {
+                if (e.Column.Index > 0)
+                {
+                    List<Selection> list = new List<Selection>();
+                    foreach(int i in anWeek.weekNrs)
+                    {
+                        Selection sel = new Selection(i.ToString(), i);
+                        sel.selected = true;
+                        list.Add(sel);
+                    }
+                    for (int i = 1; i <= (reeks.Count)*2; i++)
+                    {
+                        if (reeks.weeks.Find(w => w.weekNrs.Contains(i)) == null)
+                        {
+                            string reserve = "";
+                            if (i > (reeks.Count - 1) * 2) reserve = " (Reserve)";
+                            Selection sel = new Selection(i.ToString()+reserve, i);
+                            list.Add(sel);
+                        }
+                        if (list.Find(el => el.selected == true) == null && list.Count > 0) list[0].selected = true;
+                    }
+
+
+                    SelectionDialog diag = new SelectionDialog(list,true);
+                    diag.Text = "Select the week number:";
+                    diag.ShowDialog();
+                    if (diag.Ok)
+                    {
+                        anWeek.weekNrs = new List<int>();
+                        if (diag.Selections.Count <= 2)
+                        {
+                            foreach (Selection sel in diag.Selections)
+                            {
+                                anWeek.weekNrs.Add(sel.value);
+                            }
+                        }
+                    }
+                    objectListView1.BuildList(true);
+                }
+                model.annorama.WriteXML(model.year);
+            }
+        }
     }
     class DelegateObject
     {
@@ -102,13 +163,16 @@ namespace CompetitionCreator
         {
             putter = delegate(object rowObject, object newValue)
             {
-                Weekend we = (Weekend)rowObject;
-                reeks.weekends.Find(w => w.weekend.Saturday == we.Saturday).match = (bool)newValue;
+                Week we = (Week)rowObject;
+                AnnoramaWeek anWe = reeks.weeks.Find(w => w.week == we);
+                anWe.match = (bool)newValue;
             };
             getter = delegate(object rowObject) 
             { 
-                Weekend we = (Weekend)rowObject; 
-                return reeks.weekends.Find(w => w.weekend.Saturday == we.Saturday).match;
+                Week we = (Week)rowObject;
+                AnnoramaWeek anWe = reeks.weeks.Find(w => w.week == we);
+                return anWe.weekNrString(((reeks.Count-1)*2));
+                //return anWe.match;
             };
         }
         

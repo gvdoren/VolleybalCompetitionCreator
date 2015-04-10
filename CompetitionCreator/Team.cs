@@ -7,8 +7,8 @@ namespace CompetitionCreator
 {
     public class Team: ConstraintAdmin
     {
-        public enum WeekendRestrictionEnum { Even, Odd, All };
-        public WeekendRestrictionEnum EvenOdd = WeekendRestrictionEnum.All;
+        public enum WeekRestrictionEnum { Even, Odd, All };
+        public WeekRestrictionEnum EvenOdd = WeekRestrictionEnum.All;
         public TeamGroups group { get; set; }
         public int Id { get; set; }
         public string name { get; set; }

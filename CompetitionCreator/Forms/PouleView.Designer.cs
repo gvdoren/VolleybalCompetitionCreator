@@ -44,12 +44,12 @@
             this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn5 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn8 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn11 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.objectListView3 = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn12 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn13 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn14 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn10 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.label2 = new System.Windows.Forms.Label();
@@ -170,7 +170,6 @@
             this.objectListView2.AllColumns.Add(this.olvColumn4);
             this.objectListView2.AllColumns.Add(this.olvColumn5);
             this.objectListView2.AllColumns.Add(this.olvColumn8);
-            this.objectListView2.AllColumns.Add(this.olvColumn11);
             this.objectListView2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -180,8 +179,7 @@
             this.olvColumn9,
             this.olvColumn4,
             this.olvColumn5,
-            this.olvColumn8,
-            this.olvColumn11});
+            this.olvColumn8});
             this.objectListView2.FullRowSelect = true;
             this.objectListView2.Location = new System.Drawing.Point(1, 343);
             this.objectListView2.Name = "objectListView2";
@@ -242,12 +240,6 @@
             this.olvColumn8.CellPadding = null;
             this.olvColumn8.Text = "Conflict";
             // 
-            // olvColumn11
-            // 
-            this.olvColumn11.AspectName = "Weekend.Even";
-            this.olvColumn11.CellPadding = null;
-            this.olvColumn11.Text = "Even";
-            // 
             // button4
             // 
             this.button4.Location = new System.Drawing.Point(178, 115);
@@ -284,10 +276,12 @@
             // objectListView3
             // 
             this.objectListView3.AllColumns.Add(this.olvColumn12);
+            this.objectListView3.AllColumns.Add(this.olvColumn13);
             this.objectListView3.AllColumns.Add(this.olvColumn14);
             this.objectListView3.AllColumns.Add(this.olvColumn10);
             this.objectListView3.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumn12,
+            this.olvColumn13,
             this.olvColumn14,
             this.olvColumn10});
             this.objectListView3.FullRowSelect = true;
@@ -302,10 +296,21 @@
             // 
             // olvColumn12
             // 
-            this.olvColumn12.AspectName = "Key.Saturday";
-            this.olvColumn12.AspectToStringFormat = "{0:dd-MM}";
+            this.olvColumn12.AspectName = "Key.Start";
+            this.olvColumn12.AspectToStringFormat = "";
             this.olvColumn12.CellPadding = null;
-            this.olvColumn12.Text = "Zat";
+            this.olvColumn12.MaximumWidth = 40;
+            this.olvColumn12.MinimumWidth = 40;
+            this.olvColumn12.Text = "From";
+            this.olvColumn12.Width = 40;
+            // 
+            // olvColumn13
+            // 
+            this.olvColumn13.AspectName = "Key.End";
+            this.olvColumn13.AspectToStringFormat = "";
+            this.olvColumn13.CellPadding = null;
+            this.olvColumn13.Text = "Until";
+            this.olvColumn13.Width = 40;
             // 
             // olvColumn14
             // 
@@ -325,9 +330,9 @@
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(252, 5);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(67, 13);
+            this.label2.Size = new System.Drawing.Size(46, 13);
             this.label2.TabIndex = 10;
-            this.label2.Text = "Weekends";
+            this.label2.Text = "Weeks";
             // 
             // button7
             // 
@@ -492,11 +497,11 @@
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.Button button9;
         private System.Windows.Forms.Button button10;
-        private BrightIdeasSoftware.OLVColumn olvColumn11;
         private System.Windows.Forms.Button button11;
         private System.Windows.Forms.Button button12;
         private System.Windows.Forms.Button button13;
         private System.Windows.Forms.Button button14;
         private System.Windows.Forms.Button button15;
+        private BrightIdeasSoftware.OLVColumn olvColumn13;
     }
 }

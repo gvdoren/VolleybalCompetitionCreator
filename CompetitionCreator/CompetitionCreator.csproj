@@ -192,6 +192,7 @@
       <DependentUpon>TeamListView.cs</DependentUpon>
     </Compile>
     <Compile Include="GlobalState.cs" />
+    <Compile Include="ImportExport.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="Match.cs" />
     <Compile Include="MySettings.cs" />
@@ -227,7 +228,7 @@
     <Compile Include="Sporthal.cs" />
     <Compile Include="Team.cs" />
     <Compile Include="Time.cs" />
-    <Compile Include="Weekend.cs" />
+    <Compile Include="Week.cs" />
     <Content Include="html\no_latlng.html">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -14,19 +14,21 @@ ToDo:
 - af en toe wordt de 'cost' hoger. Hoe kan dat. Welke constraint wordt niet meegenomen in de related constraints?
 - automatisch saven om de 10 minuten.
 - Een net viewModel introduceren
-- mechanisme om backwards compatible te zijn (vooral project-files)
-- heen/terug reeks appart
-- losse wedstrijd verplaatsingen (op reserve weekenden). Tweede phase optimalisatie?
+- losse wedstrijd verplaatsingen (op reserve weken). Tweede phase optimalisatie?
 - schema editor
-- Crash indien optimalisatie wordt afgebroken.  (weekendsFirst was leeg)
 
 High:
-- diagnostics toevoegen
-   - vooral bij inlezen van files, url's etc.
-- ImportCompetition definitie. Iets anders ipv XML based.
+- Team specifieke sporthallen ook laten zien bij de club (of automatisch als je het team aanklikt.)
+	- Refresh soepeler laten verlopen
+- FixedConstraint
 - Predefined schema's from disk instead of generating one
+
+- diagnostics toevoegen
+   - Logging, zodat de log opgestuurd kan worden. Ook een viewer om het te bekijken.
+- ImportCompetition definitie. Iets anders ipv XML based.
 - Documentatie:
   - formaat types ()
+     * xsd schema
   - gebruikers handleiding
 
 Medium:

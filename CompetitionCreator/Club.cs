@@ -46,7 +46,6 @@ namespace CompetitionCreator
         public int Id { get; set; }
         public string name { get; set; }
         public string Stamnumber { get; set; }
-        public bool ConstraintAllInOneWeekend = false;
         public bool ConstraintNotAtTheSameTime = false;
         public bool Dirty = true;
         public static Club CreateNullClub()

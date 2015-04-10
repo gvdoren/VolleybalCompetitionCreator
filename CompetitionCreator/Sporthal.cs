@@ -35,6 +35,8 @@ namespace CompetitionCreator
     public class SporthallClub
     {
         public Sporthal sporthall;
+        public Team team = null;
+        public int teamId = -1;
         public string name 
         { 
             get

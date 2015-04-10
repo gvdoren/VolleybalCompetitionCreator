@@ -14,8 +14,7 @@ namespace CompetitionCreator
         {
             get
             {
-                DateTime date= Weekend.Saturday;
-                date = date.AddDays(homeTeam.defaultDay == DayOfWeek.Saturday ? 0 : 1);
+                DateTime date= Week.PlayTime(homeTeam.defaultDay);
                 date = date.AddHours(homeTeam.defaultTime.Hours);
                 date = date.AddMinutes(homeTeam.defaultTime.Minutes);
                 return date;
@@ -80,7 +79,7 @@ namespace CompetitionCreator
         }
         public Team homeTeam { get { return poule.teams[homeTeamIndex]; } }
         public Team visitorTeam { get { return poule.teams[visitorTeamIndex]; } }
-        public Weekend Weekend
+        public Week Week
         {
             get
             {
@@ -88,8 +87,8 @@ namespace CompetitionCreator
                 int index = weekIndex;
                 if (weekIndexIndividual >= 0) index = weekIndexIndividual;
 
-                if (index < poule.weekendsFirst.Count) return poule.weekendsFirst[index];
-                else return poule.weekendsSecond[index - poule.weekendsFirst.Count];
+                if (index < poule.weeksFirst.Count) return poule.weeksFirst[index];
+                else return poule.weeksSecond[index - poule.weeksFirst.Count];
             }
         }
 
@@ -125,7 +124,7 @@ namespace CompetitionCreator
         {
             if (conflict_cost == 0 && weekIndexIndividual < 0) return;
             if (weekIndexIndividual>=0)
-            { // try to get it back in the standard weekend 
+            { // try to get it back in the standard week 
                 int temp = weekIndexIndividual;
                 weekIndexIndividual = -1;
                 if (poule.SnapShotIfImproved(model) == false)
@@ -133,19 +132,19 @@ namespace CompetitionCreator
                     weekIndexIndividual = temp;
                 }
             }
-            List<Weekend> weekends = null;
+            List<Week> weeks = null;
             int extraIndex = 0;
-            if (weekIndex < poule.weekendsFirst.Count)
+            if (weekIndex < poule.weeksFirst.Count)
             {
                 extraIndex = 0;
-                weekends = poule.weekendsFirst;
+                weeks = poule.weeksFirst;
             } else 
             {
-                extraIndex = poule.weekendsFirst.Count;
-                weekends = poule.weekendsSecond;
+                extraIndex = poule.weeksFirst.Count;
+                weeks = poule.weeksSecond;
             }
-            List<Weekend> weekendsCopy = new List<Weekend>(weekends);
-            // Find an alternative weekend
+            List<Week> weeksCopy = new List<Week>(weeks);
+            // Find an alternative week
             foreach(Match m in poule.matches)
             {
                 if (m.RealMatch())
@@ -153,15 +152,14 @@ namespace CompetitionCreator
                     if (m.homeTeamIndex == homeTeamIndex || m.visitorTeamIndex == homeTeamIndex ||
                        m.homeTeamIndex == visitorTeamIndex || m.visitorTeamIndex == visitorTeamIndex)
                     {
-                        weekendsCopy.Remove(m.Weekend);
+                        weeksCopy.Remove(m.Week);
                     }
                 }
             }
-            bool improved = false;
-            foreach (Weekend we in weekendsCopy)
+            foreach (Week we in weeksCopy)
             {
                 int temp1 = weekIndexIndividual;
-                weekIndexIndividual = extraIndex + weekends.FindIndex(w => w.Saturday == we.Saturday);
+                weekIndexIndividual = extraIndex + weeks.FindIndex(w => w == we);
                 if (poule.SnapShotIfImproved(model, false) == false)
                 {
                     weekIndexIndividual = temp1;

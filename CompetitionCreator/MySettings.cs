@@ -124,9 +124,9 @@ namespace CompetitionCreator
         [DefaultValue(1000)]
         public int TwoPoulesOfSameClubInPouleCost { get; set; }
         [Category("Constraints")]
-        [DisplayName("Constraint.Not.All.In.Same.Weekend.Cost")]
+        [DisplayName("Constraint.Not.All.In.Same.Week.Cost")]
         [DefaultValue(10)]
-        public int NotAllInSameWeekendCost { get; set; }
+        public int NotAllInSameWeekCost { get; set; }
         [Category("Constraints")]
         [DisplayName("Constraint.Play.At.Same.Time.Cost")]
         [DefaultValue(1)]
