@@ -47,6 +47,7 @@ namespace CompetitionCreator
             MakeDirty();
         }
         public Annorama annorama = new Annorama(DateTime.Now.Year);
+        public List<TeamConstraint> inputConstraints = new List<TeamConstraint>();
         public List<Constraint> constraints = new List<Constraint>();
         public List<Sporthal> sporthalls = new List<Sporthal>();
         public void Optimize()
@@ -164,38 +165,171 @@ namespace CompetitionCreator
                 constraints.RemoveAll(c => (c as SpecificConstraint) == null); // alles behalve specialecontraints die zijn opgegeven.
                 foreach (Poule poule in this.poules)
                 {
-                    constraints.Add(new ConstraintSchemaTooClose(poule));
-                    constraints.Add(new ConstraintPouleInconsistent(poule));
-                    constraints.Add(new ConstraintPouleTwoTeamsOfSameClub(poule));
-                    //constraints.Add(new ConstraintPouleFixedNumber(poule));
-                    //constraints.Add(new ConstraintPouleOddEvenWeek(poule));
-                    //constraints.Add(new ConstraintPouleFullLastTwoWeeks(poule));
-                    constraints.Add(new ConstraintSchemaTooManyHomeAfterEachOther(poule));
+                    if (poule.serie.evaluated)
+                    {
+                        constraints.Add(new ConstraintSchemaTooClose(poule));
+                        constraints.Add(new ConstraintPouleInconsistent(poule));
+                        constraints.Add(new ConstraintPouleTwoTeamsOfSameClub(poule));
+                        //constraints.Add(new ConstraintPouleOddEvenWeek(poule));
+                        //constraints.Add(new ConstraintPouleFullLastTwoWeeks(poule));
+                        constraints.Add(new ConstraintSchemaTooManyHomeAfterEachOther(poule));
+                    }
                 }
-
-                foreach (Club club in clubs)
+                foreach (Team te in teams)
                 {
-                    constraints.Add(new ConstraintNotAllInSameHomeDay(club));
-                    constraints.Add(new ConstraintDifferentGroupsOnSameDay(club));
-                    constraints.Add(new ConstraintPlayAtSameTime(club));
-                    constraints.Add(new ConstraintNoPouleAssigned(club));
+                    if (te.evaluated)
+                    {
+                        if(te.poule != null)
+                        {
+                            constraints.Add(new ConstraintSporthallNotAvailable(te));
+                            if (te.fixedNumber > 0) constraints.Add(new ConstraintTeamFixedNumber(te));
+                            if (te.NotAtSameTime != null && te.NotAtSameTime.evaluated && te.NotAtSameTime.poule != null)
+                            {
+                                constraints.Add(new ConstraintPlayAtSameTime(te));
+                            }
+                        } else
+                        {
+                            constraints.Add(new ConstraintNoPouleAssigned(te));
+                        }
+                
+                    }
                 }
+                
+                // All group related constraints
+                ConstructGroupConstraintsDay(DayOfWeek.Saturday);
+                ConstructGroupConstraintsDay(DayOfWeek.Sunday);
+                ConstructGroupConstraintsWeekend();
+
                 // Deze moet als laatste
+                foreach (Team te in teams)
+                {
+                    if (te.evaluated)
+                    {
+                        constraints.Add(new ConstraintTeamTooManyConflicts(te));
+                    }
+                }
                 foreach (Club club in clubs)
                 {
                     constraints.Add(new ConstraintClubTooManyConflicts(club));
                 }
-                foreach (Team team in teams)
-                {
-                    constraints.Add(new ConstraintTeamTooManyConflicts(team));
-                    constraints.Add(new ConstraintSporthallNotAvailable(team));
-                    if (team.fixedNumber > 0) constraints.Add(new ConstraintTeamFixedNumber(team));
-                }
+
                 foreach (Poule poule in poules)
                 {
                     poule.CalculateRelatedConstraints(this);
                 }
             }
+        }
+
+        public void ConstructGroupConstraintsDay(DayOfWeek day)
+        {
+            // Grouping of teams, and creating the constraints for it
+            // first day constraints
+            List<TeamConstraint> remaining = inputConstraints.FindAll(c => c.team.defaultDay == day && 
+                                                                      c.team2.defaultDay == day && 
+                                                                      (c.what == TeamConstraint.What.HomeNotOnSameDay || c.what == TeamConstraint.What.HomeOnSameDay) &&
+                                                                      c.team.evaluated && c.team2.evaluated);
+            List<Club> remainingClubs = clubs.FindAll(c => c.teams.Exists(t => t.defaultDay == day && t.group != TeamGroups.NoGroup && t.evaluated));
+            // find the first constraint in remaining that is day related
+            Team team = null;
+            do
+            {
+                team = null;
+                // selecteer team waar vanuit het maken van de groepen begint
+                if (remaining.Count > 0) team = remaining[0].team;
+                else if (remainingClubs.Count > 0) team = remainingClubs[0].teams.Find(t => t.defaultDay == day && t.group != TeamGroups.NoGroup && t.evaluated);
+                if (team != null)
+                {
+                    ConstraintGrouping groupCon = new ConstraintGrouping();
+                    groupCon.name = "Teams in different groups play on same day";
+                    groupCon.GroupA.Add(team);
+                    bool added = false;
+                    do
+                    {
+                        added = false;
+                        List<TeamConstraint> newCons = remaining.FindAll(c => groupCon.AddTeamConstraintDay(c));
+                        foreach (TeamConstraint tc in newCons)
+                        {
+                            remaining.Remove(tc);
+                            added = true;
+                        }
+                        // check overlap met (X en A) of (Y en B) => X toevoegen aan A, Y toevoegen aan B
+                        // check overlap met (X en B) of (Y en A) => X toevoegen aan B, Y toevoegen aan A
+                        List<Club> tempRemainingClubs = new List<Club>(remainingClubs);
+                        foreach (Club club in tempRemainingClubs)
+                        {
+                            List<Team> selectedX = club.GetGroupX().FindAll(t => t.defaultDay == team.defaultDay && t.evaluated);
+                            List<Team> selectedY = club.GetGroupY().FindAll(t => t.defaultDay == team.defaultDay && t.evaluated);
+                            if (Team.Overlap(selectedX, groupCon.GroupA))
+                            {
+                                Team.AddIfNeeded(groupCon.GroupA, selectedX);
+                                Team.AddIfNeeded(groupCon.GroupB, selectedY);
+                                added = true;
+                                remainingClubs.Remove(club);
+                            }
+                            else if (Team.Overlap(selectedX, groupCon.GroupB))
+                            {
+                                Team.AddIfNeeded(groupCon.GroupA, selectedY);
+                                Team.AddIfNeeded(groupCon.GroupB, selectedX);
+                                added = true;
+                                remainingClubs.Remove(club);
+                            }
+                            else if (Team.Overlap(selectedY, groupCon.GroupA))
+                            {
+                                Team.AddIfNeeded(groupCon.GroupA, selectedY);
+                                Team.AddIfNeeded(groupCon.GroupB, selectedX);
+                                added = true;
+                                remainingClubs.Remove(club);
+                            }
+                            else if (Team.Overlap(selectedY, groupCon.GroupB))
+                            {
+                                Team.AddIfNeeded(groupCon.GroupA, selectedX);
+                                Team.AddIfNeeded(groupCon.GroupB, selectedY);
+                                added = true;
+                                remainingClubs.Remove(club);
+                            }
+                        }
+
+                    } while (added);
+                    // Als ze allemaal in 1 group zitten, komt er een constraint dat ze in zo weinig mogelijk dagen moeten spelen
+                    if (groupCon.GroupA.Count == 0) constraints.Add(new ConstraintNotAllInSameHomeDay(groupCon.GroupB));
+                    else if (groupCon.GroupB.Count == 0) constraints.Add(new ConstraintNotAllInSameHomeDay(groupCon.GroupA));
+                    else constraints.Add(groupCon);
+                }
+            } while (team != null);
+
+        }
+        public void ConstructGroupConstraintsWeekend()
+        {
+            // Grouping of teams, and creating the constraints for it
+            // first weekend constraints
+            List<TeamConstraint> remaining = inputConstraints.FindAll(c => (c.what == TeamConstraint.What.HomeNotInSameWeekend || c.what == TeamConstraint.What.HomeInSameWeekend) &&
+                                                                           c.team.evaluated && c.team2.evaluated); 
+            // find the first constraint in remaining that is day related
+            Team team = null;
+            do
+            {
+                team = null;
+                if (remaining.Count > 0) team = remaining[0].team;
+                if (team != null)
+                {
+                    ConstraintGrouping groupCon = new ConstraintGrouping();
+                    groupCon.name = "Teams in different groups play on same weekends";
+                    groupCon.GroupA.Add(team);
+                    constraints.Add(groupCon);
+                    bool added = false;
+                    do
+                    {
+                        added = false;
+                        List<TeamConstraint> newCons = remaining.FindAll(c => groupCon.AddTeamConstraintWeekend(c));
+                        foreach (TeamConstraint tc in newCons)
+                        {
+                            remaining.Remove(tc);
+                            added = true;
+                        }
+                    } while (added);
+                }
+            } while (team != null);
+
         }
 
         public int LastTotalConflicts = 0;
@@ -211,42 +345,5 @@ namespace CompetitionCreator
                 OnMyChange(this, e);
             }
         }
- /*     XML-based variant was not available. Was it due to website changes?
-  *     public void ConvertVVBCompetitionToCSV(string filename)
-        {
-            HtmlDocument doc = new HtmlDocument();
-            doc.Load(@"\vvb2014.txt");
-            StreamWriter writer = new StreamWriter(filename);
-
-            foreach (HtmlNode table in doc.DocumentNode.SelectNodes("//table"))
-            {
-                HtmlNode tr = table.SelectSingleNode(".//tr");
-                HtmlNode td = tr.SelectSingleNode(".//td");
-                string poule = td.InnerText;
-                poule = poule.Substring(12);
-                HtmlNodeCollection lines = table.SelectNodes(".//tr");
-                for (int i = 2; i < lines.Count; i++)
-                {
-                    HtmlNode line = lines[i];
-                    HtmlNodeCollection fields = line.SelectNodes(".//td");
-                    string date = fields[2].InnerText;
-                    DateTime dt = DateTime.Parse(date);
-                    string aanvangsuur = fields[3].InnerText;
-                    string thuisploeg = fields[4].InnerText;
-                    int thuisploegId = -1;
-                    string bezoekersploeg = fields[5].InnerText;
-                    int bezoekersploegId = -1;
-                    string sporthal = fields[6].InnerText;
-                    sporthal = sporthal.Replace(",", " ");
-                    int sporthalId = -1;
-                    string thuisclubname = "Nationaal";
-                    int thuisclubId = -1;
-                    writer.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13}",
-                        "Nationaal1", "-1", poule, "-1", thuisploeg, thuisploegId, bezoekersploeg, bezoekersploegId, sporthal, sporthalId, date, aanvangsuur, thuisclubname, thuisclubId);
-                }
-            }
-            writer.Close();
-        }
-  * */
     }
 }

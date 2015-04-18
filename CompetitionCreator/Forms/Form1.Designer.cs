@@ -87,6 +87,7 @@
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.schemasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -254,12 +255,12 @@
             this.cSVCompetitionToolStripMenuItem.Text = "Competition (.csv)";
             this.cSVCompetitionToolStripMenuItem.Click += new System.EventHandler(this.cSVCompetitionToolStripMenuItem_Click);
             // 
-            // exportCompetitionToolStripMenuItem
+            // exportToolStripMenuItem
             // 
             this.exportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exportCompetitionToolStripMenuItem,
             this.exportRegistrationsToolStripMenuItem});
-            this.exportToolStripMenuItem.Name = "exportCompetitionToolStripMenuItem";
+            this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
             this.exportToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.exportToolStripMenuItem.Text = "Export";
             // 
@@ -368,7 +369,8 @@
             this.manageToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.anoramaToolStripMenuItem1,
             this.poulesToolStripMenuItem,
-            this.subscriptionsToolStripMenuItem});
+            this.subscriptionsToolStripMenuItem,
+            this.schemasToolStripMenuItem});
             this.manageToolStripMenuItem.Name = "manageToolStripMenuItem";
             this.manageToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.manageToolStripMenuItem.Text = "Edit";
@@ -486,6 +488,13 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // schemasToolStripMenuItem
+            // 
+            this.schemasToolStripMenuItem.Name = "schemasToolStripMenuItem";
+            this.schemasToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.schemasToolStripMenuItem.Text = "Schemas";
+            this.schemasToolStripMenuItem.Click += new System.EventHandler(this.schemasToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -550,6 +559,7 @@
         private System.Windows.Forms.ToolStripMenuItem matchescsvToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem statisticscsvToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem importRankingWebsiteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem schemasToolStripMenuItem;
     }
 }
 

@@ -30,10 +30,12 @@
         {
             this.objectListView1 = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn7 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn5 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn6 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
@@ -51,10 +53,12 @@
             // objectListView1
             // 
             this.objectListView1.AllColumns.Add(this.olvColumn1);
+            this.objectListView1.AllColumns.Add(this.olvColumn7);
             this.objectListView1.AllColumns.Add(this.olvColumn2);
             this.objectListView1.AllColumns.Add(this.olvColumn4);
             this.objectListView1.AllColumns.Add(this.olvColumn5);
             this.objectListView1.AllColumns.Add(this.olvColumn3);
+            this.objectListView1.AllColumns.Add(this.olvColumn6);
             this.objectListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -62,10 +66,13 @@
             this.objectListView1.CheckedAspectName = "";
             this.objectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumn1,
+            this.olvColumn7,
             this.olvColumn2,
             this.olvColumn4,
             this.olvColumn5,
-            this.olvColumn3});
+            this.olvColumn3,
+            this.olvColumn6});
+            this.objectListView1.FullRowSelect = true;
             this.objectListView1.GridLines = true;
             this.objectListView1.Location = new System.Drawing.Point(13, 13);
             this.objectListView1.Name = "objectListView1";
@@ -91,35 +98,41 @@
             this.olvColumn1.Text = "Serie";
             this.olvColumn1.Width = 80;
             // 
+            // olvColumn7
+            // 
+            this.olvColumn7.AspectName = "evaluated";
+            this.olvColumn7.CellPadding = null;
+            this.olvColumn7.CheckBoxes = true;
+            this.olvColumn7.MaximumWidth = 60;
+            this.olvColumn7.MinimumWidth = 60;
+            this.olvColumn7.Text = "Evaluate";
+            // 
             // olvColumn2
             // 
             this.olvColumn2.AspectName = "optimizableNumber";
             this.olvColumn2.CellPadding = null;
             this.olvColumn2.CheckBoxes = true;
-            this.olvColumn2.MaximumWidth = 80;
-            this.olvColumn2.MinimumWidth = 80;
+            this.olvColumn2.MaximumWidth = 60;
+            this.olvColumn2.MinimumWidth = 60;
             this.olvColumn2.Text = "Number";
-            this.olvColumn2.Width = 80;
             // 
             // olvColumn4
             // 
             this.olvColumn4.AspectName = "optimizableWeeks";
             this.olvColumn4.CellPadding = null;
             this.olvColumn4.CheckBoxes = true;
-            this.olvColumn4.MaximumWidth = 80;
-            this.olvColumn4.MinimumWidth = 80;
+            this.olvColumn4.MaximumWidth = 60;
+            this.olvColumn4.MinimumWidth = 60;
             this.olvColumn4.Text = "Weeks";
-            this.olvColumn4.Width = 80;
             // 
             // olvColumn5
             // 
             this.olvColumn5.AspectName = "optimizableHomeVisit";
             this.olvColumn5.CellPadding = null;
             this.olvColumn5.CheckBoxes = true;
-            this.olvColumn5.MaximumWidth = 80;
-            this.olvColumn5.MinimumWidth = 80;
-            this.olvColumn5.Text = "Home/Visit";
-            this.olvColumn5.Width = 80;
+            this.olvColumn5.MaximumWidth = 60;
+            this.olvColumn5.MinimumWidth = 60;
+            this.olvColumn5.Text = "HomeVisit";
             // 
             // olvColumn3
             // 
@@ -129,6 +142,12 @@
             this.olvColumn3.MinimumWidth = 80;
             this.olvColumn3.Text = "Importance";
             this.olvColumn3.Width = 80;
+            // 
+            // olvColumn6
+            // 
+            this.olvColumn6.AspectName = "imported";
+            this.olvColumn6.CellPadding = null;
+            this.olvColumn6.Text = "External";
             // 
             // button1
             // 
@@ -269,5 +288,7 @@
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Button button7;
         private BrightIdeasSoftware.OLVColumn olvColumn3;
+        private BrightIdeasSoftware.OLVColumn olvColumn6;
+        private BrightIdeasSoftware.OLVColumn olvColumn7;
     }
 }

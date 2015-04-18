@@ -22,23 +22,64 @@ namespace CompetitionCreator
             this.state = state;
             InitializeComponent();
             objectListView1.SetObjects(model.series);
+            model.OnMyChange += state_OnMyChange;
+            state.OnMyChange += state_OnMyChange;
+        }
+        public void state_OnMyChange(object source, MyEventArgs e)
+        {
+            if (e.model != null)
+            {
+                model.OnMyChange -= state_OnMyChange;
+                model = e.model;
+                objectListView1.SetObjects(model.series);
+                model.OnMyChange += state_OnMyChange;
+            }
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action(() => state_OnMyChange(source, e)));
+                return;
+            }
+            lock (model)
+            {
+                objectListView1.BuildList(true);
+            }
          }
 
         private void objectListView1_SubItemChecking(object sender, SubItemCheckingEventArgs e)
         {
-            Serie serie = (Serie)e.RowObject;
-            if (e.Column.Index == 1)
+            Serie serie1 = (Serie)e.RowObject;
+            List<Serie> series = new List<Serie>();
+            if(objectListView1.SelectedObjects.Contains(serie1))
             {
-                serie.optimizableNumber = (e.NewValue == CheckState.Checked);
-            }
-            else if (e.Column.Index == 2)
+                foreach (Object obj in objectListView1.SelectedObjects)
+                {
+                    series.Add((Serie)obj);
+                }
+            } else
             {
-                serie.optimizableWeeks = (e.NewValue == CheckState.Checked);
+                series.Add(serie1);
             }
-            else if (e.Column.Index == 3)
+            foreach (Serie serie in series)
             {
-                serie.optimizableHomeVisit = (e.NewValue == CheckState.Checked);
+                if (e.Column.Index == 1)
+                {
+                    serie.evaluated = (e.NewValue == CheckState.Checked);
+                }
+                else if (e.Column.Index == 2)
+                {
+                    serie.optimizableNumber = (e.NewValue == CheckState.Checked);
+                }
+                else if (e.Column.Index == 3)
+                {
+                    serie.optimizableWeeks = (e.NewValue == CheckState.Checked);
+                }
+                else if (e.Column.Index == 4)
+                {
+                    serie.optimizableHomeVisit = (e.NewValue == CheckState.Checked);
+                }
             }
+            objectListView1.BuildList(true);
+            model.RenewConstraints();
             model.Evaluate(null);
             model.Changed();
         }
@@ -337,7 +378,7 @@ namespace CompetitionCreator
         private void objectListView1_CellEditStarting(object sender, CellEditEventArgs e)
         {
             // Ignore edit events for other columns
-            if (e.Column.Index != 4) return;
+            if (e.Column.Index != 5) return;
             ComboBox cb = new ComboBox();
             cb.Bounds = e.CellBounds;
             cb.Font = ((ObjectListView)sender).Font;
@@ -355,7 +396,7 @@ namespace CompetitionCreator
             if (e.Control is ComboBox)
             {
                 int value = ((ComboBox)e.Control).SelectedIndex;
-                if (e.Column.Index == 4)
+                if (e.Column.Index == 5)
                 {
                     ((Serie)e.RowObject).importance = (Serie.ImportanceLevels) value;
                     objectListView1.RefreshItem(e.ListViewItem);

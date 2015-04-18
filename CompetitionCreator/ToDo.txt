@@ -10,19 +10,13 @@
 
 ToDo:
 - Testen: deleted teams
-- reeks met een 2 toevoegen: a2, b2
-- af en toe wordt de 'cost' hoger. Hoe kan dat. Welke constraint wordt niet meegenomen in de related constraints?
+- Testen: inlezen op de VVB site
 - automatisch saven om de 10 minuten.
-- Een net viewModel introduceren
-- losse wedstrijd verplaatsingen (op reserve weken). Tweede phase optimalisatie?
-- schema editor
 
 High:
-- Team specifieke sporthallen ook laten zien bij de club (of automatisch als je het team aanklikt.)
-	- Refresh soepeler laten verlopen
-- FixedConstraint
-- Predefined schema's from disk instead of generating one
+- Evaluate poule: aan/uit zetten
 
+- Predefined schema's from disk instead of generating one
 - diagnostics toevoegen
    - Logging, zodat de log opgestuurd kan worden. Ook een viewer om het te bekijken.
 - ImportCompetition definitie. Iets anders ipv XML based.
@@ -31,12 +25,19 @@ High:
      * xsd schema
   - gebruikers handleiding
 
+
 Medium:
 - obfuscator
+- reeks met een 2 toevoegen: a2, b2
+- schema editor/viewer
 
 
 Low:
 - andere dagen dan zaterdag/zondag ondersteunen ?
+- Team specifieke sporthallen ook laten zien bij de club (of automatisch als je het team aanklikt.)
+	- Refresh soepeler laten verlopen
+- losse wedstrijd verplaatsingen (op reserve weken). Tweede phase optimalisatie?
+- Een net viewModel introduceren
 
 
 KLVV-site:

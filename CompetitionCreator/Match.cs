@@ -164,10 +164,6 @@ namespace CompetitionCreator
                 {
                     weekIndexIndividual = temp1;
                 }
-                else
-                {
-                    weekIndexIndividual = weekIndexIndividual;
-                }
             }
         }
     }

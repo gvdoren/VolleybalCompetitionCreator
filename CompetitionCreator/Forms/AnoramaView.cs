@@ -53,7 +53,7 @@ namespace CompetitionCreator
                 olvColumn.AutoResize(ColumnHeaderAutoResizeStyle.HeaderSize);
                 //olvColumn.AspectName = "weekNrString";
             }
-            objectListView1.BuildList(true);
+            objectListView1.BuildList(false);
             label1.Text = model.annorama.title;
         }
         private void button1_Click(object sender, EventArgs e)

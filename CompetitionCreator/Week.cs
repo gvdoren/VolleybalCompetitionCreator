@@ -81,11 +81,16 @@ namespace CompetitionCreator
         }
         public static bool operator ==(Week x, Week y)
         {
+            Object xo = (Object)x;
+            Object yo = (Object)y;
+            if (xo == null && yo != null) return false;
+            if (xo != null && yo == null) return false;
+            if (xo == null && yo == null) return true;
             return x.FirstDayInWeek == y.FirstDayInWeek && x.dayOverruled == y.dayOverruled;
         }
         public static bool operator !=(Week x, Week y)
         {
-            return x.FirstDayInWeek != y.FirstDayInWeek || x.dayOverruled != y.dayOverruled;
+            return !(x == y);
         }
         public int CompareTo(Week other)
         {

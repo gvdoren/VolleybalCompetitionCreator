@@ -720,6 +720,24 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             }
         }
 
+        private void schemasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SchemaView schema = null;
+            foreach (DockContent content in this.dockPanel.Contents)
+            {
+                schema = content as SchemaView;
+                if (schema != null)
+                {
+                    schema.Activate();
+                    return;
+                }
+            }
+            schema = new SchemaView(model, state);
+            schema.Show(this.dockPanel);
+
+
+        }
+
 
     }
 }

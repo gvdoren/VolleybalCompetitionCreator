@@ -24,6 +24,14 @@ namespace CompetitionCreator
             return false;
 
         }
+        public List<Team> GetGroupX()
+        {
+            return teams.FindAll(t => t.group == TeamGroups.GroupX);
+        }
+        public List<Team> GetGroupY()
+        {
+            return teams.FindAll(t => t.group == TeamGroups.GroupY);
+        }
  
         public bool RemoveTeam(Team team)
         {
@@ -40,7 +48,7 @@ namespace CompetitionCreator
             get { if (teams.Count == 0) return 0;
                   return (conflict * 100) / teams.Count; }
         }
-        public List<SporthallClub> sporthalls = new List<SporthallClub>();
+        public List<SporthallAvailability> sporthalls = new List<SporthallAvailability>();
         public Club groupingWithClub = null;
         public string FreeFormatConstraints = "";
         public int Id { get; set; }

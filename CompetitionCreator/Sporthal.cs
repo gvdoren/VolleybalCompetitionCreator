@@ -32,7 +32,7 @@ namespace CompetitionCreator
         }
     }
 
-    public class SporthallClub
+    public class SporthallAvailability
     {
         public Sporthal sporthall;
         public Team team = null;
@@ -58,7 +58,7 @@ namespace CompetitionCreator
         {
             return name;
         }
-        public SporthallClub(Sporthal sporthall)
+        public SporthallAvailability(Sporthal sporthall)
         {
             this.sporthall = sporthall;
 

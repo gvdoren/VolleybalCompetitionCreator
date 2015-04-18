@@ -14,7 +14,7 @@ namespace CompetitionCreator
         public string name { get; set; }
         public Club club { get; set; }
         public string Ranking { get; set;  }
-        public SporthallClub sporthal { get; set; }
+        public SporthallAvailability sporthal { get; set; }
         public int fixedNumber = -1;
         public Poule poule = null;
         public Serie serie = null;
@@ -127,7 +127,24 @@ namespace CompetitionCreator
             model.RemoveTeam(this);
         }
         public List<DateTime> plannedMatches = new List<DateTime>();
-       
+        public static bool Overlap(List<Team> group1, List<Team> group2)
+        {
+            return group1.Exists(t1 => group2.Exists(t2 => t2 == t1));
+        }
+        public static void AddIfNeeded(List<Team> group1, List<Team> group2)
+        {
+            foreach(Team team in group2)
+            {
+                if(group1.Contains(team) == false)
+                {
+                    group1.Add(team);
+                }
+            }
+        }
+        public bool evaluated {
+            get { return (serie.evaluated && deleted == false); }
+        }
+
     }
 
 }

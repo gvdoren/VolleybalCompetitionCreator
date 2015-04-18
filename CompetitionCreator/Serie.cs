@@ -22,6 +22,7 @@ namespace CompetitionCreator
         Model model = null;
         public string name { get; set; }
         public int id { get; set; }
+        public bool evaluated { get; set; }
         public List<Poule> poules = new List<Poule>();
         public enum ImportanceLevels {  High, Medium, Low };
         ImportanceLevels _importance;

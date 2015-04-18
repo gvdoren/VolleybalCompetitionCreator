@@ -350,7 +350,7 @@ namespace CompetitionCreator
                     if (club.groupingWithClub != null) writer.WriteAttributeString("LinkedClub", club.groupingWithClub.Id.ToString());
                     writer.WriteElementString("FreeFormatConstraint", club.FreeFormatConstraints);
                     writer.WriteStartElement("Sporthalls");
-                    foreach (SporthallClub sporthal in club.sporthalls)
+                    foreach (SporthallAvailability sporthal in club.sporthalls)
                     {
                         if (unknown_also || sporthal.id >= 0)
                         {
@@ -705,6 +705,7 @@ namespace CompetitionCreator
                 writer.WriteAttributeString("OptimizeNumber", serie.optimizableNumber.ToString());
                 writer.WriteAttributeString("OptimizeWeeks", serie.optimizableWeeks.ToString());
                 writer.WriteAttributeString("OptimizeHomeVisit", serie.optimizableHomeVisit.ToString());
+                writer.WriteAttributeString("Evaluated", serie.evaluated.ToString());
                 writer.WriteAttributeString("Importance", serie.importance.ToString());
                 writer.WriteEndElement();
             }
@@ -775,7 +776,9 @@ namespace CompetitionCreator
                     writer.WriteAttributeString("Cost", con.cost.ToString());
                     writer.WriteEndElement();
                 }
-                TeamConstraint tcon = c as TeamConstraint;
+            }
+            foreach (TeamConstraint tcon in model.inputConstraints)
+            {
                 if (tcon != null)
                 {
                     writer.WriteStartElement("TeamConstraint");
@@ -914,7 +917,7 @@ namespace CompetitionCreator
                     if (team1 != null && team2 != null)
                     {
                         TeamConstraint tc = new TeamConstraint(team1, team2, what);
-                        model.constraints.Add(tc);
+                        model.inputConstraints.Add(tc);
                     }
                 }
             }
@@ -938,6 +941,7 @@ namespace CompetitionCreator
                     se.optimizableNumber = BoolAttribute(serie, "OptimizeNumber");
                     se.optimizableWeeks = BoolAttribute(serie, "OptimizeWeeks");
                     se.optimizableHomeVisit = BoolAttribute(serie, "OptimizeHomeVisit");
+                    se.evaluated = BoolOptionalAttribute(serie, true, "Evaluated");
                     se.importance = EnumAttribute<Serie.ImportanceLevels>(serie, "Importance");
                 }
             }
@@ -1012,10 +1016,10 @@ namespace CompetitionCreator
                             sp1 = new Sporthal(id, sporthallName);
                             //System.Windows.Forms.MessageBox.Show(string.Format("Sporthal id {0} not known known", id));
                         }
-                        SporthallClub sp = cl.sporthalls.Find(t => t.id == id && t.teamId == teamId);
+                        SporthallAvailability sp = cl.sporthalls.Find(t => t.id == id && t.teamId == teamId);
                         if (sp == null)
                         {
-                            sp = new SporthallClub(sp1);
+                            sp = new SporthallAvailability(sp1);
                             sp.teamId = teamId;
                             cl.sporthalls.Add(sp);
                         }
@@ -1106,7 +1110,7 @@ namespace CompetitionCreator
                     if (constraints != null)
                     {
                         // Create a seperate entity for the team
-                        te.sporthal = new SporthallClub(sp2);
+                        te.sporthal = new SporthallAvailability(sp2);
                         te.sporthal.teamId = te.Id;
                         te.club.sporthalls.Add(te.sporthal);
                         foreach (var constraint in constraints.Elements("Restriction"))
@@ -1115,14 +1119,14 @@ namespace CompetitionCreator
                             te.sporthal.NotAvailable.Add(date);
                         }
                     }
-                    SporthallClub sporthall = cl.sporthalls.Find(sp => sp.id == sporthalId && sp.teamId == te.Id);
+                    SporthallAvailability sporthall = cl.sporthalls.Find(sp => sp.id == sporthalId && sp.teamId == te.Id);
                     if (sporthall == null) sporthall = cl.sporthalls.Find(sp => sp.id == sporthalId);
                     if (sporthall == null)
                     {
                         // TODO: loopt door elkaar. Moet iets bedenken van 'onbekende sporthal'. Dat is beter gedefinieerd.
                         if (sporthall == null)
                         {
-                            sporthall = new SporthallClub(new Sporthal(sporthalId, "Unknown"));
+                            sporthall = new SporthallAvailability(new Sporthal(sporthalId, "Unknown"));
                             cl.sporthalls.Add(sporthall);
                         }
                     }
@@ -1132,6 +1136,32 @@ namespace CompetitionCreator
                         sporthall.team = te;
                     }
                 }
+            }
+            // Read in the FixedConstraint, waar ze ook staan (VVB hack, omdat ze onder de clubs staan)
+            var fixConstraints = doc.Descendants("FixedConstraint");
+            fixConstraints = fixConstraints.Union(doc.Descendants("TeamConstraint"));
+            foreach(XElement con in fixConstraints)
+            {
+                int team1Id = IntegerAttribute(con, "Team1Id", "SourceTeam");
+                int team2Id = IntegerAttribute(con, "Team2Id", "TargetTeam");
+                Team team1 = model.teams.Find(t => t.Id == team1Id);
+                Team team2 = model.teams.Find(t => t.Id == team2Id);
+                TeamConstraint.What what = TeamConstraint.What.HomeOnSameDay;
+                string whatString = StringAttribute(con, "What", "ConstraintType");
+                if (whatString == "zelfde weekend thuis") what = TeamConstraint.What.HomeInSameWeekend;
+                if (whatString == "niet samen thuis weekend") what = TeamConstraint.What.HomeNotInSameWeekend;
+                if (whatString == "zelfde dag thuis") what = TeamConstraint.What.HomeOnSameDay;
+                if (whatString == "niet zelfde dag thuis") what = TeamConstraint.What.HomeNotOnSameDay;
+                if (whatString == "HomeInSameWeekend") what = TeamConstraint.What.HomeInSameWeekend;
+                if (whatString == "HomeNotInSameWeekend") what = TeamConstraint.What.HomeNotInSameWeekend;
+                if (whatString == "HomeOnSameDay") what = TeamConstraint.What.HomeOnSameDay;
+                if (whatString == "HomeNotOnSameDay") what = TeamConstraint.What.HomeNotOnSameDay;
+
+                if (what == TeamConstraint.What.HomeOnSameDay && team2.defaultDay != team1.defaultDay) continue; // No use to add this
+                if (what == TeamConstraint.What.HomeNotOnSameDay && team2.defaultDay == team1.defaultDay) continue; // No use to add this
+
+                TeamConstraint constraint = new TeamConstraint(team1, team2, what);
+                model.inputConstraints.Add(constraint);
             }
             model.RenewConstraints();
             model.Evaluate(null);
@@ -1203,10 +1233,10 @@ namespace CompetitionCreator
                     //                    System.Windows.Forms.MessageBox.Show(string.Format("Sporthal id '{0}' is unknown", sporthalId));
                 }
                 // sporthal aan club toevoegen indien deze nog niet bestaat
-                SporthallClub sporthallclub = homeClub.sporthalls.Find(sp => sp.sporthall == sporthal);
+                SporthallAvailability sporthallclub = homeClub.sporthalls.Find(sp => sp.sporthall == sporthal);
                 if (sporthallclub == null)
                 {
-                    sporthallclub = new SporthallClub(sporthal);
+                    sporthallclub = new SporthallAvailability(sporthal);
                     homeClub.sporthalls.Add(sporthallclub);
                 }
                 // poules toevoegen indien ze niet bestaan

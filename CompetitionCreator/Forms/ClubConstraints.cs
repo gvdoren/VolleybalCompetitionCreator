@@ -17,7 +17,7 @@ namespace CompetitionCreator
         Model model = null;
         GlobalState state;
         Club club;
-        SporthallClub sporthal;
+        SporthallAvailability sporthal;
         public InschrijvingenView(Model model, GlobalState state)
         {
             this.Text = "Inschrijvingen";
@@ -41,7 +41,7 @@ namespace CompetitionCreator
         private void UpdateSporthalForm()
         {
             dataGridView2.Rows.Clear();
-            foreach (SporthallClub sporthal in club.sporthalls)
+            foreach (SporthallAvailability sporthal in club.sporthalls)
             {
                 if(sporthal.team!= null) dataGridView2.Rows.Add(sporthal,sporthal.team.Id);
                 else dataGridView2.Rows.Add(sporthal, "-");
@@ -95,7 +95,7 @@ namespace CompetitionCreator
         {
             if (dataGridView2.SelectedRows.Count > 0)
             {
-                sporthal = (SporthallClub)dataGridView2.SelectedRows[0].Cells[0].Value;
+                sporthal = (SporthallAvailability)dataGridView2.SelectedRows[0].Cells[0].Value;
                 dataGridView3.Enabled = true;
             }
             else
@@ -304,7 +304,7 @@ namespace CompetitionCreator
                 if (columnindex == olvColumn6.Index) // sporthal
                 {
                     List<Selection> list = new List<Selection>();
-                    foreach (SporthallClub sporthal in club.sporthalls)
+                    foreach (SporthallAvailability sporthal in club.sporthalls)
                     {
                         Selection sel = new Selection(sporthal.name, sporthal);
                         if (sporthal == team.sporthal) sel.selected = true;
@@ -315,7 +315,7 @@ namespace CompetitionCreator
                     diag.ShowDialog();
                     if (diag.Ok)
                     {
-                        SporthallClub sporthal = (SporthallClub)diag.Selection.obj;
+                        SporthallAvailability sporthal = (SporthallAvailability)diag.Selection.obj;
                         team.sporthal = sporthal;
                         model.MakeDirty();
                     }
@@ -431,7 +431,7 @@ namespace CompetitionCreator
                 bool selected = false;
                 foreach(DataGridViewRow row in dataGridView2.Rows)
                 {
-                    SporthallClub sp = (SporthallClub)row.Cells[0].Value;
+                    SporthallAvailability sp = (SporthallAvailability)row.Cells[0].Value;
                     if(t.sporthal == sp && sp.team == t)
                     {
                         dataGridView2.ClearSelection();
@@ -444,7 +444,7 @@ namespace CompetitionCreator
                 {
                     foreach (DataGridViewRow row in dataGridView2.Rows)
                     {
-                        SporthallClub sp = (SporthallClub)row.Cells[0].Value;
+                        SporthallAvailability sp = (SporthallAvailability)row.Cells[0].Value;
                         if (t.sporthal == sp)
                         {
                             dataGridView2.ClearSelection();

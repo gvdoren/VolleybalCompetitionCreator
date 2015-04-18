@@ -120,6 +120,10 @@ namespace CompetitionCreator
         [DefaultValue(200)]
         public int MatchTooManyAfterEachOtherCostLow { get; set; }
         [Category("Constraints")]
+        [DisplayName("Constraint.Teams.Constraint.Default.Cost")]
+        [DefaultValue(40)]
+        public int DefaultTeamsConstraintCost { get; set; }
+        [Category("Constraints")]
         [DisplayName("Constraint.Two.Teams.of.same.club.in.Poule.Cost")]
         [DefaultValue(1000)]
         public int TwoPoulesOfSameClubInPouleCost { get; set; }
