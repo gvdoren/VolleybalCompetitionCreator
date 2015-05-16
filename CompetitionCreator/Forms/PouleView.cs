@@ -19,9 +19,9 @@ namespace CompetitionCreator
         public Poule poule = null;
         SimpleDropSink myDropSink = new SimpleDropSink();
         ProgressDialog diag = new ProgressDialog();
-        Dictionary<Week, int> weekmapping = new Dictionary<Week, int>();
+        Dictionary<MatchWeek, int> weekmapping = new Dictionary<MatchWeek, int>();
         List<Team> selectedTeams = new List<Team>();
-        List<Week> selectedWeeks = new List<Week>();
+        List<MatchWeek> selectedWeeks = new List<MatchWeek>();
         List<Match> selectedMatches = new List<Match>();
 
         public PouleView(Model model, GlobalState state, Poule poule)
@@ -33,12 +33,16 @@ namespace CompetitionCreator
             this.Text = "Poule - " + poule.serie.name + poule.name;
             objectListView1.ShowGroups = false;
             objectListView1.SetObjects(new List<Team>(poule.teams));
+            objectListView1.Sort(olvColumn3, SortOrder.Ascending);
+
             myDropSink.CanDropBetween = true;
             objectListView1.DropSink = myDropSink;
             //this.objectListView1.FormatRow += objectListView1_FormatRow;
             objectListView1.BuildList();
             objectListView1_SelectionChanged(null, null);
             objectListView1.HideSelection = false;
+            objectListView1.PrimarySortColumn = invisible;
+            objectListView1.PrimarySortOrder = SortOrder.Ascending;
             objectListView2.ShowGroups = false;
             objectListView2.SetObjects(poule.matches);
             objectListView2.HideSelection = false;
@@ -47,6 +51,8 @@ namespace CompetitionCreator
             objectListView3.FormatRow += objectListView3_FormatRow;
             objectListView3.ShowGroups = false;
             objectListView3.HideSelection = false;
+            objectListView3.PrimarySortColumn = olvColumn11;
+            objectListView3.PrimarySortOrder = SortOrder.Ascending;
             objectListView3.SetObjects(weekmapping);
             model.OnMyChange += state_OnMyChange;
         }
@@ -79,8 +85,9 @@ namespace CompetitionCreator
                 {
                     selectedTeams.Add((Team)obj);
                 }
-                objectListView1.BuildList(true);
+                //objectListView1.BuildList(true);
                 objectListView1.SelectedObjects = selectedTeams;
+                updateTeams();
                 foreach (Object obj in objectListView2.SelectedObjects)
                 {
                     selectedMatches.Add((Match)obj);
@@ -90,13 +97,13 @@ namespace CompetitionCreator
                 objectListView2.SelectedObjects = selectedMatches;
                 foreach (Object obj in objectListView3.SelectedObjects)
                 {
-                    selectedWeeks.Add(((KeyValuePair<Week, int>)obj).Key);
+                    selectedWeeks.Add(((KeyValuePair<MatchWeek, int>)obj).Key);
                 }
                 UpdateWeekMapping();
                 objectListView3.BuildList(true);
                 foreach (Object obj in objectListView3.Objects)
                 {
-                    KeyValuePair<Week, int> kvp = (KeyValuePair<Week, int>)obj;
+                    KeyValuePair<MatchWeek, int> kvp = (KeyValuePair<MatchWeek, int>)obj;
                     if (selectedWeeks.Contains(kvp.Key) == true) objectListView3.SelectObject(obj);
                 }
             }
@@ -129,6 +136,7 @@ namespace CompetitionCreator
                 objectListView1.SetObjects(poule.teams);
                 objectListView1.SelectObject(team1);
                 updateMatches();
+                updateTeams();
             }
         }
         private void button2_Click(object sender, EventArgs e)
@@ -143,6 +151,7 @@ namespace CompetitionCreator
                 objectListView1.SetObjects(poule.teams);
                 objectListView1.SelectObject(team1);
                 updateMatches();
+                updateTeams();
             }
 
         }
@@ -166,17 +175,35 @@ namespace CompetitionCreator
             }
             poule.teams = newList;
         }
+        private void InsertTeamList(Team t1, int position)
+        {
+            List<Team> newList = new List<Team>();
+            int index = 1;
+            foreach (Team t in poule.teams)
+            {
+                if (index == position)
+                    newList.Add(t1);
+                if (t != t1)
+                {
+                    newList.Add(t);
+                    index++;
+                }
+            }
+            poule.teams = newList;
+        }
         private void Switch_Click(object sender, EventArgs e)
         {
             Team team1 = (Team) objectListView1.SelectedObjects[0];
             Team team2 = (Team) objectListView1.SelectedObjects[1];
             SwitchTeamList(team1, team2);
             objectListView1.SetObjects(poule.teams);
+            objectListView1.Sort(olvColumn3, SortOrder.Ascending);
             List<Team> teams = new List<Team>();
             teams.Add(team1);
             teams.Add(team2);
             objectListView1.SelectObjects(teams);
             updateMatches();
+            updateTeams();
         }
 
         void updateMatches()
@@ -186,6 +213,11 @@ namespace CompetitionCreator
             objectListView2.Objects = poule.matches;
             objectListView2.BuildList();
             objectListView2.Refresh();
+        }
+        void updateTeams()
+        {
+            //objectListView1.Sort(olvColumn3, SortOrder.Ascending);
+            objectListView1.BuildList(true);
         }
 
         private void PouleView_FormClosing(object sender, FormClosingEventArgs e)
@@ -314,7 +346,7 @@ namespace CompetitionCreator
         private void objectListView3_FormatRow(object sender, FormatRowEventArgs e)
         {
             
-            KeyValuePair<Week, int> kvp = (KeyValuePair<Week, int>)e.Model;
+            KeyValuePair<MatchWeek, int> kvp = (KeyValuePair<MatchWeek, int>)e.Model;
             if (kvp.Value > 0) e.Item.SubItems[2].Text = "Week " + kvp.Value.ToString();
             else e.Item.SubItems[2].Text = "----";
         }
@@ -322,9 +354,9 @@ namespace CompetitionCreator
         private void UpdateWeekMapping()
         {
             weekmapping.Clear();
-            Week start = poule.weeksFirst.Min();
-            Week end = poule.weeksSecond.Max();
-            for (Week date = new Week(start.FirstDayInWeek); !(date > end); date = new Week(date.FirstDayInWeek.AddDays(7)))
+            MatchWeek start = poule.weeksFirst.Min();
+            MatchWeek end = poule.weeksSecond.Max();
+            for (MatchWeek date = new MatchWeek(start.FirstDayInWeek); !(date > end); date = new MatchWeek(date.FirstDayInWeek.AddDays(7)))
             {
                 for (int i = 0; i < 2; i++)
                 {
@@ -348,7 +380,7 @@ namespace CompetitionCreator
                     }
                     if (index > 0 || !b)
                     {
-                        weekmapping.Add(new Week(date), index);
+                        weekmapping.Add(new MatchWeek(date), index);
                     }
                 }
             }
@@ -388,7 +420,7 @@ namespace CompetitionCreator
                 List<Constraint> constraints = new List<Constraint>();
                 foreach (Object obj in objectListView3.SelectedObjects)
                 {
-                    KeyValuePair<Week, int> kvp = (KeyValuePair<Week, int>)obj;
+                    KeyValuePair<MatchWeek, int> kvp = (KeyValuePair<MatchWeek, int>)obj;
                     constraints.AddRange(kvp.Key.conflictConstraints);
                 }
                 state.ShowConstraints(constraints);
@@ -510,6 +542,61 @@ namespace CompetitionCreator
                 poule.CopyAndClearSnapShot(model);
                 model.Changed();
             }
+        }
+
+        private void objectListView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void splitContainer1_Panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void objectListView1_ModelDropped(object sender, ModelDropEventArgs e)
+        {
+            // If they didn't drop on anything, then don't do anything
+            if (e.TargetModel == null)
+                return;
+            if (e.SourceModels.Count != 1)
+                return;
+
+            Team targetTeam = (Team)e.TargetModel;
+            Team sourceTeam = (Team)e.SourceModels[0];
+
+            if(e.DropTargetLocation == DropTargetLocation.Item) // switch teams
+            {
+                SwitchTeamList(targetTeam, sourceTeam);
+                objectListView1.SetObjects(poule.teams);
+            }
+            int index = targetTeam.Index;
+            if (sourceTeam.Index < index) index--;
+            if (e.DropTargetLocation == DropTargetLocation.AboveItem)
+            {
+                InsertTeamList(sourceTeam, index);
+            }
+            if (e.DropTargetLocation == DropTargetLocation.BelowItem)
+            {
+                InsertTeamList(sourceTeam, index+1);
+            }
+            // Force them to refresh
+            e.RefreshObjects();
+            objectListView1.SelectedObject = sourceTeam;
+            updateMatches();
+        }
+
+        private void objectListView1_ModelCanDrop(object sender, ModelDropEventArgs e)
+        {
+            if (e.TargetModel == null)
+                e.Effect = DragDropEffects.None;
+            else if (e.SourceModels.Count != 1)
+                e.Effect = DragDropEffects.None;
+            else if (poule.optimizable == false)
+                e.Effect = DragDropEffects.None;
+            else
+                e.Effect = DragDropEffects.Move | DragDropEffects.Scroll;
+
         }
 
     }

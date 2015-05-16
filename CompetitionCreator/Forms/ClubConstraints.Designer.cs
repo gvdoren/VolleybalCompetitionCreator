@@ -44,10 +44,10 @@
             this.olvColumn0 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn14 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn18 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
-            this.label4 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label1 = new System.Windows.Forms.Label();
             this.dataGridView3 = new System.Windows.Forms.DataGridView();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -67,13 +67,26 @@
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.objectListView3 = new BrightIdeasSoftware.ObjectListView();
+            this.olvColumn21 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn22 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn23 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn24 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn20 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.label3 = new System.Windows.Forms.Label();
+            this.tabControl2 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
             this.tabControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.objectListView3)).BeginInit();
+            this.tabControl2.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabPage3
@@ -124,7 +137,7 @@
             this.objectListView1.MultiSelect = false;
             this.objectListView1.Name = "objectListView1";
             this.objectListView1.ShowGroups = false;
-            this.objectListView1.Size = new System.Drawing.Size(729, 230);
+            this.objectListView1.Size = new System.Drawing.Size(729, 163);
             this.objectListView1.TabIndex = 0;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
@@ -133,6 +146,7 @@
             this.objectListView1.FormatRow += new System.EventHandler<BrightIdeasSoftware.FormatRowEventArgs>(this.objectListView1_FormatRow);
             this.objectListView1.ItemsChanged += new System.EventHandler<BrightIdeasSoftware.ItemsChangedEventArgs>(this.objectListView1_ItemsChanged);
             this.objectListView1.SelectionChanged += new System.EventHandler(this.objectListView1_SelectionChanged);
+            this.objectListView1.SelectedIndexChanged += new System.EventHandler(this.objectListView1_SelectedIndexChanged);
             this.objectListView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.objectListView1_MouseClick);
             // 
             // olvColumn1
@@ -249,33 +263,15 @@
             this.olvColumn18.CellPadding = null;
             this.olvColumn18.Text = "Fixed Number";
             // 
-            // comboBox2
-            // 
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(7, 30);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(356, 21);
-            this.comboBox2.TabIndex = 1;
-            this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(8, 11);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(369, 13);
-            this.label4.TabIndex = 2;
-            this.label4.Text = "Groups are defined together with another Club (e.g. when sharing a sporthal):";
-            // 
             // textBox1
             // 
             this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Location = new System.Drawing.Point(7, 58);
+            this.textBox1.Location = new System.Drawing.Point(7, 27);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(725, 129);
+            this.textBox1.Size = new System.Drawing.Size(725, 160);
             this.textBox1.TabIndex = 3;
             // 
             // dataGridView2
@@ -294,6 +290,18 @@
             this.dataGridView2.Size = new System.Drawing.Size(248, 87);
             this.dataGridView2.TabIndex = 5;
             this.dataGridView2.SelectionChanged += new System.EventHandler(this.dataGridView2_SelectionChanged);
+            // 
+            // Column1
+            // 
+            this.Column1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Column1.HeaderText = "Sporthal";
+            this.Column1.Name = "Column1";
+            // 
+            // Column5
+            // 
+            this.Column5.HeaderText = "TeamId";
+            this.Column5.Name = "Column5";
+            this.Column5.Width = 50;
             // 
             // label1
             // 
@@ -367,7 +375,7 @@
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button2.Enabled = false;
-            this.button2.Location = new System.Drawing.Point(657, 509);
+            this.button2.Location = new System.Drawing.Point(640, 193);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 10;
@@ -379,7 +387,7 @@
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.Enabled = false;
-            this.button1.Location = new System.Drawing.Point(657, 479);
+            this.button1.Location = new System.Drawing.Point(559, 193);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 9;
@@ -394,7 +402,8 @@
             this.objectListView2.AllColumns.Add(this.olvColumn15);
             this.objectListView2.AllColumns.Add(this.olvColumn16);
             this.objectListView2.AllColumns.Add(this.olvColumn11);
-            this.objectListView2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.objectListView2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.objectListView2.CellEditActivation = BrightIdeasSoftware.ObjectListView.CellEditActivateMode.SingleClick;
             this.objectListView2.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -405,11 +414,11 @@
             this.olvColumn11});
             this.objectListView2.FullRowSelect = true;
             this.objectListView2.HideSelection = false;
-            this.objectListView2.Location = new System.Drawing.Point(3, 479);
+            this.objectListView2.Location = new System.Drawing.Point(6, 23);
             this.objectListView2.MultiSelect = false;
             this.objectListView2.Name = "objectListView2";
             this.objectListView2.ShowGroups = false;
-            this.objectListView2.Size = new System.Drawing.Size(632, 162);
+            this.objectListView2.Size = new System.Drawing.Size(712, 164);
             this.objectListView2.TabIndex = 8;
             this.objectListView2.UseCompatibleStateImageBehavior = false;
             this.objectListView2.View = System.Windows.Forms.View.Details;
@@ -456,9 +465,9 @@
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button3.Enabled = false;
-            this.button3.Location = new System.Drawing.Point(621, 447);
+            this.button3.Location = new System.Drawing.Point(643, 378);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(111, 23);
+            this.button3.Size = new System.Drawing.Size(89, 23);
             this.button3.TabIndex = 9;
             this.button3.Text = "Add Team";
             this.button3.UseVisualStyleBackColor = true;
@@ -467,9 +476,9 @@
             // 
             this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button4.Enabled = false;
-            this.button4.Location = new System.Drawing.Point(504, 447);
+            this.button4.Location = new System.Drawing.Point(551, 377);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(111, 23);
+            this.button4.Size = new System.Drawing.Size(89, 23);
             this.button4.TabIndex = 9;
             this.button4.Text = "Delete Team";
             this.button4.UseVisualStyleBackColor = true;
@@ -479,9 +488,9 @@
             // 
             this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button5.Enabled = false;
-            this.button5.Location = new System.Drawing.Point(504, 447);
+            this.button5.Location = new System.Drawing.Point(550, 378);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(111, 23);
+            this.button5.Size = new System.Drawing.Size(89, 23);
             this.button5.TabIndex = 9;
             this.button5.Text = "Undelete Team";
             this.button5.UseVisualStyleBackColor = true;
@@ -493,43 +502,145 @@
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(11, 456);
+            this.label2.Location = new System.Drawing.Point(9, 9);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(169, 13);
+            this.label2.Size = new System.Drawing.Size(134, 13);
             this.label2.TabIndex = 11;
-            this.label2.Text = "Special Team Requirements:";
+            this.label2.Text = "Special Requirements:";
             // 
-            // Column1
+            // objectListView3
             // 
-            this.Column1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Column1.HeaderText = "Sporthal";
-            this.Column1.Name = "Column1";
+            this.objectListView3.AllColumns.Add(this.olvColumn21);
+            this.objectListView3.AllColumns.Add(this.olvColumn22);
+            this.objectListView3.AllColumns.Add(this.olvColumn23);
+            this.objectListView3.AllColumns.Add(this.olvColumn24);
+            this.objectListView3.AllColumns.Add(this.olvColumn20);
+            this.objectListView3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.objectListView3.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.olvColumn21,
+            this.olvColumn22,
+            this.olvColumn23,
+            this.olvColumn24,
+            this.olvColumn20});
+            this.objectListView3.FullRowSelect = true;
+            this.objectListView3.Location = new System.Drawing.Point(6, 23);
+            this.objectListView3.Name = "objectListView3";
+            this.objectListView3.ShowGroups = false;
+            this.objectListView3.Size = new System.Drawing.Size(712, 195);
+            this.objectListView3.TabIndex = 12;
+            this.objectListView3.UseCompatibleStateImageBehavior = false;
+            this.objectListView3.View = System.Windows.Forms.View.Details;
+            this.objectListView3.SelectedIndexChanged += new System.EventHandler(this.objectListView3_SelectedIndexChanged);
             // 
-            // Column5
+            // olvColumn21
             // 
-            this.Column5.HeaderText = "TeamId";
-            this.Column5.Name = "Column5";
-            this.Column5.Width = 50;
+            this.olvColumn21.AspectName = "serie1str";
+            this.olvColumn21.CellPadding = null;
+            this.olvColumn21.FillsFreeSpace = true;
+            this.olvColumn21.Text = "Serie";
+            // 
+            // olvColumn22
+            // 
+            this.olvColumn22.AspectName = "team1str";
+            this.olvColumn22.CellPadding = null;
+            this.olvColumn22.FillsFreeSpace = true;
+            this.olvColumn22.Text = "Team";
+            // 
+            // olvColumn23
+            // 
+            this.olvColumn23.AspectName = "serie2str";
+            this.olvColumn23.CellPadding = null;
+            this.olvColumn23.FillsFreeSpace = true;
+            this.olvColumn23.Text = "Serie";
+            // 
+            // olvColumn24
+            // 
+            this.olvColumn24.AspectName = "team2str";
+            this.olvColumn24.CellPadding = null;
+            this.olvColumn24.FillsFreeSpace = true;
+            this.olvColumn24.Text = "Team";
+            // 
+            // olvColumn20
+            // 
+            this.olvColumn20.AspectName = "description2";
+            this.olvColumn20.CellPadding = null;
+            this.olvColumn20.FillsFreeSpace = true;
+            // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(8, 9);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(123, 13);
+            this.label3.TabIndex = 11;
+            this.label3.Text = "Team Requirements:";
+            // 
+            // tabControl2
+            // 
+            this.tabControl2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl2.Controls.Add(this.tabPage1);
+            this.tabControl2.Controls.Add(this.tabPage2);
+            this.tabControl2.Location = new System.Drawing.Point(3, 391);
+            this.tabControl2.Name = "tabControl2";
+            this.tabControl2.SelectedIndex = 0;
+            this.tabControl2.Size = new System.Drawing.Size(729, 250);
+            this.tabControl2.TabIndex = 13;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.objectListView3);
+            this.tabPage1.Controls.Add(this.label3);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(721, 224);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Team Requirements";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.objectListView2);
+            this.tabPage2.Controls.Add(this.button2);
+            this.tabPage2.Controls.Add(this.label2);
+            this.tabPage2.Controls.Add(this.button1);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(721, 224);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Special Requirements";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(8, 11);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(117, 13);
+            this.label4.TabIndex = 2;
+            this.label4.Text = "Free format constraints:";
             // 
             // InschrijvingenView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1004, 642);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.button2);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.objectListView2);
             this.Controls.Add(this.dataGridView3);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dataGridView2);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.comboBox2);
             this.Controls.Add(this.objectListView1);
+            this.Controls.Add(this.tabControl2);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "InschrijvingenView";
             this.Text = "ClubConstraints";
@@ -539,6 +650,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
             this.tabControl1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.objectListView3)).EndInit();
+            this.tabControl2.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -551,8 +668,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DataGridView dataGridView2;
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.ComboBox comboBox2;
         private BrightIdeasSoftware.ObjectListView objectListView1;
         private BrightIdeasSoftware.OLVColumn olvColumn0;
         private BrightIdeasSoftware.OLVColumn olvColumn1;
@@ -587,6 +702,17 @@
         private BrightIdeasSoftware.OLVColumn olvColumn18;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
+        private BrightIdeasSoftware.ObjectListView objectListView3;
+        private BrightIdeasSoftware.OLVColumn olvColumn20;
+        private BrightIdeasSoftware.OLVColumn olvColumn21;
+        private BrightIdeasSoftware.OLVColumn olvColumn22;
+        private BrightIdeasSoftware.OLVColumn olvColumn23;
+        private BrightIdeasSoftware.OLVColumn olvColumn24;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TabControl tabControl2;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.Label label4;
 
     }
 }

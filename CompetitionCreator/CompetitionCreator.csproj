@@ -24,7 +24,7 @@
     <UpdateIntervalUnits>Days</UpdateIntervalUnits>
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>false</MapFileExtensions>
+    <MapFileExtensions>true</MapFileExtensions>
     <InstallUrl>http://CompetitionCreator.doren.be/Installer/</InstallUrl>
     <SupportUrl>http://competitioncreator.doren.be/help.html</SupportUrl>
     <ErrorReportUrl>http://competitioncreator.doren.be/error.html</ErrorReportUrl>
@@ -32,8 +32,9 @@
     <PublisherName>Giel van Doren</PublisherName>
     <SuiteName>Competition Creator</SuiteName>
     <WebPage>publish.htm</WebPage>
+    <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <DisallowUrlActivation>true</DisallowUrlActivation>
-    <ApplicationRevision>82</ApplicationRevision>
+    <ApplicationRevision>103</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <ExcludeDeploymentUrl>true</ExcludeDeploymentUrl>
@@ -263,9 +264,6 @@
     <Content Include="Schemas\schema2.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Schemas\schema3.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Schemas\schema4.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -356,24 +354,6 @@
       <DependentUpon>SerieView.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
-    <Content Include="InputData\Schema10.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="InputData\Schema12.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="InputData\Schema14.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="InputData\Schema4.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="InputData\Schema6.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="InputData\Schema8.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -417,4 +397,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="CustomPublish" AfterTargets="PublishOnly">
+    <Exec Command="C:\Users\Giel\Desktop\FtpCompetitionCreator.bat;" />
+  </Target>
 </Project>

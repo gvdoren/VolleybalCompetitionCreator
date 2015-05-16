@@ -405,6 +405,12 @@ namespace CompetitionCreator
                 }
             }
         }
+
+        private void OptimizeForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            state.OnMyChange -= new MyEventHandler(state_OnMyChange);
+            model.OnMyChange -= new MyEventHandler(state_OnMyChange);
+        }
     }
 
 }

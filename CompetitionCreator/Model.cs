@@ -46,8 +46,8 @@ namespace CompetitionCreator
             teams.Remove(team);
             MakeDirty();
         }
-        public Annorama annorama = new Annorama(DateTime.Now.Year);
-        public List<TeamConstraint> inputConstraints = new List<TeamConstraint>();
+        public Annorama annorama = null; // = new Annorama(DateTime.Now.Year).ReadXML();
+        public List<TeamConstraint> teamConstraints = new List<TeamConstraint>();
         public List<Constraint> constraints = new List<Constraint>();
         public List<Sporthal> sporthalls = new List<Sporthal>();
         public void Optimize()
@@ -59,35 +59,40 @@ namespace CompetitionCreator
                 Changed();
             }
         }
+        private void ClearAllConflicts()
+        {
+            foreach (Team team in teams) team.ClearConflicts();
+            foreach (Poule poule in poules)
+            {
+                poule.ClearConflicts();
+                foreach (Match match in poule.matches)
+                {
+                    match.ClearConflicts();
+                }
+                foreach (MatchWeek week in poule.weeksFirst)
+                {
+                    week.ClearConflicts();
+                }
+                foreach (MatchWeek week in poule.weeksSecond)
+                {
+                    week.ClearConflicts();
+                }
+            }
+            foreach (Serie serie in series)
+            {
+                serie.ClearConflicts();
+            }
+            foreach (Club club in clubs)
+            {
+                club.ClearConflicts();
+            }
+
+        }
         public void Evaluate(Poule p)
         {
             lock (this)
             {
-                foreach (Team team in teams) team.ClearConflicts();
-                foreach (Poule poule in poules)
-                {
-                    poule.ClearConflicts();
-                    foreach (Match match in poule.matches)
-                    {
-                        match.ClearConflicts();
-                    }
-                    foreach (Week week in poule.weeksFirst)
-                    {
-                        week.ClearConflicts();
-                    }
-                    foreach (Week week in poule.weeksSecond)
-                    {
-                        week.ClearConflicts();
-                    }
-                }
-                foreach (Serie serie in series)
-                {
-                    serie.ClearConflicts();
-                }
-                foreach (Club club in clubs)
-                {
-                    club.ClearConflicts();
-                }
+                ClearAllConflicts();
                 foreach (Constraint constraint in constraints)
                 {
                     constraint.Evaluate(this);
@@ -96,24 +101,11 @@ namespace CompetitionCreator
         }
         public void EvaluateRelatedConstraints(Poule p)
         {
+            //Evaluate(p); return;
+            
             lock (this)
             {
-                foreach (Club cl in clubs)
-                {
-                    cl.ClearConflicts();
-                }
-                foreach (Team te in teams)
-                {
-                    te.ClearConflicts();
-                }
-                foreach (Week we in p.weeksFirst)
-                {
-                    we.ClearConflicts();
-                }
-                foreach (Week we in p.weeksSecond)
-                {
-                    we.ClearConflicts();
-                }
+                ClearAllConflicts();
                 foreach (Constraint constraint in p.relatedConstraints)
                 //foreach (Constraint constraint in constraints)
                 {
@@ -148,13 +140,22 @@ namespace CompetitionCreator
                 return "1.0.0.83 (not published)";
             }
         }
+        public Model()
+        {
+            string Key = CompetitionCreator.Properties.Settings.Default.LicenseKey;
+            licenseKey = new Security.LicenseKey(Key);
+            this.year = DateTime.Now.Year;
+            this.annorama = new Annorama(year);
+            this.annorama.ReadXML();
+            clubs = new List<Club>();
+        }
         public Model(int year)
         {
-
             string Key = CompetitionCreator.Properties.Settings.Default.LicenseKey;
             licenseKey = new Security.LicenseKey(Key);
             this.year = year;
             this.annorama = new Annorama(year);
+            this.annorama.ReadXML();
             clubs = new List<Club>();
         }
         public void RenewConstraints()
@@ -224,10 +225,10 @@ namespace CompetitionCreator
         {
             // Grouping of teams, and creating the constraints for it
             // first day constraints
-            List<TeamConstraint> remaining = inputConstraints.FindAll(c => c.team.defaultDay == day && 
-                                                                      c.team2.defaultDay == day && 
+            List<TeamConstraint> remaining = teamConstraints.FindAll(c => c.team1 != null && c.team1.defaultDay == day && 
+                                                                      c.team2 != null && c.team2.defaultDay == day && 
                                                                       (c.what == TeamConstraint.What.HomeNotOnSameDay || c.what == TeamConstraint.What.HomeOnSameDay) &&
-                                                                      c.team.evaluated && c.team2.evaluated);
+                                                                      c.team1.evaluated && c.team2.evaluated);
             List<Club> remainingClubs = clubs.FindAll(c => c.teams.Exists(t => t.defaultDay == day && t.group != TeamGroups.NoGroup && t.evaluated));
             // find the first constraint in remaining that is day related
             Team team = null;
@@ -235,7 +236,7 @@ namespace CompetitionCreator
             {
                 team = null;
                 // selecteer team waar vanuit het maken van de groepen begint
-                if (remaining.Count > 0) team = remaining[0].team;
+                if (remaining.Count > 0) team = remaining[0].team1;
                 else if (remainingClubs.Count > 0) team = remainingClubs[0].teams.Find(t => t.defaultDay == day && t.group != TeamGroups.NoGroup && t.evaluated);
                 if (team != null)
                 {
@@ -302,14 +303,14 @@ namespace CompetitionCreator
         {
             // Grouping of teams, and creating the constraints for it
             // first weekend constraints
-            List<TeamConstraint> remaining = inputConstraints.FindAll(c => (c.what == TeamConstraint.What.HomeNotInSameWeekend || c.what == TeamConstraint.What.HomeInSameWeekend) &&
-                                                                           c.team.evaluated && c.team2.evaluated); 
+            List<TeamConstraint> remaining = teamConstraints.FindAll(c => (c.what == TeamConstraint.What.HomeNotInSameWeekend || c.what == TeamConstraint.What.HomeInSameWeekend) &&
+                                                                           c.team1 != null && c.team2 != null && c.team1.evaluated && c.team2.evaluated); 
             // find the first constraint in remaining that is day related
             Team team = null;
             do
             {
                 team = null;
-                if (remaining.Count > 0) team = remaining[0].team;
+                if (remaining.Count > 0) team = remaining[0].team1;
                 if (team != null)
                 {
                     ConstraintGrouping groupCon = new ConstraintGrouping();
@@ -346,4 +347,69 @@ namespace CompetitionCreator
             }
         }
     }
+
+    public class TeamConstraint //: SpecificConstraint
+    {
+        public enum What { HomeInSameWeekend, HomeOnSameDay, HomeNotInSameWeekend, HomeNotOnSameDay };
+        public What what;
+        public int team1Id;
+        public int team2Id;
+        public Model model;
+        public Team team2
+        {
+            get { return model.teams.Find(t => t.Id == team2Id); }
+        }
+        public Team team1
+        {
+            get { return model.teams.Find(t => t.Id == team1Id); }
+        }
+        public TeamConstraint(Model model, int team1Id, int team2Id, What what)
+        {
+            this.model = model;
+            this.team1Id = team1Id;
+            this.team2Id = team2Id;
+            this.what = what;
+            //VisitorAlso = true;
+            //cost = MySettings.Settings.DefaultTeamsConstraintCost;
+            //name = ToText(what);
+        }
+        public /*override*/ bool RelatedTo(List<Team> teams)
+        {
+            if (team1 == null || team2 == null) return false;
+            return teams.Contains(this.team1) || teams.Contains(this.team2);
+        }
+        public /*override*/ List<Club> RelatedClubs()
+        {
+            List<Club> clubs = new List<Club>();
+            if (team1 == null || team2 == null) return clubs;
+            if (team1 != null) clubs.Add(team1.club);
+            if (team2 != null) clubs.Add(team2.club);
+            return clubs;
+        }
+        public /*override*/ List<Poule> RelatedPoules()
+        {
+            List<Poule> poules = new List<Poule>();
+            if (team1 == null || team2 == null) return poules;
+            if (team1 != null && team1.poule != null) poules.Add(team1.poule);
+            if (team2 != null && team2.poule != null) poules.Add(team2.poule);
+            return poules;
+        }
+        public /*override*/ List<Team> RelatedTeams()
+        {
+            List<Team> teams = new List<Team>();
+            if (team1 == null || team2 == null) return teams;
+            if (team1 != null) teams.Add(team1);
+            if (team2 != null) teams.Add(team2);
+            return teams;
+        }
+        public string serie1str { get { if (team1 != null) return team1.serie.name; else return "?"; } }
+        public string serie2str { get { if (team2 != null) return team2.serie.name; else return "?"; } }
+        public string team1str { get { if (team1 != null) return team1.name + " (" + team1Id + ")"; else return "? (" + team1Id + ")"; } }
+        public string team2str { get { if (team2 != null) return team2.name + " (" + team2Id + ")"; else return "? (" + team2Id + ")"; } }
+        public string description2
+        {
+            get { return what.ToString(); }
+        }
+    }
+
 }

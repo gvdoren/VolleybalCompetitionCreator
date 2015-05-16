@@ -735,14 +735,14 @@ namespace CompetitionCreator
                 }
                 writer.WriteEndElement();
                 writer.WriteStartElement("Weeks");
-                foreach (Week week in poule.weeksFirst)
+                foreach (MatchWeek week in poule.weeksFirst)
                 {
                     writer.WriteStartElement("Week");
                     writer.WriteAttributeString("Date", week.FirstDayInWeek.Date.ToShortDateString());
                     if (week.dayOverruled) writer.WriteAttributeString("OverruledDay", "true");
                     writer.WriteEndElement();
                 }
-                foreach (Week week in poule.weeksSecond)
+                foreach (MatchWeek week in poule.weeksSecond)
                 {
                     writer.WriteStartElement("Week");
                     writer.WriteAttributeString("Date", week.FirstDayInWeek.Date.ToShortDateString());
@@ -777,13 +777,13 @@ namespace CompetitionCreator
                     writer.WriteEndElement();
                 }
             }
-            foreach (TeamConstraint tcon in model.inputConstraints)
+            foreach (TeamConstraint tcon in model.teamConstraints)
             {
                 if (tcon != null)
                 {
                     writer.WriteStartElement("TeamConstraint");
-                    writer.WriteAttributeString("Team1Id", tcon.team.Id.ToString());
-                    writer.WriteAttributeString("Team2Id", tcon.team2.Id.ToString());
+                    writer.WriteAttributeString("Team1Id", tcon.team1Id.ToString());
+                    writer.WriteAttributeString("Team2Id", tcon.team2Id.ToString());
                     writer.WriteAttributeString("What", tcon.what.ToString());
                     writer.WriteEndElement();
                 }
@@ -870,11 +870,11 @@ namespace CompetitionCreator
                     po.AddTeam(te, index); //must at fixed position
                     index++;
                 }
-                List<Week> temp = new List<Week>();
+                List<MatchWeek> temp = new List<MatchWeek>();
                 foreach (XElement week in Element(poule,"Weeks").Elements("Week"))
                 {
                     DateTime date = DateAttribute(week,"Date").Date;
-                    Week w = new Week(date);
+                    MatchWeek w = new MatchWeek(date);
                     w.dayOverruled = BoolOptionalAttribute(week, false, "OverruledDay");
                     temp.Add(w);
                 }
@@ -899,7 +899,7 @@ namespace CompetitionCreator
                 {
                     int teamId = IntegerAttribute(con, "TeamId");
                     DateTime date = DateAttribute(con, "Date").Date;
-                    DateConstraint.HomeVisitNone what = EnumAttribute<DateConstraint.HomeVisitNone>(con, "What");
+                    DateConstraint.HomeVisitNone what = EnumAttribute<DateConstraint.HomeVisitNone>(con, "What", "Type");
                     Team team = model.teams.Find(t => t.Id == teamId);
                     DateConstraint tc = new DateConstraint(team);
                     tc.homeVisitNone = what;
@@ -912,12 +912,11 @@ namespace CompetitionCreator
                     int team1Id = IntegerAttribute(con,"Team1Id");
                     int team2Id = IntegerAttribute(con, "Team2Id");
                     TeamConstraint.What what = EnumAttribute<TeamConstraint.What>(con, "What");
-                    Team team1 = model.teams.Find(t => t.Id == team1Id);
-                    Team team2 = model.teams.Find(t => t.Id == team2Id);
-                    if (team1 != null && team2 != null)
+                    var exists = model.teamConstraints.Find(c => c.team1Id == team1Id && c.team2Id == team2Id && c.what == what);
+                    if (exists == null)
                     {
-                        TeamConstraint tc = new TeamConstraint(team1, team2, what);
-                        model.inputConstraints.Add(tc);
+                        TeamConstraint tc = new TeamConstraint(model, team1Id, team2Id, what);
+                        model.teamConstraints.Add(tc);
                     }
                 }
             }
@@ -954,6 +953,7 @@ namespace CompetitionCreator
             try
             {
                 Model modelnew = LoadFullCompetitionIntern(filename);
+                ImportSporthalls(modelnew, XDocument.Load(MySettings.Settings.sporthalXML, LoadOptions.SetLineInfo|LoadOptions.SetBaseUri).Root);
                 Properties.Settings.Default.LastOpenedProject = filename;
                 Properties.Settings.Default.Save();
                 model.Changed();
@@ -1003,37 +1003,39 @@ namespace CompetitionCreator
 
                 cl.FreeFormatConstraints = freeformatconstraint.Value;
 
-                if (Element(club, "Sporthalls") != null)
+                foreach (var sporthal in Element(club, "Sporthalls").Elements("Sporthall"))
                 {
-                    foreach (var sporthal in Element(club, "Sporthalls").Elements("Sporthall"))
+                    string sporthallName = StringAttribute(sporthal, "Name");
+                    int id = IntegerAttribute(sporthal, "Id");
+                    int teamId = IntegerOptionalAttribute(sporthal, -1, "TeamId");
+                    Sporthal sp1 = model.sporthalls.Find(s => s.id == id);
+                    if (sp1 == null)
                     {
-                        string sporthallName = StringAttribute(sporthal, "Name");
-                        int id = IntegerAttribute(sporthal, "Id");
-                        int teamId = IntegerOptionalAttribute(sporthal, -1, "TeamId");
-                        Sporthal sp1 = model.sporthalls.Find(s => s.id == id);
-                        if (sp1 == null)
-                        {
-                            sp1 = new Sporthal(id, sporthallName);
-                            //System.Windows.Forms.MessageBox.Show(string.Format("Sporthal id {0} not known known", id));
-                        }
-                        SporthallAvailability sp = cl.sporthalls.Find(t => t.id == id && t.teamId == teamId);
-                        if (sp == null)
-                        {
-                            sp = new SporthallAvailability(sp1);
-                            sp.teamId = teamId;
-                            cl.sporthalls.Add(sp);
-                        }
+                        sp1 = new Sporthal(id, sporthallName);
+                        model.sporthalls.Add(sp1);
+                        //System.Windows.Forms.MessageBox.Show(string.Format("Sporthal id {0} not known known", id));
+                    }
+                    SporthallAvailability sp = cl.sporthalls.Find(t => t.id == id && t.teamId == teamId);
+                    if (sp == null)
+                    {
+                        sp = new SporthallAvailability(sp1);
+                        sp.teamId = teamId;
+                        cl.sporthalls.Add(sp);
+                    }
 
-                        //clear original dates (for re-reading the subscriptions)
-                        sp.NotAvailable.Clear();
-                        foreach (var date in Element(sporthal, "NotAvailable").Elements("Date"))
+                    //clear original dates (for re-reading the subscriptions)
+                    sp.NotAvailable.Clear();
+                    foreach (var date in Element(sporthal, "NotAvailable").Elements("Date"))
+                    {
+                        try
                         {
                             DateTime dt = DateTime.Parse(date.Value.ToString());
                             if (sp.NotAvailable.Contains(dt) == false) sp.NotAvailable.Add(dt);
-
                         }
-                        if (cl.sporthalls.Contains(sp) == false) cl.sporthalls.Add(sp);
+                        catch { }
+
                     }
+                    if (cl.sporthalls.Contains(sp) == false) cl.sporthalls.Add(sp);
                 }
 
                 foreach (var team in club.Element("Teams").Elements("Team"))
@@ -1078,12 +1080,14 @@ namespace CompetitionCreator
                     Time time = new Time(DateAttribute(team,"StartTime"));
                     te.defaultDay = day;
                     te.defaultTime = time;
-                    string teamGroup = StringAttribute(team, "Group");
+                    string teamGroup = StringOptionalAttribute(team, "-", "Group");
                     te.group = TeamGroups.NoGroup;
+                    if (teamGroup != "-") te.group = TeamGroups.NoGroup;
                     if (teamGroup == "A") te.group = TeamGroups.GroupX;
                     if (teamGroup == "B") te.group = TeamGroups.GroupY;
                     if (teamGroup == "X") te.group = TeamGroups.GroupX;
                     if (teamGroup == "Y") te.group = TeamGroups.GroupY;
+                
                     if (BoolOptionalAttribute(team, false, "Deleted")) te.DeleteTeam(model); // remains only in the club administration.
                     int idNot = IntegerOptionalAttribute(team, -1, "NotAtSameTime");
                     if (idNot >= 0)
@@ -1144,10 +1148,8 @@ namespace CompetitionCreator
             {
                 int team1Id = IntegerAttribute(con, "Team1Id", "SourceTeam");
                 int team2Id = IntegerAttribute(con, "Team2Id", "TargetTeam");
-                Team team1 = model.teams.Find(t => t.Id == team1Id);
-                Team team2 = model.teams.Find(t => t.Id == team2Id);
                 TeamConstraint.What what = TeamConstraint.What.HomeOnSameDay;
-                string whatString = StringAttribute(con, "What", "ConstraintType");
+                string whatString = StringAttribute(con, "What", "Type", "ConstraintType");
                 if (whatString == "zelfde weekend thuis") what = TeamConstraint.What.HomeInSameWeekend;
                 if (whatString == "niet samen thuis weekend") what = TeamConstraint.What.HomeNotInSameWeekend;
                 if (whatString == "zelfde dag thuis") what = TeamConstraint.What.HomeOnSameDay;
@@ -1156,12 +1158,13 @@ namespace CompetitionCreator
                 if (whatString == "HomeNotInSameWeekend") what = TeamConstraint.What.HomeNotInSameWeekend;
                 if (whatString == "HomeOnSameDay") what = TeamConstraint.What.HomeOnSameDay;
                 if (whatString == "HomeNotOnSameDay") what = TeamConstraint.What.HomeNotOnSameDay;
+                var exists = model.teamConstraints.Find(c => c.team1Id == team1Id && c.team2Id == team2Id && c.what == what);
+                if (exists == null)
+                {
 
-                if (what == TeamConstraint.What.HomeOnSameDay && team2.defaultDay != team1.defaultDay) continue; // No use to add this
-                if (what == TeamConstraint.What.HomeNotOnSameDay && team2.defaultDay == team1.defaultDay) continue; // No use to add this
-
-                TeamConstraint constraint = new TeamConstraint(team1, team2, what);
-                model.inputConstraints.Add(constraint);
+                    TeamConstraint constraint = new TeamConstraint(model, team1Id, team2Id, what);
+                    model.teamConstraints.Add(constraint);
+                }
             }
             model.RenewConstraints();
             model.Evaluate(null);
@@ -1369,18 +1372,18 @@ namespace CompetitionCreator
             foreach (Poule poule in importPoules)
             {
                 // Add weeks first
-                List<Week> weeks = new List<Week>();
+                List<MatchWeek> weeks = new List<MatchWeek>();
                 foreach (string[] parameters in ParameterLines)
                 {
                     if (parameters[pouleIndex] == poule.name && poule.serie.id == int.Parse(parameters[serieIdIndex]))
                     {
-                        Week we = new Week(DateTime.Parse(parameters[dateIndex] + " " + parameters[timeIndex]));
+                        MatchWeek we = new MatchWeek(DateTime.Parse(parameters[dateIndex] + " " + parameters[timeIndex]));
                         if (weeks.Find(w => w == we) == null) weeks.Add(we);
                     }
                 }
                 weeks.Sort();
-                poule.weeksFirst = new List<Week>();
-                poule.weeksSecond = new List<Week>();
+                poule.weeksFirst = new List<MatchWeek>();
+                poule.weeksSecond = new List<MatchWeek>();
                 for (int i = 0; i < weeks.Count / 2; i++) poule.weeksFirst.Add(weeks[i]);
                 for (int i = weeks.Count / 2; i < weeks.Count; i++) poule.weeksSecond.Add(weeks[i]);
 
@@ -1396,7 +1399,7 @@ namespace CompetitionCreator
                             int homePouleTeamIndex = poule.teams.FindIndex(t => t.Id == homeTeamIndex1);
                             int visitorTeamIndex1 = int.Parse(parameters[visitorTeamIdIndex]);
                             int visitorPouleTeamIndex = poule.teams.FindIndex(t => t.Id == visitorTeamIndex1);
-                            Week we = new Week(DateTime.Parse(parameters[dateIndex] + " " + parameters[timeIndex]));
+                            MatchWeek we = new MatchWeek(DateTime.Parse(parameters[dateIndex] + " " + parameters[timeIndex]));
                             int index = weeks.FindIndex(w => w == we);
                             poule.matches.Add(new Match(index, homePouleTeamIndex, visitorPouleTeamIndex, serie, poule));
                         }
@@ -1419,20 +1422,20 @@ namespace CompetitionCreator
                     string sporthallName = StringAttribute(sporthall, "Name");
                     sh = new Sporthal(sporthallId, sporthallName);
                     model.sporthalls.Add(sh);
-
-                    string latAttrString = StringOptionalAttribute(sporthall, null, "Latitude");
-                    string lngAttrString = StringOptionalAttribute(sporthall, "Longitude");
-                    double sporthallLatitude;
-                    double sporthallLongitude;
-                    if (latAttrString != null && lngAttrString != null)
+                }
+                sh = model.sporthalls.Find(s => s.id == sporthallId);
+                string latAttrString = StringOptionalAttribute(sporthall, null, "Latitude");
+                string lngAttrString = StringOptionalAttribute(sporthall, null, "Longitude");
+                double sporthallLatitude;
+                double sporthallLongitude;
+                if (latAttrString != null && lngAttrString != null)
+                {
+                    bool ok1 = double.TryParse(latAttrString, NumberStyles.Number, CultureInfo.InvariantCulture, out sporthallLatitude);
+                    bool ok2 = double.TryParse(lngAttrString, NumberStyles.Number, CultureInfo.InvariantCulture, out sporthallLongitude);
+                    if (ok1 && ok2)
                     {
-                        bool ok1 = double.TryParse(latAttrString, NumberStyles.Number, CultureInfo.InvariantCulture, out sporthallLatitude);
-                        bool ok2 = double.TryParse(lngAttrString, NumberStyles.Number, CultureInfo.InvariantCulture, out sporthallLongitude);
-                        if (ok1 && ok2)
-                        {
-                            sh.lat = sporthallLatitude;
-                            sh.lng = sporthallLongitude;
-                        }
+                        sh.lat = sporthallLatitude;
+                        sh.lng = sporthallLongitude;
                     }
                 }
             }

@@ -45,8 +45,18 @@ namespace CompetitionCreator
         }
         public int percentage
         {
-            get { if (teams.Count == 0) return 0;
-                  return (conflict * 100) / teams.Count; }
+            get 
+            {
+                if (EvaluatedTeamCount == 0) return 0;
+                return (conflict * 100) / EvaluatedTeamCount; 
+            }
+        }
+        public int EvaluatedTeamCount
+        {
+            get
+            {
+                return teams.Count(t => t.evaluated);
+            }
         }
         public List<SporthallAvailability> sporthalls = new List<SporthallAvailability>();
         public Club groupingWithClub = null;

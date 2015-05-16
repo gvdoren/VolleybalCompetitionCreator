@@ -79,7 +79,7 @@ namespace CompetitionCreator
         }
         public Team homeTeam { get { return poule.teams[homeTeamIndex]; } }
         public Team visitorTeam { get { return poule.teams[visitorTeamIndex]; } }
-        public Week Week
+        public MatchWeek Week
         {
             get
             {
@@ -132,7 +132,7 @@ namespace CompetitionCreator
                     weekIndexIndividual = temp;
                 }
             }
-            List<Week> weeks = null;
+            List<MatchWeek> weeks = null;
             int extraIndex = 0;
             if (weekIndex < poule.weeksFirst.Count)
             {
@@ -143,7 +143,7 @@ namespace CompetitionCreator
                 extraIndex = poule.weeksFirst.Count;
                 weeks = poule.weeksSecond;
             }
-            List<Week> weeksCopy = new List<Week>(weeks);
+            List<MatchWeek> weeksCopy = new List<MatchWeek>(weeks);
             // Find an alternative week
             foreach(Match m in poule.matches)
             {
@@ -156,7 +156,7 @@ namespace CompetitionCreator
                     }
                 }
             }
-            foreach (Week we in weeksCopy)
+            foreach (MatchWeek we in weeksCopy)
             {
                 int temp1 = weekIndexIndividual;
                 weekIndexIndividual = extraIndex + weeks.FindIndex(w => w == we);

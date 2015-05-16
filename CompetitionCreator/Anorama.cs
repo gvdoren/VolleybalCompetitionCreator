@@ -17,39 +17,34 @@ namespace CompetitionCreator
     
     public class AnnoramaWeek
     {
-        public Week week;
-        public bool match;
-        public List<int> weekNrs = new List<int>();
-        public AnnoramaWeek(Week we, bool match)
+        public MatchWeek week;
+        public int weekNr = -1;
+        public string Representation
+        {
+            get
+            {
+                if (week.dayOverruled)
+                {
+                    return week.PlayTime(week.OverruledDay).ToString("dd-MM-yyyy") + "("+ week.OverruledDay.ToString() +")";
+                }
+                else
+                {
+                    return week.FirstDayInWeek.ToString("dd-MM-yyyy") + " - " + week.FirstDayInWeek.AddDays(6).ToString("dd-MM-yyyy");
+                }
+            }
+        }
+        public AnnoramaWeek(MatchWeek we)
         {
             week = we;
-            this.match = match;
         }
         public string weekNrString(int max)
         {
-            if (weekNrs.Count == 0)
-            {
-                if (match) return "x";
-                else return "-";
-            }
-            else if (weekNrs.Count == 1)
-            {
-                string reserve = "";
-                if (weekNrs[0] > max) reserve = " R";
-                return weekNrs[0].ToString() + reserve;
-            }
+            if (weekNr < 0) return "-";
             else
             {
                 string reserve = "";
-                if (weekNrs[0] > max) reserve = " R";
-                string returnString = weekNrs[0].ToString() + reserve;
-                for (int i = 1; i < weekNrs.Count; i++)
-                {
-                    reserve = "";
-                    if (weekNrs[i] > max) reserve = " R";
-                    returnString += ", " + weekNrs[i].ToString() + reserve;
-                }
-                return returnString;
+                if (weekNr > max) reserve = " R";
+                return weekNr.ToString() + reserve;
             }
         }
     }
@@ -66,13 +61,6 @@ namespace CompetitionCreator
             start = new DateTime(year, 9, 1);
             end = new DateTime(year + 1, 5, 1);
             title = string.Format("Annorama Seizoen {0}-{1}", year, year + 1);
-            try
-            {
-                ReadXML(year);
-            }
-            catch
-            {
-            }
         }
         public AnnoramaReeks GetReeks(string name)
         {
@@ -83,19 +71,12 @@ namespace CompetitionCreator
             AnnoramaReeks reeks = new AnnoramaReeks();
             reeks.Name = name;
             reeks.Count = count;
-            Week week = new Week(start);
-            DateTime current = start;
-            while (week.FirstDayInWeek < end)
-            {
-                reeks.weeks.Add(new AnnoramaWeek(week, false));
-                current = current.AddDays(7);
-                week = new Week(current);
-            }
-            reeksen.Add(reeks);
+       
             return reeks;
         }
-        public void WriteXML(int year)
+        public void WriteXML()
         {
+            int year = start.Year;
             string BaseDirectory = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\CompetitionCreator";
             using (XmlWriter writer = XmlWriter.Create(string.Format("{0}\\Annorama{1}.xml", BaseDirectory, year)))
             {
@@ -114,17 +95,14 @@ namespace CompetitionCreator
                     writer.WriteStartElement("Weeks");
                     foreach (AnnoramaWeek week in reeks.weeks)
                     {
-                        writer.WriteStartElement("Week");
-                        writer.WriteAttributeString("Date", week.week.Saturday.ToShortDateString());
-                        writer.WriteAttributeString("Match", week.match.ToString());
-                        writer.WriteStartElement("WeekNumbers");
-                        foreach (int weeknr in week.weekNrs)
+                        if (week.weekNr >= 0)
                         {
-                            writer.WriteElementString("Number", weeknr.ToString());
+                            writer.WriteStartElement("Week");
+                            writer.WriteAttributeString("Date", week.week.Saturday.ToShortDateString());
+                            if (week.week.dayOverruled) writer.WriteAttributeString("OverruledDay", week.week.OverruledDay.ToString());
+                            writer.WriteAttributeString("WeekNumber", week.weekNr.ToString());
+                            writer.WriteEndElement();
                         }
-                        writer.WriteEndElement();
-                        writer.WriteEndElement();
-
                     }
                     i++;
                     writer.WriteEndElement();
@@ -135,36 +113,56 @@ namespace CompetitionCreator
                 writer.WriteEndDocument();
             }
         }
-        public void ReadXML(int year)
+        public void ReadXML()
         {
-            string BaseDirectory = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\CompetitionCreator";
-            XElement Annorama = XElement.Load(string.Format("{0}\\Annorama{1}.xml", BaseDirectory, year));
-            title = ImportExport.StringAttribute(Annorama,"Title");
-            start = ImportExport.DateAttribute(Annorama, "Start");
-            end = ImportExport.DateAttribute(Annorama, "End");
-            reeksen.Clear();
-            IEnumerable<XElement> Reeksen = ImportExport.Element(Annorama, "Reeksen").Elements("Reeks");
-            int i = 0;
-            foreach (XElement reeks in Reeksen)
+            try
             {
-                string name = ImportExport.StringAttribute(reeks, "Name");
-                int count = ImportExport.IntegerAttribute(reeks, "Count");
-                AnnoramaReeks re = CreateReeks(name, count);
-                IEnumerable<XElement> Weeks = ImportExport.Element(reeks,"Weeks").Elements("Week");
-                foreach (XElement week in Weeks)
+                int year = start.Year;
+                string BaseDirectory = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\CompetitionCreator";
+                XElement Annorama = XElement.Load(string.Format("{0}\\Annorama{1}.xml", BaseDirectory, year));
+                title = ImportExport.StringAttribute(Annorama, "Title");
+                start = ImportExport.DateAttribute(Annorama, "Start");
+                end = ImportExport.DateAttribute(Annorama, "End");
+                reeksen.Clear();
+                IEnumerable<XElement> Reeksen = ImportExport.Element(Annorama, "Reeksen").Elements("Reeks");
+                int i = 0;
+                foreach (XElement reeks in Reeksen)
                 {
-                    DateTime dt = ImportExport.DateAttribute(week, "Date");
-                    Week we = new Week(dt);
-                    bool match = ImportExport.BoolAttribute(week, "Match");
-                    AnnoramaWeek anWeek = re.weeks.Find(w => w.week == we);
-                    anWeek.match = match;
-                    foreach (XElement weeknr in week.Element("WeekNumbers").Elements("Number"))
+                    string name = ImportExport.StringAttribute(reeks, "Name");
+                    int count = ImportExport.IntegerAttribute(reeks, "Count");
+                    AnnoramaReeks re = CreateReeks(name, count);
+                    IEnumerable<XElement> Weeks = ImportExport.Element(reeks, "Weeks").Elements("Week");
+                    foreach (XElement week in Weeks)
                     {
-                        anWeek.weekNrs.Add(int.Parse(weeknr.Value.ToString()));
+                        DateTime dt = ImportExport.DateAttribute(week, "Date");
+                        MatchWeek we = new MatchWeek(dt);
+                        AnnoramaWeek anWeek = new AnnoramaWeek(we);
+                        re.weeks.Add(anWeek);
+
+                        string overruledDayString = ImportExport.StringOptionalAttribute(week, "No", "OverruledDay");
+                        if (overruledDayString == "No")
+                        {
+                            anWeek.week.dayOverruled = false;
+                        }
+                        else
+                        {
+                            anWeek.week.dayOverruled = true;
+                            if (overruledDayString == DayOfWeek.Monday.ToString()) anWeek.week.OverruledDay = DayOfWeek.Monday;
+                            if (overruledDayString == DayOfWeek.Tuesday.ToString()) anWeek.week.OverruledDay = DayOfWeek.Tuesday;
+                            if (overruledDayString == DayOfWeek.Wednesday.ToString()) anWeek.week.OverruledDay = DayOfWeek.Wednesday;
+                            if (overruledDayString == DayOfWeek.Thursday.ToString()) anWeek.week.OverruledDay = DayOfWeek.Thursday;
+                            if (overruledDayString == DayOfWeek.Friday.ToString()) anWeek.week.OverruledDay = DayOfWeek.Friday;
+                            if (overruledDayString == DayOfWeek.Saturday.ToString()) anWeek.week.OverruledDay = DayOfWeek.Saturday;
+                            if (overruledDayString == DayOfWeek.Sunday.ToString()) anWeek.week.OverruledDay = DayOfWeek.Sunday;
+                        }
+                        anWeek.weekNr = ImportExport.IntegerAttribute(week, "WeekNumber");
                     }
+                    re.weeks.Sort((w1, w2) => { return w1.week.CompareTo(w2.week); });
+                    this.reeksen.Add(re);
+                    i++;
                 }
-                i++;
             }
+            catch { }
         }
     }
 }

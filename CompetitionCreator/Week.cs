@@ -7,7 +7,7 @@ using System.Diagnostics;
 namespace CompetitionCreator
 {
 
-    public class Week : ConstraintAdmin, IComparable<Week>
+    public class MatchWeek : ConstraintAdmin, IComparable<MatchWeek>
     {
         public bool dayOverruled = false;
         public DayOfWeek OverruledDay = DayOfWeek.Wednesday;
@@ -18,27 +18,27 @@ namespace CompetitionCreator
             if (day == 0) day += 7;
             return FirstDayInWeek.AddDays(day - firstDayInWeek).Date;
         }
-        public Week(string datestr)
+        public MatchWeek(string datestr)
         {
             date = DateTime.ParseExact(datestr, "yyyy-MM-dd", null).Date;
             CalculateFirstDayInWeek();
         }
-        public Week(DateTime date)
+        public MatchWeek(DateTime date)
         {
             this.date = date.Date;
             CalculateFirstDayInWeek();
         }
-        public Week(Week week)
+        public MatchWeek(MatchWeek week)
         {
             this.dayOverruled = week.dayOverruled;
             this.date = week.date;
             CalculateFirstDayInWeek();
         }
-        public static bool operator <(Week w1, Week w2)
+        public static bool operator <(MatchWeek w1, MatchWeek w2)
         {
             return w1.FirstDayInWeek < w2.FirstDayInWeek || (w1.FirstDayInWeek == w2.FirstDayInWeek && w1.dayOverruled && w2.dayOverruled == false);
         }
-        public static bool operator >(Week w1, Week w2)
+        public static bool operator >(MatchWeek w1, MatchWeek w2)
         {
             return w2.FirstDayInWeek < w1.FirstDayInWeek || (w2.FirstDayInWeek == w1.FirstDayInWeek && w2.dayOverruled && w1.dayOverruled == false);
         }
@@ -72,27 +72,27 @@ namespace CompetitionCreator
             if (obj == null || GetType() != obj.GetType())
                 return false;
 
-            Week p = (Week)obj;
-            return (FirstDayInWeek == p.FirstDayInWeek && dayOverruled == p.dayOverruled);
+            MatchWeek p = (MatchWeek)obj;
+            return p == this;
         }
         public override int GetHashCode()
         {
             return (int)date.Ticks;
         }
-        public static bool operator ==(Week x, Week y)
+        public static bool operator ==(MatchWeek x, MatchWeek y)
         {
             Object xo = (Object)x;
             Object yo = (Object)y;
             if (xo == null && yo != null) return false;
             if (xo != null && yo == null) return false;
             if (xo == null && yo == null) return true;
-            return x.FirstDayInWeek == y.FirstDayInWeek && x.dayOverruled == y.dayOverruled;
+            return x.FirstDayInWeek == y.FirstDayInWeek && x.dayOverruled == y.dayOverruled && y.OverruledDay == x.OverruledDay;
         }
-        public static bool operator !=(Week x, Week y)
+        public static bool operator !=(MatchWeek x, MatchWeek y)
         {
             return !(x == y);
         }
-        public int CompareTo(Week other)
+        public int CompareTo(MatchWeek other)
         {
             if(this < other) return -1;
             else if (this == other) return 0;

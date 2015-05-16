@@ -42,9 +42,9 @@
             this.objectListView1.AllColumns.Add(this.olvColumn1);
             this.objectListView1.AllColumns.Add(this.olvColumn2);
             this.objectListView1.AllColumns.Add(this.olvColumn3);
-            this.objectListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.objectListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.objectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.FirstColumn,
             this.olvColumn1,
@@ -61,7 +61,6 @@
             this.objectListView1.UseFiltering = true;
             this.objectListView1.View = System.Windows.Forms.View.Details;
             this.objectListView1.CellClick += new System.EventHandler<BrightIdeasSoftware.CellClickEventArgs>(this.objectListView1_CellClick);
-            this.objectListView1.SelectedIndexChanged += this.objectListView1_SelectedIndexChanged;
             this.objectListView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.objectListView1_MouseDoubleClick);
             // 
             // FirstColumn

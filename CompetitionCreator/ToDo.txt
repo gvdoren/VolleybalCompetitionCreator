@@ -14,9 +14,7 @@ ToDo:
 - automatisch saven om de 10 minuten.
 
 High:
-- Evaluate poule: aan/uit zetten
-
-- Predefined schema's from disk instead of generating one
+- Constraints kunnen editen
 - diagnostics toevoegen
    - Logging, zodat de log opgestuurd kan worden. Ook een viewer om het te bekijken.
 - ImportCompetition definitie. Iets anders ipv XML based.

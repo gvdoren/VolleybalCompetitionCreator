@@ -52,6 +52,7 @@
             this.olvColumn13 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn14 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn10 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn11 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.label2 = new System.Windows.Forms.Label();
             this.button7 = new System.Windows.Forms.Button();
             this.button8 = new System.Windows.Forms.Button();
@@ -62,9 +63,14 @@
             this.button13 = new System.Windows.Forms.Button();
             this.button14 = new System.Windows.Forms.Button();
             this.button15 = new System.Windows.Forms.Button();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // objectListView1
@@ -73,6 +79,9 @@
             this.objectListView1.AllColumns.Add(this.olvColumn3);
             this.objectListView1.AllColumns.Add(this.olvColumn2);
             this.objectListView1.AllColumns.Add(this.olvColumn7);
+            this.objectListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.objectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.invisible,
             this.olvColumn3,
@@ -81,17 +90,21 @@
             this.objectListView1.FullRowSelect = true;
             this.objectListView1.IsSimpleDragSource = true;
             this.objectListView1.IsSimpleDropSink = true;
-            this.objectListView1.Location = new System.Drawing.Point(-2, 25);
+            this.objectListView1.Location = new System.Drawing.Point(3, 22);
             this.objectListView1.Name = "objectListView1";
-            this.objectListView1.Size = new System.Drawing.Size(173, 275);
+            this.objectListView1.Size = new System.Drawing.Size(404, 274);
             this.objectListView1.TabIndex = 0;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
             this.objectListView1.CellClick += new System.EventHandler<BrightIdeasSoftware.CellClickEventArgs>(this.objectListView1_CellClick);
+            this.objectListView1.ModelCanDrop += new System.EventHandler<BrightIdeasSoftware.ModelDropEventArgs>(this.objectListView1_ModelCanDrop);
+            this.objectListView1.ModelDropped += new System.EventHandler<BrightIdeasSoftware.ModelDropEventArgs>(this.objectListView1_ModelDropped);
             this.objectListView1.SelectionChanged += new System.EventHandler(this.objectListView1_SelectionChanged);
+            this.objectListView1.SelectedIndexChanged += new System.EventHandler(this.objectListView1_SelectedIndexChanged);
             // 
             // invisible
             // 
+            this.invisible.AspectName = "Index";
             this.invisible.CellPadding = null;
             this.invisible.IsVisible = false;
             this.invisible.MaximumWidth = 0;
@@ -102,6 +115,7 @@
             this.olvColumn3.AspectName = "Index";
             this.olvColumn3.AspectToStringFormat = "";
             this.olvColumn3.CellPadding = null;
+            this.olvColumn3.Sortable = false;
             this.olvColumn3.Text = "";
             this.olvColumn3.Width = 30;
             // 
@@ -120,13 +134,14 @@
             // 
             this.olvColumn7.AspectName = "conflict";
             this.olvColumn7.CellPadding = null;
+            this.olvColumn7.Sortable = false;
             this.olvColumn7.Text = "Conflicts";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(-2, 6);
+            this.label1.Location = new System.Drawing.Point(11, 6);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(44, 13);
             this.label1.TabIndex = 1;
@@ -134,7 +149,8 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(177, 25);
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.Location = new System.Drawing.Point(413, 22);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(57, 23);
             this.button1.TabIndex = 2;
@@ -144,7 +160,8 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(177, 55);
+            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button2.Location = new System.Drawing.Point(413, 52);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(57, 23);
             this.button2.TabIndex = 3;
@@ -154,7 +171,8 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(177, 85);
+            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button3.Location = new System.Drawing.Point(413, 82);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(57, 23);
             this.button3.TabIndex = 4;
@@ -183,7 +201,7 @@
             this.objectListView2.FullRowSelect = true;
             this.objectListView2.Location = new System.Drawing.Point(1, 343);
             this.objectListView2.Name = "objectListView2";
-            this.objectListView2.Size = new System.Drawing.Size(543, 99);
+            this.objectListView2.Size = new System.Drawing.Size(806, 306);
             this.objectListView2.TabIndex = 5;
             this.objectListView2.UseCompatibleStateImageBehavior = false;
             this.objectListView2.View = System.Windows.Forms.View.Details;
@@ -242,7 +260,8 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(178, 115);
+            this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button4.Location = new System.Drawing.Point(414, 112);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(56, 23);
             this.button4.TabIndex = 6;
@@ -254,7 +273,7 @@
             // 
             this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button5.Enabled = false;
-            this.button5.Location = new System.Drawing.Point(552, 342);
+            this.button5.Location = new System.Drawing.Point(813, 373);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(75, 23);
             this.button5.TabIndex = 7;
@@ -265,7 +284,7 @@
             // button6
             // 
             this.button6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button6.Location = new System.Drawing.Point(551, 371);
+            this.button6.Location = new System.Drawing.Point(812, 402);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(75, 23);
             this.button6.TabIndex = 8;
@@ -279,15 +298,20 @@
             this.objectListView3.AllColumns.Add(this.olvColumn13);
             this.objectListView3.AllColumns.Add(this.olvColumn14);
             this.objectListView3.AllColumns.Add(this.olvColumn10);
+            this.objectListView3.AllColumns.Add(this.olvColumn11);
+            this.objectListView3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.objectListView3.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumn12,
             this.olvColumn13,
             this.olvColumn14,
             this.olvColumn10});
             this.objectListView3.FullRowSelect = true;
-            this.objectListView3.Location = new System.Drawing.Point(252, 25);
+            this.objectListView3.Location = new System.Drawing.Point(3, 22);
             this.objectListView3.Name = "objectListView3";
-            this.objectListView3.Size = new System.Drawing.Size(234, 275);
+            this.objectListView3.Size = new System.Drawing.Size(345, 274);
+            this.objectListView3.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.objectListView3.TabIndex = 9;
             this.objectListView3.UseCompatibleStateImageBehavior = false;
             this.objectListView3.View = System.Windows.Forms.View.Details;
@@ -301,6 +325,7 @@
             this.olvColumn12.CellPadding = null;
             this.olvColumn12.MaximumWidth = 40;
             this.olvColumn12.MinimumWidth = 40;
+            this.olvColumn12.Sortable = false;
             this.olvColumn12.Text = "From";
             this.olvColumn12.Width = 40;
             // 
@@ -309,6 +334,7 @@
             this.olvColumn13.AspectName = "Key.End";
             this.olvColumn13.AspectToStringFormat = "";
             this.olvColumn13.CellPadding = null;
+            this.olvColumn13.Sortable = false;
             this.olvColumn13.Text = "Until";
             this.olvColumn13.Width = 40;
             // 
@@ -316,19 +342,28 @@
             // 
             this.olvColumn14.AspectName = "Value";
             this.olvColumn14.CellPadding = null;
+            this.olvColumn14.Sortable = false;
             this.olvColumn14.Text = "Schema";
             // 
             // olvColumn10
             // 
             this.olvColumn10.AspectName = "Key.conflict";
             this.olvColumn10.CellPadding = null;
+            this.olvColumn10.Sortable = false;
             this.olvColumn10.Text = "Conflicts";
+            // 
+            // olvColumn11
+            // 
+            this.olvColumn11.AspectName = "Key.FirstDayInWeek";
+            this.olvColumn11.CellPadding = null;
+            this.olvColumn11.DisplayIndex = 4;
+            this.olvColumn11.IsVisible = false;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(252, 5);
+            this.label2.Location = new System.Drawing.Point(3, 6);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(46, 13);
             this.label2.TabIndex = 10;
@@ -336,7 +371,8 @@
             // 
             // button7
             // 
-            this.button7.Location = new System.Drawing.Point(492, 25);
+            this.button7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button7.Location = new System.Drawing.Point(353, 22);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(57, 23);
             this.button7.TabIndex = 4;
@@ -346,7 +382,8 @@
             // 
             // button8
             // 
-            this.button8.Location = new System.Drawing.Point(493, 55);
+            this.button8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button8.Location = new System.Drawing.Point(354, 52);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(56, 23);
             this.button8.TabIndex = 6;
@@ -356,7 +393,8 @@
             // 
             // button9
             // 
-            this.button9.Location = new System.Drawing.Point(10, 310);
+            this.button9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button9.Location = new System.Drawing.Point(6, 302);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(99, 23);
             this.button9.TabIndex = 11;
@@ -367,7 +405,8 @@
             // 
             // button10
             // 
-            this.button10.Location = new System.Drawing.Point(133, 310);
+            this.button10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button10.Location = new System.Drawing.Point(115, 302);
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(101, 23);
             this.button10.TabIndex = 12;
@@ -378,7 +417,8 @@
             // 
             // button11
             // 
-            this.button11.Location = new System.Drawing.Point(178, 144);
+            this.button11.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button11.Location = new System.Drawing.Point(414, 141);
             this.button11.Name = "button11";
             this.button11.Size = new System.Drawing.Size(56, 23);
             this.button11.TabIndex = 13;
@@ -389,7 +429,8 @@
             // 
             // button12
             // 
-            this.button12.Location = new System.Drawing.Point(178, 173);
+            this.button12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button12.Location = new System.Drawing.Point(414, 170);
             this.button12.Name = "button12";
             this.button12.Size = new System.Drawing.Size(56, 23);
             this.button12.TabIndex = 14;
@@ -400,7 +441,7 @@
             // button13
             // 
             this.button13.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button13.Location = new System.Drawing.Point(552, 400);
+            this.button13.Location = new System.Drawing.Point(813, 431);
             this.button13.Name = "button13";
             this.button13.Size = new System.Drawing.Size(75, 23);
             this.button13.TabIndex = 15;
@@ -412,7 +453,7 @@
             // button14
             // 
             this.button14.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button14.Location = new System.Drawing.Point(552, 313);
+            this.button14.Location = new System.Drawing.Point(813, 344);
             this.button14.Name = "button14";
             this.button14.Size = new System.Drawing.Size(75, 23);
             this.button14.TabIndex = 7;
@@ -422,7 +463,8 @@
             // 
             // button15
             // 
-            this.button15.Location = new System.Drawing.Point(263, 310);
+            this.button15.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button15.Location = new System.Drawing.Point(6, 302);
             this.button15.Name = "button15";
             this.button15.Size = new System.Drawing.Size(107, 23);
             this.button15.TabIndex = 6;
@@ -430,31 +472,49 @@
             this.button15.UseVisualStyleBackColor = true;
             this.button15.Click += new System.EventHandler(this.optimizeMatch_Click);
             // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainer1.Location = new System.Drawing.Point(1, 4);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.objectListView1);
+            this.splitContainer1.Panel1.Controls.Add(this.button1);
+            this.splitContainer1.Panel1.Controls.Add(this.button12);
+            this.splitContainer1.Panel1.Controls.Add(this.button2);
+            this.splitContainer1.Panel1.Controls.Add(this.button11);
+            this.splitContainer1.Panel1.Controls.Add(this.button3);
+            this.splitContainer1.Panel1.Controls.Add(this.button10);
+            this.splitContainer1.Panel1.Controls.Add(this.label1);
+            this.splitContainer1.Panel1.Controls.Add(this.button4);
+            this.splitContainer1.Panel1.Controls.Add(this.button9);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.objectListView3);
+            this.splitContainer1.Panel2.Controls.Add(this.button7);
+            this.splitContainer1.Panel2.Controls.Add(this.label2);
+            this.splitContainer1.Panel2.Controls.Add(this.button8);
+            this.splitContainer1.Panel2.Controls.Add(this.button15);
+            this.splitContainer1.Panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer1_Panel2_Paint);
+            this.splitContainer1.Size = new System.Drawing.Size(896, 333);
+            this.splitContainer1.SplitterDistance = 475;
+            this.splitContainer1.TabIndex = 16;
+            // 
             // PouleView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(634, 441);
+            this.ClientSize = new System.Drawing.Size(897, 648);
+            this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.button13);
-            this.Controls.Add(this.button12);
-            this.Controls.Add(this.button11);
-            this.Controls.Add(this.button10);
-            this.Controls.Add(this.button9);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.objectListView3);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button14);
             this.Controls.Add(this.button5);
-            this.Controls.Add(this.button15);
-            this.Controls.Add(this.button8);
-            this.Controls.Add(this.button4);
             this.Controls.Add(this.objectListView2);
-            this.Controls.Add(this.button7);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.objectListView1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "PouleView";
             this.Text = "PouleView";
@@ -462,8 +522,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView3)).EndInit();
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -503,5 +568,7 @@
         private System.Windows.Forms.Button button14;
         private System.Windows.Forms.Button button15;
         private BrightIdeasSoftware.OLVColumn olvColumn13;
+        private BrightIdeasSoftware.OLVColumn olvColumn11;
+        private System.Windows.Forms.SplitContainer splitContainer1;
     }
 }

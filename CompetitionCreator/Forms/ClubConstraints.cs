@@ -24,12 +24,6 @@ namespace CompetitionCreator
             this.model = model;
             this.state = state;
             InitializeComponent();
-            comboBox2.Items.Add("Not shared");
-            foreach (Club cl in model.clubs)
-            {
-                comboBox2.Items.Add(cl);
-            }
-            comboBox2.SelectedIndex = 0;
             state.OnMyChange += new MyEventHandler(state_OnMyChange);
             if (state.selectedClubs.Count > 0) SetClub(state.selectedClubs[0]);
             objectListView2.SetObjects(model.constraints.FindAll(c => (c as DateConstraint) != null && c.club == club));
@@ -117,12 +111,12 @@ namespace CompetitionCreator
                 dataGridView3.Visible = true;
                 label1.Visible = true;
                 label1.Text = string.Format("Sporthal '{0}' is beschikbaar op:", sporthal.name);
-                DateTime begin = new DateTime(2014, 9, 1);
-                DateTime end = new DateTime(2015, 5, 1);
+                DateTime begin = new DateTime(model.year, 9, 1);
+                DateTime end = new DateTime(model.year+1, 5, 1);
                 dataGridView3.Rows.Clear();
                 for (DateTime current = begin; current < end; current = current.AddDays(7))
                 {
-                    Week w = new Week(current);
+                    MatchWeek w = new MatchWeek(current);
                     dataGridView3.Rows.Add(w, sporthal.NotAvailable.Contains(w.Saturday) == false, sporthal.NotAvailable.Contains(w.Sunday) == false,"-");
                 }
                 
@@ -133,13 +127,16 @@ namespace CompetitionCreator
             objectListView1.SetObjects(club.teams,true);
             objectListView1_SelectionChanged(null, null); // otherwise it is not triggered for some reason.
             //objectListView1.BuildList(true);
-            if (club.groupingWithClub == null) comboBox2.SelectedIndex = 0;
-            else comboBox2.SelectedItem = club.groupingWithClub;
         }
         private void UpdateTeamConstraints()
         {
             objectListView2.SetObjects(model.constraints.FindAll(c => (c as DateConstraint) != null && c.club == club)); 
             objectListView2.BuildList(true);
+
+            var list = model.teamConstraints.FindAll(c => (c.team1 != null && c.team1.club == club) || (c.team2 != null && c.team2.club == club));
+
+            objectListView3.SetObjects(list);
+            objectListView3.BuildList(true);
             
         }
         private void dataGridView3_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -152,7 +149,7 @@ namespace CompetitionCreator
             if (e.ColumnIndex > 0 && e.RowIndex >= 0)
             {
                 DataGridViewRow row = dataGridView3.Rows[e.RowIndex];
-                Week w = (Week)row.Cells[0].Value;
+                MatchWeek w = (MatchWeek)row.Cells[0].Value;
                 DataGridViewCheckBoxCell cell = (DataGridViewCheckBoxCell)row.Cells[e.ColumnIndex];
                 cell.TrueValue = true;
                 cell.FalseValue = false;
@@ -191,7 +188,7 @@ namespace CompetitionCreator
             if (e.ColumnIndex > 0 && e.RowIndex>=0)
             {
                 DataGridViewRow row = dataGridView3.Rows[e.RowIndex];
-                Week w = (Week)row.Cells[0].Value;
+                MatchWeek w = (MatchWeek)row.Cells[0].Value;
                 DataGridViewCheckBoxCell cell = (DataGridViewCheckBoxCell)row.Cells[e.ColumnIndex];
                 cell.TrueValue = true;
                 cell.FalseValue = false;
@@ -234,24 +231,6 @@ namespace CompetitionCreator
             club.FreeFormatConstraints = textBox1.Text;
         }
 
-        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (club != null)
-            {
-                if (comboBox2.SelectedIndex == 0)
-                {
-                    if (club.groupingWithClub != null) club.groupingWithClub.groupingWithClub = null;
-                    club.groupingWithClub = null;
-                }
-                else
-                {
-                    club.groupingWithClub = (Club)comboBox2.SelectedItem;
-                    club.groupingWithClub.groupingWithClub = club;
-                }
-                model.Evaluate(null);
-                model.Changed();
-            }
-        }
         private void ClubConstraints_FormClosed(object sender, FormClosedEventArgs e)
         {
             state.OnMyChange -= new MyEventHandler(state_OnMyChange);
@@ -517,6 +496,16 @@ namespace CompetitionCreator
             model.RenewConstraints();
             model.Evaluate(null);
             model.Changed();
+
+        }
+
+        private void objectListView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void objectListView3_SelectedIndexChanged(object sender, EventArgs e)
+        {
 
         }
     }

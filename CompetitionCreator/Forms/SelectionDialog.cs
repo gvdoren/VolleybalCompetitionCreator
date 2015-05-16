@@ -91,8 +91,8 @@ namespace CompetitionCreator
     public class Selection
     {
         public string label;
-        public int value;
-        public object obj;
+        public int value=-1;
+        public object obj = null;
         public bool selected;
         public Selection(string label)
         {

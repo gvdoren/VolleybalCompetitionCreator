@@ -61,6 +61,8 @@
             this.objectListView1.AllColumns.Add(this.olvColumn1);
             this.objectListView1.AllColumns.Add(this.olvColumn2);
             this.objectListView1.AllColumns.Add(this.olvColumn3);
+            this.objectListView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.objectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumn1,
             this.olvColumn2,
@@ -70,7 +72,7 @@
             this.objectListView1.Location = new System.Drawing.Point(0, 12);
             this.objectListView1.Name = "objectListView1";
             this.objectListView1.ShowGroups = false;
-            this.objectListView1.Size = new System.Drawing.Size(239, 262);
+            this.objectListView1.Size = new System.Drawing.Size(620, 262);
             this.objectListView1.TabIndex = 0;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
@@ -102,16 +104,17 @@
             this.objectListView2.AllColumns.Add(this.olvColumn4);
             this.objectListView2.AllColumns.Add(this.olvColumn5);
             this.objectListView2.AllColumns.Add(this.olvColumn10);
+            this.objectListView2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.objectListView2.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumn4,
             this.olvColumn5,
             this.olvColumn10});
             this.objectListView2.FullRowSelect = true;
             this.objectListView2.HideSelection = false;
-            this.objectListView2.Location = new System.Drawing.Point(245, 13);
+            this.objectListView2.Location = new System.Drawing.Point(626, 12);
             this.objectListView2.Name = "objectListView2";
             this.objectListView2.ShowGroups = false;
-            this.objectListView2.Size = new System.Drawing.Size(121, 261);
+            this.objectListView2.Size = new System.Drawing.Size(154, 261);
             this.objectListView2.TabIndex = 1;
             this.objectListView2.UseCompatibleStateImageBehavior = false;
             this.objectListView2.View = System.Windows.Forms.View.Details;
@@ -122,16 +125,18 @@
             // 
             this.olvColumn4.AspectName = "name";
             this.olvColumn4.CellPadding = null;
-            this.olvColumn4.FillsFreeSpace = true;
+            this.olvColumn4.MaximumWidth = 50;
+            this.olvColumn4.MinimumWidth = 50;
             this.olvColumn4.Text = "Poules";
-            this.olvColumn4.Width = 40;
+            this.olvColumn4.Width = 50;
             // 
             // olvColumn5
             // 
             this.olvColumn5.AspectName = "TeamCount";
             this.olvColumn5.CellPadding = null;
+            this.olvColumn5.MaximumWidth = 60;
+            this.olvColumn5.MinimumWidth = 60;
             this.olvColumn5.Text = "Teams";
-            this.olvColumn5.Width = 40;
             // 
             // olvColumn10
             // 
@@ -142,8 +147,9 @@
             // 
             // button1
             // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.Enabled = false;
-            this.button1.Location = new System.Drawing.Point(370, 61);
+            this.button1.Location = new System.Drawing.Point(786, 57);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(121, 23);
             this.button1.TabIndex = 2;
@@ -153,7 +159,8 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(371, 89);
+            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button2.Location = new System.Drawing.Point(787, 85);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(120, 23);
             this.button2.TabIndex = 3;
@@ -177,10 +184,10 @@
             this.olvColumn9});
             this.objectListView3.FullRowSelect = true;
             this.objectListView3.HideSelection = false;
-            this.objectListView3.Location = new System.Drawing.Point(498, 13);
+            this.objectListView3.Location = new System.Drawing.Point(498, 280);
             this.objectListView3.Name = "objectListView3";
             this.objectListView3.ShowGroups = false;
-            this.objectListView3.Size = new System.Drawing.Size(419, 594);
+            this.objectListView3.Size = new System.Drawing.Size(419, 327);
             this.objectListView3.TabIndex = 4;
             this.objectListView3.UseCellFormatEvents = true;
             this.objectListView3.UseCompatibleStateImageBehavior = false;
@@ -231,7 +238,8 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(371, 127);
+            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button3.Location = new System.Drawing.Point(787, 141);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(120, 23);
             this.button3.TabIndex = 5;
@@ -241,15 +249,17 @@
             // 
             // comboBox1
             // 
+            this.comboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(371, 35);
+            this.comboBox1.Location = new System.Drawing.Point(787, 31);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(121, 21);
             this.comboBox1.TabIndex = 6;
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(372, 185);
+            this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button4.Location = new System.Drawing.Point(788, 199);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(120, 23);
             this.button4.TabIndex = 7;
@@ -271,10 +281,11 @@
             // 
             // checkBox1
             // 
+            this.checkBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBox1.AutoSize = true;
             this.checkBox1.Checked = true;
             this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox1.Location = new System.Drawing.Point(372, 214);
+            this.checkBox1.Location = new System.Drawing.Point(788, 228);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(114, 17);
             this.checkBox1.TabIndex = 9;
@@ -283,7 +294,8 @@
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(372, 156);
+            this.button6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button6.Location = new System.Drawing.Point(788, 170);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(118, 23);
             this.button6.TabIndex = 11;
@@ -293,8 +305,9 @@
             // 
             // button7
             // 
+            this.button7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button7.Enabled = false;
-            this.button7.Location = new System.Drawing.Point(372, 251);
+            this.button7.Location = new System.Drawing.Point(789, 251);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(118, 23);
             this.button7.TabIndex = 10;
@@ -304,8 +317,9 @@
             // 
             // label1
             // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(372, 17);
+            this.label1.Location = new System.Drawing.Point(788, 13);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(81, 13);
             this.label1.TabIndex = 12;

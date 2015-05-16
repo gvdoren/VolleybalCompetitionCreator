@@ -236,40 +236,55 @@ namespace CompetitionCreator
                 List<AnnoramaWeek> weeks =reeks.weeks;
                 int teamCount = reeks.Count;
                 Poule poule = new Poule(Letter.ToString(), teamCount, serie);
-                int matchWeeks = 0;
-                weeks.ForEach(w => matchWeeks += w.weekNrs.Count);
-                if (matchWeeks < (teamCount - 1) * 2)
+                if (reeks.weeks.Count  < (teamCount - 1) * 2)
                 {
                     MessageBox.Show("Deze annorama reeks heeft te weinig wedstrijden. ");
                     return;
                 }
                 // Create the week lists
                 int k = 0;
-                while (k < matchWeeks / 2)
+                while (k < reeks.weeks.Count / 2)
                 {
-                    poule.weeksFirst.Add(null);
+                    poule.weeksFirst.Add(reeks.weeks[k].week);
                     k++;
                 }
-                while (k < matchWeeks)
+                while (k < reeks.weeks.Count)
                 {
-                    poule.weeksSecond.Add(null);
+                    poule.weeksSecond.Add(reeks.weeks[k].week);
                     k++;
                 }
-                // Assign the correct weeks
-                foreach(AnnoramaWeek anWeek in reeks.weeks)
+                List<Schema> schemas = new List<Schema>();
+                string[] files = Directory.GetFiles(System.Windows.Forms.Application.StartupPath + @"/Schemas/");
+                foreach (string file in files)
                 {
-                    foreach(int i in anWeek.weekNrs)
+                    FileInfo fi = new FileInfo(file);
+                    Schema newSchema = new Schema();
+                    newSchema.Read(file);
+                    schemas.Add(newSchema);
+                }
+                List<Schema> correctSchemas = schemas.FindAll(s => s.teamCount == teamCount);
+                List<Selection> possibleSchemas = new List<Selection>();
+                foreach (Schema schema in correctSchemas)
+                {
+                    Selection sel = new Selection(schema.name, schema);
+                    possibleSchemas.Add(sel);
+                }
+                Selection sel1 = new Selection("Generate schema", 0);
+                possibleSchemas.Add(sel1);
+                possibleSchemas[0].selected = true;
+                SelectionDialog diag = new SelectionDialog(possibleSchemas);
+                diag.Text = "Select the schema to be used";
+                diag.ShowDialog();
+                if (diag.Ok)
+                {
+                    if(diag.Selection.obj == null)
                     {
-                        Week newWeek = new Week(anWeek.week.Saturday);
-                        // hack to allow two weeks in one week for VVB
-                        if (anWeek.weekNrs.Count > 1 && i == anWeek.weekNrs[0]) newWeek.dayOverruled = true;
-                        if (i <= poule.weeksFirst.Count) poule.weeksFirst[i - 1] = newWeek;
-                        else poule.weeksSecond[i - 1 - poule.weeksFirst.Count] = newWeek;
-                    }
+                        poule.CreateMatches(); // schema is generated
+                    } else
+                        poule.CreateMatchesFromSchemaFiles((Schema)diag.Selection.obj, serie, poule);
+                    serie.poules.Add(poule);
                 }
-                serie.poules.Add(poule);
-                poule.CreateMatches();
-                //    poule.CreateMatchesFromSchemaFiles();
+                else return;
                 model.poules.Add(poule);
                 model.RenewConstraints();
                 model.Evaluate(null);

@@ -17,8 +17,8 @@ namespace CompetitionCreator
 
         public bool evaluated { get { return imported == false; } }
         List<Team> resultTeams = new List<Team>();
-        List<Week> resultWeeksFirst = new List<Week>();
-        List<Week> resultWeeksSecond = new List<Week>();
+        List<MatchWeek> resultWeeksFirst = new List<MatchWeek>();
+        List<MatchWeek> resultWeeksSecond = new List<MatchWeek>();
         List<Match> resultMatches = new List<Match>();
         public List<Constraint> relatedConstraints = new List<Constraint>();
         int minConflicts = 0;
@@ -90,8 +90,8 @@ namespace CompetitionCreator
             this.name = name; 
         }
         public string fullName { get { return serie.name + name; ;} }
-        public List<Week> weeksFirst = new List<Week>();
-        public List<Week> weeksSecond = new List<Week>();
+        public List<MatchWeek> weeksFirst = new List<MatchWeek>();
+        public List<MatchWeek> weeksSecond = new List<MatchWeek>();
         public int CalculateDistances(Team t1)
         {
             int distance = 0;
@@ -197,7 +197,7 @@ namespace CompetitionCreator
                 {
                     if (weeksFirst.Count > 5)//12)
                     {
-                        List<Week> result = new List<Week>(weeksFirst);
+                        List<MatchWeek> result = new List<MatchWeek>(weeksFirst);
                         for (int i = 0; i < weeksFirst.Count; i++)
                         {
                             intf.Progress(i, (weeksFirst.Count + weeksSecond.Count));
@@ -212,7 +212,7 @@ namespace CompetitionCreator
                             weeksFirst = resultWeeksFirst;
                             if (intf.Cancelled()) break;
                         }
-                        result = new List<Week>(weeksSecond);
+                        result = new List<MatchWeek>(weeksSecond);
                         for (int i = 0; i < weeksSecond.Count; i++)
                         {
                             intf.Progress(i, (weeksFirst.Count + weeksSecond.Count));
@@ -232,13 +232,13 @@ namespace CompetitionCreator
                         // First optimize first half
                         try
                         {
-                            List<Week> remaining = weeksFirst;
-                            weeksFirst = new List<Week>();
+                            List<MatchWeek> remaining = weeksFirst;
+                            weeksFirst = new List<MatchWeek>();
                             GenerateWeekCombination(model, ref weeksFirst, remaining, intf);
                             weeksFirst = resultWeeksFirst;
                             
                             remaining = weeksSecond;
-                            weeksSecond = new List<Week>();
+                            weeksSecond = new List<MatchWeek>();
                             GenerateWeekCombination(model, ref weeksSecond, remaining, intf);
                             weeksSecond = resultWeeksSecond;
                         }
@@ -247,31 +247,34 @@ namespace CompetitionCreator
                 }
             }
         }
+        private int TotalRelatedConflicts = 0;
         public bool SnapShotIfImproved(Model model, bool equalAllowed = true)
         {
             if (snapShotTaken == false)
             {
                 snapShotTaken = false;
             }
-            bool snapshot = false;
             model.EvaluateRelatedConstraints(this);
-            int total = model.TotalConflicts();
-            if (total < model.LastTotalConflicts || (equalAllowed && total == model.LastTotalConflicts))
+            int totalRelated = model.TotalConflicts();
+            if (totalRelated < TotalRelatedConflicts /*|| (equalAllowed && totalRelated == model.LastTotalConflicts)*/)
             {
-                snapshot = true;
-                model.LastTotalConflicts = total;
+                // check based on a full check:
+                model.Evaluate(this);
+                int total = model.TotalConflicts();
+                if (total < model.LastTotalConflicts || (equalAllowed && total == model.LastTotalConflicts))
+                {
+                    model.LastTotalConflicts = total;
+                    TotalRelatedConflicts = totalRelated;
+                    resultTeams = new List<Team>(teams);
+                    resultWeeksFirst = new List<MatchWeek>(weeksFirst);
+                    resultWeeksSecond = new List<MatchWeek>(weeksSecond);
+                    resultMatches = CopyMatches();
+                    minConflicts = conflict_cost;
+                    model.stateNotSaved = true;
+                    return true;
+                }
             }
-
-            if(snapshot)
-            {
-                resultTeams = new List<Team>(teams);
-                resultWeeksFirst = new List<Week>(weeksFirst);
-                resultWeeksSecond = new List<Week>(weeksSecond);
-                resultMatches = CopyMatches();
-                minConflicts = conflict_cost;
-                model.stateNotSaved = true; 
-            }
-            return snapshot;
+            return false;
         }
         bool snapShotTaken = false;
         public void SnapShot(Model model)
@@ -281,10 +284,12 @@ namespace CompetitionCreator
                 snapShotTaken = true;
             }
             snapShotTaken = true;
-            model.Evaluate(null);
+            //model.Evaluate(null);
+            model.EvaluateRelatedConstraints(this);
+            TotalRelatedConflicts = model.TotalConflicts();
             resultTeams = new List<Team>(teams);
-            resultWeeksFirst = new List<Week>(weeksFirst);
-            resultWeeksSecond = new List<Week>(weeksSecond);
+            resultWeeksFirst = new List<MatchWeek>(weeksFirst);
+            resultWeeksSecond = new List<MatchWeek>(weeksSecond);
             resultMatches = CopyMatches();
             minConflicts = conflict_cost;
         }
@@ -303,16 +308,16 @@ namespace CompetitionCreator
             model.Evaluate(null);
         }
 
-        private void Swap(List<Week> list, int i, int j)
+        private void Swap(List<MatchWeek> list, int i, int j)
         {
-            Week ti = list[i];
-            Week tj = list[j];
+            MatchWeek ti = list[i];
+            MatchWeek tj = list[j];
             list.RemoveAt(i);
             list.Insert(i, tj);
             list.RemoveAt(j);
             list.Insert(j, ti);
         }
-        private void GenerateWeekCombination(Model model, ref List<Week> firstHalf, List<Week> remainingWeeks, IProgress intf)
+        private void GenerateWeekCombination(Model model, ref List<MatchWeek> firstHalf, List<MatchWeek> remainingWeeks, IProgress intf)
         {
             if (remainingWeeks.Count > 0)
             {
@@ -604,30 +609,15 @@ namespace CompetitionCreator
                 matches = resultMatches;
             }
         }
-        public void CreateMatchesFromSchemaFiles()
+        public void CreateMatchesFromSchemaFiles(Schema schema, Serie serie, Poule poule)
         {
-            try
+            foreach(SchemaWeek week in schema.weeks.Values)
             {
-                string[] lines = System.IO.File.ReadAllLines(System.Windows.Forms.Application.StartupPath + @"/InputData/" + string.Format("Schema{0}.csv", maxTeams));
-                int reqMatches = maxTeams * (maxTeams - 1);
-                if (lines.Length != reqMatches)
+                foreach(SchemaMatch match in week.matches)
                 {
-                    System.Windows.Forms.MessageBox.Show(string.Format("Schema{0}.csv does not have the correct number of lines. {1} iso {2}", maxTeams, lines.Length,reqMatches));
+                    Match m = new Match(week.WeekNr, match.team1, match.team2, serie, poule);
+                    matches.Add(m);
                 }
-                char[] delimiters = new char[] { ',', ';' };
-                foreach (string line in lines)
-                {
-                    string[] var = line.Split(delimiters);
-                    int day = int.Parse(var[0])-1; // internal administration starts at 0, schema files start at 1
-                    int team1 = int.Parse(var[1])-1;
-                    int team2 = int.Parse(var[2])-1;
-                    Match m2 = new Match(day, team1, team2, serie, this);
-                    matches.Add(m2);
-                }
-            }
-            catch
-            {
-                System.Windows.Forms.MessageBox.Show(string.Format("No schema available for {0} teams", maxTeams));
             }
         }
 
