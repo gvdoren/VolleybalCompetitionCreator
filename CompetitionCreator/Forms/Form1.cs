@@ -284,7 +284,8 @@ namespace CompetitionCreator
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            InputForm form = new InputForm("Creeer een nieuw seizoen", "Geef een jaartal");
+            InputForm form = new InputForm("Creeer een nieuw seizoen", "Geef een jaartal", DateTime.Now.Year.ToString());
+            
             form.ShowDialog();
             if (form.Result)
             {

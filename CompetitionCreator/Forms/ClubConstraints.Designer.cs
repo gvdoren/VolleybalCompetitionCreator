@@ -50,10 +50,6 @@
             this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label1 = new System.Windows.Forms.Label();
             this.dataGridView3 = new System.Windows.Forms.DataGridView();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column3 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.Column4 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.EvenOdd = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
@@ -78,6 +74,10 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.label4 = new System.Windows.Forms.Label();
+            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Day1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.Day2 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.EvenOdd = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
@@ -324,8 +324,8 @@
             this.dataGridView3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView3.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column2,
-            this.Column3,
-            this.Column4,
+            this.Day1,
+            this.Day2,
             this.EvenOdd});
             this.dataGridView3.Location = new System.Drawing.Point(741, 151);
             this.dataGridView3.Name = "dataGridView3";
@@ -334,30 +334,6 @@
             this.dataGridView3.TabIndex = 7;
             this.dataGridView3.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView3_CellContentClick);
             this.dataGridView3.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView3_CellValueChanged);
-            // 
-            // Column2
-            // 
-            this.Column2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Column2.HeaderText = "Week";
-            this.Column2.MinimumWidth = 70;
-            this.Column2.Name = "Column2";
-            // 
-            // Column3
-            // 
-            this.Column3.HeaderText = "Zaterdag";
-            this.Column3.Name = "Column3";
-            this.Column3.Width = 60;
-            // 
-            // Column4
-            // 
-            this.Column4.HeaderText = "Zondag";
-            this.Column4.Name = "Column4";
-            this.Column4.Width = 60;
-            // 
-            // EvenOdd
-            // 
-            this.EvenOdd.HeaderText = "EvenOdd";
-            this.EvenOdd.Name = "EvenOdd";
             // 
             // tabControl1
             // 
@@ -626,6 +602,30 @@
             this.label4.TabIndex = 2;
             this.label4.Text = "Free format constraints:";
             // 
+            // Column2
+            // 
+            this.Column2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Column2.HeaderText = "Week";
+            this.Column2.MinimumWidth = 70;
+            this.Column2.Name = "Column2";
+            // 
+            // Day1
+            // 
+            this.Day1.HeaderText = "Zaterdag";
+            this.Day1.Name = "Day1";
+            this.Day1.Width = 60;
+            // 
+            // Day2
+            // 
+            this.Day2.HeaderText = "Zondag";
+            this.Day2.Name = "Day2";
+            this.Day2.Width = 60;
+            // 
+            // EvenOdd
+            // 
+            this.EvenOdd.HeaderText = "EvenOdd";
+            this.EvenOdd.Name = "EvenOdd";
+            // 
             // InschrijvingenView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -681,10 +681,6 @@
         private BrightIdeasSoftware.OLVColumn olvColumn8;
         private BrightIdeasSoftware.OLVColumn olvColumn10;
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn Column3;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn Column4;
-        private System.Windows.Forms.DataGridViewTextBoxColumn EvenOdd;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button1;
         private BrightIdeasSoftware.ObjectListView objectListView2;
@@ -713,6 +709,10 @@
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn Day1;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn Day2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn EvenOdd;
 
     }
 }

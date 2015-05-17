@@ -772,7 +772,7 @@ namespace CompetitionCreator
                     writer.WriteStartElement("DateConstraint");
                     writer.WriteAttributeString("TeamId", con.team.Id.ToString());
                     writer.WriteAttributeString("Date", con.date.ToShortDateString());
-                    writer.WriteAttributeString("Constraint", con.homeVisitNone.ToString());
+                    writer.WriteAttributeString("What", con.homeVisitNone.ToString());
                     writer.WriteAttributeString("Cost", con.cost.ToString());
                     writer.WriteEndElement();
                 }
@@ -953,7 +953,7 @@ namespace CompetitionCreator
             try
             {
                 Model modelnew = LoadFullCompetitionIntern(filename);
-                ImportSporthalls(modelnew, XDocument.Load(MySettings.Settings.sporthalXML, LoadOptions.SetLineInfo|LoadOptions.SetBaseUri).Root);
+                //ImportSporthalls(modelnew, XDocument.Load(MySettings.Settings.sporthalXML, LoadOptions.SetLineInfo|LoadOptions.SetBaseUri).Root);
                 Properties.Settings.Default.LastOpenedProject = filename;
                 Properties.Settings.Default.Save();
                 model.Changed();
@@ -1007,6 +1007,23 @@ namespace CompetitionCreator
                 {
                     string sporthallName = StringAttribute(sporthal, "Name");
                     int id = IntegerAttribute(sporthal, "Id");
+                    string latAttrString = StringOptionalAttribute(sporthal, null, "latitude");
+                    string lngAttrString = StringOptionalAttribute(sporthal, null, "longitude");
+                    //VVB hack:
+                    {
+                        if(sporthallName == "-")
+                        {
+                            foreach (var sporthalAlt in Element(club, "Sporthalls").Elements("Sporthall"))
+                            {
+                                sporthallName = StringAttribute(sporthalAlt, "Name");
+                                id = IntegerAttribute(sporthalAlt, "Id");
+                                latAttrString = StringOptionalAttribute(sporthalAlt, null, "latitude");
+                                lngAttrString = StringOptionalAttribute(sporthalAlt, null, "longitude");
+                                if (sporthallName != "-") 
+                                    break;
+                            }
+                        }
+                    }
                     int teamId = IntegerOptionalAttribute(sporthal, -1, "TeamId");
                     Sporthal sp1 = model.sporthalls.Find(s => s.id == id);
                     if (sp1 == null)
@@ -1015,6 +1032,19 @@ namespace CompetitionCreator
                         model.sporthalls.Add(sp1);
                         //System.Windows.Forms.MessageBox.Show(string.Format("Sporthal id {0} not known known", id));
                     }
+                    double sporthallLatitude;
+                    double sporthallLongitude;
+                    if (latAttrString != null && lngAttrString != null)
+                    {
+                        bool ok1 = double.TryParse(latAttrString, NumberStyles.Number, CultureInfo.InvariantCulture, out sporthallLatitude);
+                        bool ok2 = double.TryParse(lngAttrString, NumberStyles.Number, CultureInfo.InvariantCulture, out sporthallLongitude);
+                        if (ok1 && ok2)
+                        {
+                            sp1.lat = sporthallLatitude;
+                            sp1.lng = sporthallLongitude;
+                        }
+                    }
+
                     SporthallAvailability sp = cl.sporthalls.Find(t => t.id == id && t.teamId == teamId);
                     if (sp == null)
                     {
@@ -1027,13 +1057,8 @@ namespace CompetitionCreator
                     sp.NotAvailable.Clear();
                     foreach (var date in Element(sporthal, "NotAvailable").Elements("Date"))
                     {
-                        try
-                        {
-                            DateTime dt = DateTime.Parse(date.Value.ToString());
-                            if (sp.NotAvailable.Contains(dt) == false) sp.NotAvailable.Add(dt);
-                        }
-                        catch { }
-
+                        DateTime dt = DateTime.Parse(date.Value.ToString());
+                        if (sp.NotAvailable.Contains(dt) == false) sp.NotAvailable.Add(dt);
                     }
                     if (cl.sporthalls.Contains(sp) == false) cl.sporthalls.Add(sp);
                 }
@@ -1054,15 +1079,6 @@ namespace CompetitionCreator
                     Team te = null;
                     if (id >= 0) te = cl.teams.Find(t => t.Id == id && t.serie == serie);
                     else te = cl.teams.Find(t => t.Id == id && t.name == teamName && t.serie == serie);
-                    int sporthalId = IntegerAttribute(team, "SporthallId");
-                    string sporthallName = StringAttribute(team, "SporthallName");
-                    // TODO: KLVV specific, sporthall should be in sporthall section
-                    Sporthal sp2 = model.sporthalls.Find(s => s.id == sporthalId);
-                    if (sp2 == null)
-                    {
-                        sp2 = new Sporthal(sporthalId, sporthallName);
-                        model.sporthalls.Add(sp2);
-                    }
                     if (te == null)
                     {
                         te = new Team(id, teamName, null, serie, cl);
@@ -1110,6 +1126,8 @@ namespace CompetitionCreator
                         if (EvenOdd == "Odd") te.EvenOdd = Team.WeekRestrictionEnum.Odd;
                     }
                     te.email = StringOptionalAttribute(team, "ContactEmail");
+                    // VVB hack: can be removed.
+                    /*
                     XElement constraints = OptionalElement(team, "Restrictions", "Constraints");
                     if (constraints != null)
                     {
@@ -1122,17 +1140,22 @@ namespace CompetitionCreator
                             DateTime date = DateAttribute(constraint, "Date", "PlayDate");
                             te.sporthal.NotAvailable.Add(date);
                         }
-                    }
-                    SporthallAvailability sporthall = cl.sporthalls.Find(sp => sp.id == sporthalId && sp.teamId == te.Id);
-                    if (sporthall == null) sporthall = cl.sporthalls.Find(sp => sp.id == sporthalId);
+                    }*/
+                    int sporthalId = IntegerAttribute(team, "SporthallId");
+                    string sporthallName = StringAttribute(team, "SporthallName");
+
+                    SporthallAvailability sporthall = cl.sporthalls.Find(s => s.sporthall.id == sporthalId && s.teamId == id);
+                    if (sporthall == null)
+                        sporthall = cl.sporthalls.Find(s => s.sporthall.id == sporthalId);
+                    // VVB hack: we hebben een alternatieve sporthal genomen specifiek voor dit team (van een ander team)
+                    if (sporthall == null)
+                        sporthall = cl.sporthalls.Find(s => s.teamId == id);
+                    if (sporthall == null) 
+                        sporthall = cl.sporthalls.Find(sp => sp.id == sporthalId);
                     if (sporthall == null)
                     {
-                        // TODO: loopt door elkaar. Moet iets bedenken van 'onbekende sporthal'. Dat is beter gedefinieerd.
-                        if (sporthall == null)
-                        {
-                            sporthall = new SporthallAvailability(new Sporthal(sporthalId, "Unknown"));
-                            cl.sporthalls.Add(sporthall);
-                        }
+                        sporthall = new SporthallAvailability(new Sporthal(sporthalId, "Unknown"));
+                        cl.sporthalls.Add(sporthall);
                     }
                     te.sporthal = sporthall;
                     if (sporthall.teamId == te.Id)
@@ -1166,6 +1189,7 @@ namespace CompetitionCreator
                     model.teamConstraints.Add(constraint);
                 }
             }
+            CalculateDistancesSporthalls(model);
             model.RenewConstraints();
             model.Evaluate(null);
             model.Changed();
@@ -1439,6 +1463,22 @@ namespace CompetitionCreator
                     }
                 }
             }
+            CalculateDistancesSporthalls(model);
+            foreach (XElement sporthall in Element(doc, "Distances").Elements("Distance"))
+            {
+                int Id1 = IntegerAttribute(sporthall, "Id1");
+                int Id2 = IntegerAttribute(sporthall, "Id2");
+                int distance = IntegerAttribute(sporthall, "Distance");
+                int time = IntegerAttribute(sporthall, "Time");
+                Sporthal sporthal3 = model.sporthalls.Find(s => s.id == Id1);
+                if (sporthal3 != null)
+                {
+                    sporthal3.distance[Id2] = distance;
+                }
+            }
+        }
+        public void CalculateDistancesSporthalls(Model model)
+        {
             foreach (Sporthal sporthal1 in model.sporthalls)
             {
                 if (sporthal1.lat != 0 && sporthal1.lng != 0)
@@ -1456,18 +1496,6 @@ namespace CompetitionCreator
 
                 }
 
-            }
-            foreach (XElement sporthall in Element(doc, "Distances").Elements("Distance"))
-            {
-                int Id1 = IntegerAttribute(sporthall, "Id1");
-                int Id2 = IntegerAttribute(sporthall, "Id2");
-                int distance = IntegerAttribute(sporthall, "Distance");
-                int time = IntegerAttribute(sporthall, "Time");
-                Sporthal sporthal3 = model.sporthalls.Find(s => s.id == Id1);
-                if (sporthal3 != null)
-                {
-                    sporthal3.distance[Id2] = distance;
-                }
             }
         }
 

@@ -108,6 +108,17 @@ namespace CompetitionCreator
             }
             else
             {
+                if(sporthal.team != null)
+                {
+                    Day1.HeaderText = sporthal.team.defaultDay.ToString();
+                    Day2.Visible = false;
+                }
+                else 
+                {
+                    Day1.HeaderText = "Saturday";
+                    Day2.HeaderText = "Sunday";
+                    Day2.Visible = true;
+                }
                 dataGridView3.Visible = true;
                 label1.Visible = true;
                 label1.Text = string.Format("Sporthal '{0}' is beschikbaar op:", sporthal.name);
@@ -117,7 +128,14 @@ namespace CompetitionCreator
                 for (DateTime current = begin; current < end; current = current.AddDays(7))
                 {
                     MatchWeek w = new MatchWeek(current);
-                    dataGridView3.Rows.Add(w, sporthal.NotAvailable.Contains(w.Saturday) == false, sporthal.NotAvailable.Contains(w.Sunday) == false,"-");
+                    if (sporthal.team != null)
+                    {
+                        dataGridView3.Rows.Add(w, sporthal.NotAvailable.Contains(w.PlayTime(sporthal.team.defaultDay)) == false, false, "-");
+                    }
+                    else
+                    {
+                        dataGridView3.Rows.Add(w, sporthal.NotAvailable.Contains(w.Saturday) == false, sporthal.NotAvailable.Contains(w.Sunday) == false, "-");
+                    }
                 }
                 
             }
@@ -127,16 +145,19 @@ namespace CompetitionCreator
             objectListView1.SetObjects(club.teams,true);
             objectListView1_SelectionChanged(null, null); // otherwise it is not triggered for some reason.
             //objectListView1.BuildList(true);
+            
         }
         private void UpdateTeamConstraints()
         {
             objectListView2.SetObjects(model.constraints.FindAll(c => (c as DateConstraint) != null && c.club == club)); 
             objectListView2.BuildList(true);
-
+            tabControl2.TabPages[1].Text = "Special requirements (" + objectListView2.Items.Count + ")";
+            
             var list = model.teamConstraints.FindAll(c => (c.team1 != null && c.team1.club == club) || (c.team2 != null && c.team2.club == club));
 
             objectListView3.SetObjects(list);
             objectListView3.BuildList(true);
+            tabControl2.TabPages[0].Text = "Team requirements (" + objectListView3.Items.Count + ")";
             
         }
         private void dataGridView3_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -157,11 +178,25 @@ namespace CompetitionCreator
                 {
                     if (((bool)cell.EditedFormattedValue) == true)
                     {
-                        sporthal.NotAvailable.Remove(w.Saturday);
+                        if (sporthal.team != null)
+                        {
+                            sporthal.NotAvailable.Remove(w.PlayTime(sporthal.team.defaultDay));
+                        }
+                        else
+                        {
+                            sporthal.NotAvailable.Remove(w.Saturday);
+                        }
                     }
                     else
                     {
-                        if (sporthal.NotAvailable.Contains(w.Saturday) == false) sporthal.NotAvailable.Add(w.Saturday);
+                        if (sporthal.team != null)
+                        {
+                            if (sporthal.NotAvailable.Contains(w.PlayTime(sporthal.team.defaultDay)) == false) sporthal.NotAvailable.Add(w.PlayTime(sporthal.team.defaultDay)); 
+                        }
+                        else
+                        {
+                            if (sporthal.NotAvailable.Contains(w.Saturday) == false) sporthal.NotAvailable.Add(w.Saturday);
+                        }
                     }
                 }
                 else

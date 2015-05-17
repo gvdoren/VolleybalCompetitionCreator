@@ -51,6 +51,8 @@
             this.button6 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.olvColumn11 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn12 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView3)).BeginInit();
@@ -174,6 +176,8 @@
             this.objectListView3.AllColumns.Add(this.olvColumn7);
             this.objectListView3.AllColumns.Add(this.olvColumn8);
             this.objectListView3.AllColumns.Add(this.olvColumn9);
+            this.objectListView3.AllColumns.Add(this.olvColumn11);
+            this.objectListView3.AllColumns.Add(this.olvColumn12);
             this.objectListView3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -325,6 +329,28 @@
             this.label1.TabIndex = 12;
             this.label1.Text = "Anorama-reeks:";
             // 
+            // olvColumn11
+            // 
+            this.olvColumn11.AspectName = "Lat";
+            this.olvColumn11.CellPadding = null;
+            this.olvColumn11.DisplayIndex = 4;
+            this.olvColumn11.IsVisible = false;
+            this.olvColumn11.MaximumWidth = 50;
+            this.olvColumn11.MinimumWidth = 50;
+            this.olvColumn11.Text = "Latitude";
+            this.olvColumn11.Width = 50;
+            // 
+            // olvColumn12
+            // 
+            this.olvColumn12.AspectName = "Lng";
+            this.olvColumn12.CellPadding = null;
+            this.olvColumn12.DisplayIndex = 5;
+            this.olvColumn12.IsVisible = false;
+            this.olvColumn12.MaximumWidth = 50;
+            this.olvColumn12.MinimumWidth = 50;
+            this.olvColumn12.Text = "Longitude";
+            this.olvColumn12.Width = 50;
+            // 
             // SerieView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -380,5 +406,7 @@
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Label label1;
+        private BrightIdeasSoftware.OLVColumn olvColumn11;
+        private BrightIdeasSoftware.OLVColumn olvColumn12;
     }
 }

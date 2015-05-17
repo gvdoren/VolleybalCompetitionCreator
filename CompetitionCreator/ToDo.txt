@@ -25,6 +25,8 @@ High:
 
 
 Medium:
+- Opschonen sporthal beschikbaarheid laten zien. Kolommen moeten eigenlijk dynamisch opgebouwd worden (welke nodig zijn).
+   Nu is dat half dynamisch
 - obfuscator
 - reeks met een 2 toevoegen: a2, b2
 - schema editor/viewer

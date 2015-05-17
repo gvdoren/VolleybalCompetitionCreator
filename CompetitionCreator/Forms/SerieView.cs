@@ -19,6 +19,7 @@ namespace CompetitionCreator
         Model model = null;
         GlobalState state;
         Serie serie = null;
+        int selectedSeriesCount = 0;
         Poule poule = null;
         List<Team> teams = new List<Team>();
         string firstHalf;
@@ -128,36 +129,43 @@ namespace CompetitionCreator
         void UpdateWebBrowser()
         {
             List<Sporthal> sl = new List<Sporthal>();
-            // create list of sporthalls
-            if (serie != null)
+            if (objectListView1.SelectedObjects.Count > 0)
             {
                 bool geoInfo = false;
                 string markers = "";
                 bool first = true;
-                button4.Enabled = true;
-                foreach (Team t in serie.teams)
+                button4.Enabled = objectListView1.SelectedObjects.Count == 1; // Not optimizing when multiple are selected
+                foreach (Object obj in objectListView1.SelectedObjects)
                 {
-                    string letter = "X";
-                    if (t.sporthal != null && Math.Abs(t.sporthal.lat) > 0.01 && Math.Abs(t.sporthal.lng) > 0.01)
+                    Serie serie = obj as Serie;
+                    // create list of sporthalls
+                    foreach (Team t in serie.teams)
                     {
-                        if (t.poule != null)
+                        string letter = "X";
+                        if (t.sporthal != null && Math.Abs(t.sporthal.lat) > 0.01 && Math.Abs(t.sporthal.lng) > 0.01)
                         {
-                            letter = t.poule.name;
+                            if (t.poule != null)
+                            {
+                                letter = t.poule.name;
+                            }
+                            double lat = t.sporthal.lat;
+                            double shift = 0.005 * (sl.Count(s => s == t.sporthal.sporthall));
+                            double lng = t.sporthal.lng;
+                            lat += shift;
+                            lng += shift * 4;
+                            if (first == false) markers += ',';
+                            char oldChar = '\'';
+                            char newChar = ' ';
+                            string name = t.name.Replace(oldChar, newChar);
+                            markers += string.Format("['{0}',{1},{2},'{3}']\n", name, lat.ToString(CultureInfo.InvariantCulture), lng.ToString(CultureInfo.InvariantCulture), letter);
+                            first = false;
+                            sl.Add(t.sporthal.sporthall);
+                            geoInfo = true;
                         }
-                        double lat = t.sporthal.lat;
-                        double shift = 0.005 * (sl.Count(s => s == t.sporthal.sporthall));
-                        double lng = t.sporthal.lng;
-                        lat += shift;
-                        lng += shift * 4;
-                        if (first == false) markers += ',';
-                        markers += string.Format("['{0}',{1},{2},'{3}']\n", t.name, lat.ToString(CultureInfo.InvariantCulture), lng.ToString(CultureInfo.InvariantCulture), letter);
-                        first = false;
-                        sl.Add(t.sporthal.sporthall);
-                        geoInfo = true;
-                    }
-                    else
-                    {
-                        button4.Enabled = false;
+                        else
+                        {
+                            button4.Enabled = false;
+                        }
                     }
                 }
                 if (geoInfo) DisplayHtml(firstHalf + markers + secondHalf);
@@ -166,11 +174,17 @@ namespace CompetitionCreator
                     DisplayHtml(noLatLng);
                 }
             }
+            else
+            {
+
+            }
         }
         private void objectListView1_SelectionChanged(object sender, EventArgs e)
         {
-            if (serie != (Serie)objectListView1.SelectedObject)
+            
+            if (serie != (Serie)objectListView1.SelectedObject || objectListView1.SelectedObjects.Count != selectedSeriesCount)
             {
+                selectedSeriesCount = objectListView1.SelectedObjects.Count;
                 serie = (Serie)objectListView1.SelectedObject;
                 poule = null;
                 teams.Clear();

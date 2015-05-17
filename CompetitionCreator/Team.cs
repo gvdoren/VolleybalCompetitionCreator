@@ -117,7 +117,7 @@ namespace CompetitionCreator
         {
             deleted = false;
             //serie.AddTeam(this);
-            model.AddTeam(this);
+            //model.AddTeam(this);
         }
         public void RemoveTeam(Model model)
         {
@@ -144,7 +144,8 @@ namespace CompetitionCreator
         public bool evaluated {
             get { return (serie.evaluated && deleted == false); }
         }
-
+        public string Lat { get { if (sporthal != null) return sporthal.lat.ToString(); else return "-"; } }
+        public string Lng { get { if (sporthal != null) return sporthal.lng.ToString(); else return "-"; } }
     }
 
 }
