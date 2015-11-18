@@ -186,11 +186,6 @@ namespace CompetitionCreator
         [Description("Hier kun je aangeven waar de ranking vandaan moet komen. ")]
         [DefaultValue("http://klvv.be/server/restricted/registrations/rankingXML.php")]
         public string RankingXML { get; set; }
-        [Category("File locations")]
-        [DisplayName("Default sporthal url")]
-        [Description("Hier kun je aangeven waar de sporthal info (afstanden) vandaan moet komen. ")]
-        [DefaultValue("http://klvv.be/server/sporthallsXML.php")]
-        public string sporthalXML { get; set; }
 
     }
 

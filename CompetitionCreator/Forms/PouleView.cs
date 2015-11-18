@@ -48,13 +48,22 @@ namespace CompetitionCreator
             objectListView2.HideSelection = false;
             UpdateWeekMapping();
             objectListView3_SelectionChanged(null, null);
-            objectListView3.FormatRow += objectListView3_FormatRow;
-            objectListView3.ShowGroups = false;
-            objectListView3.HideSelection = false;
-            objectListView3.PrimarySortColumn = olvColumn11;
-            objectListView3.PrimarySortOrder = SortOrder.Ascending;
-            objectListView3.SetObjects(weekmapping);
+            objectListWeeks.FormatRow += objectListView3_FormatRow;
+            objectListWeeks.ShowGroups = false;
+            objectListWeeks.HideSelection = false;
+            objectListWeeks.PrimarySortColumn = olvColumn11;
+            objectListWeeks.PrimarySortOrder = SortOrder.Ascending;
+            objectListWeeks.SetObjects(weekmapping);
             model.OnMyChange += state_OnMyChange;
+            weekSwitchButton.Visible = false;
+            if (model.licenseKey.Feature(Security.LicenseKey.FeatureType.Expert))
+            {
+                buttonOptimizeMatch.Visible = true;
+            }
+            else
+            {
+                buttonOptimizeMatch.Visible = false;
+            }
         }
         public void state_OnMyChange(object source, MyEventArgs e)
         {
@@ -95,16 +104,16 @@ namespace CompetitionCreator
                 objectListView2.Objects = poule.matches;
                 objectListView2.BuildList(true);
                 objectListView2.SelectedObjects = selectedMatches;
-                foreach (Object obj in objectListView3.SelectedObjects)
+                foreach (Object obj in objectListWeeks.SelectedObjects)
                 {
                     selectedWeeks.Add(((KeyValuePair<MatchWeek, int>)obj).Key);
                 }
                 UpdateWeekMapping();
-                objectListView3.BuildList(true);
-                foreach (Object obj in objectListView3.Objects)
+                objectListWeeks.BuildList(true);
+                foreach (Object obj in objectListWeeks.Objects)
                 {
                     KeyValuePair<MatchWeek, int> kvp = (KeyValuePair<MatchWeek, int>)obj;
-                    if (selectedWeeks.Contains(kvp.Key) == true) objectListView3.SelectObject(obj);
+                    if (selectedWeeks.Contains(kvp.Key) == true) objectListWeeks.SelectObject(obj);
                 }
             }
         }
@@ -356,38 +365,39 @@ namespace CompetitionCreator
             weekmapping.Clear();
             MatchWeek start = poule.weeksFirst.Min();
             MatchWeek end = poule.weeksSecond.Max();
-            for (MatchWeek date = new MatchWeek(start.FirstDayInWeek); !(date > end); date = new MatchWeek(date.FirstDayInWeek.AddDays(7)))
+            List<MatchWeek> list = new List<MatchWeek>();
+            list.AddRange(poule.weeksFirst);
+            list.AddRange(poule.weeksSecond);
+            list.Sort();
+            foreach(MatchWeek week in list)
             {
-                for (int i = 0; i < 2; i++)
+                weekmapping.Add(week, FindIndex(week));
+            }
+
+        }
+        private int FindIndex(MatchWeek week)
+        {
+            int index = 0;
+            int k = 0;
+            for (int j = 0; j < poule.weeksFirst.Count; j++, k++)
+            {
+                if (poule.weeksFirst[j] == week)
                 {
-                    bool b = (i == 0);
-                    date.dayOverruled = b;
-                    int index = 0;
-                    int k = 0;
-                    for (int j = 0; j < poule.weeksFirst.Count; j++, k++)
-                    {
-                        if (poule.weeksFirst[j] == date)
-                        {
-                            index = k + 1;
-                        }
-                    }
-                    for (int j = 0; j < poule.weeksSecond.Count; j++, k++)
-                    {
-                        if (poule.weeksSecond[j] == date)
-                        {
-                            index = k + 1;
-                        }
-                    }
-                    if (index > 0 || !b)
-                    {
-                        weekmapping.Add(new MatchWeek(date), index);
-                    }
+                    index = k + 1;
                 }
             }
+            for (int j = 0; j < poule.weeksSecond.Count; j++, k++)
+            {
+                if (poule.weeksSecond[j] == week)
+                {
+                    index = k + 1;
+                }
+            }
+            return index;
         }
         private void objectListView3_SelectionChanged(object sender, EventArgs e)
         {
-            button7.Enabled = (objectListView3.SelectedObjects.Count == 2);
+            weekSwitchButton.Enabled = (objectListWeeks.SelectedObjects.Count == 2);
         }
         private void Switch1_Click(object sender, EventArgs e)
         {
@@ -401,8 +411,8 @@ namespace CompetitionCreator
             }
             else
             {
-                /*KeyValuePair<Week, int> kvp1 = (KeyValuePair<Week, int>)objectListView3.SelectedObjects[0];
-                KeyValuePair<Week, int> kvp2 = (KeyValuePair<Week, int>)objectListView3.SelectedObjects[1];
+                /*KeyValuePair<MatchWeek, int> kvp1 = (KeyValuePair<MatchWeek, int>)objectListWeeks.SelectedObjects[0];
+                KeyValuePair<MatchWeek, int> kvp2 = (KeyValuePair<MatchWeek, int>)objectListWeeks.SelectedObjects[1];
                 int index1 = kvp1.Value - 1;
                 int index2 = kvp2.Value - 1;
                 if (index1 >= 0) poule.weeks[index1] = kvp2.Key;
@@ -415,10 +425,10 @@ namespace CompetitionCreator
         }
         private void objectListView3_CellClick(object sender, CellClickEventArgs e)
         {
-            if (objectListView3.SelectedObjects.Count > 0)
+            if (objectListWeeks.SelectedObjects.Count > 0)
             {
                 List<Constraint> constraints = new List<Constraint>();
-                foreach (Object obj in objectListView3.SelectedObjects)
+                foreach (Object obj in objectListWeeks.SelectedObjects)
                 {
                     KeyValuePair<MatchWeek, int> kvp = (KeyValuePair<MatchWeek, int>)obj;
                     constraints.AddRange(kvp.Key.conflictConstraints);

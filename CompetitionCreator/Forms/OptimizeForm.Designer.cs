@@ -29,49 +29,51 @@
         private void InitializeComponent()
         {
             this.objectListView1 = new BrightIdeasSoftware.ObjectListView();
-            this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn7 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn5 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn6 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.nameColumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.evaluatedColumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.numberColumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.weeksColumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.homeVisitColumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.importanceColumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.importedColumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.button6 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
+            this.button6 = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // objectListView1
             // 
-            this.objectListView1.AllColumns.Add(this.olvColumn1);
-            this.objectListView1.AllColumns.Add(this.olvColumn7);
-            this.objectListView1.AllColumns.Add(this.olvColumn2);
-            this.objectListView1.AllColumns.Add(this.olvColumn4);
-            this.objectListView1.AllColumns.Add(this.olvColumn5);
-            this.objectListView1.AllColumns.Add(this.olvColumn3);
-            this.objectListView1.AllColumns.Add(this.olvColumn6);
+            this.objectListView1.AllColumns.Add(this.nameColumn);
+            this.objectListView1.AllColumns.Add(this.evaluatedColumn);
+            this.objectListView1.AllColumns.Add(this.numberColumn);
+            this.objectListView1.AllColumns.Add(this.weeksColumn);
+            this.objectListView1.AllColumns.Add(this.homeVisitColumn);
+            this.objectListView1.AllColumns.Add(this.importanceColumn);
+            this.objectListView1.AllColumns.Add(this.importedColumn);
             this.objectListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.objectListView1.CellEditActivation = BrightIdeasSoftware.ObjectListView.CellEditActivateMode.SingleClick;
             this.objectListView1.CheckedAspectName = "";
             this.objectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.olvColumn1,
-            this.olvColumn7,
-            this.olvColumn2,
-            this.olvColumn4,
-            this.olvColumn5,
-            this.olvColumn3,
-            this.olvColumn6});
+            this.nameColumn,
+            this.evaluatedColumn,
+            this.numberColumn,
+            this.weeksColumn,
+            this.homeVisitColumn,
+            this.importanceColumn,
+            this.importedColumn});
             this.objectListView1.FullRowSelect = true;
             this.objectListView1.GridLines = true;
             this.objectListView1.Location = new System.Drawing.Point(13, 13);
@@ -88,73 +90,73 @@
             this.objectListView1.CellEditStarting += new BrightIdeasSoftware.CellEditEventHandler(this.objectListView1_CellEditStarting);
             this.objectListView1.SubItemChecking += new System.EventHandler<BrightIdeasSoftware.SubItemCheckingEventArgs>(this.objectListView1_SubItemChecking);
             // 
-            // olvColumn1
+            // nameColumn
             // 
-            this.olvColumn1.AspectName = "name";
-            this.olvColumn1.CellPadding = null;
-            this.olvColumn1.FillsFreeSpace = true;
-            this.olvColumn1.Hyperlink = true;
-            this.olvColumn1.MinimumWidth = 60;
-            this.olvColumn1.Text = "Serie";
-            this.olvColumn1.Width = 80;
+            this.nameColumn.AspectName = "name";
+            this.nameColumn.CellPadding = null;
+            this.nameColumn.FillsFreeSpace = true;
+            this.nameColumn.Hyperlink = true;
+            this.nameColumn.MinimumWidth = 60;
+            this.nameColumn.Text = "Serie";
+            this.nameColumn.Width = 80;
             // 
-            // olvColumn7
+            // evaluatedColumn
             // 
-            this.olvColumn7.AspectName = "evaluated";
-            this.olvColumn7.CellPadding = null;
-            this.olvColumn7.CheckBoxes = true;
-            this.olvColumn7.MaximumWidth = 60;
-            this.olvColumn7.MinimumWidth = 60;
-            this.olvColumn7.Text = "Evaluate";
+            this.evaluatedColumn.AspectName = "evaluated";
+            this.evaluatedColumn.CellPadding = null;
+            this.evaluatedColumn.CheckBoxes = true;
+            this.evaluatedColumn.MaximumWidth = 60;
+            this.evaluatedColumn.MinimumWidth = 60;
+            this.evaluatedColumn.Text = "Evaluate";
             // 
-            // olvColumn2
+            // numberColumn
             // 
-            this.olvColumn2.AspectName = "optimizableNumber";
-            this.olvColumn2.CellPadding = null;
-            this.olvColumn2.CheckBoxes = true;
-            this.olvColumn2.MaximumWidth = 60;
-            this.olvColumn2.MinimumWidth = 60;
-            this.olvColumn2.Text = "Number";
+            this.numberColumn.AspectName = "optimizableNumber";
+            this.numberColumn.CellPadding = null;
+            this.numberColumn.CheckBoxes = true;
+            this.numberColumn.MaximumWidth = 60;
+            this.numberColumn.MinimumWidth = 60;
+            this.numberColumn.Text = "Number";
             // 
-            // olvColumn4
+            // weeksColumn
             // 
-            this.olvColumn4.AspectName = "optimizableWeeks";
-            this.olvColumn4.CellPadding = null;
-            this.olvColumn4.CheckBoxes = true;
-            this.olvColumn4.MaximumWidth = 60;
-            this.olvColumn4.MinimumWidth = 60;
-            this.olvColumn4.Text = "Weeks";
+            this.weeksColumn.AspectName = "optimizableWeeks";
+            this.weeksColumn.CellPadding = null;
+            this.weeksColumn.CheckBoxes = true;
+            this.weeksColumn.MaximumWidth = 60;
+            this.weeksColumn.MinimumWidth = 60;
+            this.weeksColumn.Text = "Weeks";
             // 
-            // olvColumn5
+            // homeVisitColumn
             // 
-            this.olvColumn5.AspectName = "optimizableHomeVisit";
-            this.olvColumn5.CellPadding = null;
-            this.olvColumn5.CheckBoxes = true;
-            this.olvColumn5.MaximumWidth = 60;
-            this.olvColumn5.MinimumWidth = 60;
-            this.olvColumn5.Text = "HomeVisit";
+            this.homeVisitColumn.AspectName = "optimizableHomeVisit";
+            this.homeVisitColumn.CellPadding = null;
+            this.homeVisitColumn.CheckBoxes = true;
+            this.homeVisitColumn.MaximumWidth = 60;
+            this.homeVisitColumn.MinimumWidth = 60;
+            this.homeVisitColumn.Text = "HomeVisit";
             // 
-            // olvColumn3
+            // importanceColumn
             // 
-            this.olvColumn3.AspectName = "importance";
-            this.olvColumn3.CellPadding = null;
-            this.olvColumn3.MaximumWidth = 80;
-            this.olvColumn3.MinimumWidth = 80;
-            this.olvColumn3.Text = "Importance";
-            this.olvColumn3.Width = 80;
+            this.importanceColumn.AspectName = "importance";
+            this.importanceColumn.CellPadding = null;
+            this.importanceColumn.MaximumWidth = 80;
+            this.importanceColumn.MinimumWidth = 80;
+            this.importanceColumn.Text = "Importance";
+            this.importanceColumn.Width = 80;
             // 
-            // olvColumn6
+            // importedColumn
             // 
-            this.olvColumn6.AspectName = "imported";
-            this.olvColumn6.CellPadding = null;
-            this.olvColumn6.Text = "External";
+            this.importedColumn.AspectName = "imported";
+            this.importedColumn.CellPadding = null;
+            this.importedColumn.Text = "External";
             // 
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.Location = new System.Drawing.Point(7, 19);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(117, 23);
+            this.button1.Size = new System.Drawing.Size(131, 23);
             this.button1.TabIndex = 1;
             this.button1.Text = "Optimize";
             this.button1.UseVisualStyleBackColor = true;
@@ -163,11 +165,11 @@
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Location = new System.Drawing.Point(7, 51);
+            this.button2.Location = new System.Drawing.Point(7, 77);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(117, 23);
+            this.button2.Size = new System.Drawing.Size(132, 23);
             this.button2.TabIndex = 2;
-            this.button2.Text = "Optimize (slow)";
+            this.button2.Text = "Optimize (slow) Clubs";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
@@ -185,79 +187,89 @@
             // button4
             // 
             this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button4.Location = new System.Drawing.Point(7, 48);
+            this.button4.Location = new System.Drawing.Point(7, 19);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(134, 23);
             this.button4.TabIndex = 4;
-            this.button4.Text = "Optimize (slow)";
+            this.button4.Text = "Optimize (slow) All";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // button5
             // 
             this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button5.Location = new System.Drawing.Point(6, 77);
+            this.button5.Location = new System.Drawing.Point(6, 48);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(135, 23);
             this.button5.TabIndex = 6;
-            this.button5.Text = "Optimize Forever";
+            this.button5.Text = "Optimize Full";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // groupBox1
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.button6);
             this.groupBox1.Controls.Add(this.button7);
             this.groupBox1.Controls.Add(this.button1);
-            this.groupBox1.Controls.Add(this.button2);
             this.groupBox1.Location = new System.Drawing.Point(614, 4);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(145, 138);
+            this.groupBox1.Size = new System.Drawing.Size(145, 87);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "All";
             // 
+            // button7
+            // 
+            this.button7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button7.Location = new System.Drawing.Point(7, 51);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(131, 23);
+            this.button7.TabIndex = 1;
+            this.button7.Text = "Optimize Full";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
+            // 
             // button6
             // 
             this.button6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button6.Location = new System.Drawing.Point(7, 80);
+            this.button6.Location = new System.Drawing.Point(7, 48);
             this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(117, 23);
+            this.button6.Size = new System.Drawing.Size(132, 23);
             this.button6.TabIndex = 3;
             this.button6.Text = "Optimize Home/Visit";
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
-            // button7
-            // 
-            this.button7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button7.Location = new System.Drawing.Point(7, 109);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(117, 23);
-            this.button7.TabIndex = 1;
-            this.button7.Text = "Optimize Forever";
-            this.button7.UseVisualStyleBackColor = true;
-            this.button7.Click += new System.EventHandler(this.button7_Click);
-            // 
             // groupBox2
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.button3);
-            this.groupBox2.Controls.Add(this.button4);
             this.groupBox2.Controls.Add(this.button5);
-            this.groupBox2.Location = new System.Drawing.Point(612, 162);
+            this.groupBox2.Location = new System.Drawing.Point(612, 97);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(147, 117);
+            this.groupBox2.Size = new System.Drawing.Size(147, 80);
             this.groupBox2.TabIndex = 9;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Selected Clubs";
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.button4);
+            this.groupBox3.Controls.Add(this.button6);
+            this.groupBox3.Controls.Add(this.button2);
+            this.groupBox3.Location = new System.Drawing.Point(613, 183);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(145, 114);
+            this.groupBox3.TabIndex = 10;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Expert";
             // 
             // OptimizeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(775, 527);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.objectListView1);
@@ -268,6 +280,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
+            this.groupBox3.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -275,8 +288,8 @@
         #endregion
 
         private BrightIdeasSoftware.ObjectListView objectListView1;
-        private BrightIdeasSoftware.OLVColumn olvColumn1;
-        private BrightIdeasSoftware.OLVColumn olvColumn2;
+        private BrightIdeasSoftware.OLVColumn nameColumn;
+        private BrightIdeasSoftware.OLVColumn numberColumn;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
@@ -284,12 +297,13 @@
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
-        private BrightIdeasSoftware.OLVColumn olvColumn4;
-        private BrightIdeasSoftware.OLVColumn olvColumn5;
+        private BrightIdeasSoftware.OLVColumn weeksColumn;
+        private BrightIdeasSoftware.OLVColumn homeVisitColumn;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Button button7;
-        private BrightIdeasSoftware.OLVColumn olvColumn3;
-        private BrightIdeasSoftware.OLVColumn olvColumn6;
-        private BrightIdeasSoftware.OLVColumn olvColumn7;
+        private BrightIdeasSoftware.OLVColumn importanceColumn;
+        private BrightIdeasSoftware.OLVColumn importedColumn;
+        private BrightIdeasSoftware.OLVColumn evaluatedColumn;
+        private System.Windows.Forms.GroupBox groupBox3;
     }
 }

@@ -24,6 +24,26 @@ namespace CompetitionCreator
             objectListView1.SetObjects(model.series);
             model.OnMyChange += state_OnMyChange;
             state.OnMyChange += state_OnMyChange;
+            if(model.licenseKey.Feature(Security.LicenseKey.FeatureType.Expert))
+            {
+                this.groupBox3.Visible = true;
+            }
+            else
+            {
+                this.groupBox3.Visible = false;
+            }
+            if (model.licenseKey.Feature(Security.LicenseKey.FeatureType.Expert))
+            {
+                this.evaluatedColumn.IsVisible = true;
+                this.importedColumn.IsVisible = true;
+                objectListView1.RebuildColumns();
+            }
+            else
+            {
+                this.evaluatedColumn.IsVisible = false;
+                this.importedColumn.IsVisible = false;
+                objectListView1.RebuildColumns();
+            }
         }
         public void state_OnMyChange(object source, MyEventArgs e)
         {
@@ -61,19 +81,19 @@ namespace CompetitionCreator
             }
             foreach (Serie serie in series)
             {
-                if (e.Column.Index == 1)
+                if (e.Column == this.evaluatedColumn)
                 {
                     serie.evaluated = (e.NewValue == CheckState.Checked);
                 }
-                else if (e.Column.Index == 2)
+                else if (e.Column == this.numberColumn)
                 {
                     serie.optimizableNumber = (e.NewValue == CheckState.Checked);
                 }
-                else if (e.Column.Index == 3)
+                else if (e.Column == this.weeksColumn)
                 {
                     serie.optimizableWeeks = (e.NewValue == CheckState.Checked);
                 }
-                else if (e.Column.Index == 4)
+                else if (e.Column == this.homeVisitColumn)
                 {
                     serie.optimizableHomeVisit = (e.NewValue == CheckState.Checked);
                 }
@@ -378,7 +398,7 @@ namespace CompetitionCreator
         private void objectListView1_CellEditStarting(object sender, CellEditEventArgs e)
         {
             // Ignore edit events for other columns
-            if (e.Column.Index != 5) return;
+            if (e.Column != this.importanceColumn) return;
             ComboBox cb = new ComboBox();
             cb.Bounds = e.CellBounds;
             cb.Font = ((ObjectListView)sender).Font;
@@ -396,7 +416,7 @@ namespace CompetitionCreator
             if (e.Control is ComboBox)
             {
                 int value = ((ComboBox)e.Control).SelectedIndex;
-                if (e.Column.Index == 5)
+                if (e.Column == this.importanceColumn)
                 {
                     ((Serie)e.RowObject).importance = (Serie.ImportanceLevels) value;
                     objectListView1.RefreshItem(e.ListViewItem);

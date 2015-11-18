@@ -29,25 +29,25 @@
         private void InitializeComponent()
         {
             this.objectListView1 = new BrightIdeasSoftware.ObjectListView();
-            this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.nameColumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.conflictsColumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.evaluatedColumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.button1 = new System.Windows.Forms.Button();
-            this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.SuspendLayout();
             // 
             // objectListView1
             // 
-            this.objectListView1.AllColumns.Add(this.olvColumn2);
-            this.objectListView1.AllColumns.Add(this.olvColumn3);
-            this.objectListView1.AllColumns.Add(this.olvColumn1);
-            this.objectListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.objectListView1.AllColumns.Add(this.nameColumn);
+            this.objectListView1.AllColumns.Add(this.conflictsColumn);
+            this.objectListView1.AllColumns.Add(this.evaluatedColumn);
+            this.objectListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.objectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.olvColumn2,
-            this.olvColumn3,
-            this.olvColumn1});
+            this.nameColumn,
+            this.conflictsColumn,
+            this.evaluatedColumn});
             this.objectListView1.FullRowSelect = true;
             this.objectListView1.HideSelection = false;
             this.objectListView1.Location = new System.Drawing.Point(0, -1);
@@ -61,21 +61,27 @@
             this.objectListView1.SelectionChanged += new System.EventHandler(this.objectListView1_SelectionChanged);
             this.objectListView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.objectListView1_MouseDoubleClick);
             // 
-            // olvColumn2
+            // nameColumn
             // 
-            this.olvColumn2.AspectName = "fullName";
-            this.olvColumn2.CellPadding = null;
-            this.olvColumn2.FillsFreeSpace = true;
-            this.olvColumn2.MinimumWidth = 35;
-            this.olvColumn2.Text = "Poule";
+            this.nameColumn.AspectName = "fullName";
+            this.nameColumn.CellPadding = null;
+            this.nameColumn.FillsFreeSpace = true;
+            this.nameColumn.MinimumWidth = 35;
+            this.nameColumn.Text = "Poule";
             // 
-            // olvColumn3
+            // conflictsColumn
             // 
-            this.olvColumn3.AspectName = "conflict";
-            this.olvColumn3.CellPadding = null;
-            this.olvColumn3.FillsFreeSpace = true;
-            this.olvColumn3.MinimumWidth = 60;
-            this.olvColumn3.Text = "Conflicts";
+            this.conflictsColumn.AspectName = "conflict";
+            this.conflictsColumn.CellPadding = null;
+            this.conflictsColumn.FillsFreeSpace = true;
+            this.conflictsColumn.MinimumWidth = 60;
+            this.conflictsColumn.Text = "Conflicts";
+            // 
+            // evaluatedColumn
+            // 
+            this.evaluatedColumn.AspectName = "evaluated";
+            this.evaluatedColumn.CellPadding = null;
+            this.evaluatedColumn.Text = "Evaluated";
             // 
             // button1
             // 
@@ -87,12 +93,6 @@
             this.button1.Text = "Show all";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // olvColumn1
-            // 
-            this.olvColumn1.AspectName = "evaluated";
-            this.olvColumn1.CellPadding = null;
-            this.olvColumn1.Text = "Evaluated";
             // 
             // PouleListView
             // 
@@ -113,9 +113,9 @@
         #endregion
 
         private BrightIdeasSoftware.ObjectListView objectListView1;
-        private BrightIdeasSoftware.OLVColumn olvColumn2;
-        private BrightIdeasSoftware.OLVColumn olvColumn3;
+        private BrightIdeasSoftware.OLVColumn nameColumn;
+        private BrightIdeasSoftware.OLVColumn conflictsColumn;
         private System.Windows.Forms.Button button1;
-        private BrightIdeasSoftware.OLVColumn olvColumn1;
+        private BrightIdeasSoftware.OLVColumn evaluatedColumn;
     }
 }

@@ -77,7 +77,6 @@
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Day1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.Day2 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.EvenOdd = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
@@ -325,8 +324,7 @@
             this.dataGridView3.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column2,
             this.Day1,
-            this.Day2,
-            this.EvenOdd});
+            this.Day2});
             this.dataGridView3.Location = new System.Drawing.Point(741, 151);
             this.dataGridView3.Name = "dataGridView3";
             this.dataGridView3.RowHeadersVisible = false;
@@ -621,11 +619,6 @@
             this.Day2.Name = "Day2";
             this.Day2.Width = 60;
             // 
-            // EvenOdd
-            // 
-            this.EvenOdd.HeaderText = "EvenOdd";
-            this.EvenOdd.Name = "EvenOdd";
-            // 
             // InschrijvingenView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -712,7 +705,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Day1;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Day2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn EvenOdd;
 
     }
 }

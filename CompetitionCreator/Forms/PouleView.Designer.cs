@@ -47,14 +47,14 @@
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
-            this.objectListView3 = new BrightIdeasSoftware.ObjectListView();
+            this.objectListWeeks = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn12 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn13 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn14 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn10 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn11 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.label2 = new System.Windows.Forms.Label();
-            this.button7 = new System.Windows.Forms.Button();
+            this.weekSwitchButton = new System.Windows.Forms.Button();
             this.button8 = new System.Windows.Forms.Button();
             this.button9 = new System.Windows.Forms.Button();
             this.button10 = new System.Windows.Forms.Button();
@@ -62,11 +62,11 @@
             this.button12 = new System.Windows.Forms.Button();
             this.button13 = new System.Windows.Forms.Button();
             this.button14 = new System.Windows.Forms.Button();
-            this.button15 = new System.Windows.Forms.Button();
+            this.buttonOptimizeMatch = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.objectListView3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.objectListWeeks)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -292,31 +292,31 @@
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
-            // objectListView3
+            // objectListWeeks
             // 
-            this.objectListView3.AllColumns.Add(this.olvColumn12);
-            this.objectListView3.AllColumns.Add(this.olvColumn13);
-            this.objectListView3.AllColumns.Add(this.olvColumn14);
-            this.objectListView3.AllColumns.Add(this.olvColumn10);
-            this.objectListView3.AllColumns.Add(this.olvColumn11);
-            this.objectListView3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.objectListWeeks.AllColumns.Add(this.olvColumn12);
+            this.objectListWeeks.AllColumns.Add(this.olvColumn13);
+            this.objectListWeeks.AllColumns.Add(this.olvColumn14);
+            this.objectListWeeks.AllColumns.Add(this.olvColumn10);
+            this.objectListWeeks.AllColumns.Add(this.olvColumn11);
+            this.objectListWeeks.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.objectListView3.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.objectListWeeks.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumn12,
             this.olvColumn13,
             this.olvColumn14,
             this.olvColumn10});
-            this.objectListView3.FullRowSelect = true;
-            this.objectListView3.Location = new System.Drawing.Point(3, 22);
-            this.objectListView3.Name = "objectListView3";
-            this.objectListView3.Size = new System.Drawing.Size(345, 274);
-            this.objectListView3.Sorting = System.Windows.Forms.SortOrder.Ascending;
-            this.objectListView3.TabIndex = 9;
-            this.objectListView3.UseCompatibleStateImageBehavior = false;
-            this.objectListView3.View = System.Windows.Forms.View.Details;
-            this.objectListView3.CellClick += new System.EventHandler<BrightIdeasSoftware.CellClickEventArgs>(this.objectListView3_CellClick);
-            this.objectListView3.SelectionChanged += new System.EventHandler(this.objectListView3_SelectionChanged);
+            this.objectListWeeks.FullRowSelect = true;
+            this.objectListWeeks.Location = new System.Drawing.Point(3, 22);
+            this.objectListWeeks.Name = "objectListWeeks";
+            this.objectListWeeks.Size = new System.Drawing.Size(345, 274);
+            this.objectListWeeks.Sorting = System.Windows.Forms.SortOrder.Ascending;
+            this.objectListWeeks.TabIndex = 9;
+            this.objectListWeeks.UseCompatibleStateImageBehavior = false;
+            this.objectListWeeks.View = System.Windows.Forms.View.Details;
+            this.objectListWeeks.CellClick += new System.EventHandler<BrightIdeasSoftware.CellClickEventArgs>(this.objectListView3_CellClick);
+            this.objectListWeeks.SelectionChanged += new System.EventHandler(this.objectListView3_SelectionChanged);
             // 
             // olvColumn12
             // 
@@ -369,16 +369,16 @@
             this.label2.TabIndex = 10;
             this.label2.Text = "Weeks";
             // 
-            // button7
+            // weekSwitchButton
             // 
-            this.button7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button7.Location = new System.Drawing.Point(353, 22);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(57, 23);
-            this.button7.TabIndex = 4;
-            this.button7.Text = "Switch";
-            this.button7.UseVisualStyleBackColor = true;
-            this.button7.Click += new System.EventHandler(this.Switch1_Click);
+            this.weekSwitchButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.weekSwitchButton.Location = new System.Drawing.Point(353, 22);
+            this.weekSwitchButton.Name = "weekSwitchButton";
+            this.weekSwitchButton.Size = new System.Drawing.Size(57, 23);
+            this.weekSwitchButton.TabIndex = 4;
+            this.weekSwitchButton.Text = "Switch";
+            this.weekSwitchButton.UseVisualStyleBackColor = true;
+            this.weekSwitchButton.Click += new System.EventHandler(this.Switch1_Click);
             // 
             // button8
             // 
@@ -461,16 +461,16 @@
             this.button14.UseVisualStyleBackColor = true;
             this.button14.Visible = false;
             // 
-            // button15
+            // buttonOptimizeMatch
             // 
-            this.button15.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button15.Location = new System.Drawing.Point(6, 302);
-            this.button15.Name = "button15";
-            this.button15.Size = new System.Drawing.Size(107, 23);
-            this.button15.TabIndex = 6;
-            this.button15.Text = "Optimize Match";
-            this.button15.UseVisualStyleBackColor = true;
-            this.button15.Click += new System.EventHandler(this.optimizeMatch_Click);
+            this.buttonOptimizeMatch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonOptimizeMatch.Location = new System.Drawing.Point(6, 302);
+            this.buttonOptimizeMatch.Name = "buttonOptimizeMatch";
+            this.buttonOptimizeMatch.Size = new System.Drawing.Size(107, 23);
+            this.buttonOptimizeMatch.TabIndex = 6;
+            this.buttonOptimizeMatch.Text = "Optimize Match";
+            this.buttonOptimizeMatch.UseVisualStyleBackColor = true;
+            this.buttonOptimizeMatch.Click += new System.EventHandler(this.optimizeMatch_Click);
             // 
             // splitContainer1
             // 
@@ -494,11 +494,11 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.objectListView3);
-            this.splitContainer1.Panel2.Controls.Add(this.button7);
+            this.splitContainer1.Panel2.Controls.Add(this.objectListWeeks);
+            this.splitContainer1.Panel2.Controls.Add(this.weekSwitchButton);
             this.splitContainer1.Panel2.Controls.Add(this.label2);
             this.splitContainer1.Panel2.Controls.Add(this.button8);
-            this.splitContainer1.Panel2.Controls.Add(this.button15);
+            this.splitContainer1.Panel2.Controls.Add(this.buttonOptimizeMatch);
             this.splitContainer1.Panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer1_Panel2_Paint);
             this.splitContainer1.Size = new System.Drawing.Size(896, 333);
             this.splitContainer1.SplitterDistance = 475;
@@ -521,7 +521,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.PouleView_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.objectListView3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.objectListWeeks)).EndInit();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -553,11 +553,11 @@
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button6;
-        private BrightIdeasSoftware.ObjectListView objectListView3;
+        private BrightIdeasSoftware.ObjectListView objectListWeeks;
         private System.Windows.Forms.Label label2;
         private BrightIdeasSoftware.OLVColumn olvColumn12;
         private BrightIdeasSoftware.OLVColumn olvColumn14;
-        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Button weekSwitchButton;
         private BrightIdeasSoftware.OLVColumn olvColumn10;
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.Button button9;
@@ -566,7 +566,7 @@
         private System.Windows.Forms.Button button12;
         private System.Windows.Forms.Button button13;
         private System.Windows.Forms.Button button14;
-        private System.Windows.Forms.Button button15;
+        private System.Windows.Forms.Button buttonOptimizeMatch;
         private BrightIdeasSoftware.OLVColumn olvColumn13;
         private BrightIdeasSoftware.OLVColumn olvColumn11;
         private System.Windows.Forms.SplitContainer splitContainer1;

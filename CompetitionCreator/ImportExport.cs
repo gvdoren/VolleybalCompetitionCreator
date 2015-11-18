@@ -332,7 +332,9 @@ namespace CompetitionCreator
         {
             XmlWriter writer = XmlWriter.Create(filename);
             writer.WriteStartDocument();
+            writer.WriteStartElement("Registrations");
             WriteClubConstraintsInt(model, writer, unknown_also);
+            writer.WriteEndElement();
             writer.WriteEndDocument();
             writer.Close();
         }
@@ -357,6 +359,8 @@ namespace CompetitionCreator
                             writer.WriteStartElement("Sporthall");
                             writer.WriteAttributeString("Id", sporthal.id.ToString());
                             writer.WriteAttributeString("Name", sporthal.name);
+                            writer.WriteAttributeString("Latitude", sporthal.lat.ToString(CultureInfo.InvariantCulture));
+                            writer.WriteAttributeString("Longitude", sporthal.lng.ToString(CultureInfo.InvariantCulture));
                             if (sporthal.team != null) writer.WriteAttributeString("TeamId", sporthal.team.Id.ToString());
                             writer.WriteStartElement("NotAvailable");
                             foreach (DateTime date in sporthal.NotAvailable)
@@ -953,7 +957,6 @@ namespace CompetitionCreator
             try
             {
                 Model modelnew = LoadFullCompetitionIntern(filename);
-                //ImportSporthalls(modelnew, XDocument.Load(MySettings.Settings.sporthalXML, LoadOptions.SetLineInfo|LoadOptions.SetBaseUri).Root);
                 Properties.Settings.Default.LastOpenedProject = filename;
                 Properties.Settings.Default.Save();
                 model.Changed();
@@ -1007,8 +1010,8 @@ namespace CompetitionCreator
                 {
                     string sporthallName = StringAttribute(sporthal, "Name");
                     int id = IntegerAttribute(sporthal, "Id");
-                    string latAttrString = StringOptionalAttribute(sporthal, null, "latitude");
-                    string lngAttrString = StringOptionalAttribute(sporthal, null, "longitude");
+                    string latAttrString = StringOptionalAttribute(sporthal, null, "Latitude");
+                    string lngAttrString = StringOptionalAttribute(sporthal, null, "Longitude");
                     //VVB hack:
                     {
                         if(sporthallName == "-")
@@ -1017,8 +1020,8 @@ namespace CompetitionCreator
                             {
                                 sporthallName = StringAttribute(sporthalAlt, "Name");
                                 id = IntegerAttribute(sporthalAlt, "Id");
-                                latAttrString = StringOptionalAttribute(sporthalAlt, null, "latitude");
-                                lngAttrString = StringOptionalAttribute(sporthalAlt, null, "longitude");
+                                latAttrString = StringOptionalAttribute(sporthalAlt, null, "Latitude");
+                                lngAttrString = StringOptionalAttribute(sporthalAlt, null, "Longitude");
                                 if (sporthallName != "-") 
                                     break;
                             }
@@ -1435,48 +1438,6 @@ namespace CompetitionCreator
             model.Changed();
         }
 
-        public void ImportSporthalls(Model model, XElement doc)
-        {
-            foreach (XElement sporthall in Element(doc,"Sporthalls").Elements("Sporthall"))
-            {
-                int sporthallId = IntegerAttribute(sporthall, "Id");
-                Sporthal sh = model.sporthalls.Find(s => s.id == sporthallId);
-                if (sh == null)
-                {
-                    string sporthallName = StringAttribute(sporthall, "Name");
-                    sh = new Sporthal(sporthallId, sporthallName);
-                    model.sporthalls.Add(sh);
-                }
-                sh = model.sporthalls.Find(s => s.id == sporthallId);
-                string latAttrString = StringOptionalAttribute(sporthall, null, "Latitude");
-                string lngAttrString = StringOptionalAttribute(sporthall, null, "Longitude");
-                double sporthallLatitude;
-                double sporthallLongitude;
-                if (latAttrString != null && lngAttrString != null)
-                {
-                    bool ok1 = double.TryParse(latAttrString, NumberStyles.Number, CultureInfo.InvariantCulture, out sporthallLatitude);
-                    bool ok2 = double.TryParse(lngAttrString, NumberStyles.Number, CultureInfo.InvariantCulture, out sporthallLongitude);
-                    if (ok1 && ok2)
-                    {
-                        sh.lat = sporthallLatitude;
-                        sh.lng = sporthallLongitude;
-                    }
-                }
-            }
-            CalculateDistancesSporthalls(model);
-            foreach (XElement sporthall in Element(doc, "Distances").Elements("Distance"))
-            {
-                int Id1 = IntegerAttribute(sporthall, "Id1");
-                int Id2 = IntegerAttribute(sporthall, "Id2");
-                int distance = IntegerAttribute(sporthall, "Distance");
-                int time = IntegerAttribute(sporthall, "Time");
-                Sporthal sporthal3 = model.sporthalls.Find(s => s.id == Id1);
-                if (sporthal3 != null)
-                {
-                    sporthal3.distance[Id2] = distance;
-                }
-            }
-        }
         public void CalculateDistancesSporthalls(Model model)
         {
             foreach (Sporthal sporthal1 in model.sporthalls)
@@ -1490,6 +1451,8 @@ namespace CompetitionCreator
                             double lat_km = Math.Abs(sporthal1.lat - sporthal2.lat) * 110.0;
                             double lng_km = Math.Abs(sporthal1.lng - sporthal2.lng) * Math.Cos((Math.PI / 180) * sporthal1.lat) * 111.0;
                             double estimated_distance_km = 1.2 * Math.Sqrt((lat_km * lat_km) + (lng_km * lng_km));
+                            if (sporthal1.distance.ContainsKey(sporthal2.id))
+                                sporthal1.distance.Remove(sporthal2.id);
                             sporthal1.distance.Add(sporthal2.id, (int)estimated_distance_km);
                         }
                     }

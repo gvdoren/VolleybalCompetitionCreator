@@ -100,7 +100,7 @@
     <li>Team indelen in poules: Selecteer de poule, selecteer de team(s) en druk op 'assign team(s)'. </li>
     <li>Automatisch teams indelen: Indien je veel teams moet indelen kan het handig zijn om eerst het juiste aantal poules te creeeren, and dan met 'automatic divide' de teams in te verdelen over de poules. Indien de rangschikking van de eerste helft is geimporteerd (<a href="#rangschikking importeren">Rangschikking importeren</a>), dan wordt hier rekening mee gehouden. De hoogste in de rangschikking in poule A, daarna in B, enzovoort. De nieuw ingeschreven teams komen altijd in de laatste poule (bij de laagst geeindigden).</li>
     <li>Optimalizeren: nadat de teams zijn ingedeeld, kun je met behulp van 'Optimize distance' de verdeling van de teams over de poules optimaliseren mbt de afstand. De poules worden zo ingedeeld dat de totale afstand die de teams moeten afleggen minimaal is. In praktijk komt dit erop neer dat teams die vlak bij elkaar wonen in 1 poule worden gestopt. Hierbij kun je aangeven of meerdere teams van 1 club in 1 poule mogen (wat optimaal voor de afstand is), of dat deze verdeeld moeten worden over de poules (indien mogelijk).<br />
-    Als er poules geselecteerd zijn, vind de herverdeling (optimalisatie) van teams alleen plaats binnen de geselecteerde poules. Als er geen poules zijn geselecteerd, dan vindt de optimalisatie plaats over alle poules.</li>
+    Als er poules geselecteerd zijn, vind de herverdeling (optimalisatie) van teams alleen plaats binnen de geselecteerde poules. Als er geen poules zijn geselecteerd, dan vindt de optimalisatie plaats over alle poules. Door meerdere keren op deze knop te drukken vind er steeds een optimalisatie plaats. Je kunt zien aan de afstanden wanneer er geen betere oplossing meer gevonden kan worden.</li>
     <li>Reset-schema: Dan worden alle schema's van de poules in de serie weer naar default terug gezet en de optimalisatie van het schema teniet gedaan. Deze functionaliteit heeft eigenlijk niets te maken met het indelen van poules.</li>
   </ul>
   <p>Als poules in de tweede helft van het jaar worden ingedeeld, dan is de uitslag van de eerste helft van belang. Hiervoor kunnen de uitslagen van de eerste helft worden geimporteerd (File-Import-Ranking). Dan komt er achter elk team een getal te staan, bv. 1.56. Dit betekend dat het team 1e is geworden in de eerste helft. Het tweede getal is gerelateerd aan het aantal punten dat een team gehaald heeft. Echter, hoe kleiner dit getal, des te meer punten het team gehaald heeft. Dit is counter-intuitief maar is zo gekozen zodat je de teams kunt sorteren op dit getal: hoe kleiner hoe beter. Een team met 1.56 is dus een minder betere eerste dan een team met 1.75 omdat ze meer punten hebben gehaald in de eerste reeks.</p>
@@ -123,129 +123,20 @@
 <p>Na het inlezen van de VVB site, zijn de wedstrijden + teams ingelezen. Echter, de teams zijn niet aan een club toegewezen</p>
   <a name="optimaliseer"/>
 <h4>Competitie optimaliseren</h4>
-<p>&nbsp;</p>
-
+<p>Er kan op verschillende manieren geoptimaliseerd worden:</p>
+  <ol>
+    <li>Number: Teams wisselen van plaats in het schema</li>
+    <li>Weeks: Speelweekenden onderling wisselen</li>
+    <li>HomeVisit: Uit/Thuis wisselen</li>
+  </ol>
+  <p>Het programma probeert allerlei combinaties en probeert op deze manier het aantal conflicten te verminderen. Als de optimalisatie net draait, zal het aantal conflicten snel afnemen
+ maar hoe dichter bij het optimum des te langzamer het gaat. Je kunt per reeks aangeven wat voor soort optimalisaties mogelijk zijn. Dus als je alleen teams wilt
+ wisselen dan moet je alleen het vinkje bij die optie aanzetten.</p>
+  <p>Je kunt optimaliseren over alle clubs heen, of een aantal clubs selecteren en alleen de reeksen optimaliseren waar die clubs teams in hebben. </p>
+  
   <a name="rangschikking importeren"/>
 <h4>"Rangschikking importeren</h4>
 
-<a name="type conflicten" ></a>
-<h3>Type conflicten</h3>
-<p>De generatie van de competitie wordt in goede banen geleid door conflicten te definieren, die een bepaalde penalty-kosten introduceren. Omdat het programma probeert de totale kosten te minimaliseren zal het aantal conflicten geminimaliseert worden. </p>
-<ul>
-  <li>ConstraintSporthallNotAvailable: Dit conflict geeft aan als een wedstrijd gepland is in een sporthal die niet beschikbaar is.</li>
-  <li>ConstraintSchemaTooClose: Dit conflict geeft aan als de heen en terug wedstrijd te dicht bij elkaar gepland is.</li>
-  <li>ConstraintSchemaTooManyHomeAfterEachOther: Dit conflict geeft aan als er meer dan 3 thuis (of uit) wedstrijden na elkaar gepland zijn.</li>
-  <li>ConstraintPouleInconsistent: Hier wordt de definitie van een conflict misbruikt om een interne inconsistentie van het programma (=bug) aan te geven.</li>
-  <li>ConstraintNoPouleAssigned: Dit conflict geeft aan dat er teams zijn die nog niet ingedeeld zijn in een poule.</li>
-  <li>ConstraintPouleTwoTeamsOfSameClub: Indien er in 1 poule twee teams van 1 club zitten, dan moeten zij het eerste weekend van de heen, en terugronde tegen elkaar spelen. Dit conflict geeft aan indien de wedstrijden zo gepland zijn dat hier niet aan wordt voldaan. </li>
-  <li>ConstraintPouleOddEvenWeek: In het programma kan worden aangegeven dat een team alleen op even (of oneven) weekenden kan spelen. Het is aanbevolen deze functionaliteit niet te gebruiken omdat dit de kwaliteit van de totale competitie zal verslechteren. Het is ook niet nodig, omdat een club met de beschikbaarheid van de sporthal kan aangeven wanneer er gespeeld kan worden. Dit conflict geeft aan als oneven/even is aangegeven, maar een thuiswedstrijd is anders gepland. </li>
-  <li>ConstraintDifferentGroupsInSameWeekend: Dit conflict geeft aan als er wedstrijden op een dag gepland zijn niet allemaal in 1 groep zitten, maar verspreid over X en Y. </li>
-  <li>ConstraintNotAllInSameHomeWeekend: Dit conflict geeft aan als voor een club die alleen maar teams in 1 groep heeft, maar meer thuisweekenden heeft dan het minimale aantal weekenden.</li>
-  <li>ConstraintPlayAtSameTime: Je kunt in het tool aangeven of je niet wilt dat wedstrijden van twee teams tegelijk vallen (bv. coach speelt zelf ook). Met tegelijk wordt bedoeld dat het niet mogelijk is om te reizen tussentijds. Dit conflict geeft als de wedstrijden overlappen of tekort na elkaar gepland zijn.</li>
-  <li>ConstraintSpecialTeamRequirement: Je kunt in het tool aangeven of een team op een specifieke datum niet uit/thuis, of juist wel thuis moet spelen. Hiermee kun je bijvoorbeeld ingeven dat een team thuis moet spelen omdat ook het eetfestijn dat weekend is. Dit conflict geeft aan als aan zo'n special eis niet voldaan wordt.</li>
-  <li>ConstraintPouleFullLastTwoWeekends: Voor volwassen reeksen geld dat iedereen de laatste twee weekenden moet spelen. Dit conflict geeft aan als dit niet het geval is.</li>
-  <li>ConstraintClubTooManyConflicts: Het programma probeert de pijn te verdelen over alle clubs. Dit conflict geeft aan dat een club relatief veel conflicten heeft. Zoals ook met andere conflicten probeert het programma dit te voorkomen, waardoor er een balans komt over de clubs.</li>
-  <li>ConstraintTeamTooManyConflicts: Het programma probeert de pijn te verdelen over alle teams. Dit conflict geeft aan dat een team relatief veel conflicten heeft. Zoals ook met andere conflicten probeert het programma dit te voorkomen, waardoor er een balans komt over de team en voorkomt dat niet 1 team de pineut is.</li>
-</ul>
-<p>In de tabel is aangegeven welke conflict gerelateerd zijn aan de info die men op de website ingeeft, hoe zwaar elk conflict meeweegt.</p>
-<table width="100%" border="1">
-    <tr>
-      <th scope="col"><div align="left"></div></th>
-      <th scope="col">Beschikbaar op internet</th>
-      <th scope="col">Zwaarte</th>
-      <th scope="col">Opmerkingen</th>
-    </tr>
-    <tr>
-      <th scope="row"><div align="left">ConstraintSporthallNotAvailable</div></th>
-      <td>Ja, via beschikbaarheid sporthallen</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-    </tr>
-    <tr>
-      <th scope="row"><div align="left">ConstraintSchemaTooClose</div></th>
-      <td>Intern</td>
-      <td>&nbsp;</td>
-      <td>Schema generatie: niet toegestaan</td>
-    </tr>
-    <tr>
-      <th scope="row"><div align="left">ConstraintSchemaTooManyHomeAfterEachOther</div></th>
-      <td>Intern</td>
-      <td>&nbsp;</td>
-      <td>Schema generatie</td>
-    </tr>
-    <tr>
-      <th scope="row"><div align="left">ConstraintPouleInconsistent</div></th>
-      <td>Intern</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-    </tr>
-    <tr>
-      <th scope="row"><div align="left">ConstraintNoPouleAssigned</div></th>
-      <td>Nee, alleen in het tool zelf</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-    </tr>
-    <tr>
-      <th scope="row"><div align="left">ConstraintPouleTwoTeamsOfSameClub</div></th>
-      <td>Intern</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-    </tr>
-    <tr>
-      <th scope="row"><div align="left">ConstraintPouleOddEvenWeek</div></th>
-      <td>Nee, alleen in het tool zelf</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-    </tr>
-    <tr>
-      <th scope="row"><div align="left">ConstraintDifferentGroupsInSameWeekend</div></th>
-      <td>Ja, via groep X of Y</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-    </tr>
-    <tr>
-      <th scope="row"><div align="left">ConstraintNotAllInSameHomeWeekend</div></th>
-      <td>Ja, indien alleen X (of Y) in een club</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-    </tr>
-    <tr>
-      <th scope="row"><div align="left">ConstraintPlayAtSameTime</div></th>
-      <td>Nee, alleen via tool</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-    </tr>
-    <tr>
-      <th scope="row"><div align="left">ConstraintSpecialTeamRequirement</div></th>
-      <td>Nee, alleen via tool</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-    </tr>
-    <tr>
-      <th scope="row"><div align="left">ConstraintPouleFullLastTwoWeekends</div></th>
-      <td>Intern</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-    </tr>
-    <tr>
-      <th scope="row"><div align="left">ConstraintClubTooManyConflicts</div></th>
-      <td>Intern</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-    </tr>
-    <tr>
-      <th scope="row"><div align="left">ConstraintTeamTooManyConflicts</div></th>
-      <td>Intern</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-    </tr>
-</table>
-<p>&nbsp;</p>
-
-<p></p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
   <a name="groepen" ></a>
   <h3>Groepen</h3>
 <p>Vaak komt het voor dat een club op 1 dag in het weekend de sporthal tot zijn beschikking heeft. Stel dat het 2 senioren teams heeft die men om en om wil laten spelen omdat er maar 1 team tegelijk in de sporthal kan spelen. Om dit aan te geven kunnen de teams in twee groepen verdeeld worden: X en Y. Het programma zal proberen om teams in X niet op dezelfde dag te laten spelen als teams in Y. Een club kan bijvoorbeeld de volgende teams samenstellen:</p>

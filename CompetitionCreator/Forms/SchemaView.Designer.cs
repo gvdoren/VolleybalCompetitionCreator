@@ -43,7 +43,7 @@
             this.objectListView1.GridLines = true;
             this.objectListView1.Location = new System.Drawing.Point(12, 50);
             this.objectListView1.Name = "objectListView1";
-            this.objectListView1.Size = new System.Drawing.Size(613, 209);
+            this.objectListView1.Size = new System.Drawing.Size(751, 209);
             this.objectListView1.TabIndex = 0;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
@@ -65,7 +65,7 @@
             this.textBox1.Location = new System.Drawing.Point(13, 277);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(612, 150);
+            this.textBox1.Size = new System.Drawing.Size(750, 150);
             this.textBox1.TabIndex = 2;
             // 
             // SchemaView
@@ -78,7 +78,7 @@
             this.Controls.Add(this.objectListView1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "SchemaView";
-            this.Text = "SchemaView";
+            this.Text = "Schemas";
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

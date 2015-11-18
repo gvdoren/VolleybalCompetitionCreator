@@ -230,6 +230,9 @@ namespace Security
         public enum FeatureType 
         {
             Above1000Teams = 0,
+            Rankings,
+            Utilities,
+            Expert,
             SecondFeature
         };
         public LicenseKey(string Key)

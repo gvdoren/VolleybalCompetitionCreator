@@ -34,10 +34,21 @@ namespace CompetitionCreator
                 newSchema.Read(file);
                 schemas.Add(schemas.Count, newSchema);
                 comboBox1.Items.Add(fi.Name);
-
+            }
+            if (comboBox1.Items.Count > 0)
+            {
+                comboBox1.SelectedItem = comboBox1.Items[0];
             }
             objectListView1.Scrollable = true;
             objectListView1.ShowGroups = false;
+            if(model.licenseKey.Feature(Security.LicenseKey.FeatureType.Expert))
+            {
+                textBox1.Visible = true;
+            }
+            else 
+            {
+                textBox1.Visible = false;
+            }
         }
         private void UpdateForm(int schemaNr)
         {

@@ -32,14 +32,6 @@ namespace CompetitionCreator
             InitializeComponent();
             // reading club-constraints
             model = new Model(DateTime.Now.Year);
-            try
-            {
-                importExport.ImportSporthalls(model, XDocument.Load(MySettings.Settings.sporthalXML, LoadOptions.SetLineInfo|LoadOptions.SetBaseUri).Root);
-            }
-            catch
-            {
-                MessageBox.Show(string.Format("The specified URL for the sporthall distances ({0}) could not be found, is invalid, or no network connection is available. ", MySettings.Settings.sporthalXML));
-            }
             
             Text = string.Format("Competition Creator Tool ({0})", model.year);
 
@@ -294,15 +286,6 @@ namespace CompetitionCreator
                 if (ok)
                 {
                     Model newModel = new Model(year);
-                    try
-                    {
-                        importExport.ImportSporthalls(model, XDocument.Load(MySettings.Settings.sporthalXML, LoadOptions.SetLineInfo|LoadOptions.SetBaseUri).Root);
-                    }
-                    catch
-                    {
-                        MessageBox.Show(string.Format("The specified URL for the sporthall distances ({0}) could not be found, is invalid, or no network connection is available. ", MySettings.Settings.sporthalXML));
-                    }
-
                     model.Changed(newModel);
                     newModel.Evaluate(null);
                     newModel.Changed();
@@ -339,7 +322,17 @@ namespace CompetitionCreator
             form.ShowDialog();
             if(form.Result == true)
             {
-                importExport.ImportTeamSubscriptions(model, XDocument.Load(form.GetInputString(), LoadOptions.SetLineInfo|LoadOptions.SetBaseUri).Root);
+                try
+                {
+                    importExport.ImportTeamSubscriptions(model, XDocument.Load(form.GetInputString(), LoadOptions.SetLineInfo | LoadOptions.SetBaseUri).Root);
+                    model.Evaluate(null);
+                    model.Changed();
+                }
+                catch 
+                {
+                    MessageBox.Show("Failed importing registrations. Did you use the correct URL?");
+                }
+
             }
         }
 
@@ -707,18 +700,42 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 )
             {
                 this.exportToolStripMenuItem.Enabled = false;
-                this.importToolStripMenuItem.Enabled = false;
+                //this.importToolStripMenuItem.Enabled = false;
+                importSubscriptionsToolStripMenuItem.Enabled = false;
+                reportToolStripMenuItem1.Enabled = false;
                 this.saveToolStripMenuItem.Enabled = false;
                 this.saveToolStripMenuItem1.Enabled = false;
                 this.reportToolStripMenuItem1.Enabled = false;
             } else 
             {
                 this.exportToolStripMenuItem.Enabled = true;
-                this.importToolStripMenuItem.Enabled = true;
+                //this.importToolStripMenuItem.Enabled = true;
+                importSubscriptionsToolStripMenuItem.Enabled = true;
+                reportToolStripMenuItem1.Enabled = true;
                 this.saveToolStripMenuItem.Enabled = true;
                 this.saveToolStripMenuItem1.Enabled = true;
                 this.reportToolStripMenuItem1.Enabled = true;
             }
+            if(model.licenseKey.Feature(Security.LicenseKey.FeatureType.Rankings))
+            {
+                this.importRankingToolStripMenuItem.Visible = true;
+                this.importRankingWebsiteToolStripMenuItem.Visible = true;
+                this.cSVCompetitionToolStripMenuItem.Visible = true;
+            } else
+            {
+                this.importRankingToolStripMenuItem.Visible = false;
+                this.importRankingWebsiteToolStripMenuItem.Visible = false;
+                this.cSVCompetitionToolStripMenuItem.Visible = false;
+            }
+            if(model.licenseKey.Feature(Security.LicenseKey.FeatureType.Utilities))
+            {
+                this.utilitiesToolStripMenuItem.Visible = true;
+            }
+            else
+            {
+                this.utilitiesToolStripMenuItem.Visible = false;
+            }
+
         }
 
         private void schemasToolStripMenuItem_Click(object sender, EventArgs e)

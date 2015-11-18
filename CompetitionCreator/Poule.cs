@@ -256,7 +256,7 @@ namespace CompetitionCreator
             }
             model.EvaluateRelatedConstraints(this);
             int totalRelated = model.TotalConflicts();
-            if (totalRelated < TotalRelatedConflicts /*|| (equalAllowed && totalRelated == model.LastTotalConflicts)*/)
+            if (totalRelated < TotalRelatedConflicts || (equalAllowed && totalRelated == model.LastTotalConflicts))
             {
                 // check based on a full check:
                 model.Evaluate(this);

@@ -1087,12 +1087,12 @@ namespace CompetitionCreator
         public override string[] GetTextDescription()
         {
             List<string> result = new List<string>();
-            result.Add("Groep A:");
+            result.Add("Group X:");
             foreach(Team t in GroupA)
             {
                 result.Add(" - " + t.serie.name.ToString() + " - " + t.name.ToString()+" ("+t.Id.ToString()+")");
             }
-            result.Add("Groep B:");
+            result.Add("Group Y:");
             foreach (Team t in GroupB)
             {
                 result.Add(" - " + t.serie.name.ToString() + " - " + t.name.ToString() + " (" + t.Id.ToString() + ")");

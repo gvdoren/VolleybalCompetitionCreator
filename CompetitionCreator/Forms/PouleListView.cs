@@ -28,6 +28,16 @@ namespace CompetitionCreator
             objectListView1.UseFiltering = true;
             state.OnMyChange += new MyEventHandler(state_OnMyChange); 
             model.OnMyChange += state_OnMyChange;
+            if (model.licenseKey.Feature(Security.LicenseKey.FeatureType.Expert))
+            {
+                evaluatedColumn.IsVisible = true;
+                objectListView1.RebuildColumns();
+            }
+            else
+            {
+                evaluatedColumn.IsVisible = false;
+                objectListView1.RebuildColumns();
+            }
         }
         public void state_OnMyChange(object source, MyEventArgs e)
         {

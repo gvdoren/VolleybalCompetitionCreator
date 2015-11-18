@@ -24,22 +24,33 @@ namespace CompetitionCreator
             this.model = model;
             this.state = state;
             InitializeComponent();
+            this.tabControl2.Controls.Remove(this.tabPage1); // Initially do not show this, only show when used
             state.OnMyChange += new MyEventHandler(state_OnMyChange);
             if (state.selectedClubs.Count > 0) SetClub(state.selectedClubs[0]);
             objectListView2.SetObjects(model.constraints.FindAll(c => (c as DateConstraint) != null && c.club == club));
+
                         
-            //model.OnMyChange += state_OnMyChange;
+          //  model.OnMyChange += state_OnMyChange;
         }
 
 
         private void UpdateSporthalForm()
         {
             dataGridView2.Rows.Clear();
+            dataGridView2.ClearSelection();
+            bool selected = false;
             foreach (SporthallAvailability sporthal in club.sporthalls)
             {
-                if(sporthal.team!= null) dataGridView2.Rows.Add(sporthal,sporthal.team.Id);
-                else dataGridView2.Rows.Add(sporthal, "-");
-
+                if (sporthal.team != null) dataGridView2.Rows.Add(sporthal, sporthal.team.Id);
+                else
+                {
+                    dataGridView2.Rows.Add(sporthal, "All");
+                    if(selected == false)
+                    {
+                        selected = true;
+                        dataGridView2.Rows[dataGridView2.RowCount-1].Selected = true;
+                    }
+                }
             }
         }
         private void UpdateFreeFormatTab()
@@ -69,6 +80,12 @@ namespace CompetitionCreator
             }
             lock (model)
             {
+                if (model != this.model)
+                {
+                    Close();
+                    return;
+                }
+
                 if (state.selectedClubs.Count > 0 && state.selectedClubs[0] != club)
                 {
                     SetClub(state.selectedClubs[0]);
@@ -151,13 +168,21 @@ namespace CompetitionCreator
         {
             objectListView2.SetObjects(model.constraints.FindAll(c => (c as DateConstraint) != null && c.club == club)); 
             objectListView2.BuildList(true);
-            tabControl2.TabPages[1].Text = "Special requirements (" + objectListView2.Items.Count + ")";
+            this.tabPage2.Text = "Special requirements (" + objectListView2.Items.Count + ")";
             
             var list = model.teamConstraints.FindAll(c => (c.team1 != null && c.team1.club == club) || (c.team2 != null && c.team2.club == club));
 
-            objectListView3.SetObjects(list);
-            objectListView3.BuildList(true);
-            tabControl2.TabPages[0].Text = "Team requirements (" + objectListView3.Items.Count + ")";
+            if (list.Count > 0)
+            {
+                this.tabControl2.Controls.Add(this.tabPage1);
+                objectListView3.SetObjects(list);
+                objectListView3.BuildList(true);
+                this.tabPage1.Text = "Team requirements (" + objectListView3.Items.Count + ")";
+            }
+            else
+            {
+                this.tabControl2.Controls.Remove(this.tabPage1);
+            }
             
         }
         private void dataGridView3_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -467,14 +492,9 @@ namespace CompetitionCreator
                             selected = true;
                         }
                     }
-
                 }
                 sporthal = t.sporthal;
-                dataGridView3.Enabled = true;
-            } else
-            {
-                dataGridView3.Enabled = false;
-            }
+            } 
         }
 
         private void objectListView2_SelectionChanged(object sender, EventArgs e)

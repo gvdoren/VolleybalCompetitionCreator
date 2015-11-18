@@ -46,6 +46,7 @@ namespace CompetitionCreator
             optimizableMatch = true;
             extraTimeBefore = 0;
             importance = ImportanceLevels.Medium;
+            evaluated = true;
             // geen reserve match
         }
         

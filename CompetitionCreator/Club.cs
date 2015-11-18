@@ -7,7 +7,6 @@ using Newtonsoft.Json;
 
 namespace CompetitionCreator
 {
-    //bla
     //{"Id":"11","Name":"Avoc Achel","LogoId":"11"}
     public class Club: ConstraintAdmin
     {
@@ -45,10 +44,20 @@ namespace CompetitionCreator
         }
         public int percentage
         {
+            
             get 
             {
-                if (EvaluatedTeamCount == 0) return 0;
-                return (conflict * 100) / EvaluatedTeamCount; 
+                int c = 0;
+                foreach(Team t in teams)
+                {
+                    if(t.poule != null)
+                    {
+                        c += t.poule.teams.Count - 1;
+                    }
+                }
+                if (c == 0) return 0;
+                return (conflict * 100) / c;
+                
             }
         }
         public int EvaluatedTeamCount
