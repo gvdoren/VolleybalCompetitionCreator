@@ -152,7 +152,7 @@ namespace CompetitionCreator
     {
         public ConstraintSporthallNotAvailable(Team team)
         {
-            name = "Sporthal niet beschikbaar";
+            name = "Sporthall not available";
             this.team = team;
             VisitorAlso = false;
             cost = MySettings.Settings.SporthalNotAvailableCostLow;
@@ -231,7 +231,7 @@ namespace CompetitionCreator
                             // Of (delen door 6)
                             // 12 - teams: 22 weeks -> 3.xx weeks -> 4 weeks
                             // 6 teams: 11 weeks -> 1.9 weeks -> 2 weeks
-                            double mindays = (((poule.weeksFirst.Count + poule.weeksSecond.Count) * 7) / 6);
+                            double mindays = (((poule.weeks.Count) * 7) / 6);
                             days = mindays-days;
                             if (days>0)
                             {
@@ -533,9 +533,9 @@ namespace CompetitionCreator
                                         (m.homeTeam == t2 && m.visitorTeam == t1)
                                         )
                                     {
-                                        int weekIndexFirst = poule.weeksFirst.FindIndex(d => d == m.Week);
-                                        int weekIndexSecond = poule.weeksSecond.FindIndex(d => d == m.Week);
-                                        if (weekIndexFirst != 0 && weekIndexSecond != 0)
+                                        int index = m.weekIndex;
+                                        int firstSameRound = poule.weeks.FindIndex(w => w.round == poule.weeks[index].round);
+                                        if(index != firstSameRound)
                                         {
                                             AddConflictMatch(VisitorHomeBoth.HomeOnly,m);
                                         }

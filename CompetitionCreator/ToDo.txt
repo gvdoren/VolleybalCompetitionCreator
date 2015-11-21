@@ -8,13 +8,20 @@
    - Probeer de pijn te verdelen (XY groups opt, evt. daarna met HomeVisit opt).
    - Indien meerdere poules kan het helpen ze naar een andere poule te verplaatsen
 
-ToDo:
-- Testen: deleted teams
-- Testen: inlezen op de VVB site
-- automatisch saven om de 10 minuten.
+Testen:
+- VVB: 
+   * Inlezen op de VVB site
+   * VVB constraints kunnen editen
+
 
 High:
-- Constraints kunnen editen
+- Heen/terug ronde (of zelfs meerdere rondes) expliciet maken in schema's om ordering te kunnen handhaven
+- Opschonen sporthal beschikbaarheid laten zien. Kolommen moeten eigenlijk dynamisch opgebouwd worden (welke nodig zijn).
+- andere dagen dan zaterdag/zondag ondersteunen ?
+   Nu is dat half dynamisch
+- automatisch saven om de 10 minuten.
+- automatic divide when poules do not have the same size (e.g. 10+12)
+
 - diagnostics toevoegen
    - Logging, zodat de log opgestuurd kan worden. Ook een viewer om het te bekijken.
 - ImportCompetition definitie. Iets anders ipv XML based.
@@ -25,17 +32,12 @@ High:
 
 
 Medium:
-- Opschonen sporthal beschikbaarheid laten zien. Kolommen moeten eigenlijk dynamisch opgebouwd worden (welke nodig zijn).
-   Nu is dat half dynamisch
 - obfuscator
 - reeks met een 2 toevoegen: a2, b2
 - schema editor/viewer
 
 
 Low:
-- andere dagen dan zaterdag/zondag ondersteunen ?
-- Team specifieke sporthallen ook laten zien bij de club (of automatisch als je het team aanklikt.)
-	- Refresh soepeler laten verlopen
 - losse wedstrijd verplaatsingen (op reserve weken). Tweede phase optimalisatie?
 - Een net viewModel introduceren
 

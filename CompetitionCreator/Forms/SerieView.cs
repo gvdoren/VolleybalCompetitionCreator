@@ -257,14 +257,9 @@ namespace CompetitionCreator
                 }
                 // Create the week lists
                 int k = 0;
-                while (k < reeks.weeks.Count / 2)
-                {
-                    poule.weeksFirst.Add(reeks.weeks[k].week);
-                    k++;
-                }
                 while (k < reeks.weeks.Count)
                 {
-                    poule.weeksSecond.Add(reeks.weeks[k].week);
+                    poule.weeks.Add(reeks.weeks[k].week);
                     k++;
                 }
                 List<Schema> schemas = new List<Schema>();

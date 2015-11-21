@@ -17,8 +17,7 @@ namespace CompetitionCreator
 
         public bool evaluated { get { return imported == false; } }
         List<Team> resultTeams = new List<Team>();
-        List<MatchWeek> resultWeeksFirst = new List<MatchWeek>();
-        List<MatchWeek> resultWeeksSecond = new List<MatchWeek>();
+        List<MatchWeek> resultWeeks = new List<MatchWeek>();
         List<Match> resultMatches = new List<Match>();
         public List<Constraint> relatedConstraints = new List<Constraint>();
         int minConflicts = 0;
@@ -90,8 +89,7 @@ namespace CompetitionCreator
             this.name = name; 
         }
         public string fullName { get { return serie.name + name; ;} }
-        public List<MatchWeek> weeksFirst = new List<MatchWeek>();
-        public List<MatchWeek> weeksSecond = new List<MatchWeek>();
+        public List<MatchWeek> weeks = new List<MatchWeek>();
         public int CalculateDistances(Team t1)
         {
             int distance = 0;
@@ -195,55 +193,47 @@ namespace CompetitionCreator
                 //SnapShot(model);
                 if (conflict_cost > 0)
                 {
-                    if (weeksFirst.Count > 5)//12)
+                    int round = 1;
+                    int totalIndex = 0;
+                    do
                     {
-                        List<MatchWeek> result = new List<MatchWeek>(weeksFirst);
-                        for (int i = 0; i < weeksFirst.Count; i++)
+                        List<MatchWeek> previousRoundList = weeks.Where(w => w.round < round).ToList();
+                        List<MatchWeek> currentRoundList = weeks.Where(w => w.round == round).ToList();
+                        List<MatchWeek> nextRoundList = weeks.Where(w => w.round > round).ToList();
+                        if(currentRoundList.Count > 5)//12)
                         {
-                            intf.Progress(i, (weeksFirst.Count + weeksSecond.Count));
-                            for (int j = i + 1; j < weeksFirst.Count; j++)
+                            for (int i = 0; i < currentRoundList.Count; i++, totalIndex++)
                             {
-                                Swap(weeksFirst, i, j);
-                                SnapShotIfImproved(model);
-                                Swap(weeksFirst, i, j); 
-                                if (intf.Cancelled()) break;
+                                intf.Progress(totalIndex, weeks.Count);
+                                for (int j = i + 1; j < currentRoundList.Count; j++)
+                                {
+                                    Swap(currentRoundList, i, j);
+                                    weeks = new List<MatchWeek>(previousRoundList);
+                                    weeks.AddRange(currentRoundList);
+                                    weeks.AddRange(nextRoundList);
+                                    SnapShotIfImproved(model);
+                                    Swap(currentRoundList, i, j); 
+                                    if (intf.Cancelled()) break;
 
-                            }
-                            weeksFirst = resultWeeksFirst;
-                            if (intf.Cancelled()) break;
-                        }
-                        result = new List<MatchWeek>(weeksSecond);
-                        for (int i = 0; i < weeksSecond.Count; i++)
-                        {
-                            intf.Progress(i, (weeksFirst.Count + weeksSecond.Count));
-                            for (int j = i + 1; j < weeksSecond.Count; j++)
-                            {
-                                Swap(weeksSecond, i, j);
-                                SnapShotIfImproved(model);
-                                Swap(weeksSecond, i, j);
+                                }
+                                weeks = resultWeeks;
                                 if (intf.Cancelled()) break;
                             }
-                            weeksSecond = resultWeeksSecond;
-                            if (intf.Cancelled()) break;
                         }
-                    }
-                    else // full optimalisation
-                    {
-                        // First optimize first half
-                        try
+                        else // full optimalisation
                         {
-                            List<MatchWeek> remaining = weeksFirst;
-                            weeksFirst = new List<MatchWeek>();
-                            GenerateWeekCombination(model, ref weeksFirst, remaining, intf);
-                            weeksFirst = resultWeeksFirst;
-                            
-                            remaining = weeksSecond;
-                            weeksSecond = new List<MatchWeek>();
-                            GenerateWeekCombination(model, ref weeksSecond, remaining, intf);
-                            weeksSecond = resultWeeksSecond;
+                            try
+                            {
+                                List<MatchWeek> remaining = currentRoundList;
+                                weeks = new List<MatchWeek>(previousRoundList);
+                                GenerateWeekCombination(model, ref weeks, remaining, nextRoundList, intf);
+                                weeks = resultWeeks;
+                            }
+                            catch { }
+                            totalIndex += currentRoundList.Count;
                         }
-                        catch { }
-                    }
+                        round++;
+                    } while (totalIndex < weeks.Count);
                 }
             }
         }
@@ -266,8 +256,7 @@ namespace CompetitionCreator
                     model.LastTotalConflicts = total;
                     TotalRelatedConflicts = totalRelated;
                     resultTeams = new List<Team>(teams);
-                    resultWeeksFirst = new List<MatchWeek>(weeksFirst);
-                    resultWeeksSecond = new List<MatchWeek>(weeksSecond);
+                    resultWeeks = new List<MatchWeek>(weeks);
                     resultMatches = CopyMatches();
                     minConflicts = conflict_cost;
                     model.stateNotSaved = true;
@@ -288,8 +277,7 @@ namespace CompetitionCreator
             model.EvaluateRelatedConstraints(this);
             TotalRelatedConflicts = model.TotalConflicts();
             resultTeams = new List<Team>(teams);
-            resultWeeksFirst = new List<MatchWeek>(weeksFirst);
-            resultWeeksSecond = new List<MatchWeek>(weeksSecond);
+            resultWeeks = new List<MatchWeek>(weeks);
             resultMatches = CopyMatches();
             minConflicts = conflict_cost;
         }
@@ -301,8 +289,7 @@ namespace CompetitionCreator
             }
             snapShotTaken = false;
             teams = resultTeams;
-            weeksFirst = resultWeeksFirst;
-            weeksSecond = resultWeeksSecond;
+            weeks = resultWeeks;
             matches = resultMatches;
             snapShotTaken = false;
             model.Evaluate(null);
@@ -317,26 +304,25 @@ namespace CompetitionCreator
             list.RemoveAt(j);
             list.Insert(j, ti);
         }
-        private void GenerateWeekCombination(Model model, ref List<MatchWeek> firstHalf, List<MatchWeek> remainingWeeks, IProgress intf)
+        private void GenerateWeekCombination(Model model, ref List<MatchWeek> weeks, List<MatchWeek> remainingWeeks, List<MatchWeek> lastWeeks, IProgress intf)
         {
             if (remainingWeeks.Count > 0)
             {
                 for (int i = 0; i < remainingWeeks.Count; i++)
                 {
-                    if (firstHalf.Count == 0)
-                    {
-                        intf.Progress(i, remainingWeeks.Count - 1);
-                    }
-                    firstHalf.Add(remainingWeeks[0]);
+                    weeks.Add(remainingWeeks[0]);
                     remainingWeeks.RemoveAt(0);
-                    GenerateWeekCombination(model, ref firstHalf, remainingWeeks, intf);
-                    remainingWeeks.Add(firstHalf[firstHalf.Count - 1]);
-                    firstHalf.RemoveAt(firstHalf.Count - 1);
+                    GenerateWeekCombination(model, ref weeks, remainingWeeks, lastWeeks, intf);
+                    remainingWeeks.Add(weeks[weeks.Count - 1]);
+                    weeks.RemoveAt(weeks.Count - 1);
                 }
             }
             else
             {
+                int index = weeks.Count;
+                weeks.AddRange(lastWeeks);
                 SnapShotIfImproved(model);
+                weeks.RemoveRange(index, lastWeeks.Count);
                 if (intf.Cancelled())
                 {
                     //throw new Exception("Cancelled");
@@ -459,7 +445,7 @@ namespace CompetitionCreator
             if (optimizableMatch)
             {
                 // Only meaningfull when having spare weeks
-                if (weeksFirst.Count + weeksSecond.Count > 2 * (TeamCount - 1))
+                if (weeks.Count > 2 * (TeamCount - 1))
                 {
                     foreach (Match m in matches)
                     {
@@ -616,6 +602,7 @@ namespace CompetitionCreator
                 foreach(SchemaMatch match in week.matches)
                 {
                     Match m = new Match(week.WeekNr, match.team1, match.team2, serie, poule);
+                    weeks[week.WeekNr].round = week.round;
                     matches.Add(m);
                 }
             }

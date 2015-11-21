@@ -739,16 +739,10 @@ namespace CompetitionCreator
                 }
                 writer.WriteEndElement();
                 writer.WriteStartElement("Weeks");
-                foreach (MatchWeek week in poule.weeksFirst)
+                foreach (MatchWeek week in poule.weeks)
                 {
                     writer.WriteStartElement("Week");
-                    writer.WriteAttributeString("Date", week.FirstDayInWeek.Date.ToShortDateString());
-                    if (week.dayOverruled) writer.WriteAttributeString("OverruledDay", "true");
-                    writer.WriteEndElement();
-                }
-                foreach (MatchWeek week in poule.weeksSecond)
-                {
-                    writer.WriteStartElement("Week");
+                    writer.WriteAttributeString("Round", week.round.ToString());
                     writer.WriteAttributeString("Date", week.FirstDayInWeek.Date.ToShortDateString());
                     if (week.dayOverruled) writer.WriteAttributeString("OverruledDay", "true");
                     writer.WriteEndElement();
@@ -874,16 +868,29 @@ namespace CompetitionCreator
                     po.AddTeam(te, index); //must at fixed position
                     index++;
                 }
-                List<MatchWeek> temp = new List<MatchWeek>();
                 foreach (XElement week in Element(poule,"Weeks").Elements("Week"))
                 {
                     DateTime date = DateAttribute(week,"Date").Date;
+                    int round = IntegerOptionalAttribute(week, 0, "Round");
                     MatchWeek w = new MatchWeek(date);
+                    w.round = round;
                     w.dayOverruled = BoolOptionalAttribute(week, false, "OverruledDay");
-                    temp.Add(w);
+                    po.weeks.Add(w);
                 }
-                for (int i = 0; i < temp.Count / 2; i++) po.weeksFirst.Add(temp[i]);
-                for (int i = temp.Count / 2; i < temp.Count; i++) po.weeksSecond.Add(temp[i]);
+                // piece of code that can be removed after some time. This is to read in data without round info.
+                int maxRound = po.weeks.Max(w => w.round);
+                if(maxRound == 0)
+                {
+                    int index1 = 0;
+                    foreach(MatchWeek week in po.weeks)
+                    {
+                        if (index1 < po.weeks.Count / 2)
+                            week.round = 1;
+                        else
+                            week.round = 2;
+                        index1++;
+                    }
+                }
 
                 foreach (XElement match in Element(poule,"Matches").Elements("Match"))
                 {
@@ -1398,21 +1405,15 @@ namespace CompetitionCreator
             }
             foreach (Poule poule in importPoules)
             {
-                // Add weeks first
-                List<MatchWeek> weeks = new List<MatchWeek>();
                 foreach (string[] parameters in ParameterLines)
                 {
                     if (parameters[pouleIndex] == poule.name && poule.serie.id == int.Parse(parameters[serieIdIndex]))
                     {
                         MatchWeek we = new MatchWeek(DateTime.Parse(parameters[dateIndex] + " " + parameters[timeIndex]));
-                        if (weeks.Find(w => w == we) == null) weeks.Add(we);
+                        if (poule.weeks.Find(w => w == we) == null) poule.weeks.Add(we);
                     }
                 }
-                weeks.Sort();
-                poule.weeksFirst = new List<MatchWeek>();
-                poule.weeksSecond = new List<MatchWeek>();
-                for (int i = 0; i < weeks.Count / 2; i++) poule.weeksFirst.Add(weeks[i]);
-                for (int i = weeks.Count / 2; i < weeks.Count; i++) poule.weeksSecond.Add(weeks[i]);
+                poule.weeks.Sort();
 
                 foreach (string[] parameters in ParameterLines)
                 {
@@ -1427,7 +1428,7 @@ namespace CompetitionCreator
                             int visitorTeamIndex1 = int.Parse(parameters[visitorTeamIdIndex]);
                             int visitorPouleTeamIndex = poule.teams.FindIndex(t => t.Id == visitorTeamIndex1);
                             MatchWeek we = new MatchWeek(DateTime.Parse(parameters[dateIndex] + " " + parameters[timeIndex]));
-                            int index = weeks.FindIndex(w => w == we);
+                            int index = poule.weeks.FindIndex(w => w == we);
                             poule.matches.Add(new Match(index, homePouleTeamIndex, visitorPouleTeamIndex, serie, poule));
                         }
                     }

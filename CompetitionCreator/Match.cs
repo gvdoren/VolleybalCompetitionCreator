@@ -86,9 +86,7 @@ namespace CompetitionCreator
                 // correct for individual corrections
                 int index = weekIndex;
                 if (weekIndexIndividual >= 0) index = weekIndexIndividual;
-
-                if (index < poule.weeksFirst.Count) return poule.weeksFirst[index];
-                else return poule.weeksSecond[index - poule.weeksFirst.Count];
+                return poule.weeks[index];
             }
         }
 
@@ -133,17 +131,7 @@ namespace CompetitionCreator
                 }
             }
             List<MatchWeek> weeks = null;
-            int extraIndex = 0;
-            if (weekIndex < poule.weeksFirst.Count)
-            {
-                extraIndex = 0;
-                weeks = poule.weeksFirst;
-            } else 
-            {
-                extraIndex = poule.weeksFirst.Count;
-                weeks = poule.weeksSecond;
-            }
-            List<MatchWeek> weeksCopy = new List<MatchWeek>(weeks);
+            List<MatchWeek> weeksCopy = weeks.Where(w => w.round == weeks[weekIndex].round).ToList();
             // Find an alternative week
             foreach(Match m in poule.matches)
             {
@@ -159,7 +147,7 @@ namespace CompetitionCreator
             foreach (MatchWeek we in weeksCopy)
             {
                 int temp1 = weekIndexIndividual;
-                weekIndexIndividual = extraIndex + weeks.FindIndex(w => w == we);
+                weekIndexIndividual = weeks.FindIndex(w => w == we);
                 if (poule.SnapShotIfImproved(model, false) == false)
                 {
                     weekIndexIndividual = temp1;

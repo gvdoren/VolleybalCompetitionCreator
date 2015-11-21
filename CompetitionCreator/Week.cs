@@ -9,6 +9,7 @@ namespace CompetitionCreator
 
     public class MatchWeek : ConstraintAdmin, IComparable<MatchWeek>
     {
+        public int round = -1;
         public bool dayOverruled = false;
         public DayOfWeek OverruledDay = DayOfWeek.Wednesday;
         private DateTime date;

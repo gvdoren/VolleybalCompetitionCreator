@@ -690,7 +690,7 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             DateTime last = DateTime.Now;
             foreach(Poule poule in model.poules)
             {
-                DateTime l1 = poule.weeksSecond[poule.weeksSecond.Count-1].Saturday;
+                DateTime l1 = poule.weeks[poule.weeks.Count-1].Saturday;
                 if(l1<last) last = l1;
             }
             if (model.licenseKey.Valid() == false ||

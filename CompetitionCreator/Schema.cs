@@ -20,6 +20,7 @@ namespace CompetitionCreator
     {
         public SchemaWeek(int nr) { WeekNr = nr; }
         public int WeekNr;
+        public int round;
         public List<SchemaMatch> matches = new List<SchemaMatch>();
     }
     public class Schema
@@ -37,14 +38,30 @@ namespace CompetitionCreator
                 foreach (string line in lines)
                 {
                     string[] var = line.Split(delimiters);
-                    int weekNr = int.Parse(var[0]) - 1; // internal administration starts at 0, schema files start at 1
-                    if(weeks.ContainsKey(weekNr) == false)
+                    if (var.Length == 3)
                     {
-                        weeks.Add(weekNr, new SchemaWeek(weekNr));
+                        int weekNr = int.Parse(var[0]) - 1; // internal administration starts at 0, schema files start at 1
+                        if (weeks.ContainsKey(weekNr) == false)
+                        {
+                            weeks.Add(weekNr, new SchemaWeek(weekNr));
+                        }
+                        int team1 = int.Parse(var[1]) - 1;
+                        int team2 = int.Parse(var[2]) - 1;
+                        weeks[weekNr].matches.Add(new SchemaMatch(team1, team2));
                     }
-                    int team1 = int.Parse(var[1]) - 1;
-                    int team2 = int.Parse(var[2]) - 1;
-                    weeks[weekNr].matches.Add(new SchemaMatch(team1,team2));
+                    else if(var.Length == 4) //including round
+                    {
+                        int round = int.Parse(var[0]) - 1;
+                        int weekNr = int.Parse(var[1]) - 1; // internal administration starts at 0, schema files start at 1
+                        if (weeks.ContainsKey(weekNr) == false)
+                        {
+                            weeks.Add(weekNr, new SchemaWeek(weekNr));
+                        }
+                        int team1 = int.Parse(var[2]) - 1;
+                        int team2 = int.Parse(var[3]) - 1;
+                        weeks[weekNr].matches.Add(new SchemaMatch(team1, team2));
+                        weeks[weekNr].round = round;
+                    }
                 }
                 teamCount = weeks[0].matches.Count*2;
                 FileInfo fi = new FileInfo(fileName);

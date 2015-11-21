@@ -363,34 +363,22 @@ namespace CompetitionCreator
         private void UpdateWeekMapping()
         {
             weekmapping.Clear();
-            MatchWeek start = poule.weeksFirst.Min();
-            MatchWeek end = poule.weeksSecond.Max();
             List<MatchWeek> list = new List<MatchWeek>();
-            list.AddRange(poule.weeksFirst);
-            list.AddRange(poule.weeksSecond);
+            list.AddRange(poule.weeks);
             list.Sort();
             foreach(MatchWeek week in list)
             {
                 weekmapping.Add(week, FindIndex(week));
             }
-
         }
         private int FindIndex(MatchWeek week)
         {
             int index = 0;
-            int k = 0;
-            for (int j = 0; j < poule.weeksFirst.Count; j++, k++)
+            for (int j = 0; j < poule.weeks.Count; j++)
             {
-                if (poule.weeksFirst[j] == week)
+                if (poule.weeks[j] == week)
                 {
-                    index = k + 1;
-                }
-            }
-            for (int j = 0; j < poule.weeksSecond.Count; j++, k++)
-            {
-                if (poule.weeksSecond[j] == week)
-                {
-                    index = k + 1;
+                    index = j + 1;
                 }
             }
             return index;

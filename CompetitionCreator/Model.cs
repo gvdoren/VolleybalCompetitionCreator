@@ -69,11 +69,7 @@ namespace CompetitionCreator
                 {
                     match.ClearConflicts();
                 }
-                foreach (MatchWeek week in poule.weeksFirst)
-                {
-                    week.ClearConflicts();
-                }
-                foreach (MatchWeek week in poule.weeksSecond)
+                foreach (MatchWeek week in poule.weeks)
                 {
                     week.ClearConflicts();
                 }

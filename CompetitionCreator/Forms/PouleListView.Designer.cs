@@ -50,10 +50,10 @@
             this.evaluatedColumn});
             this.objectListView1.FullRowSelect = true;
             this.objectListView1.HideSelection = false;
-            this.objectListView1.Location = new System.Drawing.Point(0, -1);
+            this.objectListView1.Location = new System.Drawing.Point(1, -5);
             this.objectListView1.Name = "objectListView1";
             this.objectListView1.ShowGroups = false;
-            this.objectListView1.Size = new System.Drawing.Size(285, 236);
+            this.objectListView1.Size = new System.Drawing.Size(282, 236);
             this.objectListView1.TabIndex = 0;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
