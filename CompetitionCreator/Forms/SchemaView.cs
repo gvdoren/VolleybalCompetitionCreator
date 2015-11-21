@@ -40,8 +40,14 @@ namespace CompetitionCreator
                 comboBox1.SelectedItem = comboBox1.Items[0];
             }
             objectListView1.Scrollable = true;
+            objectListView2.Scrollable = true;
+            objectListView3.Scrollable = true;
+            objectListView4.Scrollable = true;
             objectListView1.ShowGroups = false;
-            if(model.licenseKey.Feature(Security.LicenseKey.FeatureType.Expert))
+            objectListView2.ShowGroups = false;
+            objectListView3.ShowGroups = false;
+            objectListView4.ShowGroups = false;
+            if (model.licenseKey.Feature(Security.LicenseKey.FeatureType.Expert))
             {
                 textBox1.Visible = true;
             }
@@ -52,30 +58,54 @@ namespace CompetitionCreator
         }
         private void UpdateForm(int schemaNr)
         {
-            //objectListView1.AllColumns.Clear();
-            objectListView1.BeginUpdate();
-            objectListView1.Columns.Clear();
-            List<int> matchnumbers = new List<int>();
-            for (int i = 1; i <= selectedSchema.weeks[0].matches.Count; i++ )
+            for (int round = 0; round < 4; round++)
             {
-                matchnumbers.Add(i);
+                ObjectListView view = objectListView1;
+                TabPage tab = tabPage1;
+                if (round == 1)
+                {
+                    view = objectListView2;
+                    tab = tabPage2;
+                }
+                if (round == 2)
+                {
+                    view = objectListView3;
+                    tab = tabPage3;
+                }
+                if (round == 3)
+                {
+                    view = objectListView4;
+                    tab = tabPage4;
+                }
+                tabControl1.TabPages.Remove(tab);
+                if (selectedSchema.weeks.Values.Count(w => w.round == round) > 0)
+                    tabControl1.TabPages.Add(tab);
+
+                //objectListView1.AllColumns.Clear();
+                view.BeginUpdate();
+                view.Columns.Clear();
+                List<int> matchnumbers = new List<int>();
+                for (int i = 1; i <= selectedSchema.weeks[0].matches.Count; i++)
+                {
+                    matchnumbers.Add(i);
+                }
+                view.SetObjects(matchnumbers);
+                foreach (var week in selectedSchema.weeks.Where(w => w.Value.round == round))
+                {
+                    BrightIdeasSoftware.OLVColumn olvColumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+                    view.Columns.Add(olvColumn);
+                    olvColumn.AspectGetter = new DelegateSchemaObject(week.Value).getter;
+                    olvColumn.IsEditable = false;
+                    olvColumn.CellPadding = null;
+                    olvColumn.CheckBoxes = false;
+                    olvColumn.Text = (week.Key + 1).ToString();
+                    olvColumn.Width = 45;
+                    olvColumn.AutoResize(ColumnHeaderAutoResizeStyle.None);
+                    //olvColumn.AspectName = "weekNrString";
+                }
+                view.BuildList(true);
+                view.EndUpdate();
             }
-            objectListView1.SetObjects(matchnumbers);
-            foreach (var week in selectedSchema.weeks)
-            {
-                BrightIdeasSoftware.OLVColumn olvColumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-                objectListView1.Columns.Add(olvColumn);
-                olvColumn.AspectGetter = new DelegateSchemaObject(week.Value).getter;
-                olvColumn.IsEditable = false;
-                olvColumn.CellPadding = null;
-                olvColumn.CheckBoxes = false;
-                olvColumn.Text = (week.Key+1).ToString();
-                olvColumn.Width = 45;
-                olvColumn.AutoResize(ColumnHeaderAutoResizeStyle.None);
-                //olvColumn.AspectName = "weekNrString";
-            }
-            objectListView1.BuildList(true);
-            objectListView1.EndUpdate();
             Analysis();
         }
         private void Analysis()
@@ -134,6 +164,11 @@ namespace CompetitionCreator
         {
             selectedSchema = schemas[comboBox1.SelectedIndex];
             UpdateForm(comboBox1.SelectedIndex);
+        }
+
+        private void tabPage2_Click(object sender, EventArgs e)
+        {
+
         }
 
     }
