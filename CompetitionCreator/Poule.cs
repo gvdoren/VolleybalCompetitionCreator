@@ -191,7 +191,7 @@ namespace CompetitionCreator
             if (optimizableWeeks)
             {
                 //SnapShot(model);
-                if (conflict_cost > 0)
+                //if (conflict_cost > 0)
                 {
                     int round = 1;
                     int totalIndex = 0;
@@ -335,7 +335,7 @@ namespace CompetitionCreator
             MakeDirty();
             if (serie.optimizableNumber)
             {
-                if (conflict_cost > 0)
+                //if (conflict_cost > 0)
                 {
                     SnapShot(model);
                     int teamindex = teams.FindIndex(t => t == team);
@@ -365,7 +365,7 @@ namespace CompetitionCreator
             MakeDirty();
             if (optimizable)
             {
-                if (conflict_cost > 0)
+                //if (conflict_cost > 0)
                 {
                     if (maxTeams <= 6)
                     {
@@ -461,7 +461,7 @@ namespace CompetitionCreator
             MakeDirty();
             if (optimizable)
             {
-                if (conflict_cost > 0)
+                //if (conflict_cost > 0)
                 {
                     List<Team> temp = new List<Team>(teams);
                     teams = new List<Team>();
@@ -562,7 +562,7 @@ namespace CompetitionCreator
             {
                 foreach (Match match in matches)
                 {
-                    if (match.conflict_cost > 0)
+                    //if (match.conflict_cost > 0)
                     {
                         SwitchHomeTeamVisitorTeam(model, match);
                         if (SnapShotIfImproved(model) == false)
@@ -583,7 +583,7 @@ namespace CompetitionCreator
                 reverseMatches.Reverse();
                 foreach (Match match in reverseMatches)
                 {
-                    if (match.conflict_cost > 0)
+                    //if (match.conflict_cost > 0)
                     {
                         SwitchHomeTeamVisitorTeam(model, match);
                         if (SnapShotIfImproved(model) == false)
