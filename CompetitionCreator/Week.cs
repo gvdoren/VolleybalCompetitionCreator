@@ -15,33 +15,33 @@ namespace CompetitionCreator
         private DateTime date;
         public DateTime PlayTime(DayOfWeek day)
         {
-            if (dayOverruled) return FirstDayInWeek.AddDays(OverruledDay - firstDayInWeek).Date;
+            if (dayOverruled) return Monday.AddDays(OverruledDay - DayOfWeek.Monday).Date;
             if (day == 0) day += 7;
-            return FirstDayInWeek.AddDays(day - firstDayInWeek).Date;
+            return Monday.AddDays(day - DayOfWeek.Monday).Date;
         }
         public MatchWeek(string datestr)
         {
             date = DateTime.ParseExact(datestr, "yyyy-MM-dd", null).Date;
-            CalculateFirstDayInWeek();
+            CalculateMonday();
         }
         public MatchWeek(DateTime date)
         {
             this.date = date.Date;
-            CalculateFirstDayInWeek();
+            CalculateMonday();
         }
         public MatchWeek(MatchWeek week)
         {
             this.dayOverruled = week.dayOverruled;
             this.date = week.date;
-            CalculateFirstDayInWeek();
+            CalculateMonday();
         }
         public static bool operator <(MatchWeek w1, MatchWeek w2)
         {
-            return w1.FirstDayInWeek < w2.FirstDayInWeek || (w1.FirstDayInWeek == w2.FirstDayInWeek && w1.dayOverruled && w2.dayOverruled == false);
+            return w1.Monday < w2.Monday || (w1.Monday == w2.Monday && w1.dayOverruled && w2.dayOverruled == false);
         }
         public static bool operator >(MatchWeek w1, MatchWeek w2)
         {
-            return w2.FirstDayInWeek < w1.FirstDayInWeek || (w2.FirstDayInWeek == w1.FirstDayInWeek && w2.dayOverruled && w1.dayOverruled == false);
+            return w2.Monday < w1.Monday || (w2.Monday == w1.Monday && w2.dayOverruled && w1.dayOverruled == false);
         }
         public override string ToString()
         {
@@ -49,7 +49,7 @@ namespace CompetitionCreator
             {
                 return PlayTime(OverruledDay) + "* - " + PlayTime(OverruledDay);
             } else
-            return FirstDayInWeek.ToShortDateString() + "-" + FirstDayInWeek.AddDays(6).ToShortDateString();
+            return Monday.ToShortDateString() + "-" + Monday.AddDays(6).ToShortDateString();
         }
         public string Start
         {
@@ -87,7 +87,7 @@ namespace CompetitionCreator
             if (xo == null && yo != null) return false;
             if (xo != null && yo == null) return false;
             if (xo == null && yo == null) return true;
-            return x.FirstDayInWeek == y.FirstDayInWeek && x.dayOverruled == y.dayOverruled && y.OverruledDay == x.OverruledDay;
+            return x.Monday == y.Monday && x.dayOverruled == y.dayOverruled && y.OverruledDay == x.OverruledDay;
         }
         public static bool operator !=(MatchWeek x, MatchWeek y)
         {
@@ -99,33 +99,33 @@ namespace CompetitionCreator
             else if (this == other) return 0;
             else return 1;
         }
-        private const DayOfWeek firstDayInWeek = DayOfWeek.Monday;
-        private DateTime _FirstDayInWeek;
-        public DateTime FirstDayInWeek { get { return _FirstDayInWeek; } }
-        private void CalculateFirstDayInWeek()
+        //private const DayOfWeek Monday = DayOfWeek.Monday;
+        private DateTime _Monday;
+        public DateTime Monday { get { return _Monday; } }
+        private DateTime _Tuesday;
+        public DateTime Tuesday { get { return _Tuesday; } }
+        private DateTime _Wednesday;
+        public DateTime Wednesday { get { return _Wednesday; } }
+        private DateTime _Thursday;
+        public DateTime Thursday { get { return _Thursday; } }
+        private DateTime _Friday;
+        public DateTime Friday { get { return _Friday; } }
+        private DateTime _Saturday;
+        public DateTime Saturday { get { return _Saturday; } }
+        private DateTime _Sunday;
+        public DateTime Sunday { get { return _Sunday; } }
+        private void CalculateMonday()
         {
-            int daysOffset = date.DayOfWeek - firstDayInWeek;
+            int daysOffset = date.DayOfWeek - DayOfWeek.Monday;
             if (daysOffset < 0) daysOffset += 7;
 
-            _FirstDayInWeek = date.AddDays(-daysOffset);
-            _Saturday = _FirstDayInWeek.AddDays(5);
-            _Sunday = _FirstDayInWeek.AddDays(6);
-        }
-        private DateTime _Saturday;
-        public DateTime Saturday
-        {
-            get
-            {
-                return _Saturday;
-            }
-        }
-        private DateTime _Sunday;
-        public DateTime Sunday
-        {
-             get 
-            {
-                return _Sunday;
-            }
+            _Monday = date.AddDays(-daysOffset);
+            _Tuesday = Monday.AddDays(1);
+            _Wednesday = Monday.AddDays(2);
+            _Thursday = Monday.AddDays(3);
+            _Friday = Monday.AddDays(4);
+            _Saturday = _Monday.AddDays(5);
+            _Sunday = _Monday.AddDays(6);
         }
         public int WeekNr()
         {
@@ -134,7 +134,7 @@ namespace CompetitionCreator
             WeekNr = cul.Calendar.GetWeekOfYear(
                 date,
                 System.Globalization.CalendarWeekRule.FirstFullWeek,
-                firstDayInWeek);
+                DayOfWeek.Monday);
             return WeekNr;
         }
     }

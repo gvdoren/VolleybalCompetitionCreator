@@ -49,7 +49,17 @@
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label1 = new System.Windows.Forms.Label();
-            this.dataGridView3 = new System.Windows.Forms.DataGridView();
+            this.availabilityGrid = new System.Windows.Forms.DataGridView();
+            this.week = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.until = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.monday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.tuesday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.wednesday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.thursday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.friday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.saturday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.sunday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
@@ -74,12 +84,9 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.label4 = new System.Windows.Forms.Label();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Day1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.Day2 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.availabilityGrid)).BeginInit();
             this.tabControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView3)).BeginInit();
@@ -124,10 +131,8 @@
             this.olvColumn2,
             this.olvColumn4,
             this.olvColumn5,
-            this.olvColumn3,
-            this.olvColumn0,
-            this.olvColumn14,
-            this.olvColumn18});
+            this.olvColumn6,
+            this.olvColumn3});
             this.objectListView1.FullRowSelect = true;
             this.objectListView1.GridLines = true;
             this.objectListView1.HasCollapsibleGroups = false;
@@ -161,6 +166,7 @@
             this.olvColumn17.CellPadding = null;
             this.olvColumn17.IsEditable = false;
             this.olvColumn17.Text = "Poule";
+            this.olvColumn17.Width = 50;
             // 
             // olvColumn2
             // 
@@ -187,10 +193,9 @@
             // 
             this.olvColumn6.AspectName = "sporthal.name";
             this.olvColumn6.CellPadding = null;
-            this.olvColumn6.DisplayIndex = 4;
             this.olvColumn6.FillsFreeSpace = true;
             this.olvColumn6.IsEditable = false;
-            this.olvColumn6.IsVisible = false;
+            this.olvColumn6.MinimumWidth = 1;
             this.olvColumn6.Text = "Sporthal";
             this.olvColumn6.Width = 100;
             // 
@@ -243,8 +248,10 @@
             // 
             this.olvColumn0.AspectName = "Id";
             this.olvColumn0.CellPadding = null;
+            this.olvColumn0.DisplayIndex = 7;
             this.olvColumn0.FillsFreeSpace = true;
             this.olvColumn0.IsEditable = false;
+            this.olvColumn0.IsVisible = false;
             this.olvColumn0.MaximumWidth = 40;
             this.olvColumn0.Text = "Id";
             this.olvColumn0.Width = 40;
@@ -253,13 +260,17 @@
             // 
             this.olvColumn14.AspectName = "club";
             this.olvColumn14.CellPadding = null;
+            this.olvColumn14.DisplayIndex = 8;
             this.olvColumn14.IsEditable = false;
+            this.olvColumn14.IsVisible = false;
             this.olvColumn14.Text = "Club";
             // 
             // olvColumn18
             // 
             this.olvColumn18.AspectName = "fixedNumber";
             this.olvColumn18.CellPadding = null;
+            this.olvColumn18.DisplayIndex = 8;
+            this.olvColumn18.IsVisible = false;
             this.olvColumn18.Text = "Fixed Number";
             // 
             // textBox1
@@ -312,26 +323,108 @@
             this.label1.TabIndex = 6;
             this.label1.Text = "Beschikbaar op:";
             // 
-            // dataGridView3
+            // availabilityGrid
             // 
-            this.dataGridView3.AllowUserToAddRows = false;
-            this.dataGridView3.AllowUserToDeleteRows = false;
-            this.dataGridView3.AllowUserToResizeColumns = false;
-            this.dataGridView3.AllowUserToResizeRows = false;
-            this.dataGridView3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.availabilityGrid.AllowUserToAddRows = false;
+            this.availabilityGrid.AllowUserToDeleteRows = false;
+            this.availabilityGrid.AllowUserToResizeColumns = false;
+            this.availabilityGrid.AllowUserToResizeRows = false;
+            this.availabilityGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dataGridView3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView3.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.availabilityGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.availabilityGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.week,
             this.Column2,
-            this.Day1,
-            this.Day2});
-            this.dataGridView3.Location = new System.Drawing.Point(741, 151);
-            this.dataGridView3.Name = "dataGridView3";
-            this.dataGridView3.RowHeadersVisible = false;
-            this.dataGridView3.Size = new System.Drawing.Size(248, 490);
-            this.dataGridView3.TabIndex = 7;
-            this.dataGridView3.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView3_CellContentClick);
-            this.dataGridView3.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView3_CellValueChanged);
+            this.until,
+            this.monday,
+            this.tuesday,
+            this.wednesday,
+            this.thursday,
+            this.friday,
+            this.saturday,
+            this.sunday});
+            this.availabilityGrid.Location = new System.Drawing.Point(741, 151);
+            this.availabilityGrid.Name = "availabilityGrid";
+            this.availabilityGrid.RowHeadersVisible = false;
+            this.availabilityGrid.Size = new System.Drawing.Size(248, 490);
+            this.availabilityGrid.TabIndex = 7;
+            this.availabilityGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView3_CellContentClick);
+            // 
+            // week
+            // 
+            this.week.HeaderText = ".";
+            this.week.Name = "week";
+            this.week.Visible = false;
+            // 
+            // Column2
+            // 
+            this.Column2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Column2.DataPropertyName = "Monday";
+            this.Column2.HeaderText = "From";
+            this.Column2.MinimumWidth = 40;
+            this.Column2.Name = "Column2";
+            // 
+            // until
+            // 
+            this.until.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.until.DataPropertyName = "Sunday";
+            this.until.HeaderText = "Until";
+            this.until.Name = "until";
+            // 
+            // monday
+            // 
+            this.monday.HeaderText = "Mon";
+            this.monday.MinimumWidth = 30;
+            this.monday.Name = "monday";
+            this.monday.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.monday.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.monday.Width = 30;
+            // 
+            // tuesday
+            // 
+            this.tuesday.HeaderText = "Tue";
+            this.tuesday.MinimumWidth = 30;
+            this.tuesday.Name = "tuesday";
+            this.tuesday.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.tuesday.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.tuesday.Width = 30;
+            // 
+            // wednesday
+            // 
+            this.wednesday.HeaderText = "Wed";
+            this.wednesday.MinimumWidth = 30;
+            this.wednesday.Name = "wednesday";
+            this.wednesday.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.wednesday.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.wednesday.Width = 30;
+            // 
+            // thursday
+            // 
+            this.thursday.HeaderText = "Thu";
+            this.thursday.MinimumWidth = 30;
+            this.thursday.Name = "thursday";
+            this.thursday.Width = 30;
+            // 
+            // friday
+            // 
+            this.friday.HeaderText = "Fri";
+            this.friday.MinimumWidth = 30;
+            this.friday.Name = "friday";
+            this.friday.Width = 30;
+            // 
+            // saturday
+            // 
+            this.saturday.HeaderText = "Sat";
+            this.saturday.MinimumWidth = 30;
+            this.saturday.Name = "saturday";
+            this.saturday.Width = 30;
+            // 
+            // sunday
+            // 
+            this.sunday.HeaderText = "Sun";
+            this.sunday.MinimumWidth = 30;
+            this.sunday.Name = "sunday";
+            this.sunday.Width = 30;
             // 
             // tabControl1
             // 
@@ -600,25 +693,6 @@
             this.label4.TabIndex = 2;
             this.label4.Text = "Free format constraints:";
             // 
-            // Column2
-            // 
-            this.Column2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Column2.HeaderText = "Week";
-            this.Column2.MinimumWidth = 70;
-            this.Column2.Name = "Column2";
-            // 
-            // Day1
-            // 
-            this.Day1.HeaderText = "Zaterdag";
-            this.Day1.Name = "Day1";
-            this.Day1.Width = 60;
-            // 
-            // Day2
-            // 
-            this.Day2.HeaderText = "Zondag";
-            this.Day2.Name = "Day2";
-            this.Day2.Width = 60;
-            // 
             // InschrijvingenView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -627,7 +701,7 @@
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
-            this.Controls.Add(this.dataGridView3);
+            this.Controls.Add(this.availabilityGrid);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dataGridView2);
             this.Controls.Add(this.textBox1);
@@ -640,7 +714,7 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ClubConstraints_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.availabilityGrid)).EndInit();
             this.tabControl1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView3)).EndInit();
@@ -657,7 +731,7 @@
         #endregion
 
         private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.DataGridView dataGridView3;
+        private System.Windows.Forms.DataGridView availabilityGrid;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DataGridView dataGridView2;
         private System.Windows.Forms.TextBox textBox1;
@@ -702,9 +776,16 @@
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.DataGridViewTextBoxColumn week;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn Day1;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn Day2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn until;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn monday;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn tuesday;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn wednesday;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn thursday;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn friday;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn saturday;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn sunday;
 
     }
 }

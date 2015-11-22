@@ -29,7 +29,7 @@ namespace CompetitionCreator
                 }
                 else
                 {
-                    return week.FirstDayInWeek.ToString("dd-MM-yyyy") + " - " + week.FirstDayInWeek.AddDays(6).ToString("dd-MM-yyyy");
+                    return week.Monday.ToString("dd-MM-yyyy") + " - " + week.Sunday.ToString("dd-MM-yyyy");
                 }
             }
         }

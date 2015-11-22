@@ -44,11 +44,20 @@ namespace CompetitionCreator
                 if (sporthal.team != null) dataGridView2.Rows.Add(sporthal, sporthal.team.Id);
                 else
                 {
-                    dataGridView2.Rows.Add(sporthal, "All");
-                    if(selected == false)
+                    int usedByCount = club.teams.Count(t => t.sporthal == sporthal);
+                    if (usedByCount == 0)
                     {
-                        selected = true;
-                        dataGridView2.Rows[dataGridView2.RowCount-1].Selected = true;
+                        dataGridView2.Rows.Add(sporthal, "None");
+                        dataGridView2.Rows[dataGridView2.RowCount - 1].Selected = false;
+                    }
+                    else
+                    {
+                        dataGridView2.Rows.Add(sporthal, "All");
+                        if (selected == false)
+                        {
+                            selected = true;
+                            dataGridView2.Rows[dataGridView2.RowCount - 1].Selected = true;
+                        }
                     }
                 }
             }
@@ -80,11 +89,11 @@ namespace CompetitionCreator
             }
             lock (model)
             {
-                if (model != this.model)
-                {
-                    Close();
-                    return;
-                }
+                //if (model != this.model)
+                //{
+                //    Close();
+                //    return;
+                //}
 
                 if (state.selectedClubs.Count > 0 && state.selectedClubs[0] != club)
                 {
@@ -107,12 +116,12 @@ namespace CompetitionCreator
             if (dataGridView2.SelectedRows.Count > 0)
             {
                 sporthal = (SporthallAvailability)dataGridView2.SelectedRows[0].Cells[0].Value;
-                dataGridView3.Enabled = true;
+                availabilityGrid.Enabled = true;
             }
             else
             {
                 sporthal = null;
-                dataGridView3.Enabled = false;
+                availabilityGrid.Enabled = false;
             }
             UpdateWeekForm();
         }
@@ -120,39 +129,63 @@ namespace CompetitionCreator
         {
             if (sporthal == null)
             {
-                dataGridView3.Visible = false;
-                label1.Visible = false;
+                availabilityGrid.Visible = false;
+                return;
+            } 
+            List<DayOfWeek> days = new List<DayOfWeek>();
+            if (sporthal.team != null)
+            {
+                days.Add(sporthal.team.defaultDay);
+            }
+            else 
+            {
+                foreach(Team team in club.teams)
+                {
+                    if (team.sporthal == sporthal && days.Contains(team.defaultDay) == false)
+                        days.Add(team.defaultDay);
+                }
+            }
+            if (days.Count == 0)
+            {
+                availabilityGrid.Visible = false;
+                label1.Text = string.Format("Sporthal {0} is not used by any team", sporthal.name);
             }
             else
             {
-                if(sporthal.team != null)
+                availabilityGrid.Visible = true;
+                label1.Text = string.Format("Sporthal '{0}'\n Available on:", sporthal.name);
+                monday.Visible = false;
+                tuesday.Visible = false;
+                wednesday.Visible = false;
+                thursday.Visible = false;
+                friday.Visible = false;
+                saturday.Visible = false;
+                sunday.Visible = false;
+                foreach(DayOfWeek day in days)
                 {
-                    Day1.HeaderText = sporthal.team.defaultDay.ToString();
-                    Day2.Visible = false;
+                    if (day == DayOfWeek.Monday) monday.Visible = true;
+                    if (day == DayOfWeek.Tuesday) tuesday.Visible = true;
+                    if (day == DayOfWeek.Wednesday) wednesday.Visible = true;
+                    if (day == DayOfWeek.Thursday) thursday.Visible = true;
+                    if (day == DayOfWeek.Friday) friday.Visible = true;
+                    if (day == DayOfWeek.Saturday) saturday.Visible = true;
+                    if (day == DayOfWeek.Sunday) sunday.Visible = true;
                 }
-                else 
-                {
-                    Day1.HeaderText = "Saturday";
-                    Day2.HeaderText = "Sunday";
-                    Day2.Visible = true;
-                }
-                dataGridView3.Visible = true;
-                label1.Visible = true;
-                label1.Text = string.Format("Sporthal '{0}' is beschikbaar op:", sporthal.name);
                 DateTime begin = new DateTime(model.year, 9, 1);
                 DateTime end = new DateTime(model.year+1, 5, 1);
-                dataGridView3.Rows.Clear();
+                availabilityGrid.Rows.Clear();
                 for (DateTime current = begin; current < end; current = current.AddDays(7))
                 {
                     MatchWeek w = new MatchWeek(current);
-                    if (sporthal.team != null)
-                    {
-                        dataGridView3.Rows.Add(w, sporthal.NotAvailable.Contains(w.PlayTime(sporthal.team.defaultDay)) == false, false, "-");
-                    }
-                    else
-                    {
-                        dataGridView3.Rows.Add(w, sporthal.NotAvailable.Contains(w.Saturday) == false, sporthal.NotAvailable.Contains(w.Sunday) == false, "-");
-                    }
+                    availabilityGrid.Rows.Add(w, w.Monday.ToString("dd-MM"), w.Sunday.ToString("dd-MM"), 
+                                                    sporthal.NotAvailable.Contains(w.Monday) == false, 
+                                                    sporthal.NotAvailable.Contains(w.Tuesday) == false,
+                                                    sporthal.NotAvailable.Contains(w.Wednesday) == false,
+                                                    sporthal.NotAvailable.Contains(w.Thursday) == false,
+                                                    sporthal.NotAvailable.Contains(w.Friday) == false,
+                                                    sporthal.NotAvailable.Contains(w.Saturday) == false,
+                                                    sporthal.NotAvailable.Contains(w.Sunday) == false
+                                                    );
                 }
                 
             }
@@ -187,98 +220,46 @@ namespace CompetitionCreator
         }
         private void dataGridView3_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            /*
-            this.dataGridView3.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView3_CellValueChanged);
-            dataGridView3.CommitEdit(DataGridViewDataErrorContexts.Commit);
-            this.dataGridView3.CellValueChanged -= new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView3_CellValueChanged);
-             * */
             if (e.ColumnIndex > 0 && e.RowIndex >= 0)
             {
-                DataGridViewRow row = dataGridView3.Rows[e.RowIndex];
+                DataGridViewRow row = availabilityGrid.Rows[e.RowIndex];
                 MatchWeek w = (MatchWeek)row.Cells[0].Value;
                 DataGridViewCheckBoxCell cell = (DataGridViewCheckBoxCell)row.Cells[e.ColumnIndex];
                 cell.TrueValue = true;
                 cell.FalseValue = false;
-                if (e.ColumnIndex == 1)
-                {
-                    if (((bool)cell.EditedFormattedValue) == true)
-                    {
-                        if (sporthal.team != null)
-                        {
-                            sporthal.NotAvailable.Remove(w.PlayTime(sporthal.team.defaultDay));
-                        }
-                        else
-                        {
-                            sporthal.NotAvailable.Remove(w.Saturday);
-                        }
-                    }
-                    else
-                    {
-                        if (sporthal.team != null)
-                        {
-                            if (sporthal.NotAvailable.Contains(w.PlayTime(sporthal.team.defaultDay)) == false) sporthal.NotAvailable.Add(w.PlayTime(sporthal.team.defaultDay)); 
-                        }
-                        else
-                        {
-                            if (sporthal.NotAvailable.Contains(w.Saturday) == false) sporthal.NotAvailable.Add(w.Saturday);
-                        }
-                    }
-                }
-                else
-                {
-                    if (((bool)cell.EditedFormattedValue) == true)
-                    {
-                        sporthal.NotAvailable.Remove(w.Sunday);
-                    }
-                    else
-                    {
-                        if (sporthal.NotAvailable.Contains(w.Sunday) == false) sporthal.NotAvailable.Add(w.Sunday);
-                    }
-
-                }
+                DataGridViewColumn col = availabilityGrid.Columns[e.ColumnIndex];
+                bool b = ((bool)cell.Value) == false;
+                if (col == monday)
+                    changeAvailability(w.Monday, b);
+                if (col == tuesday)
+                    changeAvailability(w.Tuesday, b);
+                if (col == wednesday)
+                    changeAvailability(w.Wednesday, b);
+                if (col == thursday)
+                    changeAvailability(w.Thursday, b);
+                if (col == friday)
+                    changeAvailability(w.Friday, b);
+                if (col == saturday)
+                    changeAvailability(w.Saturday, b);
+                if (col == sunday)
+                    changeAvailability(w.Sunday, b);
             }
  
             model.Evaluate(null);
             //state.Changed();
             model.Changed();
         }
-
-        private void dataGridView3_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private void changeAvailability(DateTime date, bool available)
         {
-            if (e.ColumnIndex > 0 && e.RowIndex>=0)
+            if (available)
             {
-                DataGridViewRow row = dataGridView3.Rows[e.RowIndex];
-                MatchWeek w = (MatchWeek)row.Cells[0].Value;
-                DataGridViewCheckBoxCell cell = (DataGridViewCheckBoxCell)row.Cells[e.ColumnIndex];
-                cell.TrueValue = true;
-                cell.FalseValue = false;
-                if (e.ColumnIndex == 1)
-                {
-                    if (((bool)cell.Value) == true)
-                    {
-                        sporthal.NotAvailable.Remove(w.Saturday);
-                    }
-                    else
-                    {
-                        if(sporthal.NotAvailable.Contains(w.Saturday) == false) sporthal.NotAvailable.Add(w.Saturday);
-                    }
-                }
-                else
-                {
-                    if (((bool)cell.Value) == true)
-                    {
-                        sporthal.NotAvailable.Remove(w.Sunday);
-                    }
-                    else
-                    {
-                        if (sporthal.NotAvailable.Contains(w.Sunday) == false) sporthal.NotAvailable.Add(w.Sunday);
-                    }
-
-                }
+                sporthal.NotAvailable.Remove(date);
             }
-            //DataGridViewCheckBoxCell cb = dataGridView1.
+            else
+            {
+                if (sporthal.NotAvailable.Contains(date) == false) sporthal.NotAvailable.Add(date);
+            }
         }
-
         private void objectListView1_ItemsChanged(object sender, ItemsChangedEventArgs e)
         {
             model.Evaluate(null);
@@ -429,6 +410,7 @@ namespace CompetitionCreator
                     objectListView1.BuildList(true);
                 }
             }
+            UpdateSporthalForm();
             model.Evaluate(null);
             model.Changed();
         }

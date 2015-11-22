@@ -33,7 +33,7 @@ namespace CompetitionCreator
             List<AnnoramaWeek> anWeeks = new List<AnnoramaWeek>();
             MatchWeek week = new MatchWeek(model.annorama.start);
             DateTime current = model.annorama.start;
-            while (week.FirstDayInWeek < model.annorama.end)
+            while (week.Monday < model.annorama.end)
             {
                 anWeeks.Add(new AnnoramaWeek(week));
                 current = current.AddDays(7);

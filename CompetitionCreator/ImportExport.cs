@@ -743,7 +743,7 @@ namespace CompetitionCreator
                 {
                     writer.WriteStartElement("Week");
                     writer.WriteAttributeString("Round", week.round.ToString());
-                    writer.WriteAttributeString("Date", week.FirstDayInWeek.Date.ToShortDateString());
+                    writer.WriteAttributeString("Date", week.Monday.Date.ToShortDateString());
                     if (week.dayOverruled) writer.WriteAttributeString("OverruledDay", "true");
                     writer.WriteEndElement();
                 }

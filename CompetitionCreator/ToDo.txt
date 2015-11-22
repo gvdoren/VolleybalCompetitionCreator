@@ -15,10 +15,6 @@ Testen:
 
 
 High:
-- Heen/terug ronde (of zelfs meerdere rondes) expliciet maken in schema's om ordering te kunnen handhaven
-- Opschonen sporthal beschikbaarheid laten zien. Kolommen moeten eigenlijk dynamisch opgebouwd worden (welke nodig zijn).
-- andere dagen dan zaterdag/zondag ondersteunen ?
-   Nu is dat half dynamisch
 - automatisch saven om de 10 minuten.
 - automatic divide when poules do not have the same size (e.g. 10+12)
 
