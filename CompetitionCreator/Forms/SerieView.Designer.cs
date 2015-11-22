@@ -43,6 +43,8 @@
             this.olvColumn7 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn8 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn9 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn11 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn12 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.button3 = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.button4 = new System.Windows.Forms.Button();
@@ -51,8 +53,7 @@
             this.button6 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.olvColumn11 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn12 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.button5 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView3)).BeginInit();
@@ -151,9 +152,9 @@
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.Enabled = false;
-            this.button1.Location = new System.Drawing.Point(786, 57);
+            this.button1.Location = new System.Drawing.Point(788, 83);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(121, 23);
+            this.button1.Size = new System.Drawing.Size(118, 23);
             this.button1.TabIndex = 2;
             this.button1.Text = "Create Poule";
             this.button1.UseVisualStyleBackColor = true;
@@ -162,7 +163,7 @@
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Location = new System.Drawing.Point(787, 85);
+            this.button2.Location = new System.Drawing.Point(787, 112);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(120, 23);
             this.button2.TabIndex = 3;
@@ -239,6 +240,28 @@
             this.olvColumn9.MinimumWidth = 20;
             this.olvColumn9.Text = "Rangschikking";
             this.olvColumn9.Width = 50;
+            // 
+            // olvColumn11
+            // 
+            this.olvColumn11.AspectName = "Lat";
+            this.olvColumn11.CellPadding = null;
+            this.olvColumn11.DisplayIndex = 4;
+            this.olvColumn11.IsVisible = false;
+            this.olvColumn11.MaximumWidth = 50;
+            this.olvColumn11.MinimumWidth = 50;
+            this.olvColumn11.Text = "Latitude";
+            this.olvColumn11.Width = 50;
+            // 
+            // olvColumn12
+            // 
+            this.olvColumn12.AspectName = "Lng";
+            this.olvColumn12.CellPadding = null;
+            this.olvColumn12.DisplayIndex = 5;
+            this.olvColumn12.IsVisible = false;
+            this.olvColumn12.MaximumWidth = 50;
+            this.olvColumn12.MinimumWidth = 50;
+            this.olvColumn12.Text = "Longitude";
+            this.olvColumn12.Width = 50;
             // 
             // button3
             // 
@@ -329,27 +352,17 @@
             this.label1.TabIndex = 12;
             this.label1.Text = "Anorama-reeks:";
             // 
-            // olvColumn11
+            // button5
             // 
-            this.olvColumn11.AspectName = "Lat";
-            this.olvColumn11.CellPadding = null;
-            this.olvColumn11.DisplayIndex = 4;
-            this.olvColumn11.IsVisible = false;
-            this.olvColumn11.MaximumWidth = 50;
-            this.olvColumn11.MinimumWidth = 50;
-            this.olvColumn11.Text = "Latitude";
-            this.olvColumn11.Width = 50;
-            // 
-            // olvColumn12
-            // 
-            this.olvColumn12.AspectName = "Lng";
-            this.olvColumn12.CellPadding = null;
-            this.olvColumn12.DisplayIndex = 5;
-            this.olvColumn12.IsVisible = false;
-            this.olvColumn12.MaximumWidth = 50;
-            this.olvColumn12.MinimumWidth = 50;
-            this.olvColumn12.Text = "Longitude";
-            this.olvColumn12.Width = 50;
+            this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button5.Enabled = false;
+            this.button5.Location = new System.Drawing.Point(788, 54);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(118, 23);
+            this.button5.TabIndex = 2;
+            this.button5.Text = "Create all Poules";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // SerieView
             // 
@@ -366,6 +379,7 @@
             this.Controls.Add(this.button3);
             this.Controls.Add(this.objectListView3);
             this.Controls.Add(this.button2);
+            this.Controls.Add(this.button5);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.objectListView2);
             this.Controls.Add(this.objectListView1);
@@ -408,5 +422,6 @@
         private System.Windows.Forms.Label label1;
         private BrightIdeasSoftware.OLVColumn olvColumn11;
         private BrightIdeasSoftware.OLVColumn olvColumn12;
+        private System.Windows.Forms.Button button5;
     }
 }

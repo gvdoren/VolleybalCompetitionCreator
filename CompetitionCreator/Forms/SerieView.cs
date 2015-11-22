@@ -189,6 +189,7 @@ namespace CompetitionCreator
                 poule = null;
                 teams.Clear();
                 button1.Enabled = (objectListView1.SelectedObjects.Count == 1);
+                button5.Enabled = (objectListView1.SelectedObjects.Count == 1);
                 state.Changed();
                 //UpdatePouleList();
                 //UpdateTeamList();
@@ -233,68 +234,82 @@ namespace CompetitionCreator
             model.Evaluate(null);
             model.Changed();
         }
+        private bool selectSchema(int teamCount, ref Schema result)
+        {
+            List<Schema> schemas = new List<Schema>();
+            string[] files = Directory.GetFiles(System.Windows.Forms.Application.StartupPath + @"/Schemas/");
+            foreach (string file in files)
+            {
+                FileInfo fi = new FileInfo(file);
+                Schema newSchema = new Schema();
+                newSchema.Read(file);
+                schemas.Add(newSchema);
+            }
+            List<Schema> correctSchemas = schemas.FindAll(s => s.teamCount == teamCount);
+            List<Selection> possibleSchemas = new List<Selection>();
+            foreach (Schema schema in correctSchemas)
+            {
+                Selection sel = new Selection(schema.name, schema);
+                possibleSchemas.Add(sel);
+            }
+            Selection sel1 = new Selection("Generate schema", 0);
+            possibleSchemas.Add(sel1);
+            possibleSchemas[0].selected = true;
+            SelectionDialog diag = new SelectionDialog(possibleSchemas);
+            diag.Text = "Select the schema to be used";
+            diag.ShowDialog();
+            if (diag.Ok)
+            {
+                result = (Schema)diag.Selection.obj;
+                return true;
+            } else
+                return false;
+        }
+        private void createPoule(int teamCount, AnnoramaReeks reeks, Schema schema)
+        {
+            char Letter = 'A';
+            List<Poule> poules = serie.poules.ToList();
+            poules.Sort(delegate(Poule p1, Poule p2) { return p1.name.CompareTo(p2.name); });
+            foreach (Poule p in poules)
+            {
+                if (p.name == Letter.ToString()) Letter++;
+            }
+            List<AnnoramaWeek> weeks = reeks.weeks;
+            Poule poule = new Poule(Letter.ToString(), teamCount, serie);
+            // Create the week lists
+            int k = 0;
+            while (k < reeks.weeks.Count)
+            {
+                poule.weeks.Add(reeks.weeks[k].week);
+                k++;
+            }
+            if (schema == null)
+            {
+                poule.CreateMatches(); // schema is generated
+            }
+            else
+                poule.CreateMatchesFromSchemaFiles(schema, serie, poule);
+            serie.poules.Add(poule);
+            model.poules.Add(poule);
 
+        }
         private void button1_Click(object sender, EventArgs e)
         {
             if (comboBox1.SelectedItem != null)
             {
-                char Letter = 'A';
-                List<Poule> poules = serie.poules.ToList();
-                poules.Sort(delegate(Poule p1, Poule p2) { return p1.name.CompareTo(p2.name); });
-                foreach (Poule p in poules)
-                {
-                    if (p.name == Letter.ToString()) Letter++;
-                }
                 AnnoramaReeks reeks = model.annorama.GetReeks(comboBox1.SelectedItem.ToString());
-                if(reeks == null) return;
-                List<AnnoramaWeek> weeks =reeks.weeks;
-                int teamCount = reeks.Count;
-                Poule poule = new Poule(Letter.ToString(), teamCount, serie);
-                if (reeks.weeks.Count  < (teamCount - 1) * 2)
+                if (reeks == null) return;
+                if (reeks.weeks.Count < (reeks.Count - 1) * 2)
                 {
                     MessageBox.Show("Deze annorama reeks heeft te weinig wedstrijden. ");
                     return;
                 }
-                // Create the week lists
-                int k = 0;
-                while (k < reeks.weeks.Count)
+                Schema schema = null;
+                if(selectSchema(reeks.Count, ref schema))
                 {
-                    poule.weeks.Add(reeks.weeks[k].week);
-                    k++;
-                }
-                List<Schema> schemas = new List<Schema>();
-                string[] files = Directory.GetFiles(System.Windows.Forms.Application.StartupPath + @"/Schemas/");
-                foreach (string file in files)
-                {
-                    FileInfo fi = new FileInfo(file);
-                    Schema newSchema = new Schema();
-                    newSchema.Read(file);
-                    schemas.Add(newSchema);
-                }
-                List<Schema> correctSchemas = schemas.FindAll(s => s.teamCount == teamCount);
-                List<Selection> possibleSchemas = new List<Selection>();
-                foreach (Schema schema in correctSchemas)
-                {
-                    Selection sel = new Selection(schema.name, schema);
-                    possibleSchemas.Add(sel);
-                }
-                Selection sel1 = new Selection("Generate schema", 0);
-                possibleSchemas.Add(sel1);
-                possibleSchemas[0].selected = true;
-                SelectionDialog diag = new SelectionDialog(possibleSchemas);
-                diag.Text = "Select the schema to be used";
-                diag.ShowDialog();
-                if (diag.Ok)
-                {
-                    if(diag.Selection.obj == null)
-                    {
-                        poule.CreateMatches(); // schema is generated
-                    } else
-                        poule.CreateMatchesFromSchemaFiles((Schema)diag.Selection.obj, serie, poule);
-                    serie.poules.Add(poule);
+                    createPoule(reeks.Count, reeks, schema);
                 }
                 else return;
-                model.poules.Add(poule);
                 model.RenewConstraints();
                 model.Evaluate(null);
                 model.Changed();
@@ -578,6 +593,33 @@ namespace CompetitionCreator
             model.RenewConstraints();
             model.Evaluate(null);
             model.Changed();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            if (comboBox1.SelectedItem != null)
+            {
+                AnnoramaReeks reeks = model.annorama.GetReeks(comboBox1.SelectedItem.ToString());
+                if (reeks == null) return;
+                if (reeks.weeks.Count < (reeks.Count - 1) * 2)
+                {
+                    MessageBox.Show("Deze annorama reeks heeft te weinig wedstrijden. ");
+                    return;
+                }
+                Schema schema = null;
+                if (selectSchema(reeks.Count, ref schema))
+                {
+                    while (serie.teams.Count > serie.poules.Sum(p => p.maxTeams))
+                    {
+                        createPoule(reeks.Count, reeks, schema);
+                    }
+                }
+                else return;
+                model.RenewConstraints();
+                model.Evaluate(null);
+                model.Changed();
+            }
+
         }
 
 
