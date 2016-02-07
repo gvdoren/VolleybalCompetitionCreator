@@ -260,7 +260,7 @@ namespace CompetitionCreator
         }
         public ConstraintSchemaTooManyHomeAfterEachOther(Poule poule)
         {
-            name = "Teveel thuis of uit wedstrijden na elkaar";
+            name = "Too many home or visit matches after each other";
             this.poule = poule;
             this.cost = MySettings.Settings.MatchTooManyAfterEachOtherCostLow;
         }
@@ -398,7 +398,7 @@ namespace CompetitionCreator
                 conflict_cost = 0;
                 conflictMatches.Clear();
                 ClearErrors();
-                if (poule.evaluated)
+                if (poule.evaluated && poule.imported == false)
                 {
                     SortedList<int, int> HomeMatches = new SortedList<int, int>();
                     SortedList<int, int> VisitorMatches = new SortedList<int, int>();
@@ -415,6 +415,25 @@ namespace CompetitionCreator
                         {
                             conflict_cost += cost;
                             AddError("Internal test - poule consistency: Serie does not contain poule");
+                        }
+                    }
+                    UInt64[] days = new UInt64[poule.weeks.Count];
+                    for (int i = 0; i < poule.weeks.Count; i++)
+                    {
+                        days[i] = 0;
+                    }
+                    foreach(var m in poule.matches)
+                    {
+                        if (m.RealMatch())
+                        {
+                            int index = m.weekIndex;
+                            UInt32 bitMask = (1u << m.homeTeamIndex) | (1u << m.visitorTeamIndex);
+                            if ((days[index] & bitMask) != 0)
+                            {
+                                conflict_cost += cost;
+                                AddError("Internal test - poule consistency: One teams plays more than one match on a single day");
+                            }
+                            days[index] |= bitMask;
                         }
                     }
                     for (int m1 = 0; m1 < poule.matches.Count; m1++)
@@ -436,7 +455,7 @@ namespace CompetitionCreator
                                 {
                                     if (match.homeTeam == t)
                                     {
-                                        AddError(string.Format("Internal test - poule consistency: Aantal thuis matches klopt niet (poule: {0}, team: {1})",poule.fullName,t.name));
+                                        AddError(string.Format("Internal test - poule consistency: Aantal thuis matches klopt niet (poule: {0}, team: {1})", poule.fullName, t.name));
                                     }
                                 }
                             }
@@ -508,7 +527,7 @@ namespace CompetitionCreator
         }
         public ConstraintPouleTwoTeamsOfSameClub(Poule poule)
         {
-            name = "Teams van een club in één poule moeten op de eerste dag spelen";
+            name = "Teams of one club in one poule have to play on the first day";
             this.poule = poule;
             this.VisitorAlso = false;
             this.cost = MySettings.Settings.TwoPoulesOfSameClubInPouleCost;
@@ -628,9 +647,8 @@ namespace CompetitionCreator
                 }
                 if (sortedCounts[i].Count > 0)
                 {
-                    this.conflict_cost += week_cost;
+                    this.conflict_cost += week_cost * sortedCounts[i].Count;
                     week_cost *= 2;
-                    conflict_cost += sortedCounts[i].Count;
                 }
             }
         }
@@ -1076,9 +1094,6 @@ namespace CompetitionCreator
                     week = nextWeek;
                 } 
             }
-            AMatches.Sort((m1, m2) => m1.datetime.CompareTo(m2.datetime));
-            AMatches.Sort((m1, m2) => m1.datetime.CompareTo(m2.datetime));
-
         }
         private void CheckAtSameDay()
         {

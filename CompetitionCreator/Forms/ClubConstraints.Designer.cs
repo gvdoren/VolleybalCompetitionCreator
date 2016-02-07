@@ -82,6 +82,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.buttonDeleteTeamRequirements = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
@@ -252,9 +253,10 @@
             this.olvColumn0.FillsFreeSpace = true;
             this.olvColumn0.IsEditable = false;
             this.olvColumn0.IsVisible = false;
-            this.olvColumn0.MaximumWidth = 40;
+            this.olvColumn0.MaximumWidth = 100;
+            this.olvColumn0.MinimumWidth = 50;
             this.olvColumn0.Text = "Id";
-            this.olvColumn0.Width = 40;
+            this.olvColumn0.Width = 50;
             // 
             // olvColumn14
             // 
@@ -595,7 +597,7 @@
             this.objectListView3.Location = new System.Drawing.Point(6, 23);
             this.objectListView3.Name = "objectListView3";
             this.objectListView3.ShowGroups = false;
-            this.objectListView3.Size = new System.Drawing.Size(712, 195);
+            this.objectListView3.Size = new System.Drawing.Size(712, 168);
             this.objectListView3.TabIndex = 12;
             this.objectListView3.UseCompatibleStateImageBehavior = false;
             this.objectListView3.View = System.Windows.Forms.View.Details;
@@ -634,6 +636,8 @@
             this.olvColumn20.AspectName = "description2";
             this.olvColumn20.CellPadding = null;
             this.olvColumn20.FillsFreeSpace = true;
+            this.olvColumn20.MaximumWidth = 120;
+            this.olvColumn20.Text = "Constraint";
             // 
             // label3
             // 
@@ -660,6 +664,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.buttonDeleteTeamRequirements);
             this.tabPage1.Controls.Add(this.objectListView3);
             this.tabPage1.Controls.Add(this.label3);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
@@ -669,6 +674,17 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Team Requirements";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // buttonDeleteTeamRequirements
+            // 
+            this.buttonDeleteTeamRequirements.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonDeleteTeamRequirements.Location = new System.Drawing.Point(640, 197);
+            this.buttonDeleteTeamRequirements.Name = "buttonDeleteTeamRequirements";
+            this.buttonDeleteTeamRequirements.Size = new System.Drawing.Size(75, 23);
+            this.buttonDeleteTeamRequirements.TabIndex = 13;
+            this.buttonDeleteTeamRequirements.Text = "Delete";
+            this.buttonDeleteTeamRequirements.UseVisualStyleBackColor = true;
+            this.buttonDeleteTeamRequirements.Click += new System.EventHandler(this.buttonDeleteTeamRequirements_Click);
             // 
             // tabPage2
             // 
@@ -786,6 +802,7 @@
         private System.Windows.Forms.DataGridViewCheckBoxColumn friday;
         private System.Windows.Forms.DataGridViewCheckBoxColumn saturday;
         private System.Windows.Forms.DataGridViewCheckBoxColumn sunday;
+        private System.Windows.Forms.Button buttonDeleteTeamRequirements;
 
     }
 }

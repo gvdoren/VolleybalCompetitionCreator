@@ -15,6 +15,7 @@ Testen:
 
 
 High:
+- Robuster maken van import competitie.
 - Optimize: schema ipv weeks. Dit laat ook andere optimalisaties toe
 - automatisch saven om de 10 minuten.
 - automatic divide when poules do not have the same size (e.g. 10+12)

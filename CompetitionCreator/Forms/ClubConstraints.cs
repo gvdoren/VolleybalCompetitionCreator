@@ -543,6 +543,19 @@ namespace CompetitionCreator
 
         private void objectListView3_SelectedIndexChanged(object sender, EventArgs e)
         {
+            buttonDeleteTeamRequirements.Enabled = objectListView3.SelectedItems.Count > 0;
+        }
+
+        private void buttonDeleteTeamRequirements_Click(object sender, EventArgs e)
+        {
+            foreach(TeamConstraint con in objectListView3.SelectedObjects)
+            {
+                model.teamConstraints.Remove(con);
+            }
+//            UpdateTeamConstraints();
+            model.Evaluate(null);
+            //state.Changed();
+            model.Changed();
 
         }
     }

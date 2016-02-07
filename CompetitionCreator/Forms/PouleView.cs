@@ -252,28 +252,26 @@ namespace CompetitionCreator
                 diag.Start("Optimizing teams", null);
             }
         }
-        private void OptimizeWeekAssignment(object sender, MyEventArgs e)
+        private void OptimizeWeekAssignment(IProgress intf)
         {
-            IProgress intf = (IProgress)sender;
             poule.SnapShot(model);
-            poule.OptimizeWeeks(model, intf);
+            poule.OptimizeWeeks(model, intf, state.optimizeLevel);
             poule.CopyAndClearSnapShot(model);
         }
-        private void OptimizeWeekAssignmentCompleted(object sender, MyEventArgs e)
+        private void OptimizeWeekAssignmentCompleted(IProgress intf)
         {
 //            UpdateWeekMapping();
 //            objectListView3.SetObjects(weekmapping);
             model.Evaluate(null);
             model.Changed();
         }
-        private void OptimizeTeamAssignment(object sender, MyEventArgs e)
+        private void OptimizeTeamAssignment(IProgress intf)
         {
-            IProgress intf = (IProgress)sender;
             poule.SnapShot(model);
             poule.OptimizeTeamAssignment(model, intf);
             poule.CopyAndClearSnapShot(model);
         }
-        private void OptimizeTeamAssignmentCompleted(object sender, MyEventArgs e)
+        private void OptimizeTeamAssignmentCompleted(IProgress intf)
         {
 //            objectListView1.SetObjects(poule.teams);
             model.Evaluate(null);
@@ -471,13 +469,12 @@ namespace CompetitionCreator
             diag.CompletionFunction += OptimizeCompleted;
             diag.Start("Optimizing", null);
         }
-        private void OptimizeTeam(object sender, MyEventArgs e)
+        private void OptimizeTeam(IProgress intf)
         {
-            IProgress intf = (IProgress)sender;
             intf.SetText("Optimizing team - ("+optimizeTeam.name+")");
-            poule.OptimizeTeam(model, intf, optimizeTeam);
+            poule.OptimizeTeam(model, intf, optimizeTeam, state.optimizeLevel);
         }
-        private void OptimizeCompleted(object sender, MyEventArgs e)
+        private void OptimizeCompleted(IProgress intf)
         {
             model.Evaluate(null);
             model.Changed();
@@ -490,14 +487,13 @@ namespace CompetitionCreator
             diag.CompletionFunction += OptimizeCompleted;
             diag.Start("Optimizing", null);
         }
-        private void OptimizePoule(object sender, MyEventArgs e)
+        private void OptimizePoule(IProgress intf)
         {
-            IProgress intf = (IProgress)sender;
             intf.SetText("Optimizing poule - " + poule.serie.name + poule.name);
             poule.SnapShot(model);
             poule.OptimizeTeamAssignment(model, intf);
             poule.OptimizeHomeVisitor(model);
-            poule.OptimizeWeeks(model, intf);
+            poule.OptimizeWeeks(model, intf, state.optimizeLevel);
             poule.CopyAndClearSnapShot(model);
             model.Evaluate(null);
             if (intf.Cancelled()) return;
@@ -510,9 +506,8 @@ namespace CompetitionCreator
             diag.CompletionFunction += OptimizeCompleted;
             diag.Start("Analyzing", null);
         }
-        private void AnalyzePoule(object sender, MyEventArgs e)
+        private void AnalyzePoule(IProgress intf)
         {
-            IProgress intf = (IProgress)sender;
             intf.SetText("Analysing poule - " + poule.serie.name + poule.name);
             poule.SnapShot(model);
             poule.AnalyzeTeamAssignment(model, intf);
@@ -595,6 +590,49 @@ namespace CompetitionCreator
             else
                 e.Effect = DragDropEffects.Move | DragDropEffects.Scroll;
 
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void button15_Click(object sender, EventArgs e)
+        {
+            if (poule.imported)
+            {
+                System.Windows.Forms.MessageBox.Show("Not allowed to change week ordering for imported teams");
+            }
+            else if (poule.optimizableWeeks == false)
+            {
+                System.Windows.Forms.MessageBox.Show("Not allowed to change week ordering");
+            }
+            else
+            {
+
+                ProgressDialog diag = new ProgressDialog();
+                diag.WorkFunction += OptimizeFullSchema;
+                diag.CompletionFunction += OptimizeFullSchemaCompleted;
+                diag.Start("Optimizing weeks", null);
+            }
+
+        }
+        private void OptimizeFullSchema(IProgress intf)
+        {
+            poule.SnapShot(model);
+            poule.OptimizeSchema6(model, intf, state.optimizeLevel);
+            poule.CopyAndClearSnapShot(model);
+        }
+        private void OptimizeFullSchemaCompleted(IProgress intf)
+        {
+            //            UpdateWeekMapping();
+            //            objectListView3.SetObjects(weekmapping);
+            model.Evaluate(null);
+            model.Changed();
         }
 
     }

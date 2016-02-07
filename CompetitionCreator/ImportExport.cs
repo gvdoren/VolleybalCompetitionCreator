@@ -16,13 +16,14 @@ namespace CompetitionCreator
 {
     class ImportExport
     {
+        static string BaseDirectory = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)+@"\CompetitionCreator";
         static void Error(XElement element, string str)
         {
             string filename = element.Document.BaseUri;
             IXmlLineInfo info = element;
             int lineNumber = info.LineNumber;
             int linePosition = info.LinePosition;
-            string prefix = filename +"(" + lineNumber.ToString() + "," + linePosition.ToString() + ")\n\n Element '" + element.Name + "' ";
+            string prefix = filename + "(" + lineNumber.ToString() + "," + linePosition.ToString() + ")\n\n Element '" + element.Name + "' ";
             MessageBox.Show(prefix + str);
             throw new Exception(prefix + str);
         }
@@ -46,7 +47,7 @@ namespace CompetitionCreator
             MessageBox.Show(prefix + str);
             throw new Exception(prefix + str);
 
-            }
+        }
         public static bool BoolAttribute(XElement element, params String[] attributeStrings)
         {
             bool result = false;
@@ -58,7 +59,7 @@ namespace CompetitionCreator
             }
             if (attr == null)
             {
-                Error(element, "misses the attribute: '" + attributeStrings[0].ToString()+"'");
+                Error(element, "misses the attribute: '" + attributeStrings[0].ToString() + "'");
             }
             bool success = bool.TryParse(attr.Value.ToString(), out result);
             if (success == false)
@@ -116,7 +117,7 @@ namespace CompetitionCreator
             }
             if (attr == null)
             {
-                Error(element, "misses the attribute: '" + attributeStrings[0].ToString()+"'");
+                Error(element, "misses the attribute: '" + attributeStrings[0].ToString() + "'");
             }
             bool success = int.TryParse(attr.Value.ToString(), out result);
             if (success == false)
@@ -136,7 +137,7 @@ namespace CompetitionCreator
             }
             if (attr == null)
             {
-                Error(element, "misses the attribute: '" + attributeStrings[0].ToString()+"'");
+                Error(element, "misses the attribute: '" + attributeStrings[0].ToString() + "'");
             }
 
             bool success = Enum.TryParse(attr.Value.ToString(), out result);
@@ -157,7 +158,7 @@ namespace CompetitionCreator
             }
             if (attr == null)
             {
-                Error(element, "misses the attribute: '" + attributeStrings[0].ToString()+"'");
+                Error(element, "misses the attribute: '" + attributeStrings[0].ToString() + "'");
             }
 
             bool success = Enum.TryParse(attr.Value.ToString(), out result);
@@ -178,7 +179,7 @@ namespace CompetitionCreator
             }
             if (attr == null)
             {
-                Error(element, "misses the attribute: '" + attributeStrings[0].ToString()+"'");
+                Error(element, "misses the attribute: '" + attributeStrings[0].ToString() + "'");
             }
             bool success = DateTime.TryParse(attr.Value.ToString(), out result);
             if (success == false)
@@ -279,7 +280,7 @@ namespace CompetitionCreator
             }
             if (attr == null)
             {
-                Error(element, "misses the attribute: '" + attributeStrings[0].ToString()+"'");
+                Error(element, "misses the attribute: '" + attributeStrings[0].ToString() + "'");
             }
             bool success = bool.TryParse(attr.Value.ToString(), out result);
             if (success == false)
@@ -299,7 +300,7 @@ namespace CompetitionCreator
             }
             if (attr == null)
             {
-                Error(element, "misses the attribute: '" + attributeStrings[0].ToString()+"'");
+                Error(element, "misses the attribute: '" + attributeStrings[0].ToString() + "'");
             }
             bool success = int.TryParse(attr.Value.ToString(), out result);
             if (success == false)
@@ -308,7 +309,7 @@ namespace CompetitionCreator
             }
             return result;
         }
-       
+
 
         WebClient wc = null;
         public ImportExport()
@@ -692,9 +693,20 @@ namespace CompetitionCreator
             }
             writer.Close();
         }
-        public void WriteProject(Model model, string fileName)
+        public void WriteProject(Model model, string fileName, bool backup = false)
         {
-            XmlWriter writer = XmlWriter.Create(fileName);
+            XmlWriter writer = null;
+            if (backup)
+            {
+                string dir = BaseDirectory + "\\Backup\\";
+                if (Directory.Exists(dir) == false)
+                    Directory.CreateDirectory(dir);
+                writer = XmlWriter.Create(dir+"backup.xml");
+            }
+            else
+            {
+                writer = XmlWriter.Create(fileName);
+            }
             writer.WriteStartDocument();
             writer.WriteStartElement("Competition");
             writer.WriteStartElement("Settings");
@@ -742,7 +754,8 @@ namespace CompetitionCreator
                 foreach (MatchWeek week in poule.weeks)
                 {
                     writer.WriteStartElement("Week");
-                    writer.WriteAttributeString("Round", week.round.ToString());
+                    int round = week.round + 1;
+                    writer.WriteAttributeString("Round", round.ToString());
                     writer.WriteAttributeString("Date", week.Monday.Date.ToShortDateString());
                     if (week.dayOverruled) writer.WriteAttributeString("OverruledDay", "true");
                     writer.WriteEndElement();
@@ -790,11 +803,14 @@ namespace CompetitionCreator
             writer.WriteEndElement();
             writer.WriteEndDocument();
             writer.Close();
-            model.stateNotSaved = false;
-            model.savedFileName = fileName;
-            Properties.Settings.Default.LastOpenedProject = model.savedFileName;
-            Properties.Settings.Default.Save();
-            model.Changed();
+            if (backup == false)
+            {
+                model.stateNotSaved = false;
+                model.savedFileName = fileName;
+                Properties.Settings.Default.LastOpenedProject = fileName;
+                Properties.Settings.Default.Save();
+            }
+            //model.Changed();
         }
 
 
@@ -802,13 +818,14 @@ namespace CompetitionCreator
         {
             foreach (XElement ranking in doc.Elements("Ranking"))
             {
-                int teamId = IntegerAttribute(ranking,"teamId");
-                string pouleName = StringAttribute(ranking,"pouleName");
-                int score = IntegerAttribute(ranking,"score");
-                int rank = IntegerAttribute(ranking,"ranking");
+                int teamId = IntegerAttribute(ranking, "teamId");
+                int serieId = IntegerAttribute(ranking, "serieId");
+                string pouleName = StringAttribute(ranking, "pouleName");
+                int score = IntegerAttribute(ranking, "score");
+                int rank = IntegerAttribute(ranking, "ranking");
                 foreach (Team t in model.teams)
                 {
-                    if (t.Id == teamId /*&& t.poule!= null && t.poule.name == pouleName*/)
+                    if (t.Id == teamId && t.serie.id == serieId/*&& t.poule!= null && t.poule.name == pouleName*/)
                     {
                         t.Ranking = rank.ToString("D2") + "." + (99 - score).ToString();
                     }
@@ -821,8 +838,8 @@ namespace CompetitionCreator
             XElement poulesElement = Element(competition, "Poules");
             foreach (XElement poule in poulesElement.Elements("Poule"))
             {
-                string PouleName = StringAttribute(poule,"Name");
-                string SerieName = StringAttribute(poule,"SerieName");
+                string PouleName = StringAttribute(poule, "Name");
+                string SerieName = StringAttribute(poule, "SerieName");
                 int SerieId = IntegerAttribute(poule, "SerieId", "SerieSortId");
                 Serie serie = model.series.Find(s => s.id == SerieId);
                 if (serie == null)
@@ -842,10 +859,10 @@ namespace CompetitionCreator
                 po.imported = BoolOptionalAttribute(poule, false, "Imported", "SerieImported");
 
                 int index = 0;
-                foreach (XElement team in Element(poule,"Teams").Elements("Team"))
+                foreach (XElement team in Element(poule, "Teams").Elements("Team"))
                 {
                     int teamId = IntegerAttribute(team, "Id");
-                    string teamName = StringAttribute(team,"Name");
+                    string teamName = StringAttribute(team, "Name");
                     Team te;
                     if (teamName == "----")
                     {
@@ -868,33 +885,33 @@ namespace CompetitionCreator
                     po.AddTeam(te, index); //must at fixed position
                     index++;
                 }
-                foreach (XElement week in Element(poule,"Weeks").Elements("Week"))
+                foreach (XElement week in Element(poule, "Weeks").Elements("Week"))
                 {
-                    DateTime date = DateAttribute(week,"Date").Date;
-                    int round = IntegerOptionalAttribute(week, 0, "Round");
+                    DateTime date = DateAttribute(week, "Date").Date;
+                    int round = IntegerOptionalAttribute(week, 1, "Round");
                     MatchWeek w = new MatchWeek(date);
-                    w.round = round;
+                    w.round = round - 1;
                     w.dayOverruled = BoolOptionalAttribute(week, false, "OverruledDay");
                     po.weeks.Add(w);
                 }
                 // piece of code that can be removed after some time. This is to read in data without round info.
                 int maxRound = po.weeks.Max(w => w.round);
-                if(maxRound == 0)
+                if (maxRound == 0)
                 {
                     int index1 = 0;
-                    foreach(MatchWeek week in po.weeks)
+                    foreach (MatchWeek week in po.weeks)
                     {
                         if (index1 < po.weeks.Count / 2)
-                            week.round = 1;
+                            week.round = 0;
                         else
-                            week.round = 2;
+                            week.round = 1;
                         index1++;
                     }
                 }
 
-                foreach (XElement match in Element(poule,"Matches").Elements("Match"))
+                foreach (XElement match in Element(poule, "Matches").Elements("Match"))
                 {
-                    int weekIndex = IntegerAttribute(match,"week");
+                    int weekIndex = IntegerAttribute(match, "week");
                     int homeTeam = IntegerAttribute(match, "homeTeam");
                     int visitorTeam = IntegerAttribute(match, "visitorTeam");
                     po.matches.Add(new Match(weekIndex, homeTeam, visitorTeam, serie, po));
@@ -915,12 +932,12 @@ namespace CompetitionCreator
                     DateConstraint tc = new DateConstraint(team);
                     tc.homeVisitNone = what;
                     tc.date = date;
-                    tc.cost = IntegerAttribute(con,"Cost");
+                    tc.cost = IntegerAttribute(con, "Cost");
                     model.constraints.Add(tc);
                 }
                 foreach (XElement con in teamConstraints.Elements("TeamConstraint"))
                 {
-                    int team1Id = IntegerAttribute(con,"Team1Id");
+                    int team1Id = IntegerAttribute(con, "Team1Id");
                     int team2Id = IntegerAttribute(con, "Team2Id");
                     TeamConstraint.What what = EnumAttribute<TeamConstraint.What>(con, "What");
                     var exists = model.teamConstraints.Find(c => c.team1Id == team1Id && c.team2Id == team2Id && c.what == what);
@@ -934,7 +951,7 @@ namespace CompetitionCreator
         }
         public Model LoadFullCompetitionIntern(string filename)
         {
-            XDocument doc = XDocument.Load(filename, LoadOptions.SetLineInfo|LoadOptions.SetBaseUri);
+            XDocument doc = XDocument.Load(filename, LoadOptions.SetLineInfo | LoadOptions.SetBaseUri);
             XElement competition = Element(doc, "Competition");
             XElement settings = Element(competition, "Settings");
             int year = IntegerAttribute(settings, "Year");
@@ -942,7 +959,7 @@ namespace CompetitionCreator
             ImportTeamSubscriptions(modelnew, competition);
             ImportPoules(modelnew, competition);
             ImportTeamConstraints(modelnew, competition);
-            foreach (XElement serie in Element(settings,"Series").Elements("Serie"))
+            foreach (XElement serie in Element(settings, "Series").Elements("Serie"))
             {
                 int serieId = IntegerAttribute(serie, "Id");
                 Serie se = modelnew.series.Find(s => s.id == serieId);
@@ -980,11 +997,11 @@ namespace CompetitionCreator
 
         public void ImportTeamSubscriptions(Model model, XElement doc)
         {
-            XElement clubsEl = Element(doc,"Clubs");
+            XElement clubsEl = Element(doc, "Clubs");
             foreach (XElement club in clubsEl.Elements("Club"))
             {
                 int clubId = IntegerAttribute(club, "Id");
-                string clubName = StringAttribute(club,"Name");
+                string clubName = StringAttribute(club, "Name");
                 string clubStamNumber = StringOptionalAttribute(club, null, "StamNumber");
                 Club cl = model.clubs.Find(c => c.Id == clubId);
                 if (cl == null)
@@ -1009,7 +1026,7 @@ namespace CompetitionCreator
 
                 }
 
-                XElement freeformatconstraint = Element(club,"FreeFormatConstraint");
+                XElement freeformatconstraint = Element(club, "FreeFormatConstraint");
 
                 cl.FreeFormatConstraints = freeformatconstraint.Value;
 
@@ -1021,7 +1038,7 @@ namespace CompetitionCreator
                     string lngAttrString = StringOptionalAttribute(sporthal, null, "Longitude");
                     //VVB hack:
                     {
-                        if(sporthallName == "-")
+                        if (sporthallName == "-")
                         {
                             foreach (var sporthalAlt in Element(club, "Sporthalls").Elements("Sporthall"))
                             {
@@ -1029,7 +1046,7 @@ namespace CompetitionCreator
                                 id = IntegerAttribute(sporthalAlt, "Id");
                                 latAttrString = StringOptionalAttribute(sporthalAlt, null, "Latitude");
                                 lngAttrString = StringOptionalAttribute(sporthalAlt, null, "Longitude");
-                                if (sporthallName != "-") 
+                                if (sporthallName != "-")
                                     break;
                             }
                         }
@@ -1087,7 +1104,11 @@ namespace CompetitionCreator
                     string teamName = StringAttribute(team, "Name");
                     // Search both on name & id, since the national Id's are not unique.
                     Team te = null;
-                    if (id >= 0) te = cl.teams.Find(t => t.Id == id && t.serie == serie);
+                    if (id >= 0)
+                    {
+                        te = cl.teams.Find(t => t.Id == id && t.serie == serie);
+                        cl.teams.RemoveAll(t => t.Id == id && t.serie != serie);
+                    }
                     else te = cl.teams.Find(t => t.Id == id && t.name == teamName && t.serie == serie);
                     if (te == null)
                     {
@@ -1100,10 +1121,10 @@ namespace CompetitionCreator
                         //if (te.poule != null) te.poule.RemoveTeam(te);
                     }
                     // new team, or check on changed data (re-reading subscriptions)
-                    string DayString = StringAttribute(team,"Day");
+                    string DayString = StringAttribute(team, "Day");
                     if (DayString == "7") DayString = "0";
                     DayOfWeek day = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), DayString);
-                    Time time = new Time(DateAttribute(team,"StartTime"));
+                    Time time = new Time(DateAttribute(team, "StartTime"));
                     te.defaultDay = day;
                     te.defaultTime = time;
                     string teamGroup = StringOptionalAttribute(team, "-", "Group");
@@ -1113,7 +1134,7 @@ namespace CompetitionCreator
                     if (teamGroup == "B") te.group = TeamGroups.GroupY;
                     if (teamGroup == "X") te.group = TeamGroups.GroupX;
                     if (teamGroup == "Y") te.group = TeamGroups.GroupY;
-                
+
                     if (BoolOptionalAttribute(team, false, "Deleted")) te.DeleteTeam(model); // remains only in the club administration.
                     int idNot = IntegerOptionalAttribute(team, -1, "NotAtSameTime");
                     if (idNot >= 0)
@@ -1160,7 +1181,7 @@ namespace CompetitionCreator
                     // VVB hack: we hebben een alternatieve sporthal genomen specifiek voor dit team (van een ander team)
                     if (sporthall == null)
                         sporthall = cl.sporthalls.Find(s => s.teamId == id);
-                    if (sporthall == null) 
+                    if (sporthall == null)
                         sporthall = cl.sporthalls.Find(sp => sp.id == sporthalId);
                     if (sporthall == null)
                     {
@@ -1177,7 +1198,7 @@ namespace CompetitionCreator
             // Read in the FixedConstraint, waar ze ook staan (VVB hack, omdat ze onder de clubs staan)
             var fixConstraints = doc.Descendants("FixedConstraint");
             fixConstraints = fixConstraints.Union(doc.Descendants("TeamConstraint"));
-            foreach(XElement con in fixConstraints)
+            foreach (XElement con in fixConstraints)
             {
                 int team1Id = IntegerAttribute(con, "Team1Id", "SourceTeam");
                 int team2Id = IntegerAttribute(con, "Team2Id", "TargetTeam");
@@ -1298,6 +1319,7 @@ namespace CompetitionCreator
                 {
                     // matches will be added
                     poule.matches.Clear();
+                    poule.weeks.Clear();
                 }
                 if (importPoules.Contains(poule) == false)
                 {
@@ -1551,7 +1573,7 @@ namespace CompetitionCreator
             List<KeyValuePair<string, string>> output = new List<KeyValuePair<string, string>>();
             Dictionary<int, int> registrationMapping = new Dictionary<int, int>();
             Dictionary<int, int> clubMapping = new Dictionary<int, int>();
-            string url3 = "http://model.be/server/series.php?season=2014-2015&trophy=false";
+            string url3 = "http://klvv.be/server/series.php?season=2015-2016&trophy=false";
             var json3 = wc.DownloadString(url3);
             JArray Sorts = JArray.Parse(json3);
             foreach (JObject sort in Sorts)
@@ -1561,7 +1583,7 @@ namespace CompetitionCreator
                     foreach (JObject serie in serieSorts["series"])
                     {
                         int serieId = int.Parse(serie["id"].ToString());
-                        string url2 = "http://model.be/server/teamsinserie.php?serieId=" + serieId;
+                        string url2 = "http://klvv.be/server/teamsinserie.php?serieId=" + serieId;
                         var json2 = wc.DownloadString(url2);
                         JArray teams = JArray.Parse(json2);
                         foreach (JObject team in teams)
@@ -1581,7 +1603,7 @@ namespace CompetitionCreator
             {
                 if (club.Id >= 0 && club.Id < 1000000)
                 {
-                    string url = "http://model.be/server/clubmatches.php?clubId=" + club.Id + "&hidePast=false&hideOut=true";
+                    string url = "http://klvv.be/server/clubmatches.php?clubId=" + club.Id + "&hidePast=false&hideOut=true";
                     var json1 = wc.DownloadString(url);
                     //Console.WriteLine(club.name);
                     //string json1 = File.ReadAllText(@"InputData/clubmatches" + club.Id + ".json");// local copy
@@ -1674,7 +1696,7 @@ namespace CompetitionCreator
         public void ConvertVVBCompetitionToCSV(Model model, string filename)
         {
             StreamWriter writer = new StreamWriter(filename);
-            XDocument doc = XDocument.Load(@"http://vvb.volleyadmin.be/services/wedstrijden_xml.php", LoadOptions.SetLineInfo|LoadOptions.SetBaseUri);
+            XDocument doc = XDocument.Load(@"http://vvb.volleyadmin.be/services/wedstrijden_xml.php", LoadOptions.SetLineInfo | LoadOptions.SetBaseUri);
             XElement kalender = Element(doc, "kalender");
             foreach (XElement wedstrijd in kalender.Elements("wedstrijd"))
             {
@@ -1714,8 +1736,8 @@ namespace CompetitionCreator
             }
             writer.Close();
         }
-    
-    
-    
+
+
+
     }
 }

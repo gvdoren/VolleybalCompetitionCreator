@@ -13,7 +13,20 @@ namespace CompetitionCreator
         public bool dayOverruled = false;
         public DayOfWeek OverruledDay = DayOfWeek.Wednesday;
         private DateTime date;
+        DateTime[] cachedDates = new DateTime[8];
+        bool[] cachedDatesB = new bool[8];
         public DateTime PlayTime(DayOfWeek day)
+        {
+            if (cachedDatesB[(int)day])
+                return cachedDates[(int)day];
+            else
+            {
+                cachedDates[(int)day] = PlayTimeInt(day);
+                cachedDatesB[(int)day] = true;
+                return cachedDates[(int)day];
+            }
+        }
+        public DateTime PlayTimeInt(DayOfWeek day)
         {
             if (dayOverruled) return Monday.AddDays(OverruledDay - DayOfWeek.Monday).Date;
             if (day == 0) day += 7;
@@ -126,6 +139,11 @@ namespace CompetitionCreator
             _Friday = Monday.AddDays(4);
             _Saturday = _Monday.AddDays(5);
             _Sunday = _Monday.AddDays(6);
+
+            foreach(DayOfWeek dow in Enum.GetValues(typeof(DayOfWeek)))
+            {
+                cachedDatesB[(int)dow] = false;
+            }
         }
         public int WeekNr()
         {

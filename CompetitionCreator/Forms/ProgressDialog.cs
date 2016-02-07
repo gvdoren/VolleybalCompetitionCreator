@@ -17,9 +17,12 @@ namespace CompetitionCreator
     }
     public partial class ProgressDialog : Form, IProgress
     {
+        public delegate void MyCompletionFunction(IProgress progress);
+        public delegate void MyWorkFunction(IProgress progress);
+
         BackgroundWorker bw = new BackgroundWorker();
-        public event MyEventHandler WorkFunction;
-        public event MyEventHandler CompletionFunction;
+        public event MyWorkFunction WorkFunction;
+        public event MyCompletionFunction CompletionFunction;
         private MyEventArgs args;
         public ProgressDialog()
         {
@@ -59,7 +62,7 @@ namespace CompetitionCreator
             }
             else
             {
-                WorkFunction(this, this.args);
+                WorkFunction(this);
             }
         }
         private void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -77,7 +80,7 @@ namespace CompetitionCreator
                 //this.tbProgress.Text = "Done!";
             }
             this.Close();
-            CompletionFunction(this, this.args);
+            CompletionFunction(this);
         }
 
         private void bw_ProgressChanged(object sender, ProgressChangedEventArgs e)

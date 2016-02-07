@@ -291,6 +291,9 @@
     <None Include="ClickOnceTestApp.pfx" />
     <None Include="CompetitionCreator_1_TemporaryKey.pfx" />
     <None Include="CompetitionCreator_TemporaryKey.pfx" />
+    <Content Include="Schemas\schema12Flexible.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="ToDo.txt" />
     <EmbeddedResource Include="Forms\AboutBox1.resx">
       <DependentUpon>AboutBox1.cs</DependentUpon>

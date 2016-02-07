@@ -44,6 +44,10 @@ namespace CompetitionCreator
                 this.importedColumn.IsVisible = false;
                 objectListView1.RebuildColumns();
             }
+            comboBox1.Items.Add("Fast");
+            comboBox1.Items.Add("Normal");
+            comboBox1.Items.Add("Deep (slow - better results)");
+            comboBox1.SelectedItem = comboBox1.Items[1];
         }
         public void state_OnMyChange(object source, MyEventArgs e)
         {
@@ -107,93 +111,73 @@ namespace CompetitionCreator
         private void button1_Click(object sender, EventArgs e)
         {
             ProgressDialog diag = new ProgressDialog();
-            diag.WorkFunction += OptimizePoules;
+            diag.WorkFunction += OptimizeAllPoules;
             diag.CompletionFunction += OptimizePoulesCompleted;
             diag.Start("Optimizing", null);
         }
-        private void OptimizePoules(object sender, MyEventArgs e)
+        private void OptimizeAllPoules(IProgress intf)
+        {
+            OptimizePoules(intf, model.poules);
+        }
+
+        private void OptimizePoules(IProgress intf, List<Poule> poules)
         {
             int score;
             do
             {
-                score = model.LastTotalConflicts;
+                score = model.TotalConflictsSnapshot;
                 Console.WriteLine("OptimizePoules: score: {0}", score);
-                foreach (Poule poule in model.poules)
+                foreach (Poule poule in poules)
                 {
                     if (poule.serie != null && poule.optimizable == true)
                     {
                         {
                             lock (model)
                             {
-                                IProgress intf = (IProgress)sender;
                                 intf.SetText("Optimizing - " + poule.serie.name + poule.name);
                                 poule.SnapShot(model);
                                 poule.OptimizeTeamAssignment(model, intf);
-                                if (intf.Cancelled() == false) poule.OptimizeHomeVisitor(model);
-                                if (intf.Cancelled() == false) poule.OptimizeHomeVisitorReverse(model);
-                                if (intf.Cancelled() == false) poule.OptimizeWeeks(model, intf);
+                                if (poule.optimizableWeeks == false)
+                                {
+                                    if (intf.Cancelled() == false) poule.OptimizeTeams(model, intf, state.optimizeLevel);
+                                }
+                                else
+                                {
+                                    if (intf.Cancelled() == false) poule.OptimizeHomeVisitor(model);
+                                    if (intf.Cancelled() == false) poule.OptimizeHomeVisitorReverse(model);
+                                    if (intf.Cancelled() == false && state.optimizeLevel == 0) poule.OptimizeWeeks(model, intf, state.optimizeLevel);
+                                    if (poule.maxTeams > 6)
+                                    {
+                                        while(intf.Cancelled() == false && state.optimizeLevel > 0 && poule.OptimizeSchema2(model, intf, state.optimizeLevel) == true);
+                                        while (intf.Cancelled() == false && state.optimizeLevel > 0 && poule.OptimizeSchema3(model, intf, state.optimizeLevel) == true) ;
+                                    }
+                                    else
+                                    {
+                                        while (intf.Cancelled() == false && state.optimizeLevel > 0 && poule.OptimizeSchema6(model, intf, state.optimizeLevel) == true) ;
+                                    }
+                                }
+                                if (intf.Cancelled() == false) poule.OptimizeHomeVisitor(model, state.optimizeLevel > 0);
+                                if (intf.Cancelled() == false) poule.OptimizeHomeVisitorReverse(model, state.optimizeLevel > 0);
                                 poule.CopyAndClearSnapShot(model);
                                 Console.WriteLine(" - {1}:totalConflicts: {0}", model.TotalConflicts(), poule.fullName);
                                 if (intf.Cancelled()) return;
                             }
                         }
+                        model.Evaluate(poule);
                         model.Changed();
                     }
+                    lock (model)
+                    {
+                        ImportExport importExport = new ImportExport();
+                        importExport.WriteProject(model, model.savedFileName, true);
+                    }
                 }
-            } while (model.LastTotalConflicts<score);
+            } while (model.TotalConflictsSnapshot<score);
         }
-        private void OptimizePoulesCompleted(object sender, MyEventArgs e)
+        private void OptimizePoulesCompleted(IProgress intf)
         {
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            ProgressDialog diag = new ProgressDialog();
-            diag.WorkFunction += OptimizeTeams;
-            diag.CompletionFunction += OptimizePoulesCompleted;
-            diag.Start("Optimizing", null);
-        }
-        private void OptimizeTeams(object sender, MyEventArgs e)
-        {
-            List<Team> teamList = null;
-            IProgress intf = (IProgress)sender;
-            int score;
-            do
-            {
-                score = model.LastTotalConflicts;
-                Console.WriteLine("OptimizeTeams: score: {0}", score);
-                teamList = new List<Team>();
-                foreach (Poule poule in model.poules)
-                {
-                    if (poule.optimizable)
-                    {
-                        foreach (Team team in poule.teams)
-                        {
-                            if (team.conflict_cost > 0)
-                            {
-                                teamList.Add(team);
-                            }
-                        }
-                    }
-                }
-                teamList.Sort(delegate(Team t1, Team t2) { return t1.conflict_cost.CompareTo(t2.conflict_cost); });
-                teamList.Reverse();
-                foreach (Team team in teamList)
-                {
-                    {
-                        lock (model)
-                        {
-                            intf.SetText("Optimizing - " + team.poule.serie.name + team.poule.name + " - " + team.name);
-                            team.poule.OptimizeTeam(model, intf, team);
-                            if (intf.Cancelled()) return;
-                        }
-                    }
-                    Console.WriteLine(" - {1}:totalConflicts: {0}", model.TotalConflicts(), team.poule.fullName);
-                    model.Changed();
-                }
-            } while (teamList.Count > 0 && model.LastTotalConflicts<score);
-
-        }
 
         private void button3_Click(object sender, EventArgs e)
         {
@@ -202,49 +186,24 @@ namespace CompetitionCreator
             diag.CompletionFunction += OptimizePoulesCompleted;
             diag.Start("Optimizing", null);
         }
-        private void OptimizePoulesSelectedClubs(object sender, MyEventArgs e)
+        private void OptimizePoulesSelectedClubs(IProgress intf)
         {
-            List<Poule> pouleList = null;
-            int score;
-            do
+            List<Poule> pouleList =  new List<Poule>();
+            foreach (Club club in state.selectedClubs)
             {
-                score = model.LastTotalConflicts;
-                 pouleList = new List<Poule>();
-                foreach (Club club in state.selectedClubs)
+                foreach (Team team in club.teams)
                 {
-                    foreach (Team team in club.teams)
+                    if (team.poule != null && 
+                        pouleList.Contains(team.poule) == false && 
+                        team.poule.conflict_cost > 0 &&
+                        team.poule.optimizable
+                        )
                     {
-                        if (team.poule != null && 
-                            pouleList.Contains(team.poule) == false && 
-                            team.poule.conflict_cost > 0 &&
-                            team.poule.optimizable
-                            )
-                        {
-                            pouleList.Add(team.poule);
-                        }
+                        pouleList.Add(team.poule);
                     }
                 }
-
-                foreach (Poule poule in pouleList)
-                {
-                    {
-                        lock (model)
-                        {
-                            IProgress intf = (IProgress)sender;
-                            intf.SetText("Optimizing - " + poule.serie.name + poule.name);
-                            poule.SnapShot(model);
-                            poule.OptimizeTeamAssignment(model, intf);
-                            //poule.AnalyzeAndOptimizeTeamAssignment(model, intf);
-                            poule.OptimizeHomeVisitor(model);
-                            poule.OptimizeWeeks(model, intf);
-                            poule.CopyAndClearSnapShot(model);
-                            if (intf.Cancelled()) return;
-                        }
-                    }
-                    model.Changed();
-                }
-            } while (pouleList.Count > 0 && model.LastTotalConflicts<score);
-
+            }
+            OptimizePoules(intf, pouleList);
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -254,14 +213,13 @@ namespace CompetitionCreator
             diag.CompletionFunction += OptimizePoulesCompleted;
             diag.Start("Optimizing", null);
         }
-        private void OptimizeTeamsSelectedClubs(object sender, MyEventArgs e)
+        private void OptimizeTeamsSelectedClubs(IProgress intf)
         {
             List<Team> teamList = null;
             int score;
             do
             {
-                score = model.LastTotalConflicts;
-                IProgress intf = (IProgress)sender;
+                score = model.TotalConflictsSnapshot;
                 teamList = new List<Team>();
                 foreach (Club club in state.selectedClubs)
                 {
@@ -281,22 +239,21 @@ namespace CompetitionCreator
                         lock (model)
                         {
                             intf.SetText("Optimizing - " + team.poule.serie.name + team.poule.name + " - " + team.name);
-                            team.poule.OptimizeTeam(model, intf, team);
+                            team.poule.OptimizeTeam(model, intf, team, state.optimizeLevel);
                             if (intf.Cancelled()) return;
                         }
                     }
                     model.Changed();
                 }
-            } while (teamList.Count > 0 && model.LastTotalConflicts<score);
+            } while (teamList.Count > 0 && model.TotalConflictsSnapshot<score);
 
         }
-        
-        private void OptimizeSeperatingABSelectedClubs(object sender, MyEventArgs e)
+
+        private void OptimizeSeperatingABSelectedClubs(IProgress intf)
         {
             List<Match> matchList = null;
             do
             {
-                IProgress intf = (IProgress)sender;
                 matchList = new List<Match>();
                 foreach (Club club in state.selectedClubs)
                 {
@@ -309,10 +266,6 @@ namespace CompetitionCreator
                     }
                 }
             } while (true);
-            
-
-
-
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -322,20 +275,24 @@ namespace CompetitionCreator
             diag.CompletionFunction += OptimizePoulesCompleted;
             diag.Start("Optimizing", null);
         }
-        private void OptimizeClubsForever(object sender, MyEventArgs e)
+        private void OptimizeClubsForever(IProgress intf)
         {
-            do
+            List<Poule> pouleList = new List<Poule>();
+            foreach (Club club in state.selectedClubs)
             {
-                int i = 0;
-                IProgress intf = (IProgress)sender;
-                OptimizePoulesSelectedClubs(sender, e);
-                Console.WriteLine(string.Format("{0}. Optimize Poules selected clubs finished: {1}", i, model.TotalConflicts()));
-                if (intf.Cancelled()) return;
-                OptimizeTeamsSelectedClubs(sender, e);
-                Console.WriteLine(string.Format("{0}. Optimize Team finished: {1}", i, model.TotalConflicts()));
-                if (intf.Cancelled()) return;
-                i++;
-            } while (true);
+                foreach (Team team in club.teams)
+                {
+                    if (team.poule != null && 
+                        pouleList.Contains(team.poule) == false && 
+                        team.poule.conflict_cost > 0 &&
+                        team.poule.optimizable
+                        )
+                    {
+                        pouleList.Add(team.poule);
+                    }
+                }
+            }
+            OptimizePoulesForever(intf, pouleList);
         }
 
         private void button6_Click(object sender, EventArgs e)
@@ -345,12 +302,12 @@ namespace CompetitionCreator
             diag.CompletionFunction += OptimizePoulesCompleted;
             diag.Start("Optimizing", null);
         }
-        private void OptimizePoulesHomeVisit(object sender, MyEventArgs e)
+        private void OptimizePoulesHomeVisit(IProgress intf)
         {
             int score;
             do
             {
-                score = model.LastTotalConflicts;
+                score = model.TotalConflictsSnapshot;
                 foreach (Poule poule in model.poules)
                 {
                     if (poule.serie != null && poule.optimizable == true)
@@ -358,7 +315,6 @@ namespace CompetitionCreator
                         {
                             lock (model)
                             {
-                                IProgress intf = (IProgress)sender;
                                 intf.SetText("Optimizing - " + poule.serie.name + poule.name);
                                 poule.SnapShot(model);
                                 poule.OptimizeHomeVisitor(model);
@@ -369,30 +325,46 @@ namespace CompetitionCreator
                         model.Changed();
                     }
                 }
-            } while (model.LastTotalConflicts < score);
+            } while (model.TotalConflictsSnapshot < score);
         }
 
         private void button7_Click(object sender, EventArgs e)
         {
             ProgressDialog diag = new ProgressDialog();
-            diag.WorkFunction += OptimizePoulesForever;
+            diag.WorkFunction += OptimizeAllPoulesForever;
             diag.CompletionFunction += OptimizePoulesCompleted;
             diag.Start("Optimizing", null);
         }
-        private void OptimizePoulesForever(object sender, MyEventArgs e)
+        private void OptimizeAllPoulesForever(IProgress intf)
         {
+            OptimizePoulesForever(intf, model.poules);
+        }
+        private void OptimizePoulesForever(IProgress intf, List<Poule> poules)
+        {
+            List<Serie.ImportanceLevels> oldValues = new List<Serie.ImportanceLevels>();
+            bool cont = true;
+            int i = 0;
+            foreach (Serie serie in model.series)
+            {
+                oldValues.Add(serie.importance);
+            }
             do
             {
-                int i = 0;
-                IProgress intf = (IProgress)sender;
-                OptimizePoules(sender, e);
+                model.series[i % model.series.Count].importance = Serie.ImportanceLevels.Low;
+                model.series[(i + 1) % model.series.Count].importance = Serie.ImportanceLevels.Low;
+                model.series[(i + 2) % model.series.Count].importance = Serie.ImportanceLevels.High;
+                model.series[(i + 3) % model.series.Count].importance = Serie.ImportanceLevels.High;
+                OptimizePoules(intf, poules);
                 Console.WriteLine(string.Format("{0}. Optimize Poules finished: {1}", i, model.TotalConflicts()));
-                if (intf.Cancelled()) return;
-                OptimizeTeams(sender, e);
-                Console.WriteLine(string.Format("{0}. Optimize Team finished: {1}", i, model.TotalConflicts()));
-                if (intf.Cancelled()) return;
+                if (intf.Cancelled()) cont = false;
+                model.series[i % model.series.Count].importance = oldValues[i % model.series.Count];
                 i++;
-            } while (true);
+            } while (cont);
+            foreach (Serie serie in model.series)
+            {
+                serie.importance = oldValues[0];
+                oldValues.RemoveAt(0);
+            }
         }
 
         private void objectListView1_CellEditStarting(object sender, CellEditEventArgs e)
@@ -430,6 +402,11 @@ namespace CompetitionCreator
         {
             state.OnMyChange -= new MyEventHandler(state_OnMyChange);
             model.OnMyChange -= new MyEventHandler(state_OnMyChange);
+        }
+
+        private void comboBox1_SelectedValueChanged(object sender, EventArgs e)
+        {
+            state.optimizeLevel = comboBox1.SelectedIndex;
         }
     }
 

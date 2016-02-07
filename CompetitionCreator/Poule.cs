@@ -19,6 +19,7 @@ namespace CompetitionCreator
         List<Team> resultTeams = new List<Team>();
         List<MatchWeek> resultWeeks = new List<MatchWeek>();
         List<Match> resultMatches = new List<Match>();
+        List<Match> bla = new List<Match>();
         public List<Constraint> relatedConstraints = new List<Constraint>();
         int minConflicts = 0;
         private int _maxTeams;
@@ -108,12 +109,13 @@ namespace CompetitionCreator
             }
             return distance;
         }
-        
+        bool matchesChanged = true;
         public List<Match> matches = new List<Match>();
-        public List<Match> CopyMatches()
+        public List<Match> CopyMatches(List<Match> matches_org)
         {
+            matchesChanged = true;
             List<Match> matches1 = new List<Match>();
-            foreach (Match match in matches)
+            foreach (Match match in matches_org)
             {
                 matches1.Add(new Match(match));
             }
@@ -146,6 +148,7 @@ namespace CompetitionCreator
                     relatedConstraints.Add(con);
                 }
             }
+
             // Dan krijg je de teams+clubs die via een constraint afhankelijkheid beinvloed worden
             List<Team> extraTeams = new List<Team>();
             List<Club> extraClubs = new List<Club>();
@@ -163,12 +166,6 @@ namespace CompetitionCreator
                     if (clubs.Contains(c) == false) extraClubs.Add(c);
                 }
                 // Zijn related poules relevant????
-                /*
-                List<Poule> poules1 = con.RelatedPoules();
-                foreach (Poule c in poules1)
-                {
-                    if (poules.Contains(c) == false) extraClubs.Add(c);
-                }*/
             }
             foreach (Constraint con in model.constraints)
             {
@@ -185,7 +182,7 @@ namespace CompetitionCreator
 
         }
 
-        public void OptimizeWeeks(Model model, IProgress intf)
+        public void OptimizeWeeks(Model model, IProgress intf, int optimizationLevel)
         {
             MakeDirty();
             if (optimizableWeeks)
@@ -193,7 +190,7 @@ namespace CompetitionCreator
                 //SnapShot(model);
                 //if (conflict_cost > 0)
                 {
-                    int round = 1;
+                    int round = 0;
                     int totalIndex = 0;
                     do
                     {
@@ -202,7 +199,7 @@ namespace CompetitionCreator
                         List<MatchWeek> nextRoundList = weeks.Where(w => w.round > round).ToList();
                         if(currentRoundList.Count > 5)//12)
                         {
-                            for (int i = 0; i < currentRoundList.Count; i++, totalIndex++)
+                            for (int i = 0; i < currentRoundList.Count; i++)
                             {
                                 intf.Progress(totalIndex, weeks.Count);
                                 for (int j = i + 1; j < currentRoundList.Count; j++)
@@ -212,9 +209,10 @@ namespace CompetitionCreator
                                     weeks.AddRange(currentRoundList);
                                     weeks.AddRange(nextRoundList);
                                     SnapShotIfImproved(model);
+                                    if(optimizationLevel>0) OptimizeHomeVisitor(model, optimizationLevel > 1);
                                     Swap(currentRoundList, i, j); 
-                                    if (intf.Cancelled()) break;
-
+                                    if (intf.Cancelled()) return;
+                                    matches = CopyMatches(resultMatches);
                                 }
                                 weeks = resultWeeks;
                                 if (intf.Cancelled()) break;
@@ -230,14 +228,14 @@ namespace CompetitionCreator
                                 weeks = resultWeeks;
                             }
                             catch { }
-                            totalIndex += currentRoundList.Count;
                         }
+                        totalIndex += currentRoundList.Count;
                         round++;
-                    } while (totalIndex < weeks.Count);
+                    } while (totalIndex < weeks.Count && round<4);
                 }
             }
         }
-        private int TotalRelatedConflicts = 0;
+        private int TotalRelatedConflictsSnapshot = 0;
         public bool SnapShotIfImproved(Model model, bool equalAllowed = true)
         {
             if (snapShotTaken == false)
@@ -245,21 +243,17 @@ namespace CompetitionCreator
                 snapShotTaken = false;
             }
             model.EvaluateRelatedConstraints(this);
-            int totalRelated = model.TotalConflicts();
-            if (totalRelated < TotalRelatedConflicts || (equalAllowed && totalRelated == model.LastTotalConflicts))
+            int totalRelated = model.TotalRelatedConflicts(this);
+            if (totalRelated < TotalRelatedConflictsSnapshot || (equalAllowed && totalRelated == model.TotalConflictsSnapshot))
             {
                 // check based on a full check:
                 model.Evaluate(this);
                 int total = model.TotalConflicts();
-                if (total < model.LastTotalConflicts || (equalAllowed && total == model.LastTotalConflicts))
+                if (total < model.TotalConflictsSnapshot || (equalAllowed && total == model.TotalConflictsSnapshot))
                 {
-                    model.LastTotalConflicts = total;
-                    TotalRelatedConflicts = totalRelated;
-                    resultTeams = new List<Team>(teams);
-                    resultWeeks = new List<MatchWeek>(weeks);
-                    resultMatches = CopyMatches();
-                    minConflicts = conflict_cost;
+                    model.TotalConflictsSnapshot = total;
                     model.stateNotSaved = true;
+                    SnapShot(model);
                     return true;
                 }
             }
@@ -275,10 +269,10 @@ namespace CompetitionCreator
             snapShotTaken = true;
             //model.Evaluate(null);
             model.EvaluateRelatedConstraints(this);
-            TotalRelatedConflicts = model.TotalConflicts();
+            TotalRelatedConflictsSnapshot = model.TotalRelatedConflicts(this);
             resultTeams = new List<Team>(teams);
             resultWeeks = new List<MatchWeek>(weeks);
-            resultMatches = CopyMatches();
+            resultMatches = CopyMatches(matches);
             minConflicts = conflict_cost;
         }
         public void CopyAndClearSnapShot(Model model)
@@ -290,9 +284,10 @@ namespace CompetitionCreator
             snapShotTaken = false;
             teams = resultTeams;
             weeks = resultWeeks;
-            matches = resultMatches;
+            matches = CopyMatches(resultMatches);
             snapShotTaken = false;
             model.Evaluate(null);
+            int totalConflicts = model.TotalConflicts();
         }
 
         private void Swap(List<MatchWeek> list, int i, int j)
@@ -330,7 +325,34 @@ namespace CompetitionCreator
             }
 
         }
-        public void OptimizeTeam(Model model, IProgress intf,Team team)
+        public void OptimizeTeams(Model model, IProgress intf, int optimizeLevel)
+        {
+            List<Team> teamList = null;
+            teamList = new List<Team>();
+            if (optimizable)
+            {
+                foreach (Team team in teams)
+                {
+                    if (team.conflict_cost > 0)
+                    {
+                        teamList.Add(team);
+                    }
+                }
+            }
+            teamList.Sort(delegate(Team t1, Team t2) { return t1.conflict_cost.CompareTo(t2.conflict_cost); });
+            teamList.Reverse();
+            foreach (Team team in teamList)
+            {
+                {
+                    intf.SetText("Optimizing - " + team.poule.serie.name + team.poule.name + " - " + team.name);
+                    OptimizeTeam(model, intf, team, optimizeLevel);
+                    if (intf.Cancelled()) return;
+                }
+                Console.WriteLine(" - {1}:totalConflicts: {0}", model.TotalConflicts(), team.poule.fullName);
+            }
+        }
+
+        public void OptimizeTeam(Model model, IProgress intf, Team team, int optimizationLevel)
         {
             MakeDirty();
             if (serie.optimizableNumber)
@@ -345,8 +367,10 @@ namespace CompetitionCreator
                         {
                             intf.Progress(i, teams.Count);
                             Swap(teams, i, teamindex);
-                            OptimizeWeeks(model, intf);
-                            if (intf.Cancelled() == false) OptimizeHomeVisitor(model);
+                            // Voegt dit veel toe?
+                            OptimizeWeeks(model, intf, optimizationLevel);
+                            if (intf.Cancelled() == false) break;
+                            if(optimizationLevel>0) OptimizeHomeVisitor(model);
                             //SnapShotIfImproved(model, ref minConflict);
                             Swap(teams, i, teamindex); // swap back
                         }
@@ -451,7 +475,7 @@ namespace CompetitionCreator
                     {
                         m.OptimizeIndividual(model);
                     }
-                    matches = resultMatches;
+                    matches = CopyMatches(resultMatches);
                 }
             }
         }
@@ -555,27 +579,38 @@ namespace CompetitionCreator
         }
 
 
-        public void OptimizeHomeVisitor(Model model)
+        public bool OptimizeHomeVisitor(Model model, bool tryZeroCostMatches = true)
         {
+            bool changed = false;
+            int compareTo = 0;
+            if (tryZeroCostMatches) compareTo = -1;
             MakeDirty();
             if (optimizableHomeVisit)
             {
                 foreach (Match match in matches)
                 {
-                    //if (match.conflict_cost > 0)
+                    if (match.conflict_cost > compareTo)
                     {
                         SwitchHomeTeamVisitorTeam(model, match);
-                        if (SnapShotIfImproved(model) == false)
+                        if (SnapShotIfImproved(model,false) == false)
                         { // switch back
                             SwitchHomeTeamVisitorTeam(model, match);
                         }
+                        else 
+                        {
+                            changed = true;
+                        }
                     }
                 }
-                matches = resultMatches;
+                if(changed) 
+                    matches = CopyMatches(resultMatches);
             }
+            return changed;
         }
-        public void OptimizeHomeVisitorReverse(Model model)
+        public void OptimizeHomeVisitorReverse(Model model, bool equalAllowed = true)
         {
+            int compareTo = 0;
+            if (equalAllowed) compareTo = -1;
             MakeDirty();
             if (optimizableHomeVisit)
             {
@@ -583,7 +618,7 @@ namespace CompetitionCreator
                 reverseMatches.Reverse();
                 foreach (Match match in reverseMatches)
                 {
-                    //if (match.conflict_cost > 0)
+                    if (match.conflict_cost > compareTo)
                     {
                         SwitchHomeTeamVisitorTeam(model, match);
                         if (SnapShotIfImproved(model) == false)
@@ -592,9 +627,263 @@ namespace CompetitionCreator
                         }
                     }
                 }
-                matches = resultMatches;
+                matches = CopyMatches(resultMatches);
             }
         }
+        public bool OptimizeSchema6(Model model, IProgress intf, int optimizationLevel)
+        {
+            int count = 0;
+            int round = 0;
+            while(OptimizeSchema6Int(model, intf, optimizationLevel, ref round, ref count));
+            return false;
+        }
+        public bool OptimizeSchema6Int(Model model, IProgress intf, int optimizationLevel, ref int roundref, ref int count)
+        {
+            if (maxTeams != 6) return false;
+            while(roundref < 2)
+            {
+                int round = roundref;
+                UInt32[] days = new UInt32[5];
+                for (int i = 0; i < 5; i++) days[i] = 0;
+                UInt32[] bitPatterns = new UInt32[15];
+                UInt32[] schema = new UInt32[15];
+                List<Match> selectedMatches = matches.Where(m => m.Week.round == round).ToList();
+                for (int i = 0; i < 15; i++)
+                {
+                    bitPatterns[i] = (1u << selectedMatches[i].homeTeamIndex) | (1u << selectedMatches[i].visitorTeamIndex);
+                }
+                List<List<UInt32>> schemas = new List<List<uint>>();
+                RecursiveFullSchema(model, ref days, ref bitPatterns, ref schema, ref schemas, selectedMatches.Count - 1);
+                Console.WriteLine("Counted {0} schemas", schemas.Count);
+                List<int> indexes = new List<int>();
+                foreach (var m in selectedMatches)
+                {
+                    if (indexes.Contains(m.weekIndex) == false)
+                    {
+                        indexes.Add(m.weekIndex);
+                    }
+                }
+                while(count < schemas.Count)
+                {
+                    var sch = schemas[count];
+                    count++;
+                    intf.Progress(count, schemas.Count * 2);
+                    if (intf.Cancelled())
+                    {
+                        matches = CopyMatches(resultMatches);
+                        return false;
+                    }
+
+                    List<Match> selectedMatches1 = matches.Where(m => m.Week.round == round).ToList();
+                    for (int i = 0; i < selectedMatches1.Count; i++)
+                    {
+                        Match m = selectedMatches1[i];
+                        m.weekIndex = indexes[(int)sch[i]];
+                    }
+                    SnapShotIfImproved(model);
+                    if (optimizationLevel > 1)
+                    {
+                       // if (OptimizeHomeVisitor(model, false))
+                       //     return true; // administration is not correct anymore, so jump out
+                       if (OptimizeHomeVisitor(model, optimizationLevel > 1))
+                            return true; // administration is not correct anymore, so jump out
+                    }
+                }
+                count = 0;
+                roundref++;
+            }
+            return false;
+        }
+
+        private void RecursiveFullSchema(Model model, ref UInt32[] days, ref UInt32[] bitPatterns, ref UInt32[] schema, ref List<List<UInt32>> schemas, int matchNumber)
+        {
+            for (UInt32 d = 0; d < 5; d++)
+            {
+                if (matchNumber >= 0)
+                {
+                    if ((days[d] & bitPatterns[matchNumber]) == 0)
+                    {
+                        days[d] |= bitPatterns[matchNumber];
+                        schema[matchNumber] = d;
+                        RecursiveFullSchema(model, ref days, ref bitPatterns, ref schema, ref schemas, matchNumber - 1);
+                        days[d] &= (~bitPatterns[matchNumber]);
+                    }
+                }
+                else
+                {
+                    List<UInt32> newSchema = new List<uint>();
+                    for (int i = 0; i < 15; i++)
+                    {
+                        newSchema.Add(schema[i]);
+                    }
+                    schemas.Add(newSchema);
+                }
+            }
+
+        }
+
+        
+        public bool OptimizeSchema2(Model model, IProgress intf, int optimizationLevel)
+        {
+            if (maxTeams > 6)
+            {
+                MakeDirty();
+                if (optimizableWeeks)
+                {
+                    List<Match> checkList = matches;
+                    int matchCount = 0;
+                    for (int round = 0; round < 2; round++)
+                    {
+                        SortedList<int, SortedList<int, SortedList<int, SortedList<int, Tuple<Match, Match>>>>> magicList = new SortedList<int, SortedList<int, SortedList<int, SortedList<int, Tuple<Match, Match>>>>>();
+                        int firstWeekIndex = weeks.FindIndex(w => w.round == round);
+                        int lastWeekIndex = weeks.FindLastIndex(w => w.round == round);
+                        for (int index = firstWeekIndex; index <= lastWeekIndex; index++)
+                        {
+                            intf.Progress(index, weeks.Count);
+                            if (intf.Cancelled())
+                            {
+                                matches = CopyMatches(resultMatches);
+                                return false;
+                            }
+                            List<Match> matchesDay = matches.Where(m => m.weekIndex == index).ToList();
+                            for (int x = 0; x < matchesDay.Count - 1; x++)
+                            {
+                                for (int y = x + 1; y < matchesDay.Count; y++)
+                                {
+                                    Match match1 = matchesDay[x];
+                                    Match match2 = matchesDay[y];
+                                    List<int> indexes = new List<int>();
+                                    indexes.Add(match1.homeTeamIndex);
+                                    indexes.Add(match1.visitorTeamIndex);
+                                    indexes.Add(match2.homeTeamIndex);
+                                    indexes.Add(match2.visitorTeamIndex);
+                                    indexes.Sort();
+                                    for (int index2 = index + 1; index2 <= lastWeekIndex; index2++)
+                                    {
+                                        List<Match> matchesDay2 = matches.Where(m => m.weekIndex == index2).ToList();
+                                        List<Match> twoMatches = new List<Match>();
+                                        foreach(Match m in matchesDay2)
+                                        {
+                                            if(indexes.Contains(m.homeTeamIndex) && indexes.Contains(m.visitorTeamIndex))
+                                            {
+                                                twoMatches.Add(m);
+                                            }
+                                        }
+                                        if (twoMatches.Count == 2)
+                                        {
+                                            Match match3 = twoMatches[0];
+                                            Match match4 = twoMatches[1];
+                                            int tempTotalConflicts = model.TotalConflictsSnapshot;
+                                            match1.weekIndex = index2;
+                                            match2.weekIndex = index2;
+                                            match3.weekIndex = index;
+                                            match4.weekIndex = index;
+                                            if (OptimizeHomeVisitor(model, optimizationLevel > 1))
+                                                return true; // admin is not correct any more
+                                            match1.weekIndex = index;
+                                            match2.weekIndex = index;
+                                            match3.weekIndex = index2;
+                                            match4.weekIndex = index2;
+                                            
+                                            matchCount++;
+                                        }
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+        public bool OptimizeSchema3(Model model, IProgress intf, int optimizationLevel)
+        {
+            if (maxTeams > 6)
+            {
+                MakeDirty();
+                if (optimizableWeeks)
+                {
+                    List<Match> checkList = matches;
+                    int matchCount = 0;
+                    for (int round = 0; round < 2; round++)
+                    {
+                        SortedList<int, SortedList<int, SortedList<int, SortedList<int, Tuple<Match, Match>>>>> magicList = new SortedList<int, SortedList<int, SortedList<int, SortedList<int, Tuple<Match, Match>>>>>();
+                        int firstWeekIndex = weeks.FindIndex(w => w.round == round);
+                        int lastWeekIndex = weeks.FindLastIndex(w => w.round == round);
+                        for (int index = firstWeekIndex; index <= lastWeekIndex; index++)
+                        {
+                            intf.Progress(index, weeks.Count);
+                            if (intf.Cancelled())
+                            {
+                                matches = CopyMatches(resultMatches);
+                                return false;
+                            }
+                            List<Match> matchesDay = matches.Where(m => m.weekIndex == index).ToList();
+                            for (int x = 0; x < matchesDay.Count - 2; x++)
+                            {
+                                for (int y = x + 1; y < matchesDay.Count -1; y++)
+                                {
+                                    for (int z = y + 1; z < matchesDay.Count; z++)
+                                    {
+                                        Match match1 = matchesDay[x];
+                                        Match match2 = matchesDay[y];
+                                        Match match3 = matchesDay[z];
+                                        List<int> indexes = new List<int>();
+                                        indexes.Add(match1.homeTeamIndex);
+                                        indexes.Add(match1.visitorTeamIndex);
+                                        indexes.Add(match2.homeTeamIndex);
+                                        indexes.Add(match2.visitorTeamIndex);
+                                        indexes.Add(match3.homeTeamIndex);
+                                        indexes.Add(match3.visitorTeamIndex);
+                                        indexes.Sort();
+                                        for (int index2 = index + 1; index2 <= lastWeekIndex; index2++)
+                                        {
+                                            List<Match> matchesDay3 = matches.Where(m => m.weekIndex == index2).ToList();
+                                            List<Match> threeMatches = new List<Match>();
+                                            foreach (Match m in matchesDay3)
+                                            {
+                                                if (indexes.Contains(m.homeTeamIndex) && indexes.Contains(m.visitorTeamIndex))
+                                                {
+                                                    threeMatches.Add(m);
+                                                }
+                                            }
+                                            if (threeMatches.Count == 3)
+                                            {
+                                                Match match4 = threeMatches[0];
+                                                Match match5 = threeMatches[1];
+                                                Match match6 = threeMatches[2];
+                                                int temp = match1.weekIndex;
+                                                int tempTotalConflicts = model.TotalConflictsSnapshot;
+                                                match1.weekIndex = index2;
+                                                match2.weekIndex = index2;
+                                                match3.weekIndex = index2;
+                                                match4.weekIndex = index;
+                                                match5.weekIndex = index;
+                                                match6.weekIndex = index;
+                                                if (OptimizeHomeVisitor(model, optimizationLevel > 1))
+                                                    return true;
+                                                match1.weekIndex = index;
+                                                match2.weekIndex = index;
+                                                match3.weekIndex = index;
+                                                match4.weekIndex = index2;
+                                                match5.weekIndex = index2;
+                                                match6.weekIndex = index2;
+                                                
+
+                                                matchCount++;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
         public void CreateMatchesFromSchemaFiles(Schema schema, Serie serie, Poule poule)
         {
             foreach(SchemaWeek week in schema.weeks.Values)

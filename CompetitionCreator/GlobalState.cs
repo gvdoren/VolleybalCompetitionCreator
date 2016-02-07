@@ -7,6 +7,7 @@ namespace CompetitionCreator
 {
     public class GlobalState
     {
+        public int optimizeLevel;
         public List<Club> selectedClubs = new List<Club>();
         public Constraint selectedConstraint = null;
         public List<Constraint> showConstraints = new List<Constraint>();

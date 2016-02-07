@@ -64,6 +64,8 @@
             this.button14 = new System.Windows.Forms.Button();
             this.buttonOptimizeMatch = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.button7 = new System.Windows.Forms.Button();
+            this.button15 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListWeeks)).BeginInit();
@@ -437,6 +439,7 @@
             this.button12.Text = "A + O";
             this.button12.UseVisualStyleBackColor = true;
             this.button12.Visible = false;
+            this.button12.Click += new System.EventHandler(this.button12_Click);
             // 
             // button13
             // 
@@ -485,6 +488,7 @@
             this.splitContainer1.Panel1.Controls.Add(this.button1);
             this.splitContainer1.Panel1.Controls.Add(this.button12);
             this.splitContainer1.Panel1.Controls.Add(this.button2);
+            this.splitContainer1.Panel1.Controls.Add(this.button7);
             this.splitContainer1.Panel1.Controls.Add(this.button11);
             this.splitContainer1.Panel1.Controls.Add(this.button3);
             this.splitContainer1.Panel1.Controls.Add(this.button10);
@@ -497,12 +501,35 @@
             this.splitContainer1.Panel2.Controls.Add(this.objectListWeeks);
             this.splitContainer1.Panel2.Controls.Add(this.weekSwitchButton);
             this.splitContainer1.Panel2.Controls.Add(this.label2);
+            this.splitContainer1.Panel2.Controls.Add(this.button15);
             this.splitContainer1.Panel2.Controls.Add(this.button8);
             this.splitContainer1.Panel2.Controls.Add(this.buttonOptimizeMatch);
             this.splitContainer1.Panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer1_Panel2_Paint);
             this.splitContainer1.Size = new System.Drawing.Size(896, 333);
             this.splitContainer1.SplitterDistance = 475;
             this.splitContainer1.TabIndex = 16;
+            // 
+            // button7
+            // 
+            this.button7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button7.Location = new System.Drawing.Point(413, 273);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(56, 23);
+            this.button7.TabIndex = 13;
+            this.button7.Text = "Analyse";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
+            // 
+            // button15
+            // 
+            this.button15.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button15.Location = new System.Drawing.Point(354, 191);
+            this.button15.Name = "button15";
+            this.button15.Size = new System.Drawing.Size(56, 23);
+            this.button15.TabIndex = 6;
+            this.button15.Text = "Optimize";
+            this.button15.UseVisualStyleBackColor = true;
+            this.button15.Click += new System.EventHandler(this.button15_Click);
             // 
             // PouleView
             // 
@@ -570,5 +597,7 @@
         private BrightIdeasSoftware.OLVColumn olvColumn13;
         private BrightIdeasSoftware.OLVColumn olvColumn11;
         private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Button button15;
     }
 }

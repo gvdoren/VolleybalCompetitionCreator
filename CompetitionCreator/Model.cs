@@ -121,6 +121,18 @@ namespace CompetitionCreator
                 return conflicts;
             }
         }
+        public int TotalRelatedConflicts(Poule p)
+        {
+            lock (this)
+            {
+                int conflicts = 0;
+                foreach (Constraint constraint in p.relatedConstraints)
+                {
+                    conflicts += constraint.conflict_cost;
+                }
+                return conflicts;
+            }
+        }
         public string version
         {
             get
@@ -329,11 +341,11 @@ namespace CompetitionCreator
 
         }
 
-        public int LastTotalConflicts = 0;
+        public int TotalConflictsSnapshot = 0;
         public event MyEventHandler OnMyChange;
         public void Changed(Model p = null)
         {
-            LastTotalConflicts = TotalConflicts();
+            TotalConflictsSnapshot = TotalConflicts();
             //call it then you need to update:
             if (OnMyChange != null)
             {
