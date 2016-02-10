@@ -9,6 +9,7 @@ namespace CompetitionCreator
     {
         // Temp lists for snapshot
         public bool imported = false;
+        private int optimisationThreshold = 200;
 
         public bool optimizable { get { return serie != null && serie.optimizableNumber && imported == false; } }
         public bool optimizableWeeks { get { return serie != null && serie.optimizableWeeks && imported == false; } }
@@ -209,7 +210,10 @@ namespace CompetitionCreator
                                     weeks.AddRange(currentRoundList);
                                     weeks.AddRange(nextRoundList);
                                     SnapShotIfImproved(model);
-                                    if(optimizationLevel>0) OptimizeHomeVisitor(model, optimizationLevel > 1);
+                                    if (TotalRelatedConflictsLast < TotalRelatedConflictsSnapshot + optimisationThreshold)
+                                    {
+                                        if (optimizationLevel > 0) OptimizeHomeVisitor(model, optimizationLevel > 1);
+                                    }
                                     Swap(currentRoundList, i, j); 
                                     if (intf.Cancelled()) return;
                                     matches = CopyMatches(resultMatches);
@@ -682,7 +686,7 @@ namespace CompetitionCreator
                         m.weekIndex = indexes[(int)sch[i]];
                     }
                     SnapShotIfImproved(model);
-                    if (TotalRelatedConflictsLast < TotalRelatedConflictsSnapshot + 200) // kans nog aanwezig op goede score
+                    if (TotalRelatedConflictsLast < TotalRelatedConflictsSnapshot + optimisationThreshold) // kans nog aanwezig op goede score
                     {
                         if (optimizationLevel > 1)
                         {
@@ -725,7 +729,6 @@ namespace CompetitionCreator
             }
          }
 
-        
         public bool OptimizeSchema2(Model model, IProgress intf, int optimizationLevel)
         {
             if (maxTeams > 6)
@@ -733,7 +736,6 @@ namespace CompetitionCreator
                 MakeDirty();
                 if (optimizableWeeks)
                 {
-                    List<Match> checkList = matches;
                     int matchCount = 0;
                     for (int index = 0; index < weeks.Count; index++)
                     {
@@ -784,8 +786,12 @@ namespace CompetitionCreator
                                             match2.weekIndex = index2;
                                             match3.weekIndex = index;
                                             match4.weekIndex = index;
-                                            if (OptimizeHomeVisitor(model, optimizationLevel > 1))
-                                                throw new Exception();  // admin is not correct any more
+                                            SnapShotIfImproved(model);
+                                            if (TotalRelatedConflictsLast < TotalRelatedConflictsSnapshot + optimisationThreshold)
+                                            {
+                                                if (OptimizeHomeVisitor(model, optimizationLevel > 1))
+                                                    throw new Exception();  // admin is not correct any more
+                                            }
                                             match1.weekIndex = index;
                                             match2.weekIndex = index;
                                             match3.weekIndex = index2;
@@ -807,6 +813,9 @@ namespace CompetitionCreator
             }
             return false;
         }
+
+
+
         public bool OptimizeSchema3(Model model, IProgress intf, int optimizationLevel)
         {
             if (maxTeams > 6)
@@ -814,85 +823,87 @@ namespace CompetitionCreator
                 MakeDirty();
                 if (optimizableWeeks)
                 {
-                    List<Match> checkList = matches;
                     int matchCount = 0;
-                    for (int round = 0; round < 2; round++)
+                    for (int index = 0; index < weeks.Count; index++)
                     {
-                        int firstWeekIndex = weeks.FindIndex(w => w.round == round);
-                        int lastWeekIndex = weeks.FindLastIndex(w => w.round == round);
-                        for (int index = firstWeekIndex; index <= lastWeekIndex; index++)
+                        int round = weeks[index].round;
+                        intf.Progress(index, weeks.Count);
+                        if (intf.Cancelled())
                         {
-                            intf.Progress(index, weeks.Count);
-                            if (intf.Cancelled())
+                            matches = CopyMatches(resultMatches);
+                            return false;
+                        }
+                        try
+                        {
+                            List<Match> matchesDay = matches.Where(m => m.weekIndex == index).ToList();
+                            for (int x = 0; x < matchesDay.Count - 1; x++)
                             {
-                                matches = CopyMatches(resultMatches);
-                                return false;
-                            }
-                            try
-                            {
-                                List<Match> matchesDay = matches.Where(m => m.weekIndex == index).ToList();
-                                for (int x = 0; x < matchesDay.Count - 2; x++)
+                                for (int y = x + 1; y < matchesDay.Count; y++)
                                 {
-                                    for (int y = x + 1; y < matchesDay.Count - 1; y++)
+                                    for (int z = y + 1; z < matchesDay.Count; z++)
                                     {
-                                        for (int z = y + 1; z < matchesDay.Count; z++)
+                                        Match match1 = matchesDay[x];
+                                        Match match2 = matchesDay[y];
+                                        Match match3 = matchesDay[z];
+                                        UInt32 indexes = 0;
+                                        const UInt32 one = 1;
+                                        indexes |= one << match1.homeTeamIndex;
+                                        indexes |= one << match1.visitorTeamIndex;
+                                        indexes |= one << match2.homeTeamIndex;
+                                        indexes |= one << match2.visitorTeamIndex;
+                                        indexes |= one << match3.homeTeamIndex;
+                                        indexes |= one << match3.visitorTeamIndex;
+                                        List<Match>[] threeMatches = new List<Match>[weeks.Count];
+                                        for (int i = 0; i < weeks.Count; i++)
+                                            threeMatches[i] = new List<Match>();
+                                        int maxIndex = int.MinValue;
+                                        int minIndex = int.MaxValue;
+                                        foreach (Match m in matches)
                                         {
-                                            Match match1 = matchesDay[x];
-                                            Match match2 = matchesDay[y];
-                                            Match match3 = matchesDay[z];
-                                            List<int> indexes = new List<int>();
-                                            indexes.Add(match1.homeTeamIndex);
-                                            indexes.Add(match1.visitorTeamIndex);
-                                            indexes.Add(match2.homeTeamIndex);
-                                            indexes.Add(match2.visitorTeamIndex);
-                                            indexes.Add(match3.homeTeamIndex);
-                                            indexes.Add(match3.visitorTeamIndex);
-                                            indexes.Sort();
-                                            for (int index2 = index + 1; index2 <= lastWeekIndex; index2++)
+                                            if (m.weekIndex > index && (indexes & (one << m.homeTeamIndex)) != 0 && (indexes & (one << m.visitorTeamIndex)) != 0 && m.Week.round == round)
                                             {
-                                                List<Match> matchesDay3 = matches.Where(m => m.weekIndex == index2).ToList();
-                                                List<Match> threeMatches = new List<Match>();
-                                                foreach (Match m in matchesDay3)
-                                                {
-                                                    if (indexes.Contains(m.homeTeamIndex) && indexes.Contains(m.visitorTeamIndex))
-                                                    {
-                                                        threeMatches.Add(m);
-                                                    }
-                                                }
-                                                if (threeMatches.Count == 3)
-                                                {
-                                                    Match match4 = threeMatches[0];
-                                                    Match match5 = threeMatches[1];
-                                                    Match match6 = threeMatches[2];
-                                                    int temp = match1.weekIndex;
-                                                    int tempTotalConflicts = model.TotalConflictsSnapshot;
-                                                    match1.weekIndex = index2;
-                                                    match2.weekIndex = index2;
-                                                    match3.weekIndex = index2;
-                                                    match4.weekIndex = index;
-                                                    match5.weekIndex = index;
-                                                    match6.weekIndex = index;
-                                                    if (OptimizeHomeVisitor(model, optimizationLevel > 1))
-                                                        throw new Exception();
-                                                    match1.weekIndex = index;
-                                                    match2.weekIndex = index;
-                                                    match3.weekIndex = index;
-                                                    match4.weekIndex = index2;
-                                                    match5.weekIndex = index2;
-                                                    match6.weekIndex = index2;
-
-
-                                                    matchCount++;
-                                                }
+                                                threeMatches[m.weekIndex].Add(m);
+                                                maxIndex = Math.Max(maxIndex, m.weekIndex);
+                                                minIndex = Math.Min(minIndex, m.weekIndex);
                                             }
+                                        }
+                                        for (int index2 = minIndex; index2 <= maxIndex; index2++)
+                                        {
+                                            if (threeMatches[index2].Count == 2)
+                                            {
+                                                Match match_1 = threeMatches[index2][0];
+                                                Match match_2 = threeMatches[index2][1];
+                                                Match match_3 = threeMatches[index2][2];
+                                                int tempTotalConflicts = model.TotalConflictsSnapshot;
+                                                match1.weekIndex = index2;
+                                                match2.weekIndex = index2;
+                                                match3.weekIndex = index2;
+                                                match_1.weekIndex = index;
+                                                match_2.weekIndex = index;
+                                                match_3.weekIndex = index;
+                                                SnapShotIfImproved(model);
+                                                if (TotalRelatedConflictsLast < TotalRelatedConflictsSnapshot + optimisationThreshold)
+                                                {
+                                                    if (OptimizeHomeVisitor(model, optimizationLevel > 1))
+                                                        throw new Exception();  // admin is not correct any more
+                                                }
+                                                match_1.weekIndex = index2;
+                                                match_2.weekIndex = index2;
+                                                match_3.weekIndex = index2;
+                                                match1.weekIndex = index;
+                                                match2.weekIndex = index;
+                                                match3.weekIndex = index;
+                                                matchCount++;
+                                            }
+
                                         }
                                     }
                                 }
                             }
-                            catch 
-                            {
-                                // Continue with next week
-                            }
+                        }
+                        catch
+                        {
+                            //continue with the next week.
                         }
                     }
                 }

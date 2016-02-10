@@ -391,6 +391,7 @@
             this.button8.TabIndex = 6;
             this.button8.Text = "Optimize";
             this.button8.UseVisualStyleBackColor = true;
+            this.button8.Visible = false;
             this.button8.Click += new System.EventHandler(this.button8_Click);
             // 
             // button9
@@ -473,6 +474,7 @@
             this.buttonOptimizeMatch.TabIndex = 6;
             this.buttonOptimizeMatch.Text = "Optimize Match";
             this.buttonOptimizeMatch.UseVisualStyleBackColor = true;
+            this.buttonOptimizeMatch.Visible = false;
             this.buttonOptimizeMatch.Click += new System.EventHandler(this.optimizeMatch_Click);
             // 
             // splitContainer1
@@ -518,6 +520,7 @@
             this.button7.TabIndex = 13;
             this.button7.Text = "Analyse";
             this.button7.UseVisualStyleBackColor = true;
+            this.button7.Visible = false;
             this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
             // button15
@@ -529,6 +532,7 @@
             this.button15.TabIndex = 6;
             this.button15.Text = "Optimize";
             this.button15.UseVisualStyleBackColor = true;
+            this.button15.Visible = false;
             this.button15.Click += new System.EventHandler(this.button15_Click);
             // 
             // PouleView
