@@ -8,18 +8,13 @@ using System.ComponentModel;
 
 namespace CompetitionCreator
 {
-    public class IntCountSettings
-    {
-        public int x1 { get; set; }
-        [DisplayName("xxx")]
-        public int x2 { get; set; }
-        [DisplayName("yyy")]
-        public int x3 { get; set; }
-    }
-
     public class MySettings
     {
         MySettings()
+        {
+            ResetToDefault();
+        }
+        public void ResetToDefault()
         {
             // Use the DefaultValue propety of each property to actually set it, via reflection.
             foreach (PropertyDescriptor prop in TypeDescriptor.GetProperties(this))
@@ -164,9 +159,6 @@ namespace CompetitionCreator
         [DefaultValue(10000)]
         public int FixedIndexConstraintCost { get; set; }
 
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        public IntCountSettings countSettings { get; set; }
-
         [Category("Other")]
         [DisplayName("Constraint.Inconsistent.Other")]
         [DefaultValue(10000)]
@@ -179,12 +171,12 @@ namespace CompetitionCreator
         [Category("File locations")]
         [DisplayName("Default registrations url")]
         [Description("Hier kun je aangeven waar de inschrijvingen vandaan moeten komen.")]
-        [DefaultValue("http://klvv.be/server/restricted/registrations/registrationsXML.php")]
+        [DefaultValue("")]
         public string RegistrationsXML { get; set; }
         [Category("File locations")]
         [DisplayName("Default ranking url")]
         [Description("Hier kun je aangeven waar de ranking vandaan moet komen. ")]
-        [DefaultValue("http://klvv.be/server/restricted/registrations/rankingXML.php")]
+        [DefaultValue("")]
         public string RankingXML { get; set; }
 
     }

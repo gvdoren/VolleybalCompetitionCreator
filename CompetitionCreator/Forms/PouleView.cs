@@ -594,6 +594,19 @@ namespace CompetitionCreator
 
         private void button12_Click(object sender, EventArgs e)
         {
+            ProgressDialog diag = new ProgressDialog();
+            diag.WorkFunction += AnalyzeAndOptimizePoule;
+            diag.CompletionFunction += OptimizeCompleted;
+            diag.Start("Analyzing", null);
+        }
+        private void AnalyzeAndOptimizePoule(IProgress intf)
+        {
+            intf.SetText("Analysing poule - " + poule.serie.name + poule.name);
+            poule.SnapShot(model);
+            poule.OptimizeNumberOnAnalysis(model, intf);
+            poule.CopyAndClearSnapShot(model);
+            model.Evaluate(null);
+            if (intf.Cancelled()) return;
 
         }
 

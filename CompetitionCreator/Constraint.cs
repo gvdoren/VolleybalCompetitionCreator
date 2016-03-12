@@ -393,7 +393,7 @@ namespace CompetitionCreator
         }
         public override void Evaluate(Model model)
         {
-            if (Number % 1000 == 0 || error == true) // Deze test niet elke keer uitvoeren.
+            //if (Number % 1000 == 0 || error == true) // Deze test niet elke keer uitvoeren.
             {
                 conflict_cost = 0;
                 conflictMatches.Clear();

@@ -137,19 +137,14 @@ namespace CompetitionCreator
                                 intf.SetText("Optimizing - " + poule.serie.name + poule.name);
                                 poule.SnapShot(model);
                                 poule.OptimizeTeamAssignment(model, intf);
-                                if (poule.optimizableWeeks == false)
+                                //poule.OptimizeTeams(model, intf, state.optimizeLevel);
+                                if (poule.optimizableWeeks)
                                 {
-                                    if (intf.Cancelled() == false) poule.OptimizeTeams(model, intf, state.optimizeLevel);
-                                }
-                                else
-                                {
-                                    if (intf.Cancelled() == false) poule.OptimizeHomeVisitor(model);
-                                    if (intf.Cancelled() == false) poule.OptimizeHomeVisitorReverse(model);
-                                    if (intf.Cancelled() == false && state.optimizeLevel == 0) poule.OptimizeWeeks(model, intf, state.optimizeLevel);
+                                    if (intf.Cancelled() == false) poule.OptimizeWeeks(model, intf, state.optimizeLevel);
                                     if (poule.maxTeams > 6)
                                     {
-                                        while(intf.Cancelled() == false && state.optimizeLevel > 0 && poule.OptimizeSchema2(model, intf, state.optimizeLevel) == true);
-                                        while (intf.Cancelled() == false && state.optimizeLevel > 0 && poule.OptimizeSchema3(model, intf, state.optimizeLevel) == true) ;
+                                        if (intf.Cancelled() == false && state.optimizeLevel > 0) poule.OptimizeSchema2(model, intf, state.optimizeLevel);
+                                        if (intf.Cancelled() == false && state.optimizeLevel > 0) poule.OptimizeSchema3(model, intf, state.optimizeLevel);
                                     }
                                     else
                                     {

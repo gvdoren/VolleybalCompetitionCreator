@@ -427,7 +427,6 @@
             this.button11.TabIndex = 13;
             this.button11.Text = "Analyse";
             this.button11.UseVisualStyleBackColor = true;
-            this.button11.Visible = false;
             this.button11.Click += new System.EventHandler(this.button11_Click);
             // 
             // button12
@@ -439,7 +438,6 @@
             this.button12.TabIndex = 14;
             this.button12.Text = "A + O";
             this.button12.UseVisualStyleBackColor = true;
-            this.button12.Visible = false;
             this.button12.Click += new System.EventHandler(this.button12_Click);
             // 
             // button13
