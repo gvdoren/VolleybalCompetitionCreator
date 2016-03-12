@@ -337,6 +337,28 @@ namespace CompetitionCreator
                     {
                         SporthallAvailability sporthal = (SporthallAvailability)diag.Selection.obj;
                         team.sporthal = sporthal;
+                        team.field = null;
+                        model.MakeDirty();
+                    }
+                    objectListView1.BuildList(true);
+
+                }
+                if (columnindex == olvColumn19.Index) // sporthal
+                {
+                    List<Selection> list = new List<Selection>();
+                    foreach (Field field in team.sporthal.fields)
+                    {
+                        Selection sel = new Selection(field.Name, field);
+                        if (field == team.field) sel.selected = true;
+                        list.Add(sel);
+                    }
+                    SelectionDialog diag = new SelectionDialog(list);
+                    diag.Text = "Select the field:";
+                    diag.ShowDialog();
+                    if (diag.Ok)
+                    {
+                        Field field  = (Field)diag.Selection.obj;
+                        team.field = field;
                         model.MakeDirty();
                     }
                     objectListView1.BuildList(true);

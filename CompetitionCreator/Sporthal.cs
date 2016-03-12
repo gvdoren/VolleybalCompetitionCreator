@@ -54,6 +54,7 @@ namespace CompetitionCreator
         public double lat { get { return sporthall.lat; } }
         public double lng { get { return sporthall.lng; } }
         public List<DateTime> NotAvailable = new List<DateTime>();
+        public List<Field> fields { get; set; }
         public override string ToString()
         {
             return name;
@@ -61,7 +62,7 @@ namespace CompetitionCreator
         public SporthallAvailability(Sporthal sporthall)
         {
             this.sporthall = sporthall;
-
+            this.fields = new List<Field>();
         }
     }
 }

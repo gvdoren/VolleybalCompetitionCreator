@@ -44,6 +44,7 @@
             this.olvColumn0 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn14 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn18 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn19 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -114,6 +115,7 @@
             this.objectListView1.AllColumns.Add(this.olvColumn4);
             this.objectListView1.AllColumns.Add(this.olvColumn5);
             this.objectListView1.AllColumns.Add(this.olvColumn6);
+            this.objectListView1.AllColumns.Add(this.olvColumn19);
             this.objectListView1.AllColumns.Add(this.olvColumn3);
             this.objectListView1.AllColumns.Add(this.olvColumn9);
             this.objectListView1.AllColumns.Add(this.olvColumn8);
@@ -133,6 +135,7 @@
             this.olvColumn4,
             this.olvColumn5,
             this.olvColumn6,
+            this.olvColumn19,
             this.olvColumn3});
             this.objectListView1.FullRowSelect = true;
             this.objectListView1.GridLines = true;
@@ -274,6 +277,13 @@
             this.olvColumn18.DisplayIndex = 8;
             this.olvColumn18.IsVisible = false;
             this.olvColumn18.Text = "Fixed Number";
+            // 
+            // olvColumn19
+            // 
+            this.olvColumn19.AspectName = "FieldName";
+            this.olvColumn19.CellPadding = null;
+            this.olvColumn19.IsEditable = false;
+            this.olvColumn19.Text = "Field";
             // 
             // textBox1
             // 
@@ -803,6 +813,7 @@
         private System.Windows.Forms.DataGridViewCheckBoxColumn saturday;
         private System.Windows.Forms.DataGridViewCheckBoxColumn sunday;
         private System.Windows.Forms.Button buttonDeleteTeamRequirements;
+        private BrightIdeasSoftware.OLVColumn olvColumn19;
 
     }
 }

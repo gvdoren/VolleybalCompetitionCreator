@@ -15,6 +15,17 @@ namespace CompetitionCreator
         public Club club { get; set; }
         public string Ranking { get; set;  }
         public SporthallAvailability sporthal { get; set; }
+        public Field field { get; set; }
+        public string FieldName
+        {
+            get
+            {
+                if (field == null)
+                    return "";
+                else
+                    return field.Name;
+            }
+        }
         public int fixedNumber = -1;
         public Poule poule = null;
         public Serie serie = null;

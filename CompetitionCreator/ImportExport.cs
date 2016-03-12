@@ -363,6 +363,18 @@ namespace CompetitionCreator
                             writer.WriteAttributeString("Latitude", sporthal.lat.ToString(CultureInfo.InvariantCulture));
                             writer.WriteAttributeString("Longitude", sporthal.lng.ToString(CultureInfo.InvariantCulture));
                             if (sporthal.team != null) writer.WriteAttributeString("TeamId", sporthal.team.Id.ToString());
+                            if(sporthal.fields.Count>0)
+                            {
+                                writer.WriteStartElement("Fields");
+                                foreach (Field f in sporthal.fields)
+                                {
+                                    writer.WriteStartElement("Field");
+                                    writer.WriteAttributeString("Name", f.Name);
+                                    writer.WriteAttributeString("Id", f.Id.ToString());
+                                    writer.WriteEndElement();
+                                }
+                                writer.WriteEndElement();
+                            }
                             writer.WriteStartElement("NotAvailable");
                             foreach (DateTime date in sporthal.NotAvailable)
                             {
@@ -395,6 +407,11 @@ namespace CompetitionCreator
                             writer.WriteAttributeString("Group", groupLetter);
                             writer.WriteAttributeString("SporthallId", team.sporthal.id.ToString());
                             writer.WriteAttributeString("SporthallName", team.sporthal.name);
+                            if (team.field != null)
+                            {
+                                writer.WriteAttributeString("FieldId", team.field.Id.ToString());
+                                writer.WriteAttributeString("FieldName", team.field.Name);
+                            }
                             if (team.fixedNumber >= 0) writer.WriteAttributeString("FixedNumber", team.fixedNumber.ToString());
                             if (team.deleted) writer.WriteAttributeString("Deleted", "true");
                             if (team.NotAtSameTime != null) writer.WriteAttributeString("NotAtSameTime", team.NotAtSameTime.Id.ToString());
@@ -444,6 +461,11 @@ namespace CompetitionCreator
                             // Not the id and the name of the clubsporthal is used, but the original (duplication of sporthalls)
                             writer.WriteAttributeString("SporthallId", team.sporthal.sporthall.id.ToString());
                             writer.WriteAttributeString("SporthallName", team.sporthal.sporthall.name);
+                            if (team.field != null)
+                            {
+                                writer.WriteAttributeString("FieldId", team.field.Id.ToString());
+                                writer.WriteAttributeString("FieldName", team.field.Name);
+                            }
                             writer.WriteAttributeString("ClubId", team.club.Id.ToString());
                             writer.WriteAttributeString("ClubName", team.club.name);
                             writer.WriteEndElement();
@@ -476,6 +498,12 @@ namespace CompetitionCreator
                             writer.WriteAttributeString("time", match.datetime.ToShortTimeString());
                             writer.WriteAttributeString("SporthallId", match.homeTeam.sporthal.id.ToString());
                             writer.WriteAttributeString("SporthallName", match.homeTeam.sporthal.name);
+                            if (match.homeTeam.field != null)
+                            {
+                                writer.WriteAttributeString("FieldId", match.homeTeam.field.Id.ToString());
+                                writer.WriteAttributeString("FieldName", match.homeTeam.field.Name);
+                            }
+
                             writer.WriteEndElement();
                         }
                     }
@@ -1079,6 +1107,19 @@ namespace CompetitionCreator
                         sp.teamId = teamId;
                         cl.sporthalls.Add(sp);
                     }
+                    XElement Fields = OptionalElement(sporthal, "Fields");
+                    if(Fields != null)
+                    {
+                        foreach (var field in Fields.Elements("Field"))
+                        {
+                            string FieldName = StringAttribute(field, "Name");
+                            int FieldId = IntegerAttribute(field, "Id");
+                            Field f = new Field();
+                            f.Name = FieldName;
+                            f.Id = FieldId;
+                            sp.fields.Add(f);
+                        }
+                    }
 
                     //clear original dates (for re-reading the subscriptions)
                     sp.NotAvailable.Clear();
@@ -1192,6 +1233,14 @@ namespace CompetitionCreator
                     if (sporthall.teamId == te.Id)
                     {
                         sporthall.team = te;
+                    }
+                    string fieldName = StringOptionalAttribute(team, null, "FieldName");
+                    if(fieldName != null)
+                    {
+                        int FieldId = IntegerAttribute(team, "FieldId");
+                        te.field = new Field();
+                        te.field.Id = FieldId;
+                        te.field.Name = fieldName;
                     }
                 }
             }

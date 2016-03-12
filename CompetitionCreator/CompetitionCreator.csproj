@@ -110,6 +110,7 @@
   <ItemGroup>
     <Compile Include="Anorama.cs" />
     <Compile Include="Club.cs" />
+    <Compile Include="Field.cs" />
     <Compile Include="Forms\AboutBox1.cs">
       <SubType>Form</SubType>
     </Compile>
