@@ -87,6 +87,17 @@ namespace CompetitionCreator
             else Ok = false;
             this.Close();
         }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void objectListView1_SelectionChanged(object sender, EventArgs e)
+        {
+            Selection sel = (Selection)objectListView1.SelectedObject;
+            label1.Text = sel.label;
+        }
     }
     public class Selection
     {

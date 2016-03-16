@@ -38,11 +38,6 @@ namespace CompetitionCreator
             {
                 constraints.Remove(con);
             }
-            // Remove links from other teams to this team
-            foreach (Team t in teams)
-            {
-                if (t.NotAtSameTime == team) t.NotAtSameTime = null;
-            }
             teams.Remove(team);
             MakeDirty();
         }
@@ -192,10 +187,6 @@ namespace CompetitionCreator
                         {
                             constraints.Add(new ConstraintSporthallNotAvailable(te));
                             if (te.fixedNumber > 0) constraints.Add(new ConstraintTeamFixedNumber(te));
-                            if (te.NotAtSameTime != null && te.NotAtSameTime.evaluated && te.NotAtSameTime.poule != null)
-                            {
-                                constraints.Add(new ConstraintPlayAtSameTime(te));
-                            }
                         } else
                         {
                             constraints.Add(new ConstraintNoPouleAssigned(te));
@@ -203,7 +194,11 @@ namespace CompetitionCreator
                 
                     }
                 }
-                
+                foreach(TeamConstraint con in  teamConstraints.FindAll(c => c.what == TeamConstraint.What.NotOnSameTime))
+                {
+                    constraints.Add(new ConstraintPlayAtSameTime(con.team1, con.team2));
+                }
+                                
                 // All group related constraints
                 ConstructGroupConstraintsDay(DayOfWeek.Saturday);
                 ConstructGroupConstraintsDay(DayOfWeek.Sunday);
@@ -358,13 +353,14 @@ namespace CompetitionCreator
 
     public class TeamConstraint //: SpecificConstraint
     {
-        public enum What { HomeInSameWeekend, HomeOnSameDay, HomeNotInSameWeekend, HomeNotOnSameDay };
+        public enum What { HomeInSameWeekend, HomeOnSameDay, HomeNotInSameWeekend, HomeNotOnSameDay, NotOnSameTime };
         public What what;
         public int team1Id;
         public int team2Id;
         public Model model;
         public Team team2
         {
+            
             get { return model.teams.Find(t => t.Id == team2Id); }
         }
         public Team team1
@@ -410,10 +406,8 @@ namespace CompetitionCreator
             if (team2 != null) teams.Add(team2);
             return teams;
         }
-        public string serie1str { get { if (team1 != null) return team1.serie.name; else return "?"; } }
-        public string serie2str { get { if (team2 != null) return team2.serie.name; else return "?"; } }
-        public string team1str { get { if (team1 != null) return team1.name + " (" + team1Id + ")"; else return "? (" + team1Id + ")"; } }
-        public string team2str { get { if (team2 != null) return team2.name + " (" + team2Id + ")"; else return "? (" + team2Id + ")"; } }
+        public string team1str { get { if (team1 != null) return team1.name + " (" + team1.seriePouleName + ")"; else return "? (Team removed)"; } }
+        public string team2str { get { if (team2 != null) return team2.name + " (" + team2.seriePouleName + ")"; else return "? (Team removed)"; } }
         public string description2
         {
             get { return what.ToString(); }

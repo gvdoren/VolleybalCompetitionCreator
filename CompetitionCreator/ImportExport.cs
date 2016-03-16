@@ -414,7 +414,6 @@ namespace CompetitionCreator
                             }
                             if (team.fixedNumber >= 0) writer.WriteAttributeString("FixedNumber", team.fixedNumber.ToString());
                             if (team.deleted) writer.WriteAttributeString("Deleted", "true");
-                            if (team.NotAtSameTime != null) writer.WriteAttributeString("NotAtSameTime", team.NotAtSameTime.Id.ToString());
                             if (team.EvenOdd != Team.WeekRestrictionEnum.All) writer.WriteAttributeString("EvenOdd", team.EvenOdd.ToString());
                             writer.WriteEndElement();
                         }
@@ -1177,11 +1176,6 @@ namespace CompetitionCreator
                     if (teamGroup == "Y") te.group = TeamGroups.GroupY;
 
                     if (BoolOptionalAttribute(team, false, "Deleted")) te.DeleteTeam(model); // remains only in the club administration.
-                    int idNot = IntegerOptionalAttribute(team, -1, "NotAtSameTime");
-                    if (idNot >= 0)
-                    {
-                        te.NotAtSameTime = cl.teams.Find(t => t.Id == idNot);
-                    }
                     te.fixedNumber = IntegerOptionalAttribute(team, -1, "FixedNumber");
                     string extraTimeString = StringOptionalAttribute(team, null, "extraTimeBefore"); // bijvoorbeeld voor reserve wedstrijd 
                     if (extraTimeString != null)

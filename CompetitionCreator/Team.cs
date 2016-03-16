@@ -33,33 +33,11 @@ namespace CompetitionCreator
         public Time defaultTime;
         public bool deleted { get; set; }
         public string email;
-        public string NotAtSameTimeId
-        {
-            get
-            {
-                if (NotAtSameTime != null) return NotAtSameTime.serieTeamName;
-                else return "";
-            }
-            set
-            {
-                int id;
-                bool success = int.TryParse(value, out id);
-                if (success)
-                {
-                    NotAtSameTime = club.teams.Find(t => t.Id == id);
-                }
-                else
-                {
-                    NotAtSameTime = null;
-                }
-            }
-        }
         public override void AddConflict(Constraint constraint)
         {
             // only for real teams.
             if(RealTeam()) base.AddConflict(constraint);
         }
-        public Team NotAtSameTime = null;
         public string serieTeamName { get { return serie.name + " - " + name; } }
         public DayOfWeek defaultDay = DayOfWeek.Monday; // initial value since monday is never the default
         public int Index 
@@ -83,7 +61,6 @@ namespace CompetitionCreator
         }
         public Team(int Id, string name, Poule poule, Serie serie, Club club) 
         {
-            //this.NotAtSameTime = this;
             this.Id = Id;
             this.name = name;
             if (poule != null) poule.AddTeam(this);

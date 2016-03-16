@@ -24,7 +24,7 @@ namespace CompetitionCreator
             this.model = model;
             this.state = state;
             InitializeComponent();
-            this.tabControl2.Controls.Remove(this.tabPage1); // Initially do not show this, only show when used
+            //this.tabControl2.Controls.Remove(this.tabPage1); // Initially do not show this, only show when used
             state.OnMyChange += new MyEventHandler(state_OnMyChange);
             if (state.selectedClubs.Count > 0) SetClub(state.selectedClubs[0]);
             objectListView2.SetObjects(model.constraints.FindAll(c => (c as DateConstraint) != null && c.club == club));
@@ -201,21 +201,14 @@ namespace CompetitionCreator
         {
             objectListView2.SetObjects(model.constraints.FindAll(c => (c as DateConstraint) != null && c.club == club)); 
             objectListView2.BuildList(true);
-            this.tabPage2.Text = "Special requirements (" + objectListView2.Items.Count + ")";
+            this.tabPage2.Text = "Date constraints (" + objectListView2.Items.Count + ")";
             
             var list = model.teamConstraints.FindAll(c => (c.team1 != null && c.team1.club == club) || (c.team2 != null && c.team2.club == club));
 
-            if (list.Count > 0)
-            {
-                this.tabControl2.Controls.Add(this.tabPage1);
-                objectListView3.SetObjects(list);
-                objectListView3.BuildList(true);
-                this.tabPage1.Text = "Team requirements (" + objectListView3.Items.Count + ")";
-            }
-            else
-            {
-                this.tabControl2.Controls.Remove(this.tabPage1);
-            }
+            //this.tabControl2.Controls.Add(this.tabPage1);
+            objectListView3.SetObjects(list);
+            objectListView3.BuildList(true);
+            this.tabPage1.Text = "Team constraints (" + objectListView3.Items.Count + ")";
             
         }
         private void dataGridView3_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -369,7 +362,7 @@ namespace CompetitionCreator
                     List<Selection> list = new List<Selection>();
                     Selection sel;
                     sel = new Selection(club.name);list.Add(sel);if (sel.ToString() == team.name) sel.selected = true;
-                    sel = new Selection(club.name+" A");list.Add(sel);if (sel.ToString() == team.name) sel.selected = true;
+                    sel = new Selection(club.name + " A");list.Add(sel);if (sel.ToString() == team.name) sel.selected = true;
                     sel = new Selection(club.name + " B"); list.Add(sel); if (sel.ToString() == team.name) sel.selected = true;
                     sel = new Selection(club.name + " C"); list.Add(sel); if (sel.ToString() == team.name) sel.selected = true;
                     sel = new Selection(club.name + " D"); list.Add(sel); if (sel.ToString() == team.name) sel.selected = true;
@@ -458,6 +451,8 @@ namespace CompetitionCreator
                 objectListView2.SetObjects(model.constraints.FindAll(c => c.club == club && ((c as DateConstraint) != null)));
                 objectListView2.BuildList(true);
             }
+            UpdateTeamConstraints();
+            model.RenewConstraints();
             model.Evaluate(null);
             model.Changed();
         }
@@ -465,6 +460,7 @@ namespace CompetitionCreator
         private void objectListView1_SelectionChanged(object sender, EventArgs e)
         {
             button1.Enabled = (objectListView1.SelectedObject != null);
+            buttonNewTeamRequirement.Enabled = (objectListView1.SelectedObject != null);
             button4.Enabled = (objectListView1.SelectedObject != null && ((Team)objectListView1.SelectedObject).deleted == false);
             button5.Enabled = (objectListView1.SelectedObject != null && ((Team)objectListView1.SelectedObject).deleted == true);
             button5.Visible = (objectListView1.SelectedObject != null && ((Team)objectListView1.SelectedObject).deleted == true);
@@ -574,11 +570,155 @@ namespace CompetitionCreator
             {
                 model.teamConstraints.Remove(con);
             }
-//            UpdateTeamConstraints();
+            UpdateTeamConstraints();
+            model.RenewConstraints();
             model.Evaluate(null);
             //state.Changed();
             model.Changed();
 
+        }
+
+        private void buttonNewTeamRequirements_Click(object sender, EventArgs e)
+        {
+            Team team = (Team)objectListView1.SelectedObject;
+            if (team != null)
+            {
+                TeamConstraint con = new TeamConstraint(model, team.Id, team.Id, TeamConstraint.What.HomeInSameWeekend);
+                model.teamConstraints.Add(con);
+                UpdateTeamConstraints();
+            }
+            model.Evaluate(null);
+            model.Changed();
+
+        }
+
+        private void objectListView3_MouseClick(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void objectListView3_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            Point mousePosition = objectListView3.PointToClient(Control.MousePosition);
+            ListViewHitTestInfo hit = objectListView3.HitTest(e.X, e.Y);
+            int columnindex = hit.Item.SubItems.IndexOf(hit.SubItem);
+            TeamConstraint con = (TeamConstraint) objectListView3.SelectedObject;
+            if (columnindex == olvColumn22.Index) // Team 1
+            {
+                List<Selection> list = new List<Selection>();
+                foreach( Team team in club.teams)
+                {
+                    Selection sel = new Selection(club.name + " - " + team.name +" ("+team.serie.name+")", team);
+                    if (team.Id == con.team1Id) sel.selected = true;
+                    list.Add(sel);
+                }
+                SelectionDialog diag = new SelectionDialog(list);
+                diag.Width = 400;
+                diag.Text = "Select the first team:";
+                diag.ShowDialog();
+                if (diag.Ok)
+                {
+                    Team team = (Team)diag.Selection.obj;
+                    con.team1Id = team.Id;
+                    model.MakeDirty();
+                }
+                objectListView3.BuildList(true);
+
+            } else if (columnindex == olvColumn24.Index) // Team 2 
+            {
+                List<Selection> list = new List<Selection>();
+                foreach (Club club in model.clubs)
+                {
+                    foreach (Team team in club.teams)
+                    {
+                        Selection sel = new Selection(club.name + " - " + team.name + " (" + team.serie.name + ")", team);
+                        if (team.Id == con.team2Id) sel.selected = true;
+                        list.Add(sel);
+                    }
+                }
+                SelectionDialog diag = new SelectionDialog(list);
+                diag.Width = 400;
+                diag.Text = "Select the second team:";
+                diag.ShowDialog();
+                if (diag.Ok)
+                {
+                    Team team = (Team)diag.Selection.obj;
+                    con.team2Id = team.Id;
+                    model.MakeDirty();
+                }
+                objectListView3.BuildList(true);
+
+            } else if (columnindex == olvColumn20.Index)
+            {
+                List<Selection> list = new List<Selection>();
+                foreach (TeamConstraint.What w in Enum.GetValues(typeof(TeamConstraint.What)))
+                {
+                    Selection sel = new Selection(w.ToString(), w);
+                    if (con.what == w) sel.selected = true;
+                    list.Add(sel);
+                }
+                SelectionDialog diag = new SelectionDialog(list);
+                diag.Text = "Select the constraint:";
+                diag.ShowDialog();
+                if (diag.Ok)
+                {
+                    con.what = (TeamConstraint.What) diag.Selection.obj;
+                    model.MakeDirty();
+                }
+                objectListView3.BuildList(true);
+            }
+            model.RenewConstraints();
+            model.Evaluate(null);
+            model.Changed();
+        }
+
+        private void objectListView3_CellEditFinishing(object sender, CellEditEventArgs e)
+        {
+            model.RenewConstraints();
+            model.Evaluate(null);
+            model.Changed();
+        }
+
+        private void objectListView2_CellEditFinishing(object sender, CellEditEventArgs e)
+        {
+            model.RenewConstraints();
+            model.Evaluate(null);
+            model.Changed();
+
+        }
+
+        private void objectListView2_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            Point mousePosition = objectListView2.PointToClient(Control.MousePosition);
+            ListViewHitTestInfo hit = objectListView2.HitTest(e.X, e.Y);
+            int columnindex = hit.Item.SubItems.IndexOf(hit.SubItem);
+            DateConstraint con = (DateConstraint) objectListView2.SelectedObject;
+            if (columnindex == olvColumn12.Index) 
+            {
+                List<Selection> list = new List<Selection>();
+                foreach( Team team in club.teams)
+                {
+                    Selection sel = new Selection(club.name + " - " + team.name +" ("+team.serie.name+")", team);
+                    if (team == con.team) sel.selected = true;
+                    list.Add(sel);
+                }
+                SelectionDialog diag = new SelectionDialog(list);
+                diag.Width = 400;
+                diag.Text = "Select the team:";
+                diag.ShowDialog();
+                if (diag.Ok)
+                {
+                    Team team = (Team)diag.Selection.obj;
+                    con.team = team;
+                    model.MakeDirty();
+                }
+                objectListView3.BuildList(true);
+
+            }
+            UpdateTeamConstraints();
+            model.RenewConstraints();
+            model.Evaluate(null);
+            model.Changed();
         }
     }
 }

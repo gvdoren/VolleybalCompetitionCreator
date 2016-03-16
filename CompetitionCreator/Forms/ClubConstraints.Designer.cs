@@ -36,15 +36,14 @@
             this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn5 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn6 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn19 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn9 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn8 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn10 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn7 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn0 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn14 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn18 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn19 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -65,7 +64,6 @@
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.objectListView2 = new BrightIdeasSoftware.ObjectListView();
-            this.olvColumn13 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn12 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn15 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn16 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -75,14 +73,13 @@
             this.button5 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.objectListView3 = new BrightIdeasSoftware.ObjectListView();
-            this.olvColumn21 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn22 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn23 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn24 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn20 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.label3 = new System.Windows.Forms.Label();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.buttonNewTeamRequirement = new System.Windows.Forms.Button();
             this.buttonDeleteTeamRequirements = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.label4 = new System.Windows.Forms.Label();
@@ -120,7 +117,6 @@
             this.objectListView1.AllColumns.Add(this.olvColumn9);
             this.objectListView1.AllColumns.Add(this.olvColumn8);
             this.objectListView1.AllColumns.Add(this.olvColumn10);
-            this.objectListView1.AllColumns.Add(this.olvColumn7);
             this.objectListView1.AllColumns.Add(this.olvColumn0);
             this.objectListView1.AllColumns.Add(this.olvColumn14);
             this.objectListView1.AllColumns.Add(this.olvColumn18);
@@ -203,6 +199,13 @@
             this.olvColumn6.Text = "Sporthal";
             this.olvColumn6.Width = 100;
             // 
+            // olvColumn19
+            // 
+            this.olvColumn19.AspectName = "FieldName";
+            this.olvColumn19.CellPadding = null;
+            this.olvColumn19.IsEditable = false;
+            this.olvColumn19.Text = "Field";
+            // 
             // olvColumn3
             // 
             this.olvColumn3.AspectName = "group";
@@ -239,15 +242,6 @@
             this.olvColumn10.MinimumWidth = 0;
             this.olvColumn10.Text = "Email";
             // 
-            // olvColumn7
-            // 
-            this.olvColumn7.AspectName = "NotAtSameTimeId";
-            this.olvColumn7.CellPadding = null;
-            this.olvColumn7.DisplayIndex = 5;
-            this.olvColumn7.FillsFreeSpace = true;
-            this.olvColumn7.IsVisible = false;
-            this.olvColumn7.Text = "Not at same time with:";
-            // 
             // olvColumn0
             // 
             this.olvColumn0.AspectName = "Id";
@@ -277,13 +271,6 @@
             this.olvColumn18.DisplayIndex = 8;
             this.olvColumn18.IsVisible = false;
             this.olvColumn18.Text = "Fixed Number";
-            // 
-            // olvColumn19
-            // 
-            this.olvColumn19.AspectName = "FieldName";
-            this.olvColumn19.CellPadding = null;
-            this.olvColumn19.IsEditable = false;
-            this.olvColumn19.Text = "Field";
             // 
             // textBox1
             // 
@@ -476,7 +463,6 @@
             // 
             // objectListView2
             // 
-            this.objectListView2.AllColumns.Add(this.olvColumn13);
             this.objectListView2.AllColumns.Add(this.olvColumn12);
             this.objectListView2.AllColumns.Add(this.olvColumn15);
             this.objectListView2.AllColumns.Add(this.olvColumn16);
@@ -486,7 +472,6 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.objectListView2.CellEditActivation = BrightIdeasSoftware.ObjectListView.CellEditActivateMode.SingleClick;
             this.objectListView2.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.olvColumn13,
             this.olvColumn12,
             this.olvColumn15,
             this.olvColumn16,
@@ -501,18 +486,13 @@
             this.objectListView2.TabIndex = 8;
             this.objectListView2.UseCompatibleStateImageBehavior = false;
             this.objectListView2.View = System.Windows.Forms.View.Details;
+            this.objectListView2.CellEditFinishing += new BrightIdeasSoftware.CellEditEventHandler(this.objectListView2_CellEditFinishing);
             this.objectListView2.SelectionChanged += new System.EventHandler(this.objectListView2_SelectionChanged);
-            // 
-            // olvColumn13
-            // 
-            this.olvColumn13.AspectName = "serie.name";
-            this.olvColumn13.CellPadding = null;
-            this.olvColumn13.IsEditable = false;
-            this.olvColumn13.Text = "Serie";
+            this.objectListView2.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.objectListView2_MouseDoubleClick);
             // 
             // olvColumn12
             // 
-            this.olvColumn12.AspectName = "team.name";
+            this.olvColumn12.AspectName = "team1str";
             this.olvColumn12.CellPadding = null;
             this.olvColumn12.FillsFreeSpace = true;
             this.olvColumn12.IsEditable = false;
@@ -583,69 +563,59 @@
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(9, 9);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(134, 13);
+            this.label2.Size = new System.Drawing.Size(104, 13);
             this.label2.TabIndex = 11;
-            this.label2.Text = "Special Requirements:";
+            this.label2.Text = "Date constraints:";
             // 
             // objectListView3
             // 
-            this.objectListView3.AllColumns.Add(this.olvColumn21);
             this.objectListView3.AllColumns.Add(this.olvColumn22);
-            this.objectListView3.AllColumns.Add(this.olvColumn23);
             this.objectListView3.AllColumns.Add(this.olvColumn24);
             this.objectListView3.AllColumns.Add(this.olvColumn20);
             this.objectListView3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.objectListView3.CellEditActivation = BrightIdeasSoftware.ObjectListView.CellEditActivateMode.SingleClick;
             this.objectListView3.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.olvColumn21,
             this.olvColumn22,
-            this.olvColumn23,
             this.olvColumn24,
             this.olvColumn20});
             this.objectListView3.FullRowSelect = true;
             this.objectListView3.Location = new System.Drawing.Point(6, 23);
+            this.objectListView3.MultiSelect = false;
             this.objectListView3.Name = "objectListView3";
             this.objectListView3.ShowGroups = false;
             this.objectListView3.Size = new System.Drawing.Size(712, 168);
             this.objectListView3.TabIndex = 12;
             this.objectListView3.UseCompatibleStateImageBehavior = false;
             this.objectListView3.View = System.Windows.Forms.View.Details;
+            this.objectListView3.CellEditFinishing += new BrightIdeasSoftware.CellEditEventHandler(this.objectListView3_CellEditFinishing);
             this.objectListView3.SelectedIndexChanged += new System.EventHandler(this.objectListView3_SelectedIndexChanged);
-            // 
-            // olvColumn21
-            // 
-            this.olvColumn21.AspectName = "serie1str";
-            this.olvColumn21.CellPadding = null;
-            this.olvColumn21.FillsFreeSpace = true;
-            this.olvColumn21.Text = "Serie";
+            this.objectListView3.MouseClick += new System.Windows.Forms.MouseEventHandler(this.objectListView3_MouseClick);
+            this.objectListView3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.objectListView3_MouseDoubleClick);
             // 
             // olvColumn22
             // 
             this.olvColumn22.AspectName = "team1str";
             this.olvColumn22.CellPadding = null;
             this.olvColumn22.FillsFreeSpace = true;
+            this.olvColumn22.IsEditable = false;
             this.olvColumn22.Text = "Team";
-            // 
-            // olvColumn23
-            // 
-            this.olvColumn23.AspectName = "serie2str";
-            this.olvColumn23.CellPadding = null;
-            this.olvColumn23.FillsFreeSpace = true;
-            this.olvColumn23.Text = "Serie";
             // 
             // olvColumn24
             // 
             this.olvColumn24.AspectName = "team2str";
             this.olvColumn24.CellPadding = null;
             this.olvColumn24.FillsFreeSpace = true;
+            this.olvColumn24.IsEditable = false;
             this.olvColumn24.Text = "Team";
             // 
             // olvColumn20
             // 
-            this.olvColumn20.AspectName = "description2";
+            this.olvColumn20.AspectName = "what";
             this.olvColumn20.CellPadding = null;
             this.olvColumn20.FillsFreeSpace = true;
+            this.olvColumn20.IsEditable = false;
             this.olvColumn20.MaximumWidth = 120;
             this.olvColumn20.Text = "Constraint";
             // 
@@ -656,9 +626,9 @@
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(8, 9);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(123, 13);
+            this.label3.Size = new System.Drawing.Size(108, 13);
             this.label3.TabIndex = 11;
-            this.label3.Text = "Team Requirements:";
+            this.label3.Text = "Team constraints:";
             // 
             // tabControl2
             // 
@@ -674,6 +644,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.buttonNewTeamRequirement);
             this.tabPage1.Controls.Add(this.buttonDeleteTeamRequirements);
             this.tabPage1.Controls.Add(this.objectListView3);
             this.tabPage1.Controls.Add(this.label3);
@@ -682,8 +653,19 @@
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(721, 224);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Team Requirements";
+            this.tabPage1.Text = "Team constraints";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // buttonNewTeamRequirement
+            // 
+            this.buttonNewTeamRequirement.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonNewTeamRequirement.Location = new System.Drawing.Point(559, 197);
+            this.buttonNewTeamRequirement.Name = "buttonNewTeamRequirement";
+            this.buttonNewTeamRequirement.Size = new System.Drawing.Size(75, 23);
+            this.buttonNewTeamRequirement.TabIndex = 13;
+            this.buttonNewTeamRequirement.Text = "New";
+            this.buttonNewTeamRequirement.UseVisualStyleBackColor = true;
+            this.buttonNewTeamRequirement.Click += new System.EventHandler(this.buttonNewTeamRequirements_Click);
             // 
             // buttonDeleteTeamRequirements
             // 
@@ -707,7 +689,7 @@
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(721, 224);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Special Requirements";
+            this.tabPage2.Text = "Date Requirements";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // label4
@@ -769,7 +751,6 @@
         private BrightIdeasSoftware.OLVColumn olvColumn5;
         private BrightIdeasSoftware.OLVColumn olvColumn6;
         private BrightIdeasSoftware.OLVColumn olvColumn3;
-        private BrightIdeasSoftware.OLVColumn olvColumn7;
         private BrightIdeasSoftware.OLVColumn olvColumn9;
         private BrightIdeasSoftware.OLVColumn olvColumn8;
         private BrightIdeasSoftware.OLVColumn olvColumn10;
@@ -778,7 +759,6 @@
         private System.Windows.Forms.Button button1;
         private BrightIdeasSoftware.ObjectListView objectListView2;
         private BrightIdeasSoftware.OLVColumn olvColumn12;
-        private BrightIdeasSoftware.OLVColumn olvColumn13;
         private BrightIdeasSoftware.OLVColumn olvColumn15;
         private BrightIdeasSoftware.OLVColumn olvColumn16;
         private BrightIdeasSoftware.OLVColumn olvColumn11;
@@ -793,9 +773,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
         private BrightIdeasSoftware.ObjectListView objectListView3;
         private BrightIdeasSoftware.OLVColumn olvColumn20;
-        private BrightIdeasSoftware.OLVColumn olvColumn21;
         private BrightIdeasSoftware.OLVColumn olvColumn22;
-        private BrightIdeasSoftware.OLVColumn olvColumn23;
         private BrightIdeasSoftware.OLVColumn olvColumn24;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TabControl tabControl2;
@@ -814,6 +792,7 @@
         private System.Windows.Forms.DataGridViewCheckBoxColumn sunday;
         private System.Windows.Forms.Button buttonDeleteTeamRequirements;
         private BrightIdeasSoftware.OLVColumn olvColumn19;
+        private System.Windows.Forms.Button buttonNewTeamRequirement;
 
     }
 }

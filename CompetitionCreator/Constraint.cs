@@ -667,11 +667,13 @@ namespace CompetitionCreator
 
     class ConstraintPlayAtSameTime : Constraint
     {
-        public ConstraintPlayAtSameTime(Team cl)
+        Team team2;
+        public ConstraintPlayAtSameTime(Team cl, Team cl2)
         {
+            team2 = cl2;
             team = cl;
             VisitorAlso = false;
-            name = "Teams spelen op hetzelfde uur";
+            name = "Teams on the same time";
             cost = MySettings.Settings.PlayAtSameTime;
         }
         public override void Evaluate(Model model)
@@ -680,7 +682,6 @@ namespace CompetitionCreator
             conflictMatches.Clear();
             List<Match> team1Matches = team.poule.matches.FindAll(m => m.homeTeam == team || m.visitorTeam == team);
             team1Matches.Sort(delegate(Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
-            Team team2 = team.NotAtSameTime;
             List<Match> team2Matches = team2.poule.matches.FindAll(m => m.homeTeam == team2 || m.visitorTeam == team2);
             team2Matches.Sort(delegate(Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
             Poule poule2 = team2.poule;
@@ -839,6 +840,8 @@ namespace CompetitionCreator
             cost = MySettings.Settings.DefaultCustomTeamConstraintCost;
             name = "Team conflict";
         }
+        public string team1str { get { if (team != null) return team.name + " (" + team.seriePouleName + ")"; else return "? (Team removed)"; } }
+
         public override void Evaluate(Model model)
         {
             conflict_cost = 0;
