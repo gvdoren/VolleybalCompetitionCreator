@@ -7,31 +7,43 @@ namespace CompetitionCreator
 {
     public class GlobalState
     {
-        public int optimizeLevel;
-        public List<Club> selectedClubs = new List<Club>();
-        public Constraint selectedConstraint = null;
-        public List<Constraint> showConstraints = new List<Constraint>();
-        public bool comparison = false;
-        public void ShowConstraints(List<Constraint> constraints)
+        static public List<Error> errors = new List<Error>();
+
+        static public int optimizeLevel;
+        static public List<Club> selectedClubs = new List<Club>();
+        static public Constraint selectedConstraint = null;
+        static public List<Constraint> showConstraints = new List<Constraint>();
+        static public bool comparison = false;
+        static public void ShowConstraints(List<Constraint> constraints)
         {
             var areEquivalent = (constraints.Count == showConstraints.Count) && !constraints.Except(showConstraints).Any();
             if (areEquivalent == false)
             {
                 showConstraints = constraints;
-                Changed();
+                GlobalState.Changed();
                 Console.WriteLine("Show constraints updated");
             }
         }
-        public event MyEventHandler OnMyChange;
-        public void Changed()
+        static public event MyEventHandler OnMyChange;
+        static public void Changed()
         {
             //call it then you need to update:
             if (OnMyChange != null)
             {
                 MyEventArgs e = new MyEventArgs(null);
                 //e.EventInfo = content;
-                OnMyChange(this, e);
+                GlobalState.OnMyChange(null, e);
             }
+        }
+        static public void ClearAutoClearableErrors()
+        {
+            errors.RemoveAll(e => e.Type == Error.ErrorType.AutoClearable);
+            Changed();
+        }
+        static public void ClearManualClearableErrors()
+        {
+            errors.RemoveAll(e => e.Type == Error.ErrorType.ManualClearable);
+            Changed();
         }
         public void Clear()
         {

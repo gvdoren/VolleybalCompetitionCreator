@@ -242,6 +242,7 @@ namespace Security
         }
         public bool Valid(bool msg = false)
         {
+            //return true;
             bool returnvalue = false;
             try
             {
@@ -267,13 +268,21 @@ namespace Security
         }
         public bool Feature(FeatureType feature)
         {
-            string result = StringCipher.Decrypt(key, FingerPrint.Value());
-            string[] delimiters = new string[] { "|||" };
-            string[] results = result.Split(delimiters, StringSplitOptions.None);
-            if (results.Length <= 3) return false;
-            string featureString = results[3];
-            if (featureString.Length <= (int)feature) return false;
-            return featureString[(int)feature] == '1';
+            //return true;
+            try
+            {
+                string result = StringCipher.Decrypt(key, FingerPrint.Value());
+                string[] delimiters = new string[] { "|||" };
+                string[] results = result.Split(delimiters, StringSplitOptions.None);
+                if (results.Length <= 3) return false;
+                string featureString = results[3];
+                if (featureString.Length <= (int)feature) return false;
+                return featureString[(int)feature] == '1';
+            } catch
+            {
+                MessageBox.Show("License Key is invalid");
+                return false;
+            }
         }
         static public string Create(string user, string fingerprint, DateTime date, List<FeatureType> features)
         {

@@ -26,7 +26,7 @@ namespace CompetitionCreator
             objectListView1.ModelFilter = serieFilter;
             //objectListView1.Activation = ItemActivation.TwoClick;
             objectListView1.UseFiltering = true;
-            state.OnMyChange += new MyEventHandler(state_OnMyChange); 
+            GlobalState.OnMyChange += new MyEventHandler(state_OnMyChange); 
             model.OnMyChange += state_OnMyChange;
             if (model.licenseKey.Feature(Security.LicenseKey.FeatureType.Expert))
             {
@@ -75,10 +75,10 @@ namespace CompetitionCreator
             public bool Filter(object modelObject)
             {
                 Poule poule = (Poule)modelObject;
-                if (state.selectedClubs.Count == 0) return true;
+                if (GlobalState.selectedClubs.Count == 0) return true;
                 foreach (Team team in poule.teams)
                 {
-                    if (state.selectedClubs.Contains(team.club))
+                    if (GlobalState.selectedClubs.Contains(team.club))
                     {
                         return true;
                     }
@@ -131,21 +131,21 @@ namespace CompetitionCreator
                     Poule poule = (Poule)obj;
                     constraints.AddRange(poule.conflictConstraints);
                 }
-                state.ShowConstraints(constraints);
+                GlobalState.ShowConstraints(constraints);
             }
         }
 
         private void PouleListView_FormClosed(object sender, FormClosedEventArgs e)
         {
-            state.OnMyChange -= new MyEventHandler(state_OnMyChange);
+            GlobalState.OnMyChange -= new MyEventHandler(state_OnMyChange);
             model.OnMyChange -= state_OnMyChange;
 
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            state.selectedClubs.Clear();
-            state.Changed();
+            GlobalState.selectedClubs.Clear();
+            GlobalState.Changed();
         }
 
 

@@ -23,7 +23,7 @@ namespace CompetitionCreator
             InitializeComponent();
             objectListView1.SetObjects(model.series);
             model.OnMyChange += state_OnMyChange;
-            state.OnMyChange += state_OnMyChange;
+            GlobalState.OnMyChange += state_OnMyChange;
             if(model.licenseKey.Feature(Security.LicenseKey.FeatureType.Expert))
             {
                 this.groupBox3.Visible = true;
@@ -36,18 +36,20 @@ namespace CompetitionCreator
             {
                 this.evaluatedColumn.IsVisible = true;
                 this.importedColumn.IsVisible = true;
+                this.importanceColumn.IsVisible = true;
                 objectListView1.RebuildColumns();
             }
             else
             {
                 this.evaluatedColumn.IsVisible = false;
                 this.importedColumn.IsVisible = false;
+                this.importanceColumn.IsVisible = false;
                 objectListView1.RebuildColumns();
             }
             comboBox1.Items.Add("Fast");
             comboBox1.Items.Add("Normal");
             comboBox1.Items.Add("Deep (slow - better results)");
-            comboBox1.SelectedItem = comboBox1.Items[1];
+            comboBox1.SelectedItem = comboBox1.Items[2];
         }
         public void state_OnMyChange(object source, MyEventArgs e)
         {
@@ -140,19 +142,19 @@ namespace CompetitionCreator
                                 //poule.OptimizeTeams(model, intf, state.optimizeLevel);
                                 if (poule.optimizableWeeks)
                                 {
-                                    if (intf.Cancelled() == false) poule.OptimizeWeeks(model, intf, state.optimizeLevel);
+                                    if (intf.Cancelled() == false) poule.OptimizeWeeks(model, intf, GlobalState.optimizeLevel);
                                     if (poule.maxTeams > 6)
                                     {
-                                        if (intf.Cancelled() == false && state.optimizeLevel > 0) poule.OptimizeSchema2(model, intf, state.optimizeLevel);
-                                        if (intf.Cancelled() == false && state.optimizeLevel > 0) poule.OptimizeSchema3(model, intf, state.optimizeLevel);
+                                        if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema2(model, intf, GlobalState.optimizeLevel);
+                                        if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema3(model, intf, GlobalState.optimizeLevel);
                                     }
                                     else
                                     {
-                                        while (intf.Cancelled() == false && state.optimizeLevel > 0 && poule.OptimizeSchema6(model, intf, state.optimizeLevel) == true) ;
+                                        while (intf.Cancelled() == false && GlobalState.optimizeLevel > 0 && poule.OptimizeSchema6(model, intf, GlobalState.optimizeLevel) == true) ;
                                     }
                                 }
-                                if (intf.Cancelled() == false) poule.OptimizeHomeVisitor(model, state.optimizeLevel > 0);
-                                if (intf.Cancelled() == false) poule.OptimizeHomeVisitorReverse(model, state.optimizeLevel > 0);
+                                if (intf.Cancelled() == false) poule.OptimizeHomeVisitor(model, GlobalState.optimizeLevel > 0);
+                                if (intf.Cancelled() == false) poule.OptimizeHomeVisitorReverse(model, GlobalState.optimizeLevel > 0);
                                 poule.CopyAndClearSnapShot(model);
                                 Console.WriteLine(" - {1}:totalConflicts: {0}", model.TotalConflicts(), poule.fullName);
                                 if (intf.Cancelled()) return;
@@ -184,7 +186,7 @@ namespace CompetitionCreator
         private void OptimizePoulesSelectedClubs(IProgress intf)
         {
             List<Poule> pouleList =  new List<Poule>();
-            foreach (Club club in state.selectedClubs)
+            foreach (Club club in GlobalState.selectedClubs)
             {
                 foreach (Team team in club.teams)
                 {
@@ -216,7 +218,7 @@ namespace CompetitionCreator
             {
                 score = model.TotalConflictsSnapshot;
                 teamList = new List<Team>();
-                foreach (Club club in state.selectedClubs)
+                foreach (Club club in GlobalState.selectedClubs)
                 {
                     foreach (Team team in club.teams)
                     {
@@ -234,7 +236,7 @@ namespace CompetitionCreator
                         lock (model)
                         {
                             intf.SetText("Optimizing - " + team.poule.serie.name + team.poule.name + " - " + team.name);
-                            team.poule.OptimizeTeam(model, intf, team, state.optimizeLevel);
+                            team.poule.OptimizeTeam(model, intf, team, GlobalState.optimizeLevel);
                             if (intf.Cancelled()) return;
                         }
                     }
@@ -250,7 +252,7 @@ namespace CompetitionCreator
             do
             {
                 matchList = new List<Match>();
-                foreach (Club club in state.selectedClubs)
+                foreach (Club club in GlobalState.selectedClubs)
                 {
                     foreach (Team team in club.teams)
                     {
@@ -273,7 +275,7 @@ namespace CompetitionCreator
         private void OptimizeClubsForever(IProgress intf)
         {
             List<Poule> pouleList = new List<Poule>();
-            foreach (Club club in state.selectedClubs)
+            foreach (Club club in GlobalState.selectedClubs)
             {
                 foreach (Team team in club.teams)
                 {
@@ -395,13 +397,13 @@ namespace CompetitionCreator
 
         private void OptimizeForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            state.OnMyChange -= new MyEventHandler(state_OnMyChange);
+            GlobalState.OnMyChange -= new MyEventHandler(state_OnMyChange);
             model.OnMyChange -= new MyEventHandler(state_OnMyChange);
         }
 
         private void comboBox1_SelectedValueChanged(object sender, EventArgs e)
         {
-            state.optimizeLevel = comboBox1.SelectedIndex;
+            GlobalState.optimizeLevel = comboBox1.SelectedIndex;
         }
     }
 

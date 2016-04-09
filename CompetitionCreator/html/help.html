@@ -9,12 +9,21 @@
   <h3>Inhoudsopgave</h3>
 <ul>
 <li><a href="#doel">Doel van het programma</a></li>
-<li><a href="#type conflicten">Type conflicten</a></li>
+<li><a href="#stappen">Stappen voor een nieuwe competitie</a>
+  <ol>
+    <li><a href="#creeer nieuwe competitie">Maak een nieuwe competitie</a></li>
+    <li><a href="#importeer registraties">Importeer de team-registraties</a> </li>
+    <li><a href="#controleer registraties">Controleer de team-registraties</a> </li>
+    <li><a href="#anorama">Vul de annorama in voor elk weekend &amp; voor elke reeks</a></li>
+    <li><a href="#poules indelen">Wijs de teams aan poules toe</a></li>
+    <li><a href="#competitie importeren">Importeer een bestaande (nationale) competitie</a></li>
+    <li><a href="#optimaliseer">Optimaliseer de competitie</a></li>
+  </ol></li>
 <li><a href="#groepen">Groepen</a></li>
-<li><a href="#doel">Doel van het programma</a></li>
-<li><a href="#doel">Doel van het programma</a></li>
+<li><a href="#errors">Errors</a></li>
+
 </ul>
-  <p>&nbsp;</p>
+<p>&nbsp;</p>
   <a name="doel" ></a>
   <h3>Doel van het programma</h3>
   <p>Dit programma is gemaakt om competities te creeeren, rekening houdend met:</p>
@@ -27,38 +36,33 @@
         <li>Groep: X of Y. Meer uitleg zie <a href="#groepen">groepen</a></li>
       </ul>
     </li>
-    <li>Anorama: De competitie weekenden die zijn vastgelegd voor de verschillende reeksen</li>
+    <li>annorama: De competitie weekenden die zijn vastgelegd voor de verschillende reeksen</li>
     <li>Beschikbaarheid sporthal</li>
     <li>Poule indeling: welke teams in welke poule zitten.</li>
-    <li>Externe competitie: Nationale teams worden ingedeeld buiten deze competitie om. Echter, dit legt wel beperkingen op op de zaalbeschikbaarheid, meespelen van spelers, etc.</li>
   </ul>
-  <p>Wat het programma doet is een competitie genereren en uitrekenen wat voor conflicten er zijn (bv. een wedstrijd op een dag dat de sporthal niet beschikbaar is). Vervolgens wordt er geprobeerd door de wedstrijden aan te passen (bv. uit/thuis wisselen, andere datum), het aantal conflicten te reduceren. Bij het reduceren van de conflicten wordt een soort 'fairness' gehanteerd. Je kunt je voorstellen dat het totaal aantal conflicten minimaal is, maar dat alle conflicten bij 1 club komen te liggen, of bij 1 team. Deze fairness houdt rekening met:</p>
-  <ul>
-    <li> Aantal conflicten per club (relatief tov het aantal teams in de club)</li>
-    <li>Aantal conflicten per team (relatief tov het aantal wedstrijden van het team)</li>
-  </ul>
-  <h3>Gebruik volledig nieuwe competitie</h3>
+  <p>Wat het programma doet is een competitie genereren en uitrekenen wat voor conflicten er zijn (bv. een wedstrijd op een dag dat de sporthal niet beschikbaar is). Vervolgens wordt er geprobeerd door de wedstrijden aan te passen (bv. uit/thuis wisselen, andere datum), het aantal conflicten te reduceren. Bij het reduceren van de conflicten wordt een soort 'fairness' gehanteerd. Je kunt je voorstellen dat het totaal aantal conflicten minimaal is, maar dat alle conflicten bij 1 club komen te liggen, of bij 1 team. Dit probeert het programma te voorkomen. Het zal echter altijd zijn dat een club met meer restricties (bv. beschikbaarheid van de zaal) uiteindelijk ook meer conflicten zal overhouden.</p>
+
+  <a name="stappen" ></a>
+<h3>Gebruik volledig nieuwe competitie</h3>
   <p>Om een nieuwe competitie aan te maken, moet je de volgende stappen doorlopen:</p>
   <ol>
     <li><a href="#creeer nieuwe competitie">Maak een nieuwe competitie</a></li>
     <li><a href="#importeer registraties">Importeer de team-registraties</a> </li>
     <li><a href="#controleer registraties">Controleer de team-registraties</a> </li>
-    <li><a href="#anorama">Vul de anorama in voor elk weekend &amp; voor elke reeks</a></li>
+    <li><a href="#anorama">Vul de annorama in voor elk weekend &amp; voor elke reeks</a></li>
     <li><a href="#poules indelen">Wijs de teams aan poules toe</a></li>
     <li><a href="#competitie importeren">Importeer een bestaande (nationale) competitie</a></li>
     <li><a href="#optimaliseer">Optimaliseer de competitie</a></li>
   </ol>
   <a name="creeer nieuwe competitie"/>
 <h4>Maak een nieuwe competitie</h4>
-  <p>Hiermee introduceer je alleen een nieuw bestand waar alles in wordt opgeslagen. Dit kan eenvoudig met File-New. Hierna moet je het jaar selecteren (bv 2014) waarvoor je de competitie wilt maken.</p>
+  <p>Hiermee introduceer je alleen een nieuw bestand waar alles in wordt opgeslagen. Dit kan eenvoudig met File-New. Hierna moet je het jaar invoeren (bv 2014) waarvoor je de competitie wilt maken.</p>
   <a name="importeer registraties"/>
 <h4>Importeer de team-registraties</h4>
 <p>Er zijn twee manieren om de registraties binnen te halen:</p>
   <ol>
     <li>File - Import - Registrations - file: er wordt dan gevraagd een file aan te geven (die je waarschijnlijk van te voren van de site hebt gesaved).</li>
-    <li>File - Import - Registrations - site: Hiermee haal je het direct van de website af (http://model.be/server/restricted/registrations/registrationsXML.php)</li>
-  </ol>
-<p>&nbsp;</p>
+    <li>File - Import - Registrations - site: Hiermee haal je het direct van de website af. Dit kan makkelijk zijn als je een eigen site hebt, waar je de data altijd van dezelfde URL kunt downloaden.</li></ol>
   <a name="controleer registraties"/>
 <h4>Controleer de team-registraties</h4>
 <p>Nadat je de registraties hebt geimporteerd is het zaak ze te controleren:</p>
@@ -69,7 +73,7 @@
       <ul>
         <li>Klopt de indeling in X en Y met de vrije tekst die eventueel is toegevoegd:
           <ul>
-            <li>Eetfestijnen en andere verzoeken kunnen vertaald worden in speciale team requirements. Probeer dit te beperken. Je kunt aangeven dat een team op een datum:
+            <li>Eetfestijnen en andere verzoeken kunnen vertaald worden in datum constraints (Edit - Club registrations). Probeer dit te beperken. Je kunt aangeven dat een team op een datum:
               <ul>
                 <li>Niet speelt</li>
                 <li>Thuis speelt</li>
@@ -77,34 +81,52 @@
                 <li>Uit speelt</li>
                 <li>Niet uit speelt</li>
               </ul>
-              <p>              Daarbij moet je aangeven hoezwaar het niet voldoen aan deze eis wordt gerekend. Normaal kun je de kosten het beste laten staan op '1'.
-              </p>
+              Daarbij moet je aangeven hoezwaar het niet voldoen aan deze eis wordt gerekend. Normaal kun je de kosten het beste laten staan op '1'.
+              
             </li>
           </ul>
         </li>
       </ul>
     </li>
+    <li>Indien twee clubs een sporthal delen zijn er twee opties:
+      <ul>
+        <li>Door middel van de zaalbeschikbaarheid zorg je ervoor dat de ene club bv. de even dagen heeft, en de ander de oneven. Dit is echter zeer star waardoor het programma niet tot optimale resultaten zal komen. </li>
+        <li>Door aan te geven dat de clubs niet op dezelfde dag de sporthal moeten gebruiken. Dit kun je aangeven als volgt (aannemende dat het bv. om een zaterdag gaat):
+          <ul>
+            <li>Club 1: Alle teams op zaterdag stop je in dezelfde groep, bijvoorbeeld groep X. Dit wil zeggen dat je wilt dat al die teams op dezelfde dag spelen.</li>
+            <li>Club 2: Alle teams op zaterdag stop je in dezelfde groep, bijvoorbeeld groep X. Dit wil zeggen dat je wilt dat al die teams op dezelfde dag spelen.</li>
+            <li>Kies nu 1 team uit van elke club die op zaterdag speelt en die in deze groep zit. Dan geef je bij de team constraints (Edit - Club registrations) dat deze twee teams niet op dezelfde dag moeten spelen. </li>
+          </ul>
+          Het programma beredeneert nu dat alle teams  van club 1 die op zaterdag spelen niet tegelijk moeten spelen met de teams van club 2 die op zaterdag spelen. Maar het programma heeft wel de vrijheid te bepalen welke zaterdagen voor club 1 en welke voor club 2 zijn.
+        </li>
+      </ul>
+    </li>
   </ul>
-<p>TODO: nationale teams. Eerst importeren nationale teams, dan teams toewijzen aan clubs</p>
-  <a name="anorama"/>
-<h4>Anorama invullen</h4>
-<p>Voor elke reeks (aantallen teams in de reeks) moet je de weekenden invullen waarop deze reeks speelt. Voor de senioren teams moet je dit invullen voor het gehele jaar. Voor de jeugd reeksen alleen voor de heen (of terug) reeks, afhankelijk of je de competitie aan het maken bent voor de heen (of terug) reeks. </p>
-<p>De anorama moet ingevuld zijn voordat je poules aanmaakt. Bij het creeren van een poule (met een bepaald aantal teams) wordt namelijk de anorama gebruikt om te bepalen op welke weekenden gespeeld mag worden. Als je na het creeeren van een poule de anorama veranderd heeft dat geen invloed meer op de bestaand poules. Alleen op de poules die nog gecreeerd worden. Dit kan gebruikt worden als poules voor de tweede helft van het seizoen gecreeerd worden. Je past de anorama aan voor de data voor de tweede helft, en creeerd dan de poules voor de tweede helft. De bestaande senioren poules die het hele jaar duren blijven onveranderd.</p>
-<h4></h4>
-  <a name="poules indelen"/>
+<p><a name="anorama"/></p>
+<h4>Annorama invullen</h4>
+<p>Het annorama geeft aan op welke dagen in het jaar de wedstrijden gespeeld worden. </p>
+<p>Het annorama moet ingevuld zijn voordat je poules aanmaakt. Bij het creeren van een poule (met een bepaald aantal teams) wordt namelijk het annorama gebruikt om te bepalen op welke weekenden gespeeld wordt. Als je na het creeeren van een poule de annorama veranderd heeft dat geen invloed meer op de bestaand poules. Alleen op de poules die nog gecreeerd worden. Dit kan gebruikt worden als poules voor de tweede helft van het seizoen gecreeerd worden. Je past de annorama aan voor de data voor de tweede helft, en creeerd dan de poules voor de tweede helft. De bestaande poules blijven onveranderd.</p>
+<p>Indien de speeldagen identiek zijn voor alle reeksen hoef je maar 1 kolom aan te maken. Indien er verschillen zijn, dan moet je evenveel kolommen aan maken als dat er verschillen zijn.</p>
+<p>Als je een kolom aanmaakt, klik je op elke week waarin gespeeld moet worden. Als je dit doet, moet je het speelweek nr invullen. Meestal kan dit gewoon in oplopende volgorde zijn. Echter, soms is het wenselijk dat als je een reeks van bijv. 12 en 14 combineert dat je de dagen van de reeks van 14 zo neerlegt, dat dit voor clubs beter te combineren is. Als je dit doet, moet je de schema's die je gaat toepassen heel goed kennen.</p>
+<p>Je kunt ook reserve dagen aangeven. Hier kan het programma gebruik van maken door op die dagen ook wedstrijden te spelen om het aantal conflicten te reduceren.</p>
+<p>Normaal wordt er 1 wedstrijd per week gespeeld. Echter, in sommige competities kan het voorkomen dat in 1 week 2 wedstrijden gespeeld moeten worden. Dit kun je aangeven in het annorama door op de rechter-muisknop te drukken. Je kunt dan een extra dag selecteren waarop gespeeld moet worden. Er wordt dan een extra entry gemaakt in het annorma, specifiek voor die dag. Wedstrijden die dan gespeeld worden, worden dan ook niet op de standaard dag gespeeld van elk team.</p>
+<p><a name="poules indelen"/></p>
 <h4>Poules indelen</h4>
   <p>Onder Edit-Poule zit de poule manager. Je hebt de volgende opties:</p>
   <ul>
-    <li>Poule creeeren: Je moet hiervoor eerst de juiste serie selecteren, en het max. aantal teams dat in de poule komt. Als je nu op creeer poule drukt, dan wordt op basis hiervan het basis-schema voor de poule gekozen. Let op: op het moment van poule creatie wordt de anorama uitgelezen en op basis daarvan de weekenden van de poule gecreeerd.</li>
+    <li>Poule(s) creeeren: Je moet hiervoor:
+      <ul>
+        <li>De juiste serie selecteren</li>
+        <li>De annorama reeks op basis waarvan de speeldagen bepaald worden</li>
+        </ul>
+    Als je nu op create (all) poule drukt, dan laat het programma de schema's zien waar je uit kunt kiezen. Het programma zal alleen die schema's tonen die overeenkomen met het aantal speeldagen van het annorama. Kies een schema. Hiermee wordt de poule(s) aangemaakt. Indien je create all poules kiest, worden in 1 keer voldoende poules aangemaakt voor alle teams in de reeks. Als er bv. 32 teams zijn, en je kiest voor poules van 12 teams, dan worden in één keer 3 poules aangemaakt. De teams zijn nog niet in de poule ingedeeld. Dit is een losse stap. </li>
     <li>Poule verwijderen: Selecteer de poule, en druk op delete poule. De teams die in deze poule zaten, blijven bestaan maar verliezen hun poule en moeten opnieuw aan een poule worden toegewezen.</li>
     <li>Team indelen in poules: Selecteer de poule, selecteer de team(s) en druk op 'assign team(s)'. </li>
     <li>Automatisch teams indelen: Indien je veel teams moet indelen kan het handig zijn om eerst het juiste aantal poules te creeeren, and dan met 'automatic divide' de teams in te verdelen over de poules. Indien de rangschikking van de eerste helft is geimporteerd (<a href="#rangschikking importeren">Rangschikking importeren</a>), dan wordt hier rekening mee gehouden. De hoogste in de rangschikking in poule A, daarna in B, enzovoort. De nieuw ingeschreven teams komen altijd in de laatste poule (bij de laagst geeindigden).</li>
     <li>Optimalizeren: nadat de teams zijn ingedeeld, kun je met behulp van 'Optimize distance' de verdeling van de teams over de poules optimaliseren mbt de afstand. De poules worden zo ingedeeld dat de totale afstand die de teams moeten afleggen minimaal is. In praktijk komt dit erop neer dat teams die vlak bij elkaar wonen in 1 poule worden gestopt. Hierbij kun je aangeven of meerdere teams van 1 club in 1 poule mogen (wat optimaal voor de afstand is), of dat deze verdeeld moeten worden over de poules (indien mogelijk).<br />
-    Als er poules geselecteerd zijn, vind de herverdeling (optimalisatie) van teams alleen plaats binnen de geselecteerde poules. Als er geen poules zijn geselecteerd, dan vindt de optimalisatie plaats over alle poules. Door meerdere keren op deze knop te drukken vind er steeds een optimalisatie plaats. Je kunt zien aan de afstanden wanneer er geen betere oplossing meer gevonden kan worden.</li>
-    <li>Reset-schema: Dan worden alle schema's van de poules in de serie weer naar default terug gezet en de optimalisatie van het schema teniet gedaan. Deze functionaliteit heeft eigenlijk niets te maken met het indelen van poules.</li>
-  </ul>
-  <p>Als poules in de tweede helft van het jaar worden ingedeeld, dan is de uitslag van de eerste helft van belang. Hiervoor kunnen de uitslagen van de eerste helft worden geimporteerd (File-Import-Ranking). Dan komt er achter elk team een getal te staan, bv. 1.56. Dit betekend dat het team 1e is geworden in de eerste helft. Het tweede getal is gerelateerd aan het aantal punten dat een team gehaald heeft. Echter, hoe kleiner dit getal, des te meer punten het team gehaald heeft. Dit is counter-intuitief maar is zo gekozen zodat je de teams kunt sorteren op dit getal: hoe kleiner hoe beter. Een team met 1.56 is dus een minder betere eerste dan een team met 1.75 omdat ze meer punten hebben gehaald in de eerste reeks.</p>
-<p>Als je deze scores gebruikt om de teams te sorteren kun je eenvoudig in de tweede helft de eerste 6 teams in de eerste poule, de tweede 6 in de tweede poule, enz.</p>
+    Als er poules geselecteerd zijn, vind de herverdeling (optimalisatie) van teams alleen plaats binnen de geselecteerde poules. Als er geen poules zijn geselecteerd, dan vindt de optimalisatie plaats over alle poules binnen de serie. Door meerdere keren op deze knop te drukken vind er steeds een optimalisatie plaats. Je kunt zien aan de afstanden wanneer er geen betere oplossing meer gevonden kan worden.</li>
+</ul>
+  <p>Als poules in de tweede helft van het jaar worden ingedeeld, dan is de uitslag van de eerste helft van belang. Hiervoor kunnen de uitslagen van de eerste helft worden geimporteerd (File-Import-Ranking). Dan komt er achter elk team een getal te staan, bv. 1.56. Dit betekend dat het team 1e is geworden in de eerste helft. Het tweede getal is gerelateerd aan het aantal punten dat een team gehaald heeft. Echter, hoe kleiner dit getal, des te meer punten het team gehaald heeft. Dit is counter-intuitief maar is zo gekozen zodat je de teams kunt sorteren op dit getal: hoe kleiner hoe beter. Een team met 1.56 is dus een  betere eerste dan een team met 1.75. Als je deze scores gebruikt om de teams te sorteren kun je eenvoudig in de tweede helft de eerste 6 teams in de eerste poule, de tweede 6 in de tweede poule, enz. Het importeren van rangschikkingen is een optie en is niet standaard enabled.</p>
   <a name="competitie importeren"/>
 <h4>Bestaande competitie importeren</h4>
 <p>Er zijn 2 redenen waarom een bestaande competitie wordt geimporteerd:</p>
@@ -112,32 +134,30 @@
   <li>De provinciale competitie moet zich aanpassen aan de nationale competitie. Hiervoor wordt de nationale competitie geimporteerd.</li>
   <li>In de tweede helft van het jaar wordt de jeugd competitie opnieuw gemaakt. Deze moet zich aanpassen aan de al bestaande competitie van de senioren, en aan de nationale competitie. Hiervoor moeten de senioren competitie en nationale competitie worden geimporteerd.</li>
 </ol>
+<p>Het importeren van een bestaande competitie is een optie en is niet standaard enabled. </p>
 <p>Het is belangrijk om te weten wanneer wedstrijden van geimporteerde competities zijn omdat men kan aangeven dat een team tegelijk met een team van de geimporteerde competitie moet spelen. Verder is het natuurlijk zo dat je niet de wedstrijden van de geimporteerde competitie kan veranderen, deze worden beschouwd als gegeven.</p>
 <p>Het importeren van een competitie bestaat uit twee delen:</p>
 <ol>
-  <li>Inlezen van de competitie van een website, vervolgens wordt hier een .csv file van gemaakt (file - import - Convert KLVV site to CSV of Covert VVB site to CSV).</li>
+  <li>Genereren van een .csv file. Dit is geen onderdeel van de competitie generator zelf. Het genereren van deze file is heel specifiek en zal voor elke gebruiker anders zijn afhandkelijk van waar de data vandaan komt en welke gegevens beschikbaar zijn. Het formaat is zodanig gekozen om het genereren zo eenvoudig mogelijk te houden.</li>
   <li>Inlezen van de gegeneerde.csv file in het programma</li>
 </ol>
-<p>Reden voor deze tussenstap is dat redelijk eenvoudig ook voor een andere website deze .csv gemaakt kan worden, en dan ook als input gebruikt kan worden.</p>
-<p>Indien een competitie wordt geimporteerd, kan niet altijd vastgesteld worden bij welke club teams horen. Op sites worden teams en clubs namelijk niet altijd exact hetzelfde geschreven. Indien teams in de nationale competitie worden geimporteerd, dan wordn alle teams aan de club 'Nationaal' toegekend. Echter, voor de clubs die meedoen met de provinciale competitie, moeten hun teams niet bij de 'Nationaal' club zitten, maar bij de eigen club. Dit kun je doen door de nationale club te selecten, en dan 'Edit-Club registrations'. Je krijgt dan alle teams in die bij de nationale club zitten. Door een team te selecteren, en op de club te dubbel clicken, kun je de club kiezen waar dit team echt bij hoort. Meer informatie over wijzigen van teams van een club zie</p>
-<p>Na het inlezen van de VVB site, zijn de wedstrijden + teams ingelezen. Echter, de teams zijn niet aan een club toegewezen</p>
-  <a name="optimaliseer"/>
+<p><a name="optimaliseer"/></p>
 <h4>Competitie optimaliseren</h4>
 <p>Er kan op verschillende manieren geoptimaliseerd worden:</p>
   <ol>
     <li>Number: Teams wisselen van plaats in het schema</li>
-    <li>Weeks: Speelweekenden onderling wisselen</li>
     <li>HomeVisit: Uit/Thuis wisselen</li>
+    <li>Schema: Speelweekenden/wedstrijden onderling wisselen. Eigenlijk gaat het programma het schema dat gebruikt wordt aanpassen.</li>
   </ol>
   <p>Het programma probeert allerlei combinaties en probeert op deze manier het aantal conflicten te verminderen. Als de optimalisatie net draait, zal het aantal conflicten snel afnemen
- maar hoe dichter bij het optimum des te langzamer het gaat. Je kunt per reeks aangeven wat voor soort optimalisaties mogelijk zijn. Dus als je alleen teams wilt
- wisselen dan moet je alleen het vinkje bij die optie aanzetten.</p>
-  <p>Je kunt optimaliseren over alle clubs heen, of een aantal clubs selecteren en alleen de reeksen optimaliseren waar die clubs teams in hebben. </p>
-  
-  <a name="rangschikking importeren"/>
-<h4>"Rangschikking importeren</h4>
-
-  <a name="groepen" ></a>
+maar hoe dichter bij het optimum des te langzamer het gaat. Je kunt per reeks aangeven wat voor soort optimalisaties mogelijk zijn.</p>
+  <p>Des te meer vrijheid het programma krijgt, des te beter zullen de resultaten zijn. Dus als je alleen aanvinkt dat teams op een ander number mogen staan in het schema geeft dat een slechter resultaat dan wanneer je alledrie de opties aanzet.</p>
+  <p>Het programma zorgt er wel voor dat de optimalisaties er niet voor zorgen dat er een vreemde competitie ontstaat. Door het wisselen van uit/thuis wedstrijden en schema's te veranderen zonder beperkingen zouden vreemde situaties kunnen ontstaan. Bijvoorbeeld dat een team de heenronde alleen thuis speelt, en de terugronde alleen uit. De competitie generator zorgt ervoor dat:</p><ul>
+  <li>Het maximale aantal uitwedstrijden of thuiswedstrijden achter elkaar beperkt wordt. </li>
+  <li>Het aantal uit/thuis wedstrijden in de heenronde in balans is met het aantal uit/thuis wedstrijden in de terugronde.</li>
+  </ul>
+  <p>Je kunt optimaliseren over alle clubs heen, of een aantal clubs selecteren en alleen de reeksen optimaliseren waar die clubs teams in hebben. De normale optimalisatie stopt als er geen verbeteringen meer worden gevonden. De doorlopende optimalisatie (continuous) blijft steeds kleine veranderingen maken waardoor soms nog kleine verbeteringen gevonden worden. Dit kun je gebruiken om het programma bijvoorbeeld de hele nacht door te laten lopen waardoor je de laatste verbeteringen eruit haalt.</p>
+  <p><a name="groepen" ></a>  </p>
   <h3>Groepen</h3>
 <p>Vaak komt het voor dat een club op 1 dag in het weekend de sporthal tot zijn beschikking heeft. Stel dat het 2 senioren teams heeft die men om en om wil laten spelen omdat er maar 1 team tegelijk in de sporthal kan spelen. Om dit aan te geven kunnen de teams in twee groepen verdeeld worden: X en Y. Het programma zal proberen om teams in X niet op dezelfde dag te laten spelen als teams in Y. Een club kan bijvoorbeeld de volgende teams samenstellen:</p>
 <ul>
@@ -149,7 +169,23 @@
   <li>Clubs met alle teams in X (of Y): In dit geval zal het programma het aantal thuisweekenden minimaliseren. Dit wil zeggen dat het probeert alle teams op dezelfde dag te laten spelen, om zodoende weekends te creeeren waarop helemaal geen team thuisspeelt.</li>
   <li>Clubs met X en Y teams: Doordat er typisch elke week wedstrijden zijn omdat X en Y niet op dezelfde dag spelen, ontstaan er zaterdagen (of zondagen) waarop X-teams spelen, en zaterdagen waarop Y-teams spelen omdat het niet op dezelfde dag mag. Mocht er nu nog een scholieren jongens team zijn waarvan spelers ook met het heren team mee spelen, dan kan het scholieren team ook in groep Y ingedeeld worden. Dit team mag niet tegelijk met de X, dus zal op de Y-zaterdagen terecht komen.</li>
 </ul>
-<h4>Team inschrijvingen wijzigen</h4>
+  <p><a name="errors" ></a>  </p>
+<h3>Errors</h3>
+<p>Door het gebruik van het programma kunnen situaties ontstaan waar het programma niet mee kan omgaan. Deze worden in het error window getoond. Een error bevat ook uitleg wat er fout is, en wat er tegen gedaan kan worden. Je hebt twee soorten fouten:</p>
+<ul>
+<li>Een fout die aangeeft dat een actie niet is gelukt. Bijvoorbeeld bij het importeren van inschrijvingen heeft het programma gedetecteerd dat de file die geimporteerd wordt niet voldoet. Bij deze errors wordt altijd de tijd aangegeven, zodat je ziet wanneer de fout was opgetreden. In het error scherm zit onderaan een knop zodat je dit soort fouten kunt verwijderen.</li>
+<li>Een fout die aangeeft dat er een fout in de competitie zit. Dit kunnen eenvoudige fouten zijn zoals dat een team niet is ingedeeld in een poule. Door het team in te delen, verdwijnt de fout. Maar dit kunnen ook complexere fouten zijn. Je kunt tegenstrijdige constraints invoeren. Bijv. Team A moet tegelijk spelen met team B, en ook Team A moet niet tegelijk spelen met team B. Het programma detecteerd dit, zodat je dit kunt oplossen.</li>
+</ul>
+<p>De tweede categorie fouten is essentieel om op te lossen voordat je een competitie genereert. Als je dit niet doet kan het zijn dat de optimalisatie niet goed kan optimaliseren of dat er geen goede competitie uit komt (bijv. als je een team niet ingedeeld is in een poule dan zullen er ook geen wedstrijdenn voor dat team uitkomen.)</p>
 <p>&nbsp;</p>
+<p>&nbsp;</p>
+  <p><a name="Licentie" ></a>  </p>
+<h3>Licentie</h3>
+De licentie van dit programma is een licentie per jaar voor gebruik op 1 computer. Zonder geldige licentie kan het programma wel gebruikt worden, maar kunnen er geen resultaten bewaard worden of ge-exporteerd worden. Verder zijn features zoals ranking importeren en externe competities importeren niet beschikbaar.
+Een licentie kan worden aangevraagd via Help-License. 
+
+  <p><a name="Instellingen" ></a>  </p>
+<h3>Instellingen</h3>
+Instellingen kunnen gewijzigd worden via Help-instellingen. Met deze wijzigingen kun je het gedrag volledige wijzigen. Indien je niet exact weet wat je wijzigt is het beter de instellingen op de default te laten staan.
 </body>
 </html>

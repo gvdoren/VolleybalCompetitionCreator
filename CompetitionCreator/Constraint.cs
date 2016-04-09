@@ -42,21 +42,35 @@ namespace CompetitionCreator
     public abstract class Constraint
     {
         public bool VisitorAlso = true;
-        public bool error = false;
-        List<String> errorList = new List<string>();
+        List<Error> errors = new List<Error>();
+        public List<Error> GetErrors()
+        {
+            return errors;
+        }
         protected void ClearErrors()
         {
-            error = false;
-            errorList.Clear();
+            errors.Clear();
         }
-        protected void AddError(string error_str)
+        protected void AddError(Error error)
         {
-            error = true;
-            errorList.Add(error_str);
+            errors.Add(error);
+        }
+        protected void AddError(string str, string help=null)
+        {
+            Error error = new Error();
+            error.text = str;
+            if (help != null)
+                error.AddHelpHtml(help);
+            AddError(error);
         }
         protected string[] ErrorInfo()
         {
-            return errorList.ToArray();
+            List<string> strings = new List<string>();
+            foreach(var error in errors)
+            {
+                strings.Add(error.text);
+            }
+            return strings.ToArray();
         }
         public Club club { get; set; }
         public Poule poule { get; set; }
@@ -409,12 +423,14 @@ namespace CompetitionCreator
                         if (t.poule.teams.Contains(t) == false)
                         {
                             conflict_cost += cost;
-                            AddError("Internal test - poule consistency: Poule does not contain team");
+                            AddError("Poule consistency: Poule does not contain team", 
+                                     "The cause can be that an invalid xml is used as input, or that indicates a bug in the program. In both cases save your project and contact the author.");
                         }
                         if (t.serie.poules.Contains(poule) == false)
                         {
                             conflict_cost += cost;
-                            AddError("Internal test - poule consistency: Serie does not contain poule");
+                            AddError("Poule consistency: Serie does not contain poule", 
+                                     "The cause can be that an invalid xml is used as input, or that indicates a bug in the program. In both cases save your project and contact the author.");
                         }
                     }
                     UInt64[] days = new UInt64[poule.weeks.Count];
@@ -431,7 +447,8 @@ namespace CompetitionCreator
                             if ((days[index] & bitMask) != 0)
                             {
                                 conflict_cost += cost;
-                                AddError("Internal test - poule consistency: One teams plays more than one match on a single day");
+                                AddError("Poule consistency: One teams plays more than one match on a single day", 
+                                         "The cause can be that an invalid xml is used as input, or that indicates a bug in the program. In both cases save your project and contact the author.");
                             }
                             days[index] |= bitMask;
                         }
@@ -451,23 +468,13 @@ namespace CompetitionCreator
                         {
                             if (HomeMatches[t.Index] != poule.TeamCount - 1)
                             {
-                                foreach (Match match in poule.matches)
-                                {
-                                    if (match.homeTeam == t)
-                                    {
-                                        AddError(string.Format("Internal test - poule consistency: Aantal thuis matches klopt niet (poule: {0}, team: {1})", poule.fullName, t.name));
-                                    }
-                                }
+                               AddError(string.Format("Poule consistency: Aantal thuis matches klopt niet (poule: {0}, team: {1})", poule.fullName, t.name),
+                                                 "The cause can be that an invalid xml is used as input, or that indicates a bug in the program. In both cases save your project and contact the author.");
                             }
                             if (VisitorMatches[t.Index] != poule.TeamCount - 1)
                             {
-                                foreach (Match match in poule.matches)
-                                {
-                                    if (match.visitorTeam == t)
-                                    {
-                                        AddError(string.Format("Internal test - poule consistency: Aantal uit matches klopt niet (poule: {0}, team: {1})", poule.fullName, t.name));
-                                    }
-                                }
+                               AddError(string.Format("Poule consistency: Aantal uit matches klopt niet (poule: {0}, team: {1})", poule.fullName, t.name),
+                                                 "The cause can be that an invalid xml is used as input, or that indicates a bug in the program. In both cases save your project and contact the author.");
                             }
                         }
                     }
@@ -476,7 +483,8 @@ namespace CompetitionCreator
                         if (team.RealTeam() && team.poule.matches.Count(m => m.homeTeam == team) == 0)
                         {
                             conflict_cost += cost;
-                            AddError(string.Format("Internal test - poule consistency: No matches for team '{0}'",team.name));
+                            AddError(string.Format("Internal test - poule consistency: No matches for team '{0}'",team.name),
+                                     "The cause can be that an invalid xml is used as input, or that indicates a bug in the program. In both cases save your project and contact the author.");
                         }
                     }
                 }
@@ -509,7 +517,8 @@ namespace CompetitionCreator
             conflictMatches.Clear();
             ClearErrors();
             conflict_cost += cost;
-            AddError(string.Format("Team {0} (serie:{1}) has no poule assigned", team.name, team.serie.name));
+            AddError(string.Format("Team {0} (serie:{1}) has no poule assigned", team.name, team.serie.name),
+                     "Go to Edit/Poules and add this team to a poule, or go to Edit/Registrations and delete this team (it can always be undeleted). If it is intended that this team has no poule, optimization can run with this error.");
         }
         public override string[] GetTextDescription()
         {
@@ -807,7 +816,7 @@ namespace CompetitionCreator
                     team.poule.AddConflict(this);
                     team.club.AddConflict(this);
                     conflict_cost += MySettings.Settings.FixedIndexConstraintCost;
-                 }
+                }
             }
         }
         public override string[] GetTextDescription()
@@ -820,6 +829,60 @@ namespace CompetitionCreator
             get
             {
                 return team.name;
+            }
+        }
+
+    }
+    class ConstraintTeamNaming : Constraint
+    {
+        public ConstraintTeamNaming(Club club)
+        {
+            this.club = club;
+            VisitorAlso = false;
+            name = "Names of the teams are not unique within the serie";
+            cost = 0;
+        }
+        public override void Evaluate(Model model)
+        {
+            ClearErrors();
+            bool found = false;
+            List<Team> teams = new List<Team>();
+            foreach(Team t in club.teams)
+            {
+                if (t.serie.imported == false)
+                {
+                    foreach (Team t1 in club.teams.FindAll(te => te.serie.id == t.serie.id))
+                    {
+                        if (t1.Id != t.Id && t1.name == t.name && t1.deleted == false && t.deleted == false)
+                        {
+                            teams.Add(t);
+                            found = true;
+                        }
+                    }
+                }
+            }
+            if (found)
+            {
+                string html = string.Format("Team names of club '{0}' are not unique within the serie", club.name);
+                html += "<ul>";
+                foreach (Team t in teams)
+                {
+                    html += "<li>" + t.name + " (" + t.seriePouleName + ") </li>";
+                }
+                html += "</ul>";
+                AddError(html);
+            }
+        }
+        public override string[] GetTextDescription()
+        {
+            List<string> result = new List<string>();
+            return result.ToArray();
+        }
+        public override string Context
+        {
+            get
+            {
+                return club.name;
             }
         }
 
@@ -921,6 +984,33 @@ namespace CompetitionCreator
 
     class ConstraintGrouping : Constraint
     {
+        public Error GetError()
+        {
+            ClearErrors();
+            if (GroupA.Find(t => GroupB.Contains(t)) != null)
+            {
+                Error error = new Error(Error.ErrorType.AutoClearable);
+                error.text = "Teams in group A and B should play not on the same day/weekend, but some teams are in both groups";
+                error.AddHelpHtml("The groups are calculated based on: the group of each team, and the inter team constraints that are specified. Typically, the cause can be found in the inter team constraints for the teams listed in  group A and B. These can be changed in Edit/Club Registrations.");
+                string html = " Having this error, it is of no use of optimizing the competition since conflicting constraints can make that the optimization takes the wrong decisions.<br/>";
+                html += "<b>Group A</b><ul>";
+                foreach (Team t in GroupA)
+                {
+                    html += "<li>"+ t.club.name + " - " + t.name + "(" + t.seriePouleName + ")</li>";
+                }
+                html += "</ul>";
+                html += "<b>Group B</b><ul>";
+                foreach (Team t in GroupB)
+                {
+                    html += "<li>" + t.club.name + " - " + t.name + "(" + t.seriePouleName + ")</li>";
+                }
+                html += "</ul>";
+                error.AddDetailHtml(html);
+                AddError(error);
+                return error;
+            }
+            return null;
+        }
         public List<Team> GroupA = new List<Team>();
         public List<Team> GroupB = new List<Team>();
         public ConstraintGrouping()
@@ -1011,11 +1101,6 @@ namespace CompetitionCreator
             result = result || AddTeamIfNeeded(tc.what, tc.team1, tc.team2, GroupB, GroupA);
             result = result || AddTeamIfNeeded(tc.what, tc.team2, tc.team1, GroupA, GroupB);
             result = result || AddTeamIfNeeded(tc.what, tc.team2, tc.team1, GroupB, GroupA);
-            // check overlap
-            if (GroupA.Find(t => GroupB.Contains(t)) != null)
-            {
-                error = true;
-            }
             return result;
         }
         public bool AddTeamConstraintWeekend(TeamConstraint tc)
@@ -1025,11 +1110,6 @@ namespace CompetitionCreator
             result = result || AddTeamIfNeededWeekend(tc.what, tc.team1, tc.team2, GroupB, GroupA);
             result = result || AddTeamIfNeededWeekend(tc.what, tc.team2, tc.team1, GroupA, GroupB);
             result = result || AddTeamIfNeededWeekend(tc.what, tc.team2, tc.team1, GroupB, GroupA);
-            // check overlap
-            if (GroupA.Find(t => GroupB.Contains(t)) != null)
-            {
-                error = true;
-            }
             return result;
         }
         private int calculateCost(List<Match> overlap1, List<Match> overlap2)

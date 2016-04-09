@@ -21,7 +21,7 @@ namespace CompetitionCreator
             InitializeComponent();
             objectListView1.SetObjects(model.clubs);
             model.OnMyChange += state_OnMyChange;
-            state.OnMyChange += state_OnMyChange;
+            GlobalState.OnMyChange += state_OnMyChange;
             
         }
         public void state_OnMyChange(object source, MyEventArgs e)
@@ -41,7 +41,7 @@ namespace CompetitionCreator
             lock (model)
             {
                 this.objectListView1.SelectedIndexChanged -= this.objectListView1_SelectedIndexChanged;
-                objectListView1.SelectedObjects = state.selectedClubs;
+                objectListView1.SelectedObjects = GlobalState.selectedClubs;
                 objectListView1.BuildList(true);
                 this.objectListView1.SelectedIndexChanged += this.objectListView1_SelectedIndexChanged;
             }
@@ -49,13 +49,13 @@ namespace CompetitionCreator
 
         private void objectListView1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            state.selectedClubs.Clear();
+            GlobalState.selectedClubs.Clear();
             foreach (Object obj in objectListView1.SelectedObjects)
             {
                 Club club = (Club)obj;
-                state.selectedClubs.Add(club);
+                GlobalState.selectedClubs.Add(club);
             }
-            state.Changed();
+            GlobalState.Changed();
         }
         private void objectListView1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
@@ -75,13 +75,13 @@ namespace CompetitionCreator
                             if (poulelistview != null)
                             {
                                 poulelistview.Activate();
-                                state.selectedClubs.Clear();
+                                GlobalState.selectedClubs.Clear();
                                 foreach (Object obj in objectListView1.SelectedObjects)
                                 {
                                     Club club1 = (Club)obj;
-                                    state.selectedClubs.Add(club1);
+                                    GlobalState.selectedClubs.Add(club1);
                                 }
-                                state.Changed();
+                                GlobalState.Changed();
                                 return;
                             }
                         }
@@ -107,14 +107,14 @@ namespace CompetitionCreator
                     Club club = (Club)obj;
                     constraints.AddRange(club.conflictConstraints);
                 }
-                state.ShowConstraints(constraints);
+                GlobalState.ShowConstraints(constraints);
             }
         }
 
         private void ClubListView_FormClosed(object sender, FormClosedEventArgs e)
         {
             model.OnMyChange -= state_OnMyChange;
-            state.OnMyChange -= state_OnMyChange;
+            GlobalState.OnMyChange -= state_OnMyChange;
         }
     }
     internal static class ControlExtensionMethods

@@ -63,6 +63,10 @@ namespace CompetitionCreator
             else
             {
                 buttonOptimizeMatch.Visible = false;
+                button11.Visible = false;
+                button12.Visible = false;
+                button4.Visible = false;
+                button6.Visible = false;
             }
         }
         public void state_OnMyChange(object source, MyEventArgs e)
@@ -255,7 +259,7 @@ namespace CompetitionCreator
         private void OptimizeWeekAssignment(IProgress intf)
         {
             poule.SnapShot(model);
-            poule.OptimizeWeeks(model, intf, state.optimizeLevel);
+            poule.OptimizeWeeks(model, intf, GlobalState.optimizeLevel);
             poule.CopyAndClearSnapShot(model);
         }
         private void OptimizeWeekAssignmentCompleted(IProgress intf)
@@ -293,7 +297,7 @@ namespace CompetitionCreator
                     Team team = (Team)obj;
                     constraints.AddRange(team.conflictConstraints);
                 }
-                state.ShowConstraints(constraints);
+                GlobalState.ShowConstraints(constraints);
             }
         }
 
@@ -307,7 +311,7 @@ namespace CompetitionCreator
                     Match match = (Match)obj;
                     constraints.AddRange(match.conflictConstraints);
                 }
-                state.ShowConstraints(constraints);
+                GlobalState.ShowConstraints(constraints);
             }
         }
 
@@ -419,7 +423,7 @@ namespace CompetitionCreator
                     KeyValuePair<MatchWeek, int> kvp = (KeyValuePair<MatchWeek, int>)obj;
                     constraints.AddRange(kvp.Key.conflictConstraints);
                 }
-                state.ShowConstraints(constraints);
+                GlobalState.ShowConstraints(constraints);
             }
         }
         private void optimizeMatch_Click(object sender, EventArgs e)
@@ -472,7 +476,7 @@ namespace CompetitionCreator
         private void OptimizeTeam(IProgress intf)
         {
             intf.SetText("Optimizing team - ("+optimizeTeam.name+")");
-            poule.OptimizeTeam(model, intf, optimizeTeam, state.optimizeLevel);
+            poule.OptimizeTeam(model, intf, optimizeTeam, GlobalState.optimizeLevel);
         }
         private void OptimizeCompleted(IProgress intf)
         {
@@ -493,7 +497,7 @@ namespace CompetitionCreator
             poule.SnapShot(model);
             poule.OptimizeTeamAssignment(model, intf);
             poule.OptimizeHomeVisitor(model);
-            poule.OptimizeWeeks(model, intf, state.optimizeLevel);
+            poule.OptimizeWeeks(model, intf, GlobalState.optimizeLevel);
             poule.CopyAndClearSnapShot(model);
             model.Evaluate(null);
             if (intf.Cancelled()) return;
@@ -637,7 +641,7 @@ namespace CompetitionCreator
         private void OptimizeFullSchema(IProgress intf)
         {
             poule.SnapShot(model);
-            poule.OptimizeSchema6(model, intf, state.optimizeLevel);
+            poule.OptimizeSchema6(model, intf, GlobalState.optimizeLevel);
             poule.CopyAndClearSnapShot(model);
         }
         private void OptimizeFullSchemaCompleted(IProgress intf)

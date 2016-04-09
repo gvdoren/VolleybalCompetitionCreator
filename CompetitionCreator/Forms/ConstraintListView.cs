@@ -25,7 +25,7 @@ namespace CompetitionCreator
             objectListView1.UseFiltering = true;
             UpdateConflictCount();
             model.OnMyChange += state_OnMyChange;
-            state.OnMyChange += state_OnMyChange;
+            GlobalState.OnMyChange += state_OnMyChange;
             
         }
         public void state_OnMyChange(object source, MyEventArgs e)
@@ -44,17 +44,17 @@ namespace CompetitionCreator
             }
             lock (model)
             {
-                if (state.selectedConstraint != null && state.showConstraints.Contains(state.selectedConstraint) == false && state.selectedConstraint.error == false)
+                if (GlobalState.selectedConstraint != null && GlobalState.showConstraints.Contains(GlobalState.selectedConstraint) == false)
                 {
-                    if (state.showConstraints.Count > 0)
+                    if (GlobalState.showConstraints.Count > 0)
                     {
 
-                        state.selectedConstraint = state.showConstraints[0];
-                        objectListView1.SelectObject(state.selectedConstraint,true);
+                        GlobalState.selectedConstraint = GlobalState.showConstraints[0];
+                        objectListView1.SelectObject(GlobalState.selectedConstraint, true);
                     }
                     else
                     {
-                        state.selectedConstraint = null;
+                        GlobalState.selectedConstraint = null;
                         objectListView1.SelectedObjects.Clear();
                     }
                 }
@@ -65,12 +65,10 @@ namespace CompetitionCreator
          }
         private void UpdateConflictCount()
         {
-            bool error = false;
             int conflicts = 0;
             foreach (Constraint constraint in model.constraints)
             {
                 conflicts += constraint.conflict_cost;
-                error |= constraint.error;
                 
             }
             int totalMatches = 0;
@@ -93,9 +91,6 @@ namespace CompetitionCreator
                 }
             }
 
-
-            if (error) label2.ForeColor = Color.Red;
-            else label2.ForeColor = Color.Black;
             double percentage = 0;
             if (totalMatches > 0)
             {
@@ -149,7 +144,7 @@ namespace CompetitionCreator
         public bool Filter(object modelObject)
         {
             Constraint constraint = (Constraint)modelObject;
-            return state.showConstraints.Contains(constraint) || constraint.error;
+            return GlobalState.showConstraints.Contains(constraint);
         }
 
 
@@ -165,17 +160,17 @@ namespace CompetitionCreator
                 constraintView.Show(Pane, DockAlignment.Bottom, 0.45);
             }
             // Show the correct constraint
-            if (constraint != state.selectedConstraint)
+            if (constraint != GlobalState.selectedConstraint)
             {
-                state.selectedConstraint = constraint;
-                state.Changed();
+                GlobalState.selectedConstraint = constraint;
+                GlobalState.Changed();
             }
         }
 
         private void ConstraintListView_FormClosed(object sender, FormClosedEventArgs e)
         {
             model.OnMyChange -= state_OnMyChange;
-            state.OnMyChange -= state_OnMyChange;
+            GlobalState.OnMyChange -= state_OnMyChange;
 
         }
 
@@ -187,15 +182,15 @@ namespace CompetitionCreator
 
         private void button2_Click(object sender, EventArgs e)
         {
-            state.showConstraints.Clear();
+            GlobalState.showConstraints.Clear();
             foreach (Constraint con in model.constraints)
             {
                 if (con.conflictMatches.Count > 0 || con.conflict_cost >0)
                 {
-                    state.showConstraints.Add(con);
+                    GlobalState.showConstraints.Add(con);
                 }
             }
-            state.Changed();
+            GlobalState.Changed();
         }
     }
 

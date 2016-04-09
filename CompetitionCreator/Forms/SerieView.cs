@@ -37,7 +37,7 @@ namespace CompetitionCreator
             }
             if (comboBox1.Items.Count > 0) comboBox1.SelectedIndex = 0;
             model.OnMyChange += state_OnMyChange;
-            state.OnMyChange += state_OnMyChange;
+            GlobalState.OnMyChange += state_OnMyChange;
             firstHalf = File.ReadAllText(@"html/html_first.html");
             secondHalf = File.ReadAllText(@"html/html_second.html");
             noLatLng = File.ReadAllText(@"html/no_latlng.html");
@@ -123,7 +123,8 @@ namespace CompetitionCreator
             }
             catch (Exception)
             {
-                MessageBox.Show("Error showing html. Possible cause: not internet connection.");
+                Error.AddManualError("Error showing html. Possible cause: no internet connection.");
+                MessageBox.Show("Error showing html. Possible cause: no internet connection.");
             } // do nothing with this
         }
         void UpdateWebBrowser()
@@ -190,7 +191,7 @@ namespace CompetitionCreator
                 teams.Clear();
                 button1.Enabled = (objectListView1.SelectedObjects.Count == 1);
                 button5.Enabled = (objectListView1.SelectedObjects.Count == 1);
-                state.Changed();
+                GlobalState.Changed();
                 //UpdatePouleList();
                 //UpdateTeamList();
                 //UpdateWebBrowser();
@@ -301,6 +302,7 @@ namespace CompetitionCreator
                 if (reeks == null) return;
                 if (reeks.weeks.Count < (reeks.Count - 1) * 2)
                 {
+                    Error.AddManualError("Deze annorama reeks heeft te weinig wedstrijden. ",reeks.Name);
                     MessageBox.Show("Deze annorama reeks heeft te weinig wedstrijden. ");
                     return;
                 }
@@ -417,6 +419,7 @@ namespace CompetitionCreator
             }
             catch (Exception ex)
             {
+                Error.AddManualError("Error occured while optimizing distances.", ex.ToString());
                 MessageBox.Show(ex.ToString());
             }
             model.RenewConstraints();
@@ -427,7 +430,7 @@ namespace CompetitionCreator
         private void SerieView_FormClosed(object sender, FormClosedEventArgs e)
         {
             model.OnMyChange -= state_OnMyChange;
-            state.OnMyChange -= state_OnMyChange;
+            GlobalState.OnMyChange -= state_OnMyChange;
         }
 
         private void objectListView3_DoubleClick(object sender, EventArgs e)
@@ -461,6 +464,7 @@ namespace CompetitionCreator
                             {
                                 newPoule.AddTeam(team);
                             }
+                            model.RenewConstraints();
                             model.Evaluate(null);
                             model.Changed();
                         }

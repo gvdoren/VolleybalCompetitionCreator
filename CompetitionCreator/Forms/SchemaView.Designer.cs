@@ -60,7 +60,7 @@
             this.objectListView1.GridLines = true;
             this.objectListView1.Location = new System.Drawing.Point(6, 6);
             this.objectListView1.Name = "objectListView1";
-            this.objectListView1.Size = new System.Drawing.Size(730, 164);
+            this.objectListView1.Size = new System.Drawing.Size(730, 341);
             this.objectListView1.TabIndex = 0;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
@@ -76,12 +76,12 @@
             // 
             // textBox1
             // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox1.Location = new System.Drawing.Point(13, 426);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
+            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBox1.Size = new System.Drawing.Size(750, 116);
             this.textBox1.TabIndex = 2;
             // 
@@ -107,7 +107,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(742, 176);
+            this.tabPage1.Size = new System.Drawing.Size(742, 353);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Round 1";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -118,7 +118,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(742, 176);
+            this.tabPage2.Size = new System.Drawing.Size(742, 353);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Round 2";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -145,7 +145,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(742, 176);
+            this.tabPage3.Size = new System.Drawing.Size(742, 353);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Round 3";
             this.tabPage3.UseVisualStyleBackColor = true;

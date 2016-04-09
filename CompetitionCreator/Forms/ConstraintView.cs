@@ -21,7 +21,7 @@ namespace CompetitionCreator
             InitializeComponent();
             model.OnMyChange += state_OnMyChange;
             objectListView1.ShowGroups = false;
-            state.OnMyChange += state_OnMyChange;
+            GlobalState.OnMyChange += state_OnMyChange;
             UpdateTabPage2();
             
         }
@@ -49,8 +49,8 @@ namespace CompetitionCreator
             label1.Text = "";
             this.Text = "No conflicts selected";
             richTextBox2.Clear();
-                
-            Constraint constraint = state.selectedConstraint;
+
+            Constraint constraint = GlobalState.selectedConstraint;
             if (constraint != null)
             {
                 objectListView1.SetObjects(constraint.conflictMatches, true);
@@ -98,7 +98,7 @@ namespace CompetitionCreator
         private void ConstraintView_FormClosed(object sender, FormClosedEventArgs e)
         {
             model.OnMyChange -= state_OnMyChange;
-            state.OnMyChange -= state_OnMyChange;
+            GlobalState.OnMyChange -= state_OnMyChange;
         }
     }
 }

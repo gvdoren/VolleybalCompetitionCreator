@@ -200,8 +200,10 @@ namespace CompetitionCreator
                 }
                                 
                 // All group related constraints
-                ConstructGroupConstraintsDay(DayOfWeek.Saturday);
-                ConstructGroupConstraintsDay(DayOfWeek.Sunday);
+                foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
+                {
+                    ConstructGroupConstraintsDay(day);
+                }
                 ConstructGroupConstraintsWeekend();
 
                 // Deze moet als laatste
@@ -215,6 +217,7 @@ namespace CompetitionCreator
                 foreach (Club club in clubs)
                 {
                     constraints.Add(new ConstraintClubTooManyConflicts(club));
+                    constraints.Add(new ConstraintTeamNaming(club));
                 }
 
                 foreach (Poule poule in poules)
@@ -294,6 +297,7 @@ namespace CompetitionCreator
                         }
 
                     } while (added);
+                    Error error = groupCon.GetError();
                     // Als ze allemaal in 1 group zitten, komt er een constraint dat ze in zo weinig mogelijk dagen moeten spelen
                     if (groupCon.GroupA.Count == 0) constraints.Add(new ConstraintNotAllInSameHomeDay(groupCon.GroupB));
                     else if (groupCon.GroupB.Count == 0) constraints.Add(new ConstraintNotAllInSameHomeDay(groupCon.GroupA));
@@ -319,7 +323,6 @@ namespace CompetitionCreator
                     ConstraintGrouping groupCon = new ConstraintGrouping();
                     groupCon.name = "Teams in different groups play on same weekends";
                     groupCon.GroupA.Add(team);
-                    constraints.Add(groupCon);
                     bool added = false;
                     do
                     {
@@ -331,6 +334,8 @@ namespace CompetitionCreator
                             added = true;
                         }
                     } while (added);
+                    Error error = groupCon.GetError();
+                    constraints.Add(groupCon);
                 }
             } while (team != null);
 

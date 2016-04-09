@@ -67,8 +67,9 @@ namespace CompetitionCreator
                 FileInfo fi = new FileInfo(fileName);
                 name = fi.Name;
             }
-            catch
+            catch(Exception ex)
             {
+                Error.AddManualError(string.Format("Error in schema {0}", fileName),ex.ToString());
                 System.Windows.Forms.MessageBox.Show("Error in schema :"+ fileName);
             }
 

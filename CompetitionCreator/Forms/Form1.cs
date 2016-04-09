@@ -62,8 +62,9 @@ namespace CompetitionCreator
                 ListTeam.Add(string.Format("Team {0}",i+1));
             }
             model.OnMyChange += state_OnMyChange;
-            state.OnMyChange += state_OnMyChange;
+            GlobalState.OnMyChange += state_OnMyChange;
             importExport.OpenLastProject(model);
+            GlobalState.Changed();
         }
         public void state_OnMyChange(object source, MyEventArgs e)
         {
@@ -83,6 +84,15 @@ namespace CompetitionCreator
             {
                 string changed = model.stateNotSaved ? "*" : "";
                 this.Text = string.Format("Competition Creator Tool ({0}{1})", model.savedFileName, changed);
+                List<Error> totErrors = new List<Error>(GlobalState.errors);
+                foreach (var con in model.constraints)
+                {
+                    totErrors.AddRange(con.GetErrors());
+                }
+                if(totErrors.Count>0)
+                    this.errorsToolStripMenuItem.ForeColor = Color.Red;
+                else
+                    this.errorsToolStripMenuItem.ForeColor = Color.Black;
             }
         }
 
@@ -325,6 +335,7 @@ namespace CompetitionCreator
                 try
                 {
                     importExport.ImportTeamSubscriptions(model, XDocument.Load(form.GetInputString(), LoadOptions.SetLineInfo | LoadOptions.SetBaseUri).Root);
+                    model.RenewConstraints();
                     model.Evaluate(null);
                     model.Changed();
                 }
@@ -431,6 +442,10 @@ namespace CompetitionCreator
         public void openFileDialog1_FileOk3(object sender, CancelEventArgs e)
         {
             importExport.ImportTeamSubscriptions(model, XDocument.Load(openFileDialog1.FileName, LoadOptions.SetLineInfo|LoadOptions.SetBaseUri).Root);
+            model.RenewConstraints();
+            model.Evaluate(null);
+            model.Changed();
+
         }
 
         private void convertKlvvToCSVToolStripMenuItem_Click(object sender, EventArgs e)
@@ -494,6 +509,7 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             }
             catch (Exception exc)
             {
+                CompetitionCreator.Error.AddManualError("Failed importing ranking.", exc.ToString());
                 MessageBox.Show("Failed importing ranking. Error: " + exc.ToString());
             }
             model.Evaluate(null);
@@ -678,6 +694,7 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 }
                 catch (Exception exc)
                 {
+                    CompetitionCreator.Error.AddManualError("Failed importing ranking. ",exc.ToString());
                     MessageBox.Show("Failed importing ranking. Error: " + exc.ToString());
                 }
                 model.Evaluate(null);
@@ -735,6 +752,18 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             {
                 this.utilitiesToolStripMenuItem.Visible = false;
             }
+            if (model.licenseKey.Feature(Security.LicenseKey.FeatureType.Expert))
+            {
+
+            }
+            else
+            {
+                this.cSVCompetitionToolStripMenuItem.Visible = false;
+                this.conflictPerTypeToolStripMenuItem.Visible = false;
+                this.conflictsPerClubToolStripMenuItem.Visible = false;
+                this.matchescsvToolStripMenuItem1.Visible = false;
+                this.statisticscsvToolStripMenuItem1.Visible = false;
+            }
 
         }
 
@@ -753,6 +782,24 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             schema = new SchemaView(model, state);
             schema.Show(this.dockPanel);
 
+
+        }
+
+        private void errorsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ErrorView errorView = null;
+            foreach (DockContent content in this.dockPanel.Contents)
+            {
+                errorView = content as ErrorView;
+                if (errorView != null)
+                {
+                    errorView.Activate();
+                    return;
+                }
+            }
+            errorView = new ErrorView(model, state);
+            errorView.ShowHint = DockState.DockRight;
+            errorView.Show(this.dockPanel);
 
         }
 

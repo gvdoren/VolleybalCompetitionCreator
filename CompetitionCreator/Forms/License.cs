@@ -53,6 +53,7 @@ namespace CompetitionCreator
         {
             if (textBox1.Text.Length < 40)
             {
+                Error.AddManualError("License key is too small", textBox1.Text);
                 MessageBox.Show("License key is too small");
             }
             else
@@ -70,9 +71,18 @@ namespace CompetitionCreator
                 }
                 else
                 {
+                    Error.AddManualError("License key is invalid", textBox1.Text);
                     MessageBox.Show("License key is invalid");
                 }
             }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            CompetitionCreator.Properties.Settings.Default.LicenseKey = null;
+            CompetitionCreator.Properties.Settings.Default.Save();
+            textBox1.Clear();
+            model.licenseKey = null;
         }
 
     }

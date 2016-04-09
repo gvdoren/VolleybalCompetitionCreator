@@ -44,6 +44,7 @@ namespace CompetitionCreator
                 }
                 else
                 {
+                    Error.AddManualError("Failed adding a team to a poule.", string.Format("{0} contains no null teams while the poule is not full", name));
                     System.Windows.Forms.MessageBox.Show("Inconsistency");
                 }
             }
@@ -111,11 +112,9 @@ namespace CompetitionCreator
             }
             return distance;
         }
-        bool matchesChanged = true;
         public List<Match> matches = new List<Match>();
         public List<Match> CopyMatches(List<Match> matches_org)
         {
-            matchesChanged = true;
             List<Match> matches1 = new List<Match>();
             foreach (Match match in matches_org)
             {
@@ -516,8 +515,8 @@ namespace CompetitionCreator
             int totalScore = score[0,0];
 
             int cycle = 0;
-            List<List<Team>>[] options = new List<List<Team>>[100];
-            for (int i = 0; i < 100; i++) options[i] = new List<List<Team>>();
+            List<List<Team>>[] options = new List<List<Team>>[1000];
+            for (int i = 0; i < 1000; i++) options[i] = new List<List<Team>>();
             while (true)
             {
                 if (cycle++ % 1000 == 0)

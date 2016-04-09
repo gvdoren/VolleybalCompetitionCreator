@@ -21,7 +21,7 @@ namespace CompetitionCreator
             this.state = state;
             InitializeComponent();
             objectListView1.SetObjects(model.teams);
-            state.OnMyChange += new MyEventHandler(state_OnMyChange); 
+            GlobalState.OnMyChange += new MyEventHandler(state_OnMyChange); 
             model.OnMyChange += state_OnMyChange;
         }
         public void state_OnMyChange(object source, MyEventArgs e)
@@ -75,7 +75,7 @@ namespace CompetitionCreator
 
         private void TeamListView_FormClosed(object sender, FormClosedEventArgs e)
         {
-            state.OnMyChange -= new MyEventHandler(state_OnMyChange);
+            GlobalState.OnMyChange -= new MyEventHandler(state_OnMyChange);
             model.OnMyChange -= state_OnMyChange;
         }
 
@@ -88,15 +88,15 @@ namespace CompetitionCreator
                 foreach (Object obj in objectListView1.SelectedObjects)
                 {
                     Team team = (Team)obj;
-                    state.selectedClubs.Clear();
-                    state.selectedClubs.Add(team.club);
+                    GlobalState.selectedClubs.Clear();
+                    GlobalState.selectedClubs.Add(team.club);
                     if (team.poule != null)
                     {
                         constraints.AddRange(team.conflictConstraints);
                     }
-                    state.Changed();
+                    GlobalState.Changed();
                 }
-                state.ShowConstraints(constraints);
+                GlobalState.ShowConstraints(constraints);
             }
         }
     }

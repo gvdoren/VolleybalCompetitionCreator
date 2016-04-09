@@ -24,7 +24,10 @@ namespace CompetitionCreator
             int lineNumber = info.LineNumber;
             int linePosition = info.LinePosition;
             string prefix = filename + "(" + lineNumber.ToString() + "," + linePosition.ToString() + ")\n\n Element '" + element.Name + "' ";
-            MessageBox.Show(prefix + str);
+            CompetitionCreator.Error.AddManualError("Reading the input file failed. ", 
+                                                    "The input file that is read is not conform the expected scheme. Possibly an old file is read that is not conform the current scheme any more. <br/>"+
+                                                    prefix + str);
+            MessageBox.Show("Error reading xml data", prefix + str);
             throw new Exception(prefix + str);
         }
         static void Error(XDocument element, string str)
@@ -34,7 +37,10 @@ namespace CompetitionCreator
             int lineNumber = info.LineNumber;
             int linePosition = info.LinePosition;
             string prefix = filename + "(" + lineNumber.ToString() + "," + linePosition.ToString() + ")\n\n";
-            MessageBox.Show(prefix + str);
+            CompetitionCreator.Error.AddManualError("Reading the input file failed. ", 
+                                                    "The input file that is read is not conform the expected scheme. Possibly an old file is read that is not conform the current scheme any more.<br/>"+
+                                                    prefix + str);
+            MessageBox.Show("Error reading xml data", prefix + str);
             throw new Exception(prefix + str);
         }
         static void Error(XAttribute attribute, string str)
@@ -44,6 +50,9 @@ namespace CompetitionCreator
             int lineNumber = info.LineNumber;
             int linePosition = info.LinePosition;
             string prefix = filename + "(" + lineNumber.ToString() + "," + linePosition.ToString() + ")\n\n Attribute '" + attribute.Name + "'";
+            CompetitionCreator.Error.AddManualError("Reading the input file failed. ", 
+                                                    "The input file that is read is not conform the expected scheme. Possibly an old file is read that is not conform the current scheme any more.<br/>" +
+                                                    prefix + str);
             MessageBox.Show(prefix + str);
             throw new Exception(prefix + str);
 
@@ -714,7 +723,7 @@ namespace CompetitionCreator
                         {
                             conflicts += constr.name + ",";
                         }
-                        writer.WriteLine("{5},{0},{1},{2},{3},{4},{7},{6}", match.datetime, match.poule.fullName, match.homeTeam.name, match.visitorTeam.name, match.homeTeam.group.ToString(), constraint, conflicts, match.homeTeam.sporthal.name.Replace(",", " "));
+                        writer.WriteLine("{5},{0},{1},{2},{3},{4},{7},{8},{6}", match.datetime, match.poule.fullName, match.homeTeam.name, match.visitorTeam.name, match.homeTeam.group.ToString(), constraint, conflicts, match.homeTeam.sporthal.name.Replace(",", " "), match.homeTeam.field.Name);
                     }
                 }
             }
@@ -1018,6 +1027,7 @@ namespace CompetitionCreator
             }
             catch (Exception exc)
             {
+                CompetitionCreator.Error.AddManualError("Loading competition failed.", string.Format("Project '{0}' could not be opened. The XML might not be correct, or the syntax is of an previous version. \n Exception: {1}", filename, exc.ToString()));
                 MessageBox.Show(string.Format("Project '{0}' could not be opened. The XML might not be correct, or the syntax is of an previous version. \n Exception: {1}", filename, exc.ToString()));
             }
         }
@@ -1264,9 +1274,6 @@ namespace CompetitionCreator
                 }
             }
             CalculateDistancesSporthalls(model);
-            model.RenewConstraints();
-            model.Evaluate(null);
-            model.Changed();
         }
 
         public void ImportCSV(Model model, string fileName)

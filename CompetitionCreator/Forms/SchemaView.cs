@@ -47,14 +47,14 @@ namespace CompetitionCreator
             objectListView2.ShowGroups = false;
             objectListView3.ShowGroups = false;
             objectListView4.ShowGroups = false;
-            if (model.licenseKey.Feature(Security.LicenseKey.FeatureType.Expert))
-            {
-                textBox1.Visible = true;
-            }
-            else 
-            {
-                textBox1.Visible = false;
-            }
+//            if (model.licenseKey.Feature(Security.LicenseKey.FeatureType.Expert))
+//            {
+//                textBox1.Visible = true;
+//            }
+//            else 
+//            {
+//                textBox1.Visible = false;
+//            }
         }
         private void UpdateForm(int schemaNr)
         {
@@ -82,8 +82,9 @@ namespace CompetitionCreator
                     tabControl1.TabPages.Add(tab);
 
                 //objectListView1.AllColumns.Clear();
-                view.BeginUpdate();
+                //view.BeginUpdate();
                 view.Columns.Clear();
+                view.ClearObjects();
                 List<int> matchnumbers = new List<int>();
                 for (int i = 1; i <= selectedSchema.weeks[0].matches.Count; i++)
                 {
@@ -93,7 +94,6 @@ namespace CompetitionCreator
                 foreach (var week in selectedSchema.weeks.Where(w => w.Value.round == round))
                 {
                     BrightIdeasSoftware.OLVColumn olvColumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-                    view.Columns.Add(olvColumn);
                     olvColumn.AspectGetter = new DelegateSchemaObject(week.Value).getter;
                     olvColumn.IsEditable = false;
                     olvColumn.CellPadding = null;
@@ -102,9 +102,10 @@ namespace CompetitionCreator
                     olvColumn.Width = 45;
                     olvColumn.AutoResize(ColumnHeaderAutoResizeStyle.None);
                     //olvColumn.AspectName = "weekNrString";
+                    view.Columns.Add(olvColumn);
                 }
                 view.BuildList(true);
-                view.EndUpdate();
+                //view.EndUpdate();
             }
             Analysis();
         }
@@ -115,11 +116,15 @@ namespace CompetitionCreator
             int[] matchCount = new int[selectedSchema.teamCount];
             int[] maxCount = new int[selectedSchema.teamCount];
             bool[] played = new bool[selectedSchema.teamCount];
+            int[] homeCount = new int[selectedSchema.teamCount];
+            int[] visitCount = new int[selectedSchema.teamCount];
             for (int i = 0; i < selectedSchema.teamCount; i++)
             {
                 homeVisit[i] = 0;
                 matchCount[i] = 1;
                 maxCount[i] = 0;
+                visitCount[i] = 0;
+                homeCount[i] = 0;
             }
             foreach(SchemaWeek week in selectedSchema.weeks.Values)
             {
@@ -131,6 +136,8 @@ namespace CompetitionCreator
                 {
                     played[match.team1] = true;
                     played[match.team2] = true;
+                    homeCount[match.team1]++;
+                    visitCount[match.team2]++;
                     if (homeVisit[match.team1] != 1)
                     {
                         homeVisit[match.team1] = 1;
@@ -149,13 +156,20 @@ namespace CompetitionCreator
                     if (matchCount[i] > maxCount[i]) maxCount[i] = matchCount[i];
                     if (played[i] == false)
                     {
-                        textBox1.AppendText("Team " + (i + 1).ToString() + " speelt niet elke week!!\n");
+                        textBox1.AppendText("Team " + (i + 1).ToString() + " speelt niet elke week!!" + Environment.NewLine);
                     }
                 }
             }
             for (int i = 0; i < selectedSchema.teamCount; i++)
             {
-                textBox1.AppendText("Team " + (i + 1).ToString() + " speelt " + maxCount[i].ToString() + " achter elkaar thuis/uit.\n");
+                if (visitCount[i] != homeCount[i])
+                {
+                    textBox1.AppendText("Team " + (i + 1).ToString() + " speelt " + homeCount[i] + "thuis, en " + visitCount[i] + "uit" + Environment.NewLine);
+                }
+            }
+            for (int i = 0; i < selectedSchema.teamCount; i++)
+            {
+                textBox1.AppendText("Team " + (i + 1).ToString() + " speelt " + maxCount[i].ToString() + " achter elkaar thuis/uit."+Environment.NewLine);
             }
  
         }
@@ -185,7 +199,9 @@ namespace CompetitionCreator
             getter = delegate(object rowObject)
             {
                 int matchNr = (int)rowObject;
-                return (week.matches[matchNr-1].team1+1).ToString() + " - " + (week.matches[matchNr-1].team2+1).ToString();
+                if (week.matches.Count < matchNr)
+                    return "-";
+                return (week.matches[matchNr - 1].team1 + 1).ToString() + " - " + (week.matches[matchNr - 1].team2 + 1).ToString();
             };
         }
 

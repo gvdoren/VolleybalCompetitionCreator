@@ -25,8 +25,8 @@ namespace CompetitionCreator
             this.state = state;
             InitializeComponent();
             //this.tabControl2.Controls.Remove(this.tabPage1); // Initially do not show this, only show when used
-            state.OnMyChange += new MyEventHandler(state_OnMyChange);
-            if (state.selectedClubs.Count > 0) SetClub(state.selectedClubs[0]);
+            GlobalState.OnMyChange += new MyEventHandler(state_OnMyChange);
+            if (GlobalState.selectedClubs.Count > 0) SetClub(GlobalState.selectedClubs[0]);
             objectListView2.SetObjects(model.constraints.FindAll(c => (c as DateConstraint) != null && c.club == club));
 
                         
@@ -95,9 +95,9 @@ namespace CompetitionCreator
                 //    return;
                 //}
 
-                if (state.selectedClubs.Count > 0 && state.selectedClubs[0] != club)
+                if (GlobalState.selectedClubs.Count > 0 && GlobalState.selectedClubs[0] != club)
                 {
-                    SetClub(state.selectedClubs[0]);
+                    SetClub(GlobalState.selectedClubs[0]);
                 }
             }
         }
@@ -267,19 +267,21 @@ namespace CompetitionCreator
 
         private void ClubConstraints_FormClosed(object sender, FormClosedEventArgs e)
         {
-            state.OnMyChange -= new MyEventHandler(state_OnMyChange);
+            GlobalState.OnMyChange -= new MyEventHandler(state_OnMyChange);
             //model.OnMyChange -= state_OnMyChange;
 
         }
 
         private void objectListView1_CellEditFinishing(object sender, CellEditEventArgs e)
         {
+            model.RenewConstraints();
             model.Evaluate(null);
             model.Changed();
         }
 
         private void objectListView1_CellClick(object sender, CellClickEventArgs e)
         {
+            model.RenewConstraints();
             model.Evaluate(null);
             model.Changed();
 
@@ -426,6 +428,7 @@ namespace CompetitionCreator
                 }
             }
             UpdateSporthalForm();
+            model.RenewConstraints();
             model.Evaluate(null);
             model.Changed();
         }
