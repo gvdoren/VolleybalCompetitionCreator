@@ -190,7 +190,7 @@ namespace CompetitionCreator
                 poule = null;
                 teams.Clear();
                 button1.Enabled = (objectListView1.SelectedObjects.Count == 1);
-                button5.Enabled = (objectListView1.SelectedObjects.Count == 1);
+                button5.Enabled = (objectListView1.SelectedObjects.Count >= 1);
                 GlobalState.Changed();
                 //UpdatePouleList();
                 //UpdateTeamList();
@@ -266,7 +266,7 @@ namespace CompetitionCreator
             } else
                 return false;
         }
-        private void createPoule(int teamCount, AnnoramaReeks reeks, Schema schema)
+        private void createPoule(Serie serie, int teamCount, AnnoramaReeks reeks, Schema schema)
         {
             char Letter = 'A';
             List<Poule> poules = serie.poules.ToList();
@@ -309,7 +309,7 @@ namespace CompetitionCreator
                 Schema schema = null;
                 if(selectSchema(reeks.Count, ref schema))
                 {
-                    createPoule(reeks.Count, reeks, schema);
+                    createPoule(serie, reeks.Count, reeks, schema);
                 }
                 else return;
                 model.RenewConstraints();
@@ -495,13 +495,27 @@ namespace CompetitionCreator
 
         private void button6_Click(object sender, EventArgs e)
         {
+            DivideTeams(serie);
+        }
+        private void DivideTeams(Serie serie)
+        {
+            int maxTeams = 0;
+            foreach (Poule p in serie.poules)
+            {
+                maxTeams += p.maxTeams;
+            }
+            if (serie.teams.Count > maxTeams)
+            {
+                System.Windows.Forms.MessageBox.Show(string.Format("Number of teams ({0}) past niet in het aantal poules", serie.teams.Count));
+                return;
+            }
+            // alles leegmaken
             List<Team> tms = new List<Team>();
             foreach (Team team in serie.teams)
             {
                 if (team.poule != null) team.poule.RemoveTeam(team);
                 tms.Add(team);
             }
-            // 
             tms.Sort(delegate(Team t1, Team t2)
             {
                 if (t1.Ranking != t2.Ranking)
@@ -523,40 +537,55 @@ namespace CompetitionCreator
                 }
                 return 0;
             });
-            // Eerst alles leeg
-            int maxTeams = 0;
-            foreach (Poule p in serie.poules)
-            {
-                maxTeams += p.maxTeams;
-            }
-            // dan alles opnieuw indelen
-            int remainingTeams = serie.teams.Count;
-            int remainingPoules = serie.poules.Count;
-
-
-            if (remainingTeams > maxTeams)
-            {
-                System.Windows.Forms.MessageBox.Show(string.Format("Number of teams ({0}) past niet in het aantal poules", remainingTeams));
-                return;
-            }
             List<Poule> poules = new List<Poule>();
             poules.AddRange(serie.poules);
             poules.Sort(delegate(Poule p1, Poule p2)
             {
                 return p1.name.CompareTo(p2.name);
             });
-            int it = 0;
+            // Bereken in welke minimale poule ze moeten zitten (indien meerdere teams van 1 club)
+            Dictionary<Poule, List<Team>> pouleteams = new Dictionary<Poule, List<Team>>();
+            foreach(Poule poule in poules)
+            {
+                pouleteams[poule] = new List<Team>();
+            }
+            foreach(Team team in tms.Reverse<Team>())
+            {
+                foreach(Poule poule in poules.Reverse<Poule>())
+                {
+                    if(pouleteams[poule].Exists( t => t.club == team.club) == false)
+                    {
+                        pouleteams[poule].Add(team);
+                        break;
+                    }
+                }
+            }
+            // dan alles opnieuw indelen
+            int remainingPoules = serie.poules.Count;
             foreach (Poule p in poules)
             {
-                double avg = Math.Ceiling(((double)remainingTeams) / remainingPoules);
-                for (int i = 0; i < avg; i++)
+                double avg = Math.Ceiling(((double)tms.Count) / remainingPoules);
+                foreach (Team team in pouleteams[p])
                 {
-                    p.AddTeam(tms[it++]);
-                    remainingTeams--;
+                    p.AddTeam(team);
+                    tms.Remove(team);
+                }
+                for (int i = p.TeamCount; i < avg; i++)
+                {
+                    int index = tms.FindIndex(t1 => p.teams.Exists(t2 => t2.club == t1.club) == false);
+                    if (index == -1)
+                        index = 0; // teams of dezelfde club moeten bij elkaar (bijv. maar 1 poule)
+                    p.AddTeam(tms[index]);
+                    // verwijder team uit de lijst van minimale plekken
+                    foreach (Poule poule in poules)
+                    {
+                        if (pouleteams[poule].Contains(tms[index]))
+                            pouleteams[poule].Remove(tms[index]);
+                    }
+                    tms.RemoveAt(index);
                 }
                 remainingPoules--;
             }
-
             model.RenewConstraints();
             model.Evaluate(null);
             model.Changed();
@@ -613,9 +642,14 @@ namespace CompetitionCreator
                 Schema schema = null;
                 if (selectSchema(reeks.Count, ref schema))
                 {
-                    while (serie.teams.Count > serie.poules.Sum(p => p.maxTeams))
+                    foreach (Serie serie in objectListView1.SelectedObjects)
                     {
-                        createPoule(reeks.Count, reeks, schema);
+                        while (serie.teams.Count > serie.poules.Sum(p => p.maxTeams))
+                        {
+                            createPoule(serie, reeks.Count, reeks, schema);
+                        }
+                        // Divide teams
+                        DivideTeams(serie);
                     }
                 }
                 else return;

@@ -168,6 +168,11 @@ namespace CompetitionCreator
         [DefaultValue(10000)]
         public int NoPouleAssignedCost { get; set; }
 
+        [Category("Setting")]
+        [DisplayName("Setting.EvenOddToGroupXY")]
+        [DefaultValue(true)]
+        public bool TranslateEvenOddToGroupXY { get; set; }
+
         [Category("File locations")]
         [DisplayName("Default registrations url")]
         [Description("Hier kun je aangeven waar de inschrijvingen vandaan moeten komen.")]

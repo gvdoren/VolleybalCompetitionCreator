@@ -209,7 +209,7 @@ namespace CompetitionCreator
                                     weeks = new List<MatchWeek>(previousRoundList);
                                     weeks.AddRange(currentRoundList);
                                     weeks.AddRange(nextRoundList);
-                                    SnapShotIfImproved(model);
+                                    SnapShotIfImproved(model,false);
                                     if (TotalRelatedConflictsLast < TotalRelatedConflictsSnapshot + optimisationThreshold)
                                     {
                                         if (optimizationLevel > 0) OptimizeHomeVisitor(model, optimizationLevel > 1);
@@ -249,7 +249,7 @@ namespace CompetitionCreator
             }
             model.EvaluateRelatedConstraints(this);
             TotalRelatedConflictsLast = model.TotalRelatedConflicts(this);
-            if (TotalRelatedConflictsLast < TotalRelatedConflictsSnapshot || (equalAllowed && TotalRelatedConflictsLast == TotalRelatedConflictsSnapshot))
+            if (TotalRelatedConflictsLast <= TotalRelatedConflictsSnapshot)
             {
                 // check based on a full check:
                 model.Evaluate(this);
@@ -320,7 +320,7 @@ namespace CompetitionCreator
             {
                 int index = weeks.Count;
                 weeks.AddRange(lastWeeks);
-                SnapShotIfImproved(model);
+                SnapShotIfImproved(model,false);
                 weeks.RemoveRange(index, lastWeeks.Count);
                 if (intf.Cancelled())
                 {
@@ -410,7 +410,7 @@ namespace CompetitionCreator
                                 if (j != i)
                                 {
                                     Swap(teams, i, j);
-                                    SnapShotIfImproved(model);
+                                    SnapShotIfImproved(model,false);
                                     Swap(teams, i, j);
                                 }
                                 if (intf.Cancelled()) break;
@@ -630,7 +630,7 @@ namespace CompetitionCreator
                     if (count > 1000)
                         break;
                     teams = list;
-                    SnapShotIfImproved(model, true);
+                    SnapShotIfImproved(model, false);
                     //SnapShot(model);
                     //teams = resultTeams;
                     //return;
@@ -707,7 +707,7 @@ namespace CompetitionCreator
             }
             else
             {
-                SnapShotIfImproved(model);
+                SnapShotIfImproved(model, false);
                 if (intf.Cancelled())
                 {
                     //throw new Exception("Cancelled");
@@ -801,7 +801,7 @@ namespace CompetitionCreator
                     if (match.conflict_cost > compareTo)
                     {
                         SwitchHomeTeamVisitorTeam(model, match);
-                        if (SnapShotIfImproved(model) == false)
+                        if (SnapShotIfImproved(model, false) == false)
                         { // switch back
                             SwitchHomeTeamVisitorTeam(model, match);
                         }
@@ -860,7 +860,7 @@ namespace CompetitionCreator
                         Match m = selectedMatches[i];
                         m.weekIndex = indexes[(int)sch[i]];
                     }
-                    SnapShotIfImproved(model);
+                    SnapShotIfImproved(model,false);
                     if (TotalRelatedConflictsLast < TotalRelatedConflictsSnapshot + optimisationThreshold) // kans nog aanwezig op goede score
                     {
                         if (optimizationLevel > 1)
@@ -961,7 +961,7 @@ namespace CompetitionCreator
                                             match2.weekIndex = index2;
                                             match3.weekIndex = index;
                                             match4.weekIndex = index;
-                                            SnapShotIfImproved(model);
+                                            SnapShotIfImproved(model,false);
                                             if (TotalRelatedConflictsLast < TotalRelatedConflictsSnapshot + optimisationThreshold)
                                             {
                                                 if (OptimizeHomeVisitor(model, optimizationLevel > 1))
@@ -1056,7 +1056,7 @@ namespace CompetitionCreator
                                                 match_1.weekIndex = index;
                                                 match_2.weekIndex = index;
                                                 match_3.weekIndex = index;
-                                                SnapShotIfImproved(model);
+                                                SnapShotIfImproved(model,false);
                                                 if (TotalRelatedConflictsLast < TotalRelatedConflictsSnapshot + optimisationThreshold)
                                                 {
                                                     if (OptimizeHomeVisitor(model, optimizationLevel > 1))

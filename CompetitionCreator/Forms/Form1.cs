@@ -286,22 +286,29 @@ namespace CompetitionCreator
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            InputForm form = new InputForm("Creeer een nieuw seizoen", "Geef een jaartal", DateTime.Now.Year.ToString());
-            
-            form.ShowDialog();
-            if (form.Result)
+            int year = model.licenseKey.ValidUntil().Year;
+            if (year == 1)
             {
-                int year;
-                bool ok = int.TryParse(form.GetInputString(), out year);
-                if (ok)
-                {
-                    Model newModel = new Model(year);
-                    model.Changed(newModel);
-                    newModel.Evaluate(null);
-                    newModel.Changed();
-                }
+                year = DateTime.Now.Year + 1;
             }
-
+            List<Selection> list = new List<Selection>();
+            for(int i = year-3; i <= year; i++)
+            {
+                Selection sel = new Selection(i.ToString(), i);
+                if (i == year-1) sel.selected = true;
+                list.Add(sel);
+            }
+            SelectionDialog diag = new SelectionDialog(list);
+            diag.Text = "Create a new season. Select the year:";
+            diag.ShowDialog();
+            if (diag.Ok)
+            {
+                year = diag.Selection.value;
+                Model newModel = new Model(year);
+                model.Changed(newModel);
+                newModel.Evaluate(null);
+                newModel.Changed();
+            }
         }
         private void teamsToolStripMenuItem_Click(object sender, EventArgs e)
         {

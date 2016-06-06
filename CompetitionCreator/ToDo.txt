@@ -8,51 +8,34 @@
    - Probeer de pijn te verdelen (XY groups opt, evt. daarna met HomeVisit opt).
    - Indien meerdere poules kan het helpen ze naar een andere poule te verplaatsen
 
-Testen:
-- VVB: 
-   * Inlezen op de VVB site
-   * VVB constraints kunnen editen
+Verbeteringen mbt VVB:
+- Competitie matchen inlezen VVB: expliciet serie-id bij de XML
+- Gecombineerde XML voor alle inschrijvingen van limburg
 
+Ideeen:
+- Reserve weekenden mee opnemen in schema. Als je schema mag wijzigen kan dit ook meegenomen worden (en oude manier om individuele wijzigen door te voeren kan dan weg)
+- Overzichtsscherm met matchen, filteren op conflict matchen, met reden erachter. Veel intuitiever dan huidige scherm.
 
 High:
-- Robuster maken van import competitie.
+- Sortering weken in poule view
+- Vertraging GUI
+- Robuster maken van import competitie (competitie echt als xml invoeren)
 - Optimize: schema ipv weeks. Dit laat ook andere optimalisaties toe
 - automatisch saven om de 10 minuten.
-- automatic divide when poules do not have the same size (e.g. 10+12)
 
 - diagnostics toevoegen
    - Logging, zodat de log opgestuurd kan worden. Ook een viewer om het te bekijken.
-- ImportCompetition definitie. Iets anders ipv XML based.
 - Documentatie:
   - formaat types ()
      * xsd schema
   - gebruikers handleiding
-
 
 Medium:
 - obfuscator
 - reeks met een 2 toevoegen: a2, b2
 - schema editor/viewer
 
-
 Low:
-- losse wedstrijd verplaatsingen (op reserve weken). Tweede phase optimalisatie?
+- manueel losse wedstrijd verplaatsen. Tweede phase optimalisatie?
 - Een net viewModel introduceren
 
-
-KLVV-site:
-- A&B -> X&Y helemaal doorvoeren
-- Update model-site-import competitie
-
-
-
-
-
-
-
-
-Syntax-changes:
-1.0.0.83:
- - Subscriptions: TeamName --> Name
-
- 

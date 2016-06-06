@@ -79,10 +79,10 @@ namespace CompetitionCreator
 
         private void button3_Click(object sender, EventArgs e)
         {
-            CompetitionCreator.Properties.Settings.Default.LicenseKey = null;
+            CompetitionCreator.Properties.Settings.Default.LicenseKey = "";
             CompetitionCreator.Properties.Settings.Default.Save();
             textBox1.Clear();
-            model.licenseKey = null;
+            model.licenseKey = new Security.LicenseKey(CompetitionCreator.Properties.Settings.Default.LicenseKey);
         }
 
     }

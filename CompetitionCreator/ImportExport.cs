@@ -723,7 +723,7 @@ namespace CompetitionCreator
                         {
                             conflicts += constr.name + ",";
                         }
-                        writer.WriteLine("{5},{0},{1},{2},{3},{4},{7},{8},{6}", match.datetime, match.poule.fullName, match.homeTeam.name, match.visitorTeam.name, match.homeTeam.group.ToString(), constraint, conflicts, match.homeTeam.sporthal.name.Replace(",", " "), match.homeTeam.field.Name);
+                        writer.WriteLine("{5},{0},{1},{2},{3},{4},{7},{8},{6}", match.datetime, match.poule.fullName, match.homeTeam.name, match.visitorTeam.name, match.homeTeam.group.ToString(), constraint, conflicts, match.homeTeam.sporthal.name.Replace(",", " "), match.homeTeam.FieldName);
                     }
                 }
             }
@@ -1081,8 +1081,8 @@ namespace CompetitionCreator
                             {
                                 sporthallName = StringAttribute(sporthalAlt, "Name");
                                 id = IntegerAttribute(sporthalAlt, "Id");
-                                latAttrString = StringOptionalAttribute(sporthalAlt, null, "Latitude");
-                                lngAttrString = StringOptionalAttribute(sporthalAlt, null, "Longitude");
+                                latAttrString = StringOptionalAttribute(sporthalAlt, null, "Latitude", "latitude");
+                                lngAttrString = StringOptionalAttribute(sporthalAlt, null, "Longitude", "longitude");
                                 if (sporthallName != "-")
                                     break;
                             }
@@ -1132,10 +1132,29 @@ namespace CompetitionCreator
 
                     //clear original dates (for re-reading the subscriptions)
                     sp.NotAvailable.Clear();
-                    foreach (var date in Element(sporthal, "NotAvailable").Elements("Date"))
+                    if (OptionalElement(sporthal, "NotAvailables") != null)
                     {
-                        DateTime dt = DateTime.Parse(date.Value.ToString());
-                        if (sp.NotAvailable.Contains(dt) == false) sp.NotAvailable.Add(dt);
+                        foreach (var notAvailable in Element(sporthal, "NotAvailables").Elements("NotAvailable"))
+                        {
+                            string from = notAvailable.Attribute("from").Value;
+                            string until = notAvailable.Attribute("until").Value;
+                            DateTime dtFrom = DateTime.Parse(from);
+                            DateTime dtUntil = DateTime.Parse(until);
+                            while(dtFrom < dtUntil)
+                            {
+                               
+                                if (sp.NotAvailable.Contains(dtFrom) == false) sp.NotAvailable.Add(dtFrom);
+                                dtFrom = dtFrom.AddDays(1);
+                            }
+                        }
+                    }
+                    else if(OptionalElement(sporthal,"NotAvailable") != null)
+                    {
+                        foreach (var date in Element(sporthal, "NotAvailable").Elements("Date"))
+                        {
+                            DateTime dt = DateTime.Parse(date.Value.ToString());
+                            if (sp.NotAvailable.Contains(dt) == false) sp.NotAvailable.Add(dt);
+                        }
                     }
                     if (cl.sporthalls.Contains(sp) == false) cl.sporthalls.Add(sp);
                 }
@@ -1194,12 +1213,21 @@ namespace CompetitionCreator
                         bool ok = double.TryParse(extraTimeString, NumberStyles.Number, CultureInfo.InvariantCulture, out extraTime);
                         if (ok) serie.extraTimeBefore = extraTime;
                     }
-                    string EvenOdd = StringOptionalAttribute(team, "EvenOdd");
+                    string EvenOdd = StringOptionalAttribute(team, null, "EvenOdd");
                     if (EvenOdd != null)
                     {
-                        te.EvenOdd = Team.WeekRestrictionEnum.All;
-                        if (EvenOdd == "Even") te.EvenOdd = Team.WeekRestrictionEnum.Even;
-                        if (EvenOdd == "Odd") te.EvenOdd = Team.WeekRestrictionEnum.Odd;
+                        if (MySettings.Settings.TranslateEvenOddToGroupXY)
+                        {
+                            te.group = TeamGroups.NoGroup;
+                            if (EvenOdd == "Even") te.group = TeamGroups.GroupX;
+                            if (EvenOdd == "Odd") te.group = TeamGroups.GroupY;
+                        }
+                        else
+                        {
+                            te.EvenOdd = Team.WeekRestrictionEnum.All;
+                            if (EvenOdd == "Even") te.EvenOdd = Team.WeekRestrictionEnum.Even;
+                            if (EvenOdd == "Odd") te.EvenOdd = Team.WeekRestrictionEnum.Odd;
+                        }
                     }
                     te.email = StringOptionalAttribute(team, "ContactEmail");
                     // VVB hack: can be removed.
@@ -1218,7 +1246,7 @@ namespace CompetitionCreator
                         }
                     }*/
                     int sporthalId = IntegerAttribute(team, "SporthallId");
-                    string sporthallName = StringAttribute(team, "SporthallName");
+                    //string sporthallName = StringAttribute(team, "SporthallName");
 
                     SporthallAvailability sporthall = cl.sporthalls.Find(s => s.sporthall.id == sporthalId && s.teamId == id);
                     if (sporthall == null)
@@ -1748,17 +1776,50 @@ namespace CompetitionCreator
             StreamWriter writer = new StreamWriter(filename);
             XDocument doc = XDocument.Load(@"http://vvb.volleyadmin.be/services/wedstrijden_xml.php", LoadOptions.SetLineInfo | LoadOptions.SetBaseUri);
             XElement kalender = Element(doc, "kalender");
+            // Create mapping to known series
+            Dictionary<string, Serie> series = new Dictionary<string, Serie>();
             foreach (XElement wedstrijd in kalender.Elements("wedstrijd"))
             {
+                string poule = StringElement(wedstrijd, "reeks");
+                int thuisploegId = IntegerElement(wedstrijd, "thuisploeg_id");
+                string stamnummer = StringElement(wedstrijd, "stamnummer_thuisclub");
+                Team team = model.teams.Find(t => t.Id == thuisploegId && t.club.Stamnumber == stamnummer);
+                if(team != null)
+                {
+                    if(series.ContainsKey(poule))
+                    { // check to be sure
+                        if(team.serie.id != series[poule].id)
+                        {
+                            CompetitionCreator.Error.AddManualError("Inconsistent data ",
+                                        "Team id "+thuisploegId+" has a serie id "+team.serie.id+" that is different from another team in that poule ("+poule+"), other serie id: "+series[poule].id);
+                            MessageBox.Show("Team id " + thuisploegId + " has a serie id " + team.serie.id + " that is different from another team in that poule (" + poule + "), other serie id: " + series[poule].id);
 
+                        }
+                    }
+                    else
+                    {
+                        series.Add(poule, team.serie);
+                    }
+                }
+            }
+            foreach (XElement wedstrijd in kalender.Elements("wedstrijd"))
+            {
+                string reeks = "VVB";
+                string reeksId = "1000000";
+                string pouleId = "-1";
                 string aanvangsuur = StringElement(wedstrijd, "aanvangsuur");
                 string datum = StringElement(wedstrijd, "datum");
                 string thuisploeg = StringElement(wedstrijd, "thuisploeg");
                 string bezoekersploeg = StringElement(wedstrijd, "bezoekersploeg");
                 string sporthal = StringElement(wedstrijd, "sporthal");
                 string poule = StringElement(wedstrijd, "reeks");
-                int thuisploegId = 1000000 + IntegerElement(wedstrijd, "thuisploeg_id");
-                int bezoekersploegId = 1000000 + IntegerElement(wedstrijd, "bezoekersploeg_id");
+                if(series.ContainsKey(poule))
+                {
+                    reeks = series[poule].name;
+                    reeksId = series[poule].id.ToString();
+                }
+                int thuisploegId = IntegerElement(wedstrijd, "thuisploeg_id");
+                int bezoekersploegId = IntegerElement(wedstrijd, "bezoekersploeg_id");
                 string stamnummer_thuisclub = StringElement(wedstrijd, "stamnummer_thuisclub");
                 string stamnummer_bezoekersclub = StringElement(wedstrijd, "stamnummer_bezoekersclub");
                 string thuisclubname = "VVB";
@@ -1782,7 +1843,7 @@ namespace CompetitionCreator
                 sporthal = sporthal.Replace(",", " ");
                 int sporthalId = -1;
                 writer.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15}",
-                    "VVB", "1000000", poule, "-1", thuisploeg, thuisploegId, bezoekersploeg, bezoekersploegId, sporthal, sporthalId, date.ToShortDateString(), aanvangsuur, thuisclubname, thuisclubId, bezoekersclubname, bezoekersclubId);
+                    reeks, reeksId, poule, pouleId, thuisploeg, thuisploegId, bezoekersploeg, bezoekersploegId, sporthal, sporthalId, date.ToShortDateString(), aanvangsuur, thuisclubname, thuisclubId, bezoekersclubname, bezoekersclubId);
             }
             writer.Close();
         }
