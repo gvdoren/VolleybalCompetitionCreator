@@ -44,6 +44,7 @@ namespace CompetitionCreator
         }
         public MatchWeek(MatchWeek week)
         {
+            this.round = week.round;
             this.dayOverruled = week.dayOverruled;
             this.date = week.date;
             CalculateMonday();

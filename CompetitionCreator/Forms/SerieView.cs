@@ -278,10 +278,11 @@ namespace CompetitionCreator
             List<AnnoramaWeek> weeks = reeks.weeks;
             Poule poule = new Poule(Letter.ToString(), teamCount, serie);
             // Create the week lists
-            int k = 0;
-            while (k < reeks.weeks.Count)
+            int k = 1;
+            while (k <= reeks.weeks.Count)
             {
-                poule.weeks.Add(reeks.weeks[k].week);
+                int index = reeks.weeks.FindIndex(w => w.weekNr == k);
+                poule.weeks.Add(reeks.weeks[index].week);
                 k++;
             }
             if (schema == null)

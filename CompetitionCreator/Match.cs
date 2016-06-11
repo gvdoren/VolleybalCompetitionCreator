@@ -6,15 +6,26 @@ using System.Diagnostics;
 
 namespace CompetitionCreator
 {
-    public class Match: ConstraintAdmin
+    public class Match : ConstraintAdmin
     {
-        public int weekIndex = -1;
-        private int weekIndexIndividual = -1;
-        public DateTime datetime 
+        public string ConflictString
         {
             get
             {
-                DateTime date= Week.PlayTime(homeTeam.defaultDay);
+                string str = "";
+                foreach(Constraint con in conflictConstraints)
+                {
+                    str += con.Title+" ";
+                }
+                return str;
+            }
+        }
+        public int weekIndex = -1;
+        public DateTime datetime
+        {
+            get
+            {
+                DateTime date = Week.PlayTime(homeTeam.defaultDay);
                 date = date.AddHours(homeTeam.defaultTime.Hours);
                 date = date.AddMinutes(homeTeam.defaultTime.Minutes);
                 return date;
@@ -65,17 +76,18 @@ namespace CompetitionCreator
                 }
             }
         }
-                
+
         private Time time;
-        public Time Time { 
-            get 
+        public Time Time
+        {
+            get
             {
-                return homeTeam.defaultTime; 
+                return homeTeam.defaultTime;
             }
-            set 
+            set
             {
                 time = value;
-            } 
+            }
         }
         public Team homeTeam { get { return poule.teams[homeTeamIndex]; } }
         public Team visitorTeam { get { return poule.teams[visitorTeamIndex]; } }
@@ -85,13 +97,15 @@ namespace CompetitionCreator
             {
                 // correct for individual corrections
                 int index = weekIndex;
-                if (weekIndexIndividual >= 0) index = weekIndexIndividual;
                 return poule.weeks[index];
             }
         }
 
         public int homeTeamIndex;
         public int visitorTeamIndex;
+        public UInt32 homeTeamMask { get { const UInt32 one = 1; return one << homeTeamIndex; } }
+        public UInt32 visitorTeamMask { get { const UInt32 one = 1; return one << visitorTeamIndex; } }
+        public UInt32 matchMask { get { return homeTeamMask | visitorTeamMask; } }
         public Poule poule;
         public Serie serie;
         public bool RealMatch()
@@ -109,7 +123,6 @@ namespace CompetitionCreator
         public Match(Match match)
         {
             this.weekIndex = match.weekIndex;
-            this.weekIndexIndividual = match.weekIndexIndividual;
             this.homeTeamIndex = match.homeTeamIndex;
             this.visitorTeamIndex = match.visitorTeamIndex;
             this.serie = match.serie;
@@ -117,42 +130,6 @@ namespace CompetitionCreator
             this.conflict = match.conflict;
             this.conflict_cost = match.conflict_cost;
             this.time = match.time;
-        }
-        public void OptimizeIndividual(Model model)
-        {
-            if (conflict_cost == 0 && weekIndexIndividual < 0) return;
-            if (weekIndexIndividual>=0)
-            { // try to get it back in the standard week 
-                int temp = weekIndexIndividual;
-                weekIndexIndividual = -1;
-                if (poule.SnapShotIfImproved(model) == false)
-                {
-                    weekIndexIndividual = temp;
-                }
-            }
-            List<MatchWeek> weeks = null;
-            List<MatchWeek> weeksCopy = weeks.Where(w => w.round == weeks[weekIndex].round).ToList();
-            // Find an alternative week
-            foreach(Match m in poule.matches)
-            {
-                if (m.RealMatch())
-                {
-                    if (m.homeTeamIndex == homeTeamIndex || m.visitorTeamIndex == homeTeamIndex ||
-                       m.homeTeamIndex == visitorTeamIndex || m.visitorTeamIndex == visitorTeamIndex)
-                    {
-                        weeksCopy.Remove(m.Week);
-                    }
-                }
-            }
-            foreach (MatchWeek we in weeksCopy)
-            {
-                int temp1 = weekIndexIndividual;
-                weekIndexIndividual = weeks.FindIndex(w => w == we);
-                if (poule.SnapShotIfImproved(model, false) == false)
-                {
-                    weekIndexIndividual = temp1;
-                }
-            }
         }
     }
 }

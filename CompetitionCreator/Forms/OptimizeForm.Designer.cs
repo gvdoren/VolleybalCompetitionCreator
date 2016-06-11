@@ -45,8 +45,8 @@
             this.button6 = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -77,12 +77,12 @@
             this.importedColumn});
             this.objectListView1.FullRowSelect = true;
             this.objectListView1.GridLines = true;
-            this.objectListView1.Location = new System.Drawing.Point(13, 13);
+            this.objectListView1.Location = new System.Drawing.Point(4, 13);
             this.objectListView1.Name = "objectListView1";
             this.objectListView1.OwnerDraw = true;
             this.objectListView1.ShowGroups = false;
             this.objectListView1.ShowImagesOnSubItems = true;
-            this.objectListView1.Size = new System.Drawing.Size(564, 502);
+            this.objectListView1.Size = new System.Drawing.Size(614, 502);
             this.objectListView1.TabIndex = 0;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.UseSubItemCheckBoxes = true;
@@ -115,8 +115,8 @@
             this.numberColumn.AspectName = "optimizableNumber";
             this.numberColumn.CellPadding = null;
             this.numberColumn.CheckBoxes = true;
-            this.numberColumn.MaximumWidth = 60;
-            this.numberColumn.MinimumWidth = 60;
+            this.numberColumn.MaximumWidth = 50;
+            this.numberColumn.MinimumWidth = 30;
             this.numberColumn.Text = "Number";
             // 
             // weeksColumn
@@ -124,9 +124,10 @@
             this.weeksColumn.AspectName = "optimizableWeeks";
             this.weeksColumn.CellPadding = null;
             this.weeksColumn.CheckBoxes = true;
-            this.weeksColumn.MaximumWidth = 60;
-            this.weeksColumn.MinimumWidth = 60;
+            this.weeksColumn.MaximumWidth = 50;
+            this.weeksColumn.MinimumWidth = 30;
             this.weeksColumn.Text = "Schema";
+            this.weeksColumn.Width = 50;
             // 
             // homeVisitColumn
             // 
@@ -201,7 +202,7 @@
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.button7);
             this.groupBox1.Controls.Add(this.button1);
-            this.groupBox1.Location = new System.Drawing.Point(608, 11);
+            this.groupBox1.Location = new System.Drawing.Point(626, 11);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(145, 87);
             this.groupBox1.TabIndex = 8;
@@ -235,7 +236,7 @@
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.button3);
             this.groupBox2.Controls.Add(this.button5);
-            this.groupBox2.Location = new System.Drawing.Point(606, 104);
+            this.groupBox2.Location = new System.Drawing.Point(624, 104);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(147, 80);
             this.groupBox2.TabIndex = 9;
@@ -249,22 +250,12 @@
             this.groupBox3.Controls.Add(this.button4);
             this.groupBox3.Controls.Add(this.comboBox1);
             this.groupBox3.Controls.Add(this.button6);
-            this.groupBox3.Location = new System.Drawing.Point(607, 190);
+            this.groupBox3.Location = new System.Drawing.Point(625, 190);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(145, 163);
             this.groupBox3.TabIndex = 10;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Expert";
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(3, 38);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(136, 21);
-            this.comboBox1.TabIndex = 11;
-            this.comboBox1.SelectedValueChanged += new System.EventHandler(this.comboBox1_SelectedValueChanged);
             // 
             // label1
             // 
@@ -275,6 +266,16 @@
             this.label1.Size = new System.Drawing.Size(94, 13);
             this.label1.TabIndex = 12;
             this.label1.Text = "Optimization Type:";
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(3, 38);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(136, 21);
+            this.comboBox1.TabIndex = 11;
+            this.comboBox1.SelectedValueChanged += new System.EventHandler(this.comboBox1_SelectedValueChanged);
             // 
             // OptimizeForm
             // 

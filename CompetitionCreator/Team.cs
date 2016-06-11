@@ -16,6 +16,13 @@ namespace CompetitionCreator
         public string Ranking { get; set;  }
         public SporthallAvailability sporthal { get; set; }
         public Field field { get; set; }
+        public string GroupName
+        {
+            get
+            {
+                return group.ToStringCustom();
+            }
+        }
         public string FieldName
         {
             get

@@ -11,16 +11,15 @@
 Verbeteringen mbt VVB:
 - Competitie matchen inlezen VVB: expliciet serie-id bij de XML
 - Gecombineerde XML voor alle inschrijvingen van limburg
+- Robuster maken license-key opslag
 
 Ideeen:
-- Reserve weekenden mee opnemen in schema. Als je schema mag wijzigen kan dit ook meegenomen worden (en oude manier om individuele wijzigen door te voeren kan dan weg)
 - Overzichtsscherm met matchen, filteren op conflict matchen, met reden erachter. Veel intuitiever dan huidige scherm.
+- Ontmoedigen reserve dagen (als het niet uitmaakt)
 
 High:
-- Sortering weken in poule view
 - Vertraging GUI
 - Robuster maken van import competitie (competitie echt als xml invoeren)
-- Optimize: schema ipv weeks. Dit laat ook andere optimalisaties toe
 - automatisch saven om de 10 minuten.
 
 - diagnostics toevoegen
@@ -36,6 +35,5 @@ Medium:
 - schema editor/viewer
 
 Low:
-- manueel losse wedstrijd verplaatsen. Tweede phase optimalisatie?
 - Een net viewModel introduceren
 

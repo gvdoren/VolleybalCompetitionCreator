@@ -1,6 +1,6 @@
 ﻿namespace CompetitionCreator
 {
-    partial class ConstraintView
+    partial class MatchesView
     {
         /// <summary>
         /// Required designer variable.
@@ -29,6 +29,10 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.checkBoxConflictsOnly = new System.Windows.Forms.CheckBox();
+            this.labelGroup = new System.Windows.Forms.Label();
+            this.labelSeriePoule = new System.Windows.Forms.Label();
+            this.labelTeam = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.objectListView1 = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -39,8 +43,9 @@
             this.olvColumn6 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn7 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn8 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.label2 = new System.Windows.Forms.Label();
-            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
+            this.olvColumn9 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.conflictLabel = new System.Windows.Forms.Label();
+            this.richTextConflict = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -59,16 +64,64 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.conflictLabel);
+            this.splitContainer1.Panel1.Controls.Add(this.checkBoxConflictsOnly);
+            this.splitContainer1.Panel1.Controls.Add(this.labelGroup);
+            this.splitContainer1.Panel1.Controls.Add(this.labelSeriePoule);
+            this.splitContainer1.Panel1.Controls.Add(this.labelTeam);
             this.splitContainer1.Panel1.Controls.Add(this.label1);
             this.splitContainer1.Panel1.Controls.Add(this.objectListView1);
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.label2);
-            this.splitContainer1.Panel2.Controls.Add(this.richTextBox2);
-            this.splitContainer1.Size = new System.Drawing.Size(486, 205);
-            this.splitContainer1.SplitterDistance = 141;
+            this.splitContainer1.Panel2.Controls.Add(this.richTextConflict);
+            this.splitContainer1.Size = new System.Drawing.Size(486, 333);
+            this.splitContainer1.SplitterDistance = 282;
             this.splitContainer1.TabIndex = 4;
+            // 
+            // checkBoxConflictsOnly
+            // 
+            this.checkBoxConflictsOnly.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBoxConflictsOnly.AutoSize = true;
+            this.checkBoxConflictsOnly.Checked = true;
+            this.checkBoxConflictsOnly.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxConflictsOnly.Location = new System.Drawing.Point(394, 2);
+            this.checkBoxConflictsOnly.Name = "checkBoxConflictsOnly";
+            this.checkBoxConflictsOnly.Size = new System.Drawing.Size(88, 17);
+            this.checkBoxConflictsOnly.TabIndex = 7;
+            this.checkBoxConflictsOnly.Text = "Conflicts only";
+            this.checkBoxConflictsOnly.UseVisualStyleBackColor = true;
+            this.checkBoxConflictsOnly.CheckedChanged += new System.EventHandler(this.checkBoxConflictsOnly_CheckedChanged);
+            // 
+            // labelGroup
+            // 
+            this.labelGroup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelGroup.AutoSize = true;
+            this.labelGroup.Location = new System.Drawing.Point(30, 244);
+            this.labelGroup.Name = "labelGroup";
+            this.labelGroup.Size = new System.Drawing.Size(39, 13);
+            this.labelGroup.TabIndex = 6;
+            this.labelGroup.Text = "Group:";
+            // 
+            // labelSeriePoule
+            // 
+            this.labelSeriePoule.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelSeriePoule.AutoSize = true;
+            this.labelSeriePoule.Location = new System.Drawing.Point(5, 228);
+            this.labelSeriePoule.Name = "labelSeriePoule";
+            this.labelSeriePoule.Size = new System.Drawing.Size(64, 13);
+            this.labelSeriePoule.TabIndex = 5;
+            this.labelSeriePoule.Text = "Serie-Poule:";
+            // 
+            // labelTeam
+            // 
+            this.labelTeam.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelTeam.AutoSize = true;
+            this.labelTeam.Location = new System.Drawing.Point(32, 212);
+            this.labelTeam.Name = "labelTeam";
+            this.labelTeam.Size = new System.Drawing.Size(37, 13);
+            this.labelTeam.TabIndex = 4;
+            this.labelTeam.Text = "Team:";
             // 
             // label1
             // 
@@ -89,6 +142,7 @@
             this.objectListView1.AllColumns.Add(this.olvColumn6);
             this.objectListView1.AllColumns.Add(this.olvColumn7);
             this.objectListView1.AllColumns.Add(this.olvColumn8);
+            this.objectListView1.AllColumns.Add(this.olvColumn9);
             this.objectListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -100,15 +154,18 @@
             this.olvColumn5,
             this.olvColumn6,
             this.olvColumn7,
-            this.olvColumn8});
+            this.olvColumn8,
+            this.olvColumn9});
             this.objectListView1.FullRowSelect = true;
-            this.objectListView1.Location = new System.Drawing.Point(-2, 19);
+            this.objectListView1.Location = new System.Drawing.Point(0, 19);
+            this.objectListView1.MultiSelect = false;
             this.objectListView1.Name = "objectListView1";
-            this.objectListView1.Size = new System.Drawing.Size(489, 119);
+            this.objectListView1.Size = new System.Drawing.Size(486, 190);
             this.objectListView1.SortGroupItemsByPrimaryColumn = false;
             this.objectListView1.TabIndex = 2;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
+            this.objectListView1.SelectionChanged += new System.EventHandler(this.objectListView1_SelectionChanged);
             this.objectListView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.objectListView1_MouseDoubleClick);
             // 
             // olvColumn1
@@ -116,6 +173,7 @@
             this.olvColumn1.AspectName = "datetime";
             this.olvColumn1.AspectToStringFormat = "{0:dd-MM-yyyy}";
             this.olvColumn1.CellPadding = null;
+            this.olvColumn1.MaximumWidth = 100;
             this.olvColumn1.Text = "Datum";
             this.olvColumn1.Width = 70;
             // 
@@ -168,44 +226,55 @@
             // 
             // olvColumn8
             // 
-            this.olvColumn8.AspectName = "homeTeam.group";
+            this.olvColumn8.AspectName = "homeTeam.GroupName";
             this.olvColumn8.CellPadding = null;
             this.olvColumn8.Text = "Group";
+            this.olvColumn8.Width = 45;
             // 
-            // label2
+            // olvColumn9
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 3);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(28, 13);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "Info:";
+            this.olvColumn9.AspectName = "ConflictString";
+            this.olvColumn9.CellPadding = null;
+            this.olvColumn9.FillsFreeSpace = true;
+            this.olvColumn9.MaximumWidth = 300;
+            this.olvColumn9.MinimumWidth = 70;
+            this.olvColumn9.Text = "Conflict";
+            this.olvColumn9.Width = 70;
             // 
-            // richTextBox2
+            // conflictLabel
             // 
-            this.richTextBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.conflictLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.conflictLabel.AutoSize = true;
+            this.conflictLabel.Location = new System.Drawing.Point(24, 261);
+            this.conflictLabel.Name = "conflictLabel";
+            this.conflictLabel.Size = new System.Drawing.Size(45, 13);
+            this.conflictLabel.TabIndex = 5;
+            this.conflictLabel.Text = "Conflict:";
+            // 
+            // richTextConflict
+            // 
+            this.richTextConflict.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.richTextBox2.Location = new System.Drawing.Point(1, 19);
-            this.richTextBox2.Name = "richTextBox2";
-            this.richTextBox2.Size = new System.Drawing.Size(483, 41);
-            this.richTextBox2.TabIndex = 4;
-            this.richTextBox2.Text = "";
+            this.richTextConflict.Location = new System.Drawing.Point(1, 3);
+            this.richTextConflict.Name = "richTextConflict";
+            this.richTextConflict.Size = new System.Drawing.Size(483, 41);
+            this.richTextConflict.TabIndex = 4;
+            this.richTextConflict.Text = "";
             // 
-            // ConstraintView
+            // MatchesView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(494, 211);
+            this.ClientSize = new System.Drawing.Size(494, 339);
             this.Controls.Add(this.splitContainer1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Name = "ConstraintView";
-            this.Text = "ConstraintView";
+            this.Name = "MatchesView";
+            this.Text = "Matches - conflicts";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ConstraintView_FormClosed);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).EndInit();
@@ -226,8 +295,13 @@
         private BrightIdeasSoftware.OLVColumn olvColumn6;
         private BrightIdeasSoftware.OLVColumn olvColumn7;
         private BrightIdeasSoftware.OLVColumn olvColumn8;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.RichTextBox richTextBox2;
+        private System.Windows.Forms.Label conflictLabel;
+        private System.Windows.Forms.RichTextBox richTextConflict;
+        private BrightIdeasSoftware.OLVColumn olvColumn9;
+        private System.Windows.Forms.Label labelGroup;
+        private System.Windows.Forms.Label labelSeriePoule;
+        private System.Windows.Forms.Label labelTeam;
+        private System.Windows.Forms.CheckBox checkBoxConflictsOnly;
 
 
     }

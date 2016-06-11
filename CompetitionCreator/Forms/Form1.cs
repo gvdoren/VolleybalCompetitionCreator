@@ -39,6 +39,10 @@ namespace CompetitionCreator
             ClubListView clubview = new ClubListView(model,state);
             clubview.ShowHint = DockState.DockLeft;
             clubview.Show(dockPanel);
+            ConstraintListView conflicts = new ConstraintListView(model, state);
+//            conflicts.ShowHint = DockState.DockLeft;
+//            conflicts.Show(dockPanel.  previousPane,DockAlignment.Top,0.1);
+//            dockPanel.DockTopPortion = 100;
 
             //SerieView serieview = new SerieView(model, state);
             //serieview.ShowHint = DockState.DockRight;
@@ -52,15 +56,10 @@ namespace CompetitionCreator
             pouleListview.ShowHint = DockState.DockLeft;
             pouleListview.Show(clubview.Pane, DockAlignment.Right, 0.5);
             //pouleListview.Show(dockPanel);
-            ConstraintListView constraintListview = new ConstraintListView(model, state);
-            constraintListview.ShowHint = DockState.DockRight;
-            constraintListview.Show(dockPanel);
-            dockPanel.DockRightPortion = 500;
-            List<string> ListTeam = new List<string>();
-            for (int i = 0; i < 11; i++)
-            {
-                ListTeam.Add(string.Format("Team {0}",i+1));
-            }
+            MatchesView constraintview = new MatchesView(model, state);
+            constraintview.ShowHint = DockState.DockRight;
+            constraintview.Show(dockPanel);
+            dockPanel.DockRightPortion = 700;
             model.OnMyChange += state_OnMyChange;
             GlobalState.OnMyChange += state_OnMyChange;
             importExport.OpenLastProject(model);
@@ -93,7 +92,48 @@ namespace CompetitionCreator
                     this.errorsToolStripMenuItem.ForeColor = Color.Red;
                 else
                     this.errorsToolStripMenuItem.ForeColor = Color.Black;
+                UpdateConflictCount();
             }
+        }
+        private void UpdateConflictCount()
+        {
+            int conflicts = 0;
+            foreach (Constraint constraint in model.constraints)
+            {
+                conflicts += constraint.conflict_cost;
+
+            }
+            int totalMatches = 0;
+            int conflictMatches = 0;
+            foreach (Poule poule in model.poules)
+            {
+                if (poule.evaluated)
+                {
+                    foreach (Match mat in poule.matches)
+                    {
+                        if (mat.RealMatch())
+                        {
+                            if (mat.conflict > 0)
+                            {
+                                conflictMatches++;
+                            }
+                            totalMatches++;
+                        }
+                    }
+                }
+            }
+
+            double percentage = 0;
+            if (totalMatches > 0)
+            {
+                percentage = conflictMatches * 100;
+                percentage /= totalMatches;
+            }
+            else
+            {
+                percentage = 0;
+            }
+            toolStripStatusLabel1.Text = "Conflict-matches: " + conflictMatches.ToString() + string.Format(" ({0:F1}%)     Cost: {1}", percentage, conflicts.ToString());
         }
 
 
@@ -177,17 +217,17 @@ namespace CompetitionCreator
 
         private void constraintsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ConstraintListView constraintView = null;
+            MatchesView constraintView = null;
             foreach (DockContent content in this.dockPanel.Contents)
             {
-                constraintView = content as ConstraintListView;
+                constraintView = content as MatchesView;
                 if (constraintView != null)
                 {
                     constraintView.Activate();
                     return;
                 }
             }
-            constraintView = new ConstraintListView(model, state);
+            constraintView = new MatchesView(model, state);
             constraintView.ShowHint = DockState.DockRight;
             constraintView.Show(this.dockPanel);
         }

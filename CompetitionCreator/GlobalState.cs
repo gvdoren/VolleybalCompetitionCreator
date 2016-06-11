@@ -11,6 +11,8 @@ namespace CompetitionCreator
 
         static public int optimizeLevel;
         static public List<Club> selectedClubs = new List<Club>();
+        static public List<Poule> selectedPoules = new List<Poule>();
+
         static public Constraint selectedConstraint = null;
         static public List<Constraint> showConstraints = new List<Constraint>();
         static public bool comparison = false;

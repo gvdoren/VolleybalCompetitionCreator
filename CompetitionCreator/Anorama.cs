@@ -35,7 +35,7 @@ namespace CompetitionCreator
         }
         public AnnoramaWeek(MatchWeek we)
         {
-            week = we;
+            week = new MatchWeek(we);
         }
         public string weekNrString(int max)
         {
@@ -43,7 +43,7 @@ namespace CompetitionCreator
             else
             {
                 string reserve = "";
-                if (weekNr > max) reserve = " R";
+                if (weekNr > max) reserve = " R-"+week.round;
                 return weekNr.ToString() + reserve;
             }
         }
@@ -100,6 +100,7 @@ namespace CompetitionCreator
                             writer.WriteStartElement("Week");
                             writer.WriteAttributeString("Date", week.week.Saturday.ToShortDateString());
                             if (week.week.dayOverruled) writer.WriteAttributeString("OverruledDay", week.week.OverruledDay.ToString());
+                            if (week.week.round >= 0) writer.WriteAttributeString("Round", week.week.round.ToString());
                             writer.WriteAttributeString("WeekNumber", week.weekNr.ToString());
                             writer.WriteEndElement();
                         }
@@ -136,6 +137,9 @@ namespace CompetitionCreator
                     {
                         DateTime dt = ImportExport.DateAttribute(week, "Date");
                         MatchWeek we = new MatchWeek(dt);
+                        string roundString = ImportExport.StringOptionalAttribute(week, null, "Round");
+                        if (roundString != null)
+                            we.round = int.Parse(roundString);
                         AnnoramaWeek anWeek = new AnnoramaWeek(we);
                         re.weeks.Add(anWeek);
 

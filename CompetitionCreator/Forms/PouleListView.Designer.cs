@@ -74,7 +74,7 @@
             this.conflictsColumn.AspectName = "conflict";
             this.conflictsColumn.CellPadding = null;
             this.conflictsColumn.FillsFreeSpace = true;
-            this.conflictsColumn.MinimumWidth = 60;
+            this.conflictsColumn.MinimumWidth = 30;
             this.conflictsColumn.Text = "Conflicts";
             // 
             // evaluatedColumn

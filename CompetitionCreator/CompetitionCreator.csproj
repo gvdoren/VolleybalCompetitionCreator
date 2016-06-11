@@ -143,11 +143,11 @@
     <Compile Include="Forms\ConstraintListView.Designer.cs">
       <DependentUpon>ConstraintListView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ConstraintView.cs">
+    <Compile Include="Forms\MatchesView.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\ConstraintView.Designer.cs">
-      <DependentUpon>ConstraintView.cs</DependentUpon>
+    <Compile Include="Forms\MatchesView.Designer.cs">
+      <DependentUpon>MatchesView.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ErrorView.cs">
       <SubType>Form</SubType>
@@ -318,8 +318,8 @@
     <EmbeddedResource Include="Forms\ConstraintListView.resx">
       <DependentUpon>ConstraintListView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ConstraintView.resx">
-      <DependentUpon>ConstraintView.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\MatchesView.resx">
+      <DependentUpon>MatchesView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ErrorView.resx">
       <DependentUpon>ErrorView.cs</DependentUpon>

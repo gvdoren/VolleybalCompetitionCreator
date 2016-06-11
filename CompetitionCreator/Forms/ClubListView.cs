@@ -55,6 +55,7 @@ namespace CompetitionCreator
                 Club club = (Club)obj;
                 GlobalState.selectedClubs.Add(club);
             }
+            GlobalState.selectedPoules.Clear();
             GlobalState.Changed();
         }
         private void objectListView1_MouseDoubleClick(object sender, MouseEventArgs e)

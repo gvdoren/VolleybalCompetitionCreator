@@ -122,6 +122,7 @@ namespace CompetitionCreator
 
         private void objectListView1_CellClick(object sender, CellClickEventArgs e)
         {
+            GlobalState.selectedPoules.Clear();
             if (objectListView1.SelectedObjects.Count > 0)
             {
 
@@ -130,7 +131,9 @@ namespace CompetitionCreator
                 {
                     Poule poule = (Poule)obj;
                     constraints.AddRange(poule.conflictConstraints);
+                    GlobalState.selectedPoules.Add(poule);
                 }
+                GlobalState.selectedClubs.Clear();
                 GlobalState.ShowConstraints(constraints);
             }
         }

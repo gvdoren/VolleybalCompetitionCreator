@@ -53,19 +53,15 @@
             this.olvColumn14 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn10 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn11 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn15 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.label2 = new System.Windows.Forms.Label();
-            this.weekSwitchButton = new System.Windows.Forms.Button();
-            this.button8 = new System.Windows.Forms.Button();
             this.button9 = new System.Windows.Forms.Button();
             this.button10 = new System.Windows.Forms.Button();
             this.button11 = new System.Windows.Forms.Button();
             this.button12 = new System.Windows.Forms.Button();
             this.button13 = new System.Windows.Forms.Button();
             this.button14 = new System.Windows.Forms.Button();
-            this.buttonOptimizeMatch = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.button7 = new System.Windows.Forms.Button();
-            this.button15 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListWeeks)).BeginInit();
@@ -301,6 +297,7 @@
             this.objectListWeeks.AllColumns.Add(this.olvColumn14);
             this.objectListWeeks.AllColumns.Add(this.olvColumn10);
             this.objectListWeeks.AllColumns.Add(this.olvColumn11);
+            this.objectListWeeks.AllColumns.Add(this.olvColumn15);
             this.objectListWeeks.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -308,17 +305,17 @@
             this.olvColumn12,
             this.olvColumn13,
             this.olvColumn14,
-            this.olvColumn10});
+            this.olvColumn10,
+            this.olvColumn15});
             this.objectListWeeks.FullRowSelect = true;
             this.objectListWeeks.Location = new System.Drawing.Point(3, 22);
             this.objectListWeeks.Name = "objectListWeeks";
-            this.objectListWeeks.Size = new System.Drawing.Size(345, 274);
-            this.objectListWeeks.Sorting = System.Windows.Forms.SortOrder.Ascending;
+            this.objectListWeeks.Size = new System.Drawing.Size(402, 303);
+            this.objectListWeeks.SortGroupItemsByPrimaryColumn = false;
             this.objectListWeeks.TabIndex = 9;
             this.objectListWeeks.UseCompatibleStateImageBehavior = false;
             this.objectListWeeks.View = System.Windows.Forms.View.Details;
             this.objectListWeeks.CellClick += new System.EventHandler<BrightIdeasSoftware.CellClickEventArgs>(this.objectListView3_CellClick);
-            this.objectListWeeks.SelectionChanged += new System.EventHandler(this.objectListView3_SelectionChanged);
             // 
             // olvColumn12
             // 
@@ -342,7 +339,7 @@
             // 
             // olvColumn14
             // 
-            this.olvColumn14.AspectName = "Value";
+            this.olvColumn14.AspectName = "Value.Key";
             this.olvColumn14.CellPadding = null;
             this.olvColumn14.Sortable = false;
             this.olvColumn14.Text = "Schema";
@@ -361,6 +358,12 @@
             this.olvColumn11.DisplayIndex = 4;
             this.olvColumn11.IsVisible = false;
             // 
+            // olvColumn15
+            // 
+            this.olvColumn15.AspectName = "Value.Value";
+            this.olvColumn15.CellPadding = null;
+            this.olvColumn15.Text = "Matches";
+            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -370,29 +373,6 @@
             this.label2.Size = new System.Drawing.Size(46, 13);
             this.label2.TabIndex = 10;
             this.label2.Text = "Weeks";
-            // 
-            // weekSwitchButton
-            // 
-            this.weekSwitchButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.weekSwitchButton.Location = new System.Drawing.Point(353, 22);
-            this.weekSwitchButton.Name = "weekSwitchButton";
-            this.weekSwitchButton.Size = new System.Drawing.Size(57, 23);
-            this.weekSwitchButton.TabIndex = 4;
-            this.weekSwitchButton.Text = "Switch";
-            this.weekSwitchButton.UseVisualStyleBackColor = true;
-            this.weekSwitchButton.Click += new System.EventHandler(this.Switch1_Click);
-            // 
-            // button8
-            // 
-            this.button8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button8.Location = new System.Drawing.Point(354, 52);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(56, 23);
-            this.button8.TabIndex = 6;
-            this.button8.Text = "Optimize";
-            this.button8.UseVisualStyleBackColor = true;
-            this.button8.Visible = false;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
             // 
             // button9
             // 
@@ -463,18 +443,6 @@
             this.button14.UseVisualStyleBackColor = true;
             this.button14.Visible = false;
             // 
-            // buttonOptimizeMatch
-            // 
-            this.buttonOptimizeMatch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonOptimizeMatch.Location = new System.Drawing.Point(6, 302);
-            this.buttonOptimizeMatch.Name = "buttonOptimizeMatch";
-            this.buttonOptimizeMatch.Size = new System.Drawing.Size(107, 23);
-            this.buttonOptimizeMatch.TabIndex = 6;
-            this.buttonOptimizeMatch.Text = "Optimize Match";
-            this.buttonOptimizeMatch.UseVisualStyleBackColor = true;
-            this.buttonOptimizeMatch.Visible = false;
-            this.buttonOptimizeMatch.Click += new System.EventHandler(this.optimizeMatch_Click);
-            // 
             // splitContainer1
             // 
             this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -488,7 +456,6 @@
             this.splitContainer1.Panel1.Controls.Add(this.button1);
             this.splitContainer1.Panel1.Controls.Add(this.button12);
             this.splitContainer1.Panel1.Controls.Add(this.button2);
-            this.splitContainer1.Panel1.Controls.Add(this.button7);
             this.splitContainer1.Panel1.Controls.Add(this.button11);
             this.splitContainer1.Panel1.Controls.Add(this.button3);
             this.splitContainer1.Panel1.Controls.Add(this.button10);
@@ -499,39 +466,11 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.objectListWeeks);
-            this.splitContainer1.Panel2.Controls.Add(this.weekSwitchButton);
             this.splitContainer1.Panel2.Controls.Add(this.label2);
-            this.splitContainer1.Panel2.Controls.Add(this.button15);
-            this.splitContainer1.Panel2.Controls.Add(this.button8);
-            this.splitContainer1.Panel2.Controls.Add(this.buttonOptimizeMatch);
             this.splitContainer1.Panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer1_Panel2_Paint);
             this.splitContainer1.Size = new System.Drawing.Size(896, 333);
             this.splitContainer1.SplitterDistance = 475;
             this.splitContainer1.TabIndex = 16;
-            // 
-            // button7
-            // 
-            this.button7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button7.Location = new System.Drawing.Point(413, 273);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(56, 23);
-            this.button7.TabIndex = 13;
-            this.button7.Text = "Analyse";
-            this.button7.UseVisualStyleBackColor = true;
-            this.button7.Visible = false;
-            this.button7.Click += new System.EventHandler(this.button7_Click);
-            // 
-            // button15
-            // 
-            this.button15.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button15.Location = new System.Drawing.Point(354, 191);
-            this.button15.Name = "button15";
-            this.button15.Size = new System.Drawing.Size(56, 23);
-            this.button15.TabIndex = 6;
-            this.button15.Text = "Optimize";
-            this.button15.UseVisualStyleBackColor = true;
-            this.button15.Visible = false;
-            this.button15.Click += new System.EventHandler(this.button15_Click);
             // 
             // PouleView
             // 
@@ -586,20 +525,16 @@
         private System.Windows.Forms.Label label2;
         private BrightIdeasSoftware.OLVColumn olvColumn12;
         private BrightIdeasSoftware.OLVColumn olvColumn14;
-        private System.Windows.Forms.Button weekSwitchButton;
         private BrightIdeasSoftware.OLVColumn olvColumn10;
-        private System.Windows.Forms.Button button8;
         private System.Windows.Forms.Button button9;
         private System.Windows.Forms.Button button10;
         private System.Windows.Forms.Button button11;
         private System.Windows.Forms.Button button12;
         private System.Windows.Forms.Button button13;
         private System.Windows.Forms.Button button14;
-        private System.Windows.Forms.Button buttonOptimizeMatch;
         private BrightIdeasSoftware.OLVColumn olvColumn13;
         private BrightIdeasSoftware.OLVColumn olvColumn11;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.Button button7;
-        private System.Windows.Forms.Button button15;
+        private BrightIdeasSoftware.OLVColumn olvColumn15;
     }
 }

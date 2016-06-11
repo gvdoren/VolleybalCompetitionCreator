@@ -19,7 +19,7 @@ namespace CompetitionCreator
         public Poule poule = null;
         SimpleDropSink myDropSink = new SimpleDropSink();
         ProgressDialog diag = new ProgressDialog();
-        Dictionary<MatchWeek, int> weekmapping = new Dictionary<MatchWeek, int>();
+        Dictionary<MatchWeek, KeyValuePair<int, int>> weekmapping = new Dictionary<MatchWeek, KeyValuePair<int, int>>();
         List<Team> selectedTeams = new List<Team>();
         List<MatchWeek> selectedWeeks = new List<MatchWeek>();
         List<Match> selectedMatches = new List<Match>();
@@ -47,22 +47,18 @@ namespace CompetitionCreator
             objectListView2.SetObjects(poule.matches);
             objectListView2.HideSelection = false;
             UpdateWeekMapping();
-            objectListView3_SelectionChanged(null, null);
             objectListWeeks.FormatRow += objectListView3_FormatRow;
             objectListWeeks.ShowGroups = false;
             objectListWeeks.HideSelection = false;
-            objectListWeeks.PrimarySortColumn = olvColumn11;
-            objectListWeeks.PrimarySortOrder = SortOrder.Ascending;
+            //objectListWeeks.PrimarySortColumn = olvColumn11;
+            //objectListWeeks.PrimarySortOrder = SortOrder.Ascending;
             objectListWeeks.SetObjects(weekmapping);
             model.OnMyChange += state_OnMyChange;
-            weekSwitchButton.Visible = false;
             if (model.licenseKey.Feature(Security.LicenseKey.FeatureType.Expert))
             {
-                buttonOptimizeMatch.Visible = true;
             }
             else
             {
-                buttonOptimizeMatch.Visible = false;
                 button11.Visible = false;
                 button12.Visible = false;
                 button4.Visible = false;
@@ -116,7 +112,7 @@ namespace CompetitionCreator
                 objectListWeeks.BuildList(true);
                 foreach (Object obj in objectListWeeks.Objects)
                 {
-                    KeyValuePair<MatchWeek, int> kvp = (KeyValuePair<MatchWeek, int>)obj;
+                    KeyValuePair<MatchWeek,KeyValuePair<int,int>> kvp = (KeyValuePair<MatchWeek, KeyValuePair<int,int>>)obj;
                     if (selectedWeeks.Contains(kvp.Key) == true) objectListWeeks.SelectObject(obj);
                 }
             }
@@ -356,9 +352,15 @@ namespace CompetitionCreator
 
         private void objectListView3_FormatRow(object sender, FormatRowEventArgs e)
         {
-            
-            KeyValuePair<MatchWeek, int> kvp = (KeyValuePair<MatchWeek, int>)e.Model;
-            if (kvp.Value > 0) e.Item.SubItems[2].Text = "Week " + kvp.Value.ToString();
+
+            KeyValuePair<MatchWeek, KeyValuePair<int, int>> kvp = (KeyValuePair<MatchWeek, KeyValuePair<int, int>>)e.Model;
+            if (kvp.Value.Key >= 0)
+            {
+                if(kvp.Value.Key < (poule.maxTeams-1)*2)
+                    e.Item.SubItems[2].Text = "Week " + (kvp.Value.Key + 1).ToString();
+                else
+                    e.Item.SubItems[2].Text = "Reserve-" + (kvp.Key.round + 1).ToString();
+            }
             else e.Item.SubItems[2].Text = "----";
         }
 
@@ -367,51 +369,24 @@ namespace CompetitionCreator
             weekmapping.Clear();
             List<MatchWeek> list = new List<MatchWeek>();
             list.AddRange(poule.weeks);
-            list.Sort();
+            list.Sort(delegate(MatchWeek w1, MatchWeek w2) { return w1.Sunday.CompareTo(w2.Sunday); });
             foreach(MatchWeek week in list)
             {
-                weekmapping.Add(week, FindIndex(week));
+                int index = FindIndex(week);
+                weekmapping.Add(week, new KeyValuePair<int,int>(index, poule.matches.Count(m => m.weekIndex == index)));
             }
         }
         private int FindIndex(MatchWeek week)
         {
-            int index = 0;
+            int index = -1;
             for (int j = 0; j < poule.weeks.Count; j++)
             {
                 if (poule.weeks[j] == week)
                 {
-                    index = j + 1;
+                    index = j;
                 }
             }
             return index;
-        }
-        private void objectListView3_SelectionChanged(object sender, EventArgs e)
-        {
-            weekSwitchButton.Enabled = (objectListWeeks.SelectedObjects.Count == 2);
-        }
-        private void Switch1_Click(object sender, EventArgs e)
-        {
-            if (poule.imported)
-            {
-                System.Windows.Forms.MessageBox.Show("Not allowed to change week ordering for an imported poule");
-            }
-            else if (poule.optimizableWeeks == false)
-            {
-                System.Windows.Forms.MessageBox.Show("Not allowed to change week ordering");
-            }
-            else
-            {
-                /*KeyValuePair<MatchWeek, int> kvp1 = (KeyValuePair<MatchWeek, int>)objectListWeeks.SelectedObjects[0];
-                KeyValuePair<MatchWeek, int> kvp2 = (KeyValuePair<MatchWeek, int>)objectListWeeks.SelectedObjects[1];
-                int index1 = kvp1.Value - 1;
-                int index2 = kvp2.Value - 1;
-                if (index1 >= 0) poule.weeks[index1] = kvp2.Key;
-                if (index2 >= 0) poule.weeks[index2] = kvp1.Key;
-                UpdateWeekMapping();
-                model.Evaluate(null);
-                model.Changed();
-                 */
-            }
         }
         private void objectListView3_CellClick(object sender, CellClickEventArgs e)
         {
@@ -426,44 +401,7 @@ namespace CompetitionCreator
                 GlobalState.ShowConstraints(constraints);
             }
         }
-        private void optimizeMatch_Click(object sender, EventArgs e)
-        {
-            if (poule.imported)
-            {
-                System.Windows.Forms.MessageBox.Show("Not allowed to change home/visit for imported poules");
-            }
-            else if (poule.optimizableMatch == false)
-            {
-                System.Windows.Forms.MessageBox.Show("Not allowed to change individual match");
-            }
-            else
-            {
-                poule.SnapShot(model);
-                poule.OptimizeIndividualMatches(model);
-                poule.CopyAndClearSnapShot(model);
-                model.Changed();
-            }
-        }
 
-        private void button8_Click(object sender, EventArgs e)
-        {
-            if (poule.imported)
-            {
-                System.Windows.Forms.MessageBox.Show("Not allowed to change week ordering for imported teams");
-            }
-            else if (poule.optimizableWeeks == false)
-            {
-                System.Windows.Forms.MessageBox.Show("Not allowed to change week ordering");
-            }
-            else
-            {
-
-                ProgressDialog diag = new ProgressDialog();
-                diag.WorkFunction += OptimizeWeekAssignment;
-                diag.CompletionFunction += OptimizeWeekAssignmentCompleted;
-                diag.Start("Optimizing weeks", null);
-            }
-        }
         Team optimizeTeam = null;
         private void button9_Click(object sender, EventArgs e)
         {
@@ -614,30 +552,6 @@ namespace CompetitionCreator
 
         }
 
-        private void button7_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void button15_Click(object sender, EventArgs e)
-        {
-            if (poule.imported)
-            {
-                System.Windows.Forms.MessageBox.Show("Not allowed to change week ordering for imported teams");
-            }
-            else if (poule.optimizableWeeks == false)
-            {
-                System.Windows.Forms.MessageBox.Show("Not allowed to change week ordering");
-            }
-            else
-            {
-
-                ProgressDialog diag = new ProgressDialog();
-                diag.WorkFunction += OptimizeFullSchema;
-                diag.CompletionFunction += OptimizeFullSchemaCompleted;
-                diag.Start("Optimizing weeks", null);
-            }
-
-        }
         private void OptimizeFullSchema(IProgress intf)
         {
             poule.SnapShot(model);

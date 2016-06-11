@@ -125,14 +125,19 @@ namespace CompetitionCreator
                     {
                         if (reeks.weeks.Exists(w => w.weekNr == i) == false)
                         {
+                            AnnoramaWeek w = new AnnoramaWeek(week.week);
+                            w.weekNr = i;
                             string reserve = "";
-                            if (i > (reeks.Count - 1) * 2) reserve = " (Reserve)";
-                            Selection sel = new Selection(i.ToString() + reserve, i);
+                            if (i > (reeks.Count - 1) * 2)
+                            {
+                                w.week.round = i - ((reeks.Count - 1) * 2) - 1;
+                                reserve = " (Reserve round-"+(w.week.round+1).ToString() + ")";
+                            }
+                            Selection sel = new Selection(i.ToString() + reserve, w);
                             list.Add(sel);
-                            if (anWeek != null) sel.selected = i == (anWeek.weekNr);
                         }
                     }
-                    Selection sel1 = new Selection("No matches", -1);
+                    Selection sel1 = new Selection("No matches", null);
                     list.Add(sel1);
                     if (list.Find(el => el.selected == true) == null && list.Count > 0) list[0].selected = true;
 
@@ -142,16 +147,11 @@ namespace CompetitionCreator
                     if (diag.Ok)
                     {
                         if (anWeek != null)
+                            reeks.weeks.Remove(anWeek);
+                        if (diag.Selection.obj != null)
                         {
-                            if (diag.Selection.value > 0) anWeek.weekNr = diag.Selection.value;
-                            else reeks.weeks.Remove(anWeek);
-                        }
-                        else
-                        {
-                            anWeek = new AnnoramaWeek(week.week);
-                            anWeek.weekNr = diag.Selection.value;
-                            reeks.weeks.Add(anWeek);
-                        }
+                            reeks.weeks.Add((AnnoramaWeek) diag.Selection.obj);
+                        } 
                     }
                     objectListView1.BuildList(true);
                     model.annorama.WriteXML();

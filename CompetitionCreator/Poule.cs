@@ -641,25 +641,6 @@ namespace CompetitionCreator
             teams = resultTeams;
         }
         
-
-
-        public void OptimizeIndividualMatches(Model model)
-        {
-            MakeDirty();
-            if (optimizableMatch)
-            {
-                // Only meaningfull when having spare weeks
-                if (weeks.Count > 2 * (TeamCount - 1))
-                {
-                    foreach (Match m in matches)
-                    {
-                        m.OptimizeIndividual(model);
-                    }
-                    matches = CopyMatches(resultMatches);
-                }
-            }
-        }
-
         public void OptimizeFullTeamAssignment(Model model, IProgress intf)
         {
             MakeDirty();
@@ -904,18 +885,21 @@ namespace CompetitionCreator
             }
          }
 
-        public bool OptimizeSchema2(Model model, IProgress intf, int optimizationLevel)
+        public bool OptimizeSchema(Model model, IProgress intf, int setSize, int optimizationLevel)
         {
             if (maxTeams > 6)
             {
                 MakeDirty();
                 if (optimizableWeeks)
                 {
-                    int matchCount = 0;
+                    List<Match>[] matchesPerWeek = new List<Match>[weeks.Count];
                     for (int index = 0; index < weeks.Count; index++)
                     {
-                        int round = weeks[index].round;
-                        intf.Progress(index, weeks.Count);
+                        matchesPerWeek[index] = matches.Where(m => m.weekIndex == index).ToList();
+                    }
+                    for (int index1 = 0; index1 < weeks.Count; index1++)
+                    {
+                        intf.Progress(index1, weeks.Count);
                         if (intf.Cancelled())
                         {
                             matches = CopyMatches(resultMatches);
@@ -923,65 +907,63 @@ namespace CompetitionCreator
                         }
                         try
                         {
-                            List<Match> matchesDay = matches.Where(m => m.weekIndex == index).ToList();
-                            for (int x = 0; x < matchesDay.Count - 1; x++)
+                            int round = weeks[index1].round;
+                            List<Match> matchesDay = matchesPerWeek[index1];
+                            Match[] matches1 = new Match[setSize];
+                            int[] indices = new int[setSize];
+                            for (int i = 0; i < setSize; i++)
+                                indices[i] = i;
+                            do
                             {
-                                for (int y = x + 1; y < matchesDay.Count; y++)
+                                UInt32 indexes = 0;
+                                for (int i = 0; i < setSize; i++)
                                 {
-                                    Match match1 = matchesDay[x];
-                                    Match match2 = matchesDay[y];
-                                    UInt32 indexes = 0;
-                                    const UInt32 one = 1;
-                                    indexes |= one << match1.homeTeamIndex;
-                                    indexes |= one << match1.visitorTeamIndex;
-                                    indexes |= one << match2.homeTeamIndex;
-                                    indexes |= one << match2.visitorTeamIndex;
-                                    List<Match>[] twoMatches = new List<Match>[weeks.Count];
-                                    for (int i = 0; i < weeks.Count; i++)
-                                        twoMatches[i] = new List<Match>();
-                                    int maxIndex = int.MinValue;
-                                    int minIndex = int.MaxValue;
-                                    foreach (Match m in matches)
+                                    matches1[i] = matchesDay[indices[i]];
+                                    indexes |= matches1[i].matchMask;
+                                }
+                                for (int index2 = index1 + 1; index2 < weeks.Count; index2++)
+                                {
+                                    if (weeks[index2].round == round)
                                     {
-                                        if (m.weekIndex>index && (indexes & (one << m.homeTeamIndex)) != 0 && (indexes & (one << m.visitorTeamIndex)) != 0 && m.Week.round == round)
+                                        List<Match> matches2 = new List<Match>();
+                                        bool validWeek = true;
+                                        foreach (Match m in matchesPerWeek[index2])
                                         {
-                                            twoMatches[m.weekIndex].Add(m);
-                                            maxIndex = Math.Max(maxIndex, m.weekIndex);
-                                            minIndex = Math.Min(minIndex, m.weekIndex);
+                                            UInt32 matchMask = m.matchMask;
+                                            if ((indexes & matchMask) == matchMask)
+                                            {
+                                                matches2.Add(m);
+                                            }
+                                            else if ((indexes & matchMask) != 0)
+                                            { // Switching is not possible when a match is half overlapping
+                                                validWeek = false;
+                                                break;
+                                            }
                                         }
-                                    }
-                                    for (int index2 = minIndex; index2 <= maxIndex; index2++)
-                                    {
-                                        if (twoMatches[index2].Count == 2)
+                                        if (validWeek)
                                         {
-                                            Match match3 = twoMatches[index2][0];
-                                            Match match4 = twoMatches[index2][1];
                                             int tempTotalConflicts = model.TotalConflictsSnapshot;
-                                            match1.weekIndex = index2;
-                                            match2.weekIndex = index2;
-                                            match3.weekIndex = index;
-                                            match4.weekIndex = index;
-                                            SnapShotIfImproved(model,false);
+                                            SwitchMatches(index1, matches1, index2, matches2);
+                                            SnapShotIfImproved(model, false);
                                             if (TotalRelatedConflictsLast < TotalRelatedConflictsSnapshot + optimisationThreshold)
                                             {
                                                 if (OptimizeHomeVisitor(model, optimizationLevel > 1))
                                                     throw new Exception();  // admin is not correct any more
                                             }
-                                            match1.weekIndex = index;
-                                            match2.weekIndex = index;
-                                            match3.weekIndex = index2;
-                                            match4.weekIndex = index2;
-
-                                            matchCount++;
+                                            SwitchMatches(index2, matches1, index1, matches2);
                                         }
-
                                     }
                                 }
-                            }
+                            } while(NextSetMatches(ref indices, 2, matchesDay.Count-1));
                         }
                         catch
                         {
-                            //continue with the next week.
+                            // Is changed, so recalculate
+                            matchesPerWeek = new List<Match>[weeks.Count];
+                            for (int index = 0; index < weeks.Count; index++)
+                            {
+                                matchesPerWeek[index] = matches.Where(m => m.weekIndex == index).ToList();
+                            }
                         }
                     }
                 }
@@ -989,6 +971,34 @@ namespace CompetitionCreator
             return false;
         }
 
+        bool NextSetMatches(ref int[] indices, int indicesCount, int maxIndex)
+        {
+            int current = indicesCount-1;
+            indices[current]++;
+            while(indices[current]>maxIndex)
+            {
+                indices[current] = 0;
+                current--;
+                if (current < 0)
+                    return false;
+                indices[current]++;
+                for (int i = current + 1; i < indicesCount; i++)
+                {
+                    indices[i] = indices[i - 1] + 1;
+                    if (indices[i] > maxIndex)
+                        return false; 
+                }
+            }
+            return true;
+        }
+
+        private void SwitchMatches(int index1, IEnumerable<Match> matches1, int index2, IEnumerable<Match> matches2)
+        {
+            foreach(Match m in matches1)
+                m.weekIndex = index2;
+            foreach(Match m in matches2)
+                m.weekIndex = index1;
+        }
 
 
         public bool OptimizeSchema3(Model model, IProgress intf, int optimizationLevel)
