@@ -43,6 +43,7 @@
             WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient3 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
             WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient6 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
             WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient7 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.invoerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -71,15 +72,15 @@
             this.convertKlvvToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.vVBConvertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.manageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.anoramaToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.yearPlansToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.poulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.subscriptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.schemasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clubsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.seriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.constraintsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.teamsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.constraintsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optimizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -372,39 +373,39 @@
             // manageToolStripMenuItem
             // 
             this.manageToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.anoramaToolStripMenuItem1,
-            this.poulesToolStripMenuItem,
+            this.yearPlansToolStripMenuItem1,
             this.subscriptionsToolStripMenuItem,
+            this.poulesToolStripMenuItem,
             this.schemasToolStripMenuItem});
             this.manageToolStripMenuItem.Name = "manageToolStripMenuItem";
             this.manageToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.manageToolStripMenuItem.Text = "Edit";
             // 
-            // anoramaToolStripMenuItem1
+            // yearPlanToolStripMenuItem1
             // 
-            this.anoramaToolStripMenuItem1.Name = "anoramaToolStripMenuItem1";
-            this.anoramaToolStripMenuItem1.Size = new System.Drawing.Size(170, 22);
-            this.anoramaToolStripMenuItem1.Text = "Anorama";
-            this.anoramaToolStripMenuItem1.Click += new System.EventHandler(this.anoramaToolStripMenuItem1_Click);
+            this.yearPlansToolStripMenuItem1.Name = "yearPlanToolStripMenuItem1";
+            this.yearPlansToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.yearPlansToolStripMenuItem1.Text = "Year plan";
+            this.yearPlansToolStripMenuItem1.Click += new System.EventHandler(this.yearplanToolStripMenuItem1_Click);
             // 
             // poulesToolStripMenuItem
             // 
             this.poulesToolStripMenuItem.Name = "poulesToolStripMenuItem";
-            this.poulesToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.poulesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.poulesToolStripMenuItem.Text = "Poules";
             this.poulesToolStripMenuItem.Click += new System.EventHandler(this.poulesToolStripMenuItem_Click);
             // 
             // subscriptionsToolStripMenuItem
             // 
             this.subscriptionsToolStripMenuItem.Name = "subscriptionsToolStripMenuItem";
-            this.subscriptionsToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
-            this.subscriptionsToolStripMenuItem.Text = "Club Registrations";
+            this.subscriptionsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.subscriptionsToolStripMenuItem.Text = "Registrations";
             this.subscriptionsToolStripMenuItem.Click += new System.EventHandler(this.subscriptionsToolStripMenuItem_Click);
             // 
             // schemasToolStripMenuItem
             // 
             this.schemasToolStripMenuItem.Name = "schemasToolStripMenuItem";
-            this.schemasToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.schemasToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.schemasToolStripMenuItem.Text = "Schemas";
             this.schemasToolStripMenuItem.Click += new System.EventHandler(this.schemasToolStripMenuItem_Click);
             // 
@@ -422,30 +423,30 @@
             // clubsToolStripMenuItem
             // 
             this.clubsToolStripMenuItem.Name = "clubsToolStripMenuItem";
-            this.clubsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.clubsToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.clubsToolStripMenuItem.Text = "Clubs";
             this.clubsToolStripMenuItem.Click += new System.EventHandler(this.clubsToolStripMenuItem_Click);
             // 
             // seriesToolStripMenuItem
             // 
             this.seriesToolStripMenuItem.Name = "seriesToolStripMenuItem";
-            this.seriesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.seriesToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.seriesToolStripMenuItem.Text = "Poules";
             this.seriesToolStripMenuItem.Click += new System.EventHandler(this.seriesToolStripMenuItem_Click);
-            // 
-            // constraintsToolStripMenuItem
-            // 
-            this.constraintsToolStripMenuItem.Name = "constraintsToolStripMenuItem";
-            this.constraintsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.constraintsToolStripMenuItem.Text = "Matches";
-            this.constraintsToolStripMenuItem.Click += new System.EventHandler(this.constraintsToolStripMenuItem_Click);
             // 
             // teamsToolStripMenuItem
             // 
             this.teamsToolStripMenuItem.Name = "teamsToolStripMenuItem";
-            this.teamsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.teamsToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.teamsToolStripMenuItem.Text = "Teams";
             this.teamsToolStripMenuItem.Click += new System.EventHandler(this.teamsToolStripMenuItem_Click);
+            // 
+            // constraintsToolStripMenuItem
+            // 
+            this.constraintsToolStripMenuItem.Name = "constraintsToolStripMenuItem";
+            this.constraintsToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.constraintsToolStripMenuItem.Text = "Matches";
+            this.constraintsToolStripMenuItem.Click += new System.EventHandler(this.constraintsToolStripMenuItem_Click);
             // 
             // optimizeToolStripMenuItem
             // 
@@ -534,6 +535,7 @@
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.dockPanel);
             this.Controls.Add(this.menuStrip1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Competition Creator Tool";
@@ -558,7 +560,7 @@
         private System.Windows.Forms.ToolStripMenuItem invoerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem constraintsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem manageToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem anoramaToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem yearPlansToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem poulesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem subscriptionsToolStripMenuItem;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;

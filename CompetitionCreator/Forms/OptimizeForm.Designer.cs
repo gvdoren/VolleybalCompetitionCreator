@@ -58,8 +58,8 @@
             this.objectListView1.AllColumns.Add(this.nameColumn);
             this.objectListView1.AllColumns.Add(this.evaluatedColumn);
             this.objectListView1.AllColumns.Add(this.numberColumn);
-            this.objectListView1.AllColumns.Add(this.weeksColumn);
             this.objectListView1.AllColumns.Add(this.homeVisitColumn);
+            this.objectListView1.AllColumns.Add(this.weeksColumn);
             this.objectListView1.AllColumns.Add(this.importanceColumn);
             this.objectListView1.AllColumns.Add(this.importedColumn);
             this.objectListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -71,8 +71,8 @@
             this.nameColumn,
             this.evaluatedColumn,
             this.numberColumn,
-            this.weeksColumn,
             this.homeVisitColumn,
+            this.weeksColumn,
             this.importanceColumn,
             this.importedColumn});
             this.objectListView1.FullRowSelect = true;
@@ -118,16 +118,16 @@
             this.numberColumn.MaximumWidth = 50;
             this.numberColumn.MinimumWidth = 30;
             this.numberColumn.Text = "Number";
+            this.numberColumn.Width = 50;
             // 
             // weeksColumn
             // 
             this.weeksColumn.AspectName = "optimizableWeeks";
             this.weeksColumn.CellPadding = null;
             this.weeksColumn.CheckBoxes = true;
-            this.weeksColumn.MaximumWidth = 50;
+            this.weeksColumn.MaximumWidth = 60;
             this.weeksColumn.MinimumWidth = 30;
             this.weeksColumn.Text = "Schema";
-            this.weeksColumn.Width = 50;
             // 
             // homeVisitColumn
             // 

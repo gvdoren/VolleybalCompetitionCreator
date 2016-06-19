@@ -232,20 +232,20 @@ namespace CompetitionCreator
             constraintView.Show(this.dockPanel);
         }
 
-        private void anoramaToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void yearplanToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            AnoramaView anorama = null;
+            YearPlanView yearPlan = null;
             foreach (DockContent content in this.dockPanel.Contents)
             {
-                anorama = content as AnoramaView;
-                if (anorama != null)
+                yearPlan = content as YearPlanView;
+                if (yearPlan != null)
                 {
-                    anorama.Activate();
+                    yearPlan.Activate();
                     return;
                 }
             }
-            anorama = new AnoramaView(model, state);
-            anorama.Show(this.dockPanel);
+            yearPlan = new YearPlanView(model, state);
+            yearPlan.Show(this.dockPanel);
 
 
         }

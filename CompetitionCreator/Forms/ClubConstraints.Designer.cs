@@ -718,7 +718,7 @@
             this.Controls.Add(this.tabControl2);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "InschrijvingenView";
-            this.Text = "ClubConstraints";
+            this.Text = "Registrations";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ClubConstraints_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();

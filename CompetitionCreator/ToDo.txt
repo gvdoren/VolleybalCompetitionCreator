@@ -2,7 +2,7 @@
 - zet op de site er expliciet bij dat ze aangeven of hun nationale teams in X of Y of nogroup zit.
 - Eventueel naar alle clubs de indeling in reeksen sturen voordat de kalender wordt gemaakt.
 - Week eerder de sluitingsdatum. (eerste week poules indelen, en terugkoppelen)
-- Check data van anorama.
+- Check data van year plans.
    * Mag een reserve-datum gebruikt worden!!
 - Check of er teams bijzitten met relatief veel conflicts (bv 6 of 7). 
    - Probeer de pijn te verdelen (XY groups opt, evt. daarna met HomeVisit opt).
@@ -14,8 +14,8 @@ Verbeteringen mbt VVB:
 - Robuster maken license-key opslag
 
 Ideeen:
-- Overzichtsscherm met matchen, filteren op conflict matchen, met reden erachter. Veel intuitiever dan huidige scherm.
 - Ontmoedigen reserve dagen (als het niet uitmaakt)
+- from poule select a schema, not a yearplan.
 
 High:
 - Vertraging GUI

@@ -41,7 +41,7 @@ namespace CompetitionCreator
             teams.Remove(team);
             MakeDirty();
         }
-        public Annorama annorama = null; // = new Annorama(DateTime.Now.Year).ReadXML();
+        public YearPlans yearPlans = null; 
         public List<TeamConstraint> teamConstraints = new List<TeamConstraint>();
         public List<Constraint> constraints = new List<Constraint>();
         public List<Sporthal> sporthalls = new List<Sporthal>();
@@ -148,8 +148,8 @@ namespace CompetitionCreator
             string Key = CompetitionCreator.Properties.Settings.Default.LicenseKey;
             licenseKey = new Security.LicenseKey(Key);
             this.year = DateTime.Now.Year;
-            this.annorama = new Annorama(year);
-            this.annorama.ReadXML();
+            this.yearPlans = new YearPlans(year);
+            this.yearPlans.ReadXML();
             clubs = new List<Club>();
         }
         public Model(int year)
@@ -157,8 +157,8 @@ namespace CompetitionCreator
             string Key = CompetitionCreator.Properties.Settings.Default.LicenseKey;
             licenseKey = new Security.LicenseKey(Key);
             this.year = year;
-            this.annorama = new Annorama(year);
-            this.annorama.ReadXML();
+            this.yearPlans = new YearPlans(year);
+            this.yearPlans.ReadXML();
             clubs = new List<Club>();
         }
         public void RenewConstraints()

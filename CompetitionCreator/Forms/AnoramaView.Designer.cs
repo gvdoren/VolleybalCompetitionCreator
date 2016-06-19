@@ -1,6 +1,6 @@
 ﻿namespace CompetitionCreator
 {
-    partial class AnoramaView
+    partial class YearPlanView
     {
         /// <summary>
         /// Required designer variable.
@@ -103,7 +103,7 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // AnoramaView
+            // YearPlanView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -113,8 +113,8 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.objectListView1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Name = "AnoramaView";
-            this.Text = "Anorama";
+            this.Name = "Year plans";
+            this.Text = "Year plans";
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

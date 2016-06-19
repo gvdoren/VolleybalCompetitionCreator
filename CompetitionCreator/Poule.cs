@@ -17,7 +17,7 @@ namespace CompetitionCreator
         public bool optimizableHomeVisit { get { return serie != null && serie.optimizableHomeVisit && imported == false; } }
         public bool optimizableMatch { get { return serie != null && serie.optimizableMatch && imported == false; } }
 
-        public bool evaluated { get { return imported == false; } }
+        public bool evaluated { get { return serie.evaluated && imported == false; } }
         List<Team> resultTeams = new List<Team>();
         List<MatchWeek> resultWeeks = new List<MatchWeek>();
         List<Match> resultMatches = new List<Match>();
@@ -472,6 +472,8 @@ namespace CompetitionCreator
 
         public void OptimizeNumberOnAnalysis(Model model, IProgress intf)
         {
+            if (evaluated == false) // This optimization will not work otherwise since all own conflicts are zero
+                return;
             SnapShot(model);
             int[,] score = AnalyzeTeamAssignment(model, intf);
             // Welk team eerst indelen: diegene die in het totaal het meeste conflicten heeft (of het verschil min/max grootste)
@@ -954,7 +956,7 @@ namespace CompetitionCreator
                                         }
                                     }
                                 }
-                            } while(NextSetMatches(ref indices, 2, matchesDay.Count-1));
+                            } while(NextSetMatches(ref indices, setSize, matchesDay.Count-1));
                         }
                         catch
                         {

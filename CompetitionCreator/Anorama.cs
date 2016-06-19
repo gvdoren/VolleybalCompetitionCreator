@@ -8,14 +8,14 @@ using System.Xml.Linq;
 
 namespace CompetitionCreator
 {
-    public class AnnoramaReeks
+    public class YearPlan
     {
         public string Name;
         public int Count;
-        public List<AnnoramaWeek> weeks = new List<AnnoramaWeek>();
+        public List<YearPlanWeek> weeks = new List<YearPlanWeek>();
     }
     
-    public class AnnoramaWeek
+    public class YearPlanWeek
     {
         public MatchWeek week;
         public int weekNr = -1;
@@ -33,7 +33,7 @@ namespace CompetitionCreator
                 }
             }
         }
-        public AnnoramaWeek(MatchWeek we)
+        public YearPlanWeek(MatchWeek we)
         {
             week = new MatchWeek(we);
         }
@@ -49,26 +49,26 @@ namespace CompetitionCreator
         }
     }
 
-    public class Annorama
+    public class YearPlans
     {
         public string title;
-        public List<AnnoramaReeks> reeksen = new List<AnnoramaReeks>();
+        public List<YearPlan> reeksen = new List<YearPlan>();
         public DateTime start;
         public DateTime end;
-        public Annorama(int year)
+        public YearPlans(int year)
         {
             reeksen.Clear();
             start = new DateTime(year, 9, 1);
             end = new DateTime(year + 1, 5, 1);
-            title = string.Format("Annorama Seizoen {0}-{1}", year, year + 1);
+            title = string.Format("Year plan: {0}-{1}", year, year + 1);
         }
-        public AnnoramaReeks GetReeks(string name)
+        public YearPlan GetReeks(string name)
         {
             return reeksen.Find(w => w.Name == name);
         }
-        public AnnoramaReeks CreateReeks(string name, int count)
+        public YearPlan CreateYearPlan(string name, int count)
         {
-            AnnoramaReeks reeks = new AnnoramaReeks();
+            YearPlan reeks = new YearPlan();
             reeks.Name = name;
             reeks.Count = count;
        
@@ -87,13 +87,13 @@ namespace CompetitionCreator
                 writer.WriteAttributeString("End", end.ToShortDateString());
                 writer.WriteStartElement("Reeksen");
                 int i=0;
-                foreach (AnnoramaReeks reeks in reeksen)
+                foreach (YearPlan reeks in reeksen)
                 {
                     writer.WriteStartElement("Reeks");
                     writer.WriteAttributeString("Name", reeks.Name);
                     writer.WriteAttributeString("Count", reeks.Count.ToString());
                     writer.WriteStartElement("Weeks");
-                    foreach (AnnoramaWeek week in reeks.weeks)
+                    foreach (YearPlanWeek week in reeks.weeks)
                     {
                         if (week.weekNr >= 0)
                         {
@@ -120,18 +120,18 @@ namespace CompetitionCreator
             {
                 int year = start.Year;
                 string BaseDirectory = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\CompetitionCreator";
-                XElement Annorama = XElement.Load(string.Format("{0}\\Annorama{1}.xml", BaseDirectory, year));
-                title = ImportExport.StringAttribute(Annorama, "Title");
-                start = ImportExport.DateAttribute(Annorama, "Start");
-                end = ImportExport.DateAttribute(Annorama, "End");
+                XElement yearPlan = XElement.Load(string.Format("{0}\\Annorama{1}.xml", BaseDirectory, year));
+                title = ImportExport.StringAttribute(yearPlan, "Title");
+                start = ImportExport.DateAttribute(yearPlan, "Start");
+                end = ImportExport.DateAttribute(yearPlan, "End");
                 reeksen.Clear();
-                IEnumerable<XElement> Reeksen = ImportExport.Element(Annorama, "Reeksen").Elements("Reeks");
+                IEnumerable<XElement> Reeksen = ImportExport.Element(yearPlan, "Reeksen").Elements("Reeks");
                 int i = 0;
                 foreach (XElement reeks in Reeksen)
                 {
                     string name = ImportExport.StringAttribute(reeks, "Name");
                     int count = ImportExport.IntegerAttribute(reeks, "Count");
-                    AnnoramaReeks re = CreateReeks(name, count);
+                    YearPlan re = CreateYearPlan(name, count);
                     IEnumerable<XElement> Weeks = ImportExport.Element(reeks, "Weeks").Elements("Week");
                     foreach (XElement week in Weeks)
                     {
@@ -140,7 +140,7 @@ namespace CompetitionCreator
                         string roundString = ImportExport.StringOptionalAttribute(week, null, "Round");
                         if (roundString != null)
                             we.round = int.Parse(roundString);
-                        AnnoramaWeek anWeek = new AnnoramaWeek(we);
+                        YearPlanWeek anWeek = new YearPlanWeek(we);
                         re.weeks.Add(anWeek);
 
                         string overruledDayString = ImportExport.StringOptionalAttribute(week, "No", "OverruledDay");

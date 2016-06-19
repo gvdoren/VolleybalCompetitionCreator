@@ -228,7 +228,7 @@
             this.olvColumn8.FillsFreeSpace = true;
             this.olvColumn8.MaximumWidth = 50;
             this.olvColumn8.MinimumWidth = 20;
-            this.olvColumn8.Text = "Afstand";
+            this.olvColumn8.Text = "Distance";
             this.olvColumn8.Width = 50;
             // 
             // olvColumn9
@@ -348,9 +348,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(788, 13);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(81, 13);
+            this.label1.Size = new System.Drawing.Size(49, 13);
             this.label1.TabIndex = 12;
-            this.label1.Text = "Anorama-reeks:";
+            this.label1.Text = "Schema:";
             // 
             // button5
             // 

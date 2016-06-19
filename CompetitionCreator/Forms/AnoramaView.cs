@@ -12,17 +12,17 @@ using System.Xml;
 
 namespace CompetitionCreator
 {
-    public partial class AnoramaView : DockContent
+    public partial class YearPlanView : DockContent
     {
         Model model = null;
         GlobalState state;
         List<MatchWeek> weeks = new List<MatchWeek>();
-        public AnoramaView(Model model, GlobalState state)
+        public YearPlanView(Model model, GlobalState state)
         {
             this.model = model;
             this.state = state;
             InitializeComponent();
-            DateTime current = model.annorama.start;
+            DateTime current = model.yearPlans.start;
             MatchWeek week = new MatchWeek(current);
             UpdateForm();
         }
@@ -30,18 +30,18 @@ namespace CompetitionCreator
         {
             while (objectListView1.AllColumns.Count > 1) objectListView1.AllColumns.RemoveAt(1);
             while (objectListView1.Columns.Count > 1) objectListView1.Columns.RemoveAt(1);
-            List<AnnoramaWeek> anWeeks = new List<AnnoramaWeek>();
-            MatchWeek week = new MatchWeek(model.annorama.start);
-            DateTime current = model.annorama.start;
-            while (week.Monday < model.annorama.end)
+            List<YearPlanWeek> anWeeks = new List<YearPlanWeek>();
+            MatchWeek week = new MatchWeek(model.yearPlans.start);
+            DateTime current = model.yearPlans.start;
+            while (week.Monday < model.yearPlans.end)
             {
-                anWeeks.Add(new AnnoramaWeek(week));
+                anWeeks.Add(new YearPlanWeek(week));
                 current = current.AddDays(7);
                 week = new MatchWeek(current);
             }
-            foreach (AnnoramaReeks reeks in model.annorama.reeksen)
+            foreach (YearPlan reeks in model.yearPlans.reeksen)
             {
-                foreach (AnnoramaWeek anWeek in reeks.weeks)
+                foreach (YearPlanWeek anWeek in reeks.weeks)
                 {
                     if(!anWeeks.Exists(w => w.week == anWeek.week))
                     {
@@ -66,35 +66,35 @@ namespace CompetitionCreator
             anWeeks.Sort((anw1, anw2) => { return anw1.week.CompareTo(anw2.week); });
             objectListView1.SetObjects(anWeeks);
             objectListView1.BuildList(false);
-            label1.Text = model.annorama.title;
+            label1.Text = model.yearPlans.title;
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            DialogResult dialogResult = MessageBox.Show("Bij het creeren van een nieuwe anorama gaat de oude verloren. Wil je dit?", "Nieuwe anorama", MessageBoxButtons.YesNo);
+            DialogResult dialogResult = MessageBox.Show("When creating new year plans the old plans will be lost. Are you sure?", "New year plans", MessageBoxButtons.YesNo);
             if (dialogResult == DialogResult.Yes)
             {
-                model.annorama = new Annorama(model.year);
-                model.annorama.WriteXML();
+                model.yearPlans = new YearPlans(model.year);
+                model.yearPlans.WriteXML();
             }
             UpdateForm();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            InputForm form = new InputForm("Creeer weken-reeks voor de anorama", "Geef een naam voor de anorama-reeks");
+            InputForm form = new InputForm("Create year plan", "Give a name for the year plan");
             form.ShowDialog();
             if (form.Result)
             {
-                InputForm form1 = new InputForm("Voor hoeveel teams is dit", "Geef het max. aantal teams voor in deze anorama-reeks");
+                InputForm form1 = new InputForm("Maximum number of teams", "Enter the maximum number of teams of this year plan.");
                 form1.ShowDialog();
                 if(form1.Result)
                 {
                     int count = 0;
                     if (int.TryParse(form1.GetInputString(), out count))
                     {
-                        model.annorama.reeksen.Add(model.annorama.CreateReeks(form.GetInputString(),count));
+                        model.yearPlans.reeksen.Add(model.yearPlans.CreateYearPlan(form.GetInputString(),count));
                         UpdateForm();
-                        model.annorama.WriteXML();
+                        model.yearPlans.WriteXML();
                     }
                 }
             }
@@ -112,12 +112,12 @@ namespace CompetitionCreator
 
         private void objectListView1_CellClick(object sender, CellClickEventArgs e)
         {
-            if (e.Column.Index > model.annorama.reeksen.Count) return;
-            AnnoramaWeek week = (AnnoramaWeek)objectListView1.SelectedObject;
+            if (e.Column.Index > model.yearPlans.reeksen.Count) return;
+            YearPlanWeek week = (YearPlanWeek)objectListView1.SelectedObject;
             if (e.Column.Index > 0)
             {
-                AnnoramaReeks reeks = model.annorama.reeksen[e.Column.Index - 1];
-                AnnoramaWeek anWeek = reeks.weeks.Find(w => w.week == week.week);
+                YearPlan reeks = model.yearPlans.reeksen[e.Column.Index - 1];
+                YearPlanWeek anWeek = reeks.weeks.Find(w => w.week == week.week);
                 if (e.Column.Index > 0)
                 {
                     List<Selection> list = new List<Selection>();
@@ -125,7 +125,7 @@ namespace CompetitionCreator
                     {
                         if (reeks.weeks.Exists(w => w.weekNr == i) == false)
                         {
-                            AnnoramaWeek w = new AnnoramaWeek(week.week);
+                            YearPlanWeek w = new YearPlanWeek(week.week);
                             w.weekNr = i;
                             string reserve = "";
                             if (i > (reeks.Count - 1) * 2)
@@ -150,19 +150,19 @@ namespace CompetitionCreator
                             reeks.weeks.Remove(anWeek);
                         if (diag.Selection.obj != null)
                         {
-                            reeks.weeks.Add((AnnoramaWeek) diag.Selection.obj);
+                            reeks.weeks.Add((YearPlanWeek) diag.Selection.obj);
                         } 
                     }
                     objectListView1.BuildList(true);
-                    model.annorama.WriteXML();
+                    model.yearPlans.WriteXML();
                 }
             }
         }
 
         private void objectListView1_CellRightClick(object sender, CellRightClickEventArgs e)
         {
-            if (e.Column.Index > model.annorama.reeksen.Count) return;
-            AnnoramaWeek week = (AnnoramaWeek)objectListView1.SelectedObject;
+            if (e.Column.Index > model.yearPlans.reeksen.Count) return;
+            YearPlanWeek week = (YearPlanWeek)objectListView1.SelectedObject;
             if (e.Column.Index > 0)
             {
                 List<Selection> days = new List<Selection>();
@@ -176,12 +176,12 @@ namespace CompetitionCreator
                 diag.ShowDialog();
                 if(diag.Ok)
                 {
-                    AnnoramaWeek anWeek = new AnnoramaWeek(week.week);
+                    YearPlanWeek anWeek = new YearPlanWeek(week.week);
                     week.week.dayOverruled = true;
                     week.week.OverruledDay = (DayOfWeek)diag.Selection.obj;
-                    AnnoramaReeks reeks = model.annorama.reeksen[e.Column.Index - 1];
+                    YearPlan reeks = model.yearPlans.reeksen[e.Column.Index - 1];
                     reeks.weeks.Add(anWeek);
-                    model.annorama.WriteXML();
+                    model.yearPlans.WriteXML();
                     UpdateForm();
                 }
             }
@@ -191,17 +191,17 @@ namespace CompetitionCreator
     {
         public AspectPutterDelegate putter = null;
         public AspectGetterDelegate getter = null;
-        public DelegateObject(AnnoramaReeks reeks)
+        public DelegateObject(YearPlan reeks)
         {
             putter = delegate(object rowObject, object newValue)
             {
-                AnnoramaWeek we = (AnnoramaWeek)rowObject;
-                AnnoramaWeek anWe = reeks.weeks.Find(w => w.week == we.week);
+                YearPlanWeek we = (YearPlanWeek)rowObject;
+                YearPlanWeek anWe = reeks.weeks.Find(w => w.week == we.week);
             };
             getter = delegate(object rowObject) 
             {
-                AnnoramaWeek we = (AnnoramaWeek)rowObject;
-                AnnoramaWeek anWe = reeks.weeks.Find(w => w.week == we.week);
+                YearPlanWeek we = (YearPlanWeek)rowObject;
+                YearPlanWeek anWe = reeks.weeks.Find(w => w.week == we.week);
                 if (anWe!= null) return anWe.weekNrString(((reeks.Count - 1) * 2));
                 else return "-";
             };

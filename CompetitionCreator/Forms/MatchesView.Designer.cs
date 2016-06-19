@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.conflictLabel = new System.Windows.Forms.Label();
             this.checkBoxConflictsOnly = new System.Windows.Forms.CheckBox();
             this.labelGroup = new System.Windows.Forms.Label();
             this.labelSeriePoule = new System.Windows.Forms.Label();
@@ -44,7 +45,6 @@
             this.olvColumn7 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn8 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn9 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.conflictLabel = new System.Windows.Forms.Label();
             this.richTextConflict = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -78,6 +78,16 @@
             this.splitContainer1.Size = new System.Drawing.Size(486, 333);
             this.splitContainer1.SplitterDistance = 282;
             this.splitContainer1.TabIndex = 4;
+            // 
+            // conflictLabel
+            // 
+            this.conflictLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.conflictLabel.AutoSize = true;
+            this.conflictLabel.Location = new System.Drawing.Point(24, 261);
+            this.conflictLabel.Name = "conflictLabel";
+            this.conflictLabel.Size = new System.Drawing.Size(45, 13);
+            this.conflictLabel.TabIndex = 5;
+            this.conflictLabel.Text = "Conflict:";
             // 
             // checkBoxConflictsOnly
             // 
@@ -128,9 +138,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(5, 3);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(101, 13);
+            this.label1.Size = new System.Drawing.Size(138, 13);
             this.label1.TabIndex = 3;
-            this.label1.Text = "Conflict wedstrijden:";
+            this.label1.Text = "Matches:0  Conflicts:0  (0%)";
             // 
             // objectListView1
             // 
@@ -240,16 +250,6 @@
             this.olvColumn9.MinimumWidth = 70;
             this.olvColumn9.Text = "Conflict";
             this.olvColumn9.Width = 70;
-            // 
-            // conflictLabel
-            // 
-            this.conflictLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.conflictLabel.AutoSize = true;
-            this.conflictLabel.Location = new System.Drawing.Point(24, 261);
-            this.conflictLabel.Name = "conflictLabel";
-            this.conflictLabel.Size = new System.Drawing.Size(45, 13);
-            this.conflictLabel.TabIndex = 5;
-            this.conflictLabel.Text = "Conflict:";
             // 
             // richTextConflict
             // 

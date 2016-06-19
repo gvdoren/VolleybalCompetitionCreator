@@ -28,6 +28,10 @@ namespace CompetitionCreator
         public SortedDictionary<int, SchemaWeek> weeks = new SortedDictionary<int, SchemaWeek>();
         public int teamCount = 0;
         public string name;
+        public override string ToString()
+        {
+            return teamCount.ToString() + " - "+name;
+        }
         SchemaWeek week(int i) { return weeks[i]; }
         public void Read(string fileName)
         {

@@ -25,17 +25,32 @@ namespace CompetitionCreator
         string firstHalf;
         string secondHalf;
         string noLatLng;
+        List<Schema> schemas = new List<Schema>();
+            
         public SerieView(Model model, GlobalState state)
         {
             this.model = model;
             this.state = state;
             InitializeComponent();
             objectListView1.SetObjects(model.series);
-            foreach (AnnoramaReeks reeks in model.annorama.reeksen)
+//            foreach (YearPlan reeks in model.yearPlans.reeksen)
+//            {
+//                comboBox1.Items.Add(reeks.Name);
+//            }
+            string[] files = Directory.GetFiles(System.Windows.Forms.Application.StartupPath + @"/Schemas/");
+            foreach (string file in files)
             {
-                comboBox1.Items.Add(reeks.Name);
+                FileInfo fi = new FileInfo(file);
+                Schema newSchema = new Schema();
+                newSchema.Read(file);
+                schemas.Add(newSchema);
             }
-            if (comboBox1.Items.Count > 0) comboBox1.SelectedIndex = 0;
+            schemas.Sort((s1,s2) => s1.teamCount.CompareTo(s2.teamCount));
+            foreach (Schema schema in schemas)
+            {
+                comboBox1.Items.Add(schema);
+                if (comboBox1.Items.Count > 0) comboBox1.SelectedIndex = 0;
+            }
             model.OnMyChange += state_OnMyChange;
             GlobalState.OnMyChange += state_OnMyChange;
             firstHalf = File.ReadAllText(@"html/html_first.html");
@@ -197,7 +212,6 @@ namespace CompetitionCreator
                 //UpdateWebBrowser();
             }
         }
-
         private void objectListView2_SelectionChanged(object sender, EventArgs e)
         {
             button2.Enabled = (objectListView2.SelectedObjects.Count >= 1);
@@ -235,38 +249,33 @@ namespace CompetitionCreator
             model.Evaluate(null);
             model.Changed();
         }
-        private bool selectSchema(int teamCount, ref Schema result)
+        private bool selectYearPlan(int weekCount, ref YearPlan result)
         {
-            List<Schema> schemas = new List<Schema>();
-            string[] files = Directory.GetFiles(System.Windows.Forms.Application.StartupPath + @"/Schemas/");
-            foreach (string file in files)
+            List<YearPlan> yearPlans = model.yearPlans.reeksen.FindAll(p => (p.Count-1)*2 == weekCount);
+            List<Selection> possiblePlans = new List<Selection>();
+            foreach (YearPlan plan in yearPlans)
             {
-                FileInfo fi = new FileInfo(file);
-                Schema newSchema = new Schema();
-                newSchema.Read(file);
-                schemas.Add(newSchema);
+                Selection sel = new Selection(plan.Name, plan);
+                possiblePlans.Add(sel);
             }
-            List<Schema> correctSchemas = schemas.FindAll(s => s.teamCount == teamCount);
-            List<Selection> possibleSchemas = new List<Selection>();
-            foreach (Schema schema in correctSchemas)
+            if(possiblePlans.Count > 0)
             {
-                Selection sel = new Selection(schema.name, schema);
-                possibleSchemas.Add(sel);
-            }
-            Selection sel1 = new Selection("Generate schema", 0);
-            possibleSchemas.Add(sel1);
-            possibleSchemas[0].selected = true;
-            SelectionDialog diag = new SelectionDialog(possibleSchemas);
-            diag.Text = "Select the schema to be used";
-            diag.ShowDialog();
-            if (diag.Ok)
-            {
-                result = (Schema)diag.Selection.obj;
-                return true;
+                possiblePlans[0].selected = true;
+                SelectionDialog diag = new SelectionDialog(possiblePlans);
+                diag.Text = "Select the year plan to be used";
+                diag.ShowDialog();
+                if (diag.Ok)
+                {
+                    result = (YearPlan)diag.Selection.obj;
+                    return true;
+                }
             } else
-                return false;
+            {
+                MessageBox.Show("No year plan available for a schema with "+weekCount.ToString()+"weeks.");
+            }
+            return false;
         }
-        private void createPoule(Serie serie, int teamCount, AnnoramaReeks reeks, Schema schema)
+        private void createPoule(Serie serie, int teamCount, YearPlan reeks, Schema schema)
         {
             char Letter = 'A';
             List<Poule> poules = serie.poules.ToList();
@@ -275,7 +284,7 @@ namespace CompetitionCreator
             {
                 if (p.name == Letter.ToString()) Letter++;
             }
-            List<AnnoramaWeek> weeks = reeks.weeks;
+            List<YearPlanWeek> weeks = reeks.weeks;
             Poule poule = new Poule(Letter.ToString(), teamCount, serie);
             // Create the week lists
             int k = 1;
@@ -299,18 +308,13 @@ namespace CompetitionCreator
         {
             if (comboBox1.SelectedItem != null)
             {
-                AnnoramaReeks reeks = model.annorama.GetReeks(comboBox1.SelectedItem.ToString());
-                if (reeks == null) return;
-                if (reeks.weeks.Count < (reeks.Count - 1) * 2)
+                Schema schema = (Schema) comboBox1.SelectedItem;
+                int weekCount = schema.weeks.Count;
+
+                YearPlan plan = null;
+                if(selectYearPlan(weekCount, ref plan))
                 {
-                    Error.AddManualError("Deze annorama reeks heeft te weinig wedstrijden. ",reeks.Name);
-                    MessageBox.Show("Deze annorama reeks heeft te weinig wedstrijden. ");
-                    return;
-                }
-                Schema schema = null;
-                if(selectSchema(reeks.Count, ref schema))
-                {
-                    createPoule(serie, reeks.Count, reeks, schema);
+                    createPoule(serie, plan.Count, plan, schema);
                 }
                 else return;
                 model.RenewConstraints();
@@ -633,21 +637,17 @@ namespace CompetitionCreator
         {
             if (comboBox1.SelectedItem != null)
             {
-                AnnoramaReeks reeks = model.annorama.GetReeks(comboBox1.SelectedItem.ToString());
-                if (reeks == null) return;
-                if (reeks.weeks.Count < (reeks.Count - 1) * 2)
-                {
-                    MessageBox.Show("Deze annorama reeks heeft te weinig wedstrijden. ");
-                    return;
-                }
-                Schema schema = null;
-                if (selectSchema(reeks.Count, ref schema))
+                Schema schema = (Schema)comboBox1.SelectedItem;
+                int weekCount = schema.weeks.Count;
+
+                YearPlan plan = null;
+                if (selectYearPlan(weekCount, ref plan))
                 {
                     foreach (Serie serie in objectListView1.SelectedObjects)
                     {
                         while (serie.teams.Count > serie.poules.Sum(p => p.maxTeams))
                         {
-                            createPoule(serie, reeks.Count, reeks, schema);
+                            createPoule(serie, plan.Count, plan, schema);
                         }
                         // Divide teams
                         DivideTeams(serie);
@@ -658,10 +658,7 @@ namespace CompetitionCreator
                 model.Evaluate(null);
                 model.Changed();
             }
-
         }
-
-
     }
 }
  

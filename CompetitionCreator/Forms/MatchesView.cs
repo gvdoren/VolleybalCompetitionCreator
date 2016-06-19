@@ -51,6 +51,7 @@ namespace CompetitionCreator
                 return;
             }
             int conflicts = 0;
+            int allSelectedMatches = 0;
             List<Match> matches = new List<Match>();
             if(GlobalState.selectedClubs.Count>0)
             {
@@ -64,6 +65,7 @@ namespace CompetitionCreator
                             {
                                 if (match.homeTeam.club == club)
                                 {
+                                    allSelectedMatches++;
                                     if(checkBoxConflictsOnly.Checked == false || match.conflict >0 )
                                         matches.Add(match);
                                     if (match.conflict > 0)
@@ -80,6 +82,7 @@ namespace CompetitionCreator
                 {
                     foreach (Match match in poule.matches)
                     {
+                        allSelectedMatches++;
                         if (checkBoxConflictsOnly.Checked == false || match.conflict > 0)
                             matches.Add(match);
                         if (match.conflict > 0)
@@ -88,7 +91,7 @@ namespace CompetitionCreator
                 }
             }
             objectListView1.SetObjects(matches, true);
-            label1.Text = string.Format("Conflits:{0}, Matches:{1}",conflicts,matches.Count);
+            label1.Text = string.Format("Matches:{0}  Conflicts:{1}  ({2:F1}%)", allSelectedMatches, conflicts, ((double)conflicts * 100) / allSelectedMatches);
             /*
             objectListView1.ClearObjects();
             label1.Text = "";
