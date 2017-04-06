@@ -1,0 +1,18 @@
+﻿Importeren van bestaande wedstrijden:
+- Willekeurige wedstrijddagen kan niet. Hij zet ze op de standaarddag die week
+- Ik kan de series van de teams niet goed krijgen:
+  * De inschrijvingen zijn gebaseerd op verschillende reeksen (eerste helft, en tweede helft R2)
+  * Teams in die verschillende reeksen, zitten toch bij elkaar in de reeks.
+  Opl: Teams voor de tweede ronde, blijven vanuit de reeksen in de eerste ronde werken. Bij de poule komt R2A, R2B, ... te staan
+  Doel: 
+    * nieuwe competitie gebaseerd op oorsponkelijke teamIds
+	* de inschrijvingen moeten ten alle tijden de data blijven die de clubs hebben ingeschreven
+	* constraints moeten blijven werken.
+	* sporthal-info moet erbij blijven.
+
+- Clubs kunnen niet de attributen van bestaande teams wijzigen (tijd, dag, sporthalbeschikbaarheid)
+
+- Teams deleten, die niet meer in dezelfde reeks starten.
+
+- Teams die niet oorspronkelijk zijn, niet laten zien in het overzicht.
+
