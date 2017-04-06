@@ -14,8 +14,11 @@ Verbeteringen mbt VVB:
 - Robuster maken license-key opslag
 
 Ideeen:
-- Ontmoedigen reserve dagen (als het niet uitmaakt)
-- from poule select a schema, not a yearplan.
+- Ontmoedigen reserve week (als het niet uitmaakt)
+  * expliciet opslaagn dat iets een reserve week is
+- Schema editor
+  * different number of rounds
+  * number of teams
 
 High:
 - Vertraging GUI

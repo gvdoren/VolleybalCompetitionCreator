@@ -598,7 +598,7 @@ namespace CompetitionCreator
             writer.WriteLine("Serie,Poule,Poule-team-number,Team,Team-Id,Club,Club-Id,Speeldag,Speeltijd,Groep");
             foreach (Team team in model.teams)
             {
-                if (team.club.Id >= 0)
+                if (team.club.Id >= 0 && !team.deleted)
                 {
                     string pouleName = "-";
                     if (team.poule != null)
@@ -1450,9 +1450,14 @@ namespace CompetitionCreator
                         //serie.AddTeam(team);
                         homeClub.AddTeam(team);
                     }
+                    else 
+                    {
+                        team.serie = serie;
+                    }
                     team.sporthal = homeClub.sporthalls[0]; // just first sporthal.
                     poule.AddTeam(team);
                 }
+                
                 // visitor teams (sommige competities hebben geen heen, en terug reeks
                 if (parameters[visitorTeamIndex].Length > 0 && visitorClub != null)
                 {
@@ -1498,6 +1503,10 @@ namespace CompetitionCreator
                         model.teams.Add(team);
                         //serie.AddTeam(team);
                         visitorClub.AddTeam(team);
+                    }
+                    else
+                    {
+                        team.serie = serie;
                     }
                     if (visitorClub.sporthalls.Count > 0) team.sporthal = visitorClub.sporthalls[0]; // just first sporthal.
                     poule.AddTeam(team);
@@ -1774,7 +1783,8 @@ namespace CompetitionCreator
         public void ConvertVVBCompetitionToCSV(Model model, string filename)
         {
             StreamWriter writer = new StreamWriter(filename);
-            XDocument doc = XDocument.Load(@"http://vvb.volleyadmin.be/services/wedstrijden_xml.php", LoadOptions.SetLineInfo | LoadOptions.SetBaseUri);
+            //XDocument doc = XDocument.Load(@"http://vvb.volleyadmin.be/services/wedstrijden_xml.php", LoadOptions.SetLineInfo | LoadOptions.SetBaseUri);
+            XDocument doc = XDocument.Load(@"http://www.volleyadmin2.be/services/wedstrijden_xml.php?province_id=4", LoadOptions.SetLineInfo | LoadOptions.SetBaseUri);
             XElement kalender = Element(doc, "kalender");
             // Create mapping to known series
             Dictionary<string, Serie> series = new Dictionary<string, Serie>();

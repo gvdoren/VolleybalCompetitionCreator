@@ -73,8 +73,8 @@
             this.vVBConvertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.manageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.yearPlansToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.poulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.subscriptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.poulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.schemasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clubsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -381,31 +381,31 @@
             this.manageToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.manageToolStripMenuItem.Text = "Edit";
             // 
-            // yearPlanToolStripMenuItem1
+            // yearPlansToolStripMenuItem1
             // 
-            this.yearPlansToolStripMenuItem1.Name = "yearPlanToolStripMenuItem1";
-            this.yearPlansToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.yearPlansToolStripMenuItem1.Name = "yearPlansToolStripMenuItem1";
+            this.yearPlansToolStripMenuItem1.Size = new System.Drawing.Size(142, 22);
             this.yearPlansToolStripMenuItem1.Text = "Year plan";
             this.yearPlansToolStripMenuItem1.Click += new System.EventHandler(this.yearplanToolStripMenuItem1_Click);
-            // 
-            // poulesToolStripMenuItem
-            // 
-            this.poulesToolStripMenuItem.Name = "poulesToolStripMenuItem";
-            this.poulesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.poulesToolStripMenuItem.Text = "Poules";
-            this.poulesToolStripMenuItem.Click += new System.EventHandler(this.poulesToolStripMenuItem_Click);
             // 
             // subscriptionsToolStripMenuItem
             // 
             this.subscriptionsToolStripMenuItem.Name = "subscriptionsToolStripMenuItem";
-            this.subscriptionsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.subscriptionsToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.subscriptionsToolStripMenuItem.Text = "Registrations";
             this.subscriptionsToolStripMenuItem.Click += new System.EventHandler(this.subscriptionsToolStripMenuItem_Click);
+            // 
+            // poulesToolStripMenuItem
+            // 
+            this.poulesToolStripMenuItem.Name = "poulesToolStripMenuItem";
+            this.poulesToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.poulesToolStripMenuItem.Text = "Poules";
+            this.poulesToolStripMenuItem.Click += new System.EventHandler(this.poulesToolStripMenuItem_Click);
             // 
             // schemasToolStripMenuItem
             // 
             this.schemasToolStripMenuItem.Name = "schemasToolStripMenuItem";
-            this.schemasToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.schemasToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.schemasToolStripMenuItem.Text = "Schemas";
             this.schemasToolStripMenuItem.Click += new System.EventHandler(this.schemasToolStripMenuItem_Click);
             // 
