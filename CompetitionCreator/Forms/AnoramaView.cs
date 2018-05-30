@@ -121,16 +121,16 @@ namespace CompetitionCreator
                 if (e.Column.Index > 0)
                 {
                     List<Selection> list = new List<Selection>();
-                    for (int i = 1; i <= (reeks.Count) * 2; i++)
+                    for (int i = 1; i <= reeks.WeekCount + 2; i++)
                     {
                         if (reeks.weeks.Exists(w => w.weekNr == i) == false)
                         {
                             YearPlanWeek w = new YearPlanWeek(week.week);
                             w.weekNr = i;
                             string reserve = "";
-                            if (i > (reeks.Count - 1) * 2)
+                            if (i > reeks.WeekCount)
                             {
-                                w.week.round = i - ((reeks.Count - 1) * 2) - 1;
+                                w.week.round = i - reeks.WeekCount - 1;
                                 reserve = " (Reserve round-"+(w.week.round+1).ToString() + ")";
                             }
                             Selection sel = new Selection(i.ToString() + reserve, w);
@@ -202,7 +202,7 @@ namespace CompetitionCreator
             {
                 YearPlanWeek we = (YearPlanWeek)rowObject;
                 YearPlanWeek anWe = reeks.weeks.Find(w => w.week == we.week);
-                if (anWe!= null) return anWe.weekNrString(((reeks.Count - 1) * 2));
+                if (anWe!= null) return anWe.weekNrString(reeks.WeekCount);
                 else return "-";
             };
         }

@@ -263,6 +263,52 @@ namespace CompetitionCreator
             return result.ToArray();
         }
     }
+
+    class ConstraintSchemaTooManyHome : Constraint
+    {
+        public override string Title
+        {
+            get
+            {
+                return name + " - " + poule.serie.name + poule.name;
+            }
+        }
+        public ConstraintSchemaTooManyHome(Poule poule)
+        {
+            name = "Teveel thuiswedstrijden";
+            this.poule = poule;
+        }
+        public override void Evaluate(Model model)
+        {
+            conflict_cost = 0;
+            conflictMatches.Clear();
+            int[] counts = new int[poule.maxTeams]; 
+            if (poule.evaluated)
+            {
+                foreach (Match m in poule.matches)
+                {
+                    counts[m.homeTeamIndex]++;
+                }
+                int upperLimit = (int) Math.Ceiling(((double)poule.matches.Count) / poule.TeamCount);
+                for(int i=0;i<poule.maxTeams;i++)
+                {
+                    if (counts[i] > upperLimit)
+                    {
+                        cost = MySettings.Settings.MatchTooManyHomeMatches;
+                        Match match = poule.matches.First(m => m.homeTeamIndex == i);
+                        AddConflictMatch(VisitorHomeBoth.HomeOnly, match);
+                    }
+
+                }
+            }
+        }
+        public override string[] GetTextDescription()
+        {
+            List<string> result = new List<string>();
+            return result.ToArray();
+        }
+    }
+    
     class ConstraintSchemaTooManyHomeAfterEachOther : Constraint
     {
         public override string Title

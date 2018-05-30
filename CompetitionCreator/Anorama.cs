@@ -11,7 +11,7 @@ namespace CompetitionCreator
     public class YearPlan
     {
         public string Name;
-        public int Count;
+        public int WeekCount;
         public List<YearPlanWeek> weeks = new List<YearPlanWeek>();
     }
     
@@ -66,11 +66,11 @@ namespace CompetitionCreator
         {
             return reeksen.Find(w => w.Name == name);
         }
-        public YearPlan CreateYearPlan(string name, int count)
+        public YearPlan CreateYearPlan(string name, int weekCount)
         {
             YearPlan reeks = new YearPlan();
             reeks.Name = name;
-            reeks.Count = count;
+            reeks.WeekCount = weekCount;
        
             return reeks;
         }
@@ -91,7 +91,7 @@ namespace CompetitionCreator
                 {
                     writer.WriteStartElement("Reeks");
                     writer.WriteAttributeString("Name", reeks.Name);
-                    writer.WriteAttributeString("Count", reeks.Count.ToString());
+                    writer.WriteAttributeString("WeekCount", reeks.WeekCount.ToString());
                     writer.WriteStartElement("Weeks");
                     foreach (YearPlanWeek week in reeks.weeks)
                     {
@@ -130,8 +130,8 @@ namespace CompetitionCreator
                 foreach (XElement reeks in Reeksen)
                 {
                     string name = ImportExport.StringAttribute(reeks, "Name");
-                    int count = ImportExport.IntegerAttribute(reeks, "Count");
-                    YearPlan re = CreateYearPlan(name, count);
+                    int weekCount = ImportExport.IntegerAttribute(reeks, "WeekCount");
+                    YearPlan re = CreateYearPlan(name, weekCount);
                     IEnumerable<XElement> Weeks = ImportExport.Element(reeks, "Weeks").Elements("Week");
                     foreach (XElement week in Weeks)
                     {

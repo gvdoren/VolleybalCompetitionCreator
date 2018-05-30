@@ -702,6 +702,38 @@ namespace CompetitionCreator
         {
             if (optimizableHomeVisit)
             {
+                int homeMatchesCounthome = 0;
+                int homeMatchesCountvisitor = 0;
+                int homeTeamIndex = match.homeTeamIndex;
+                int visitorTeamIndex = match.visitorTeamIndex;
+
+                List<Match> homeList = new List<Match>();  // Generic implementation taking into account 1 or 3 rounds
+                List<Match> visitorList = new List<Match>();
+
+                foreach (Match m in matches)
+                {
+                    if (m.homeTeam == match.homeTeam && m.visitorTeam == match.visitorTeam) homeList.Add(m);
+                    if (m.homeTeam == match.visitorTeam && m.visitorTeam == match.homeTeam) visitorList.Add(m);
+                    if (m.homeTeam == match.homeTeam) homeMatchesCounthome++;
+                    if (m.homeTeam == match.visitorTeam) homeMatchesCountvisitor++;
+                }
+                foreach (Match m in homeList)
+                {
+                    m.homeTeamIndex = visitorTeamIndex;
+                    m.visitorTeamIndex = homeTeamIndex;
+                }
+                foreach (Match m in visitorList)
+                {
+                    m.homeTeamIndex = homeTeamIndex;
+                    m.visitorTeamIndex = visitorTeamIndex;
+                }
+            }
+        }
+
+ /*       public void SwitchHomeTeamVisitorTeam(Model model, Match match)
+        {
+            if (optimizableHomeVisit)
+            {
                 Match match2 = null;
                 Match match1 = null;
                 foreach (Match m in matches)
@@ -719,7 +751,7 @@ namespace CompetitionCreator
                 }
             }
         }
-
+        */
         public Team BestFit(string name)
         {
             Team result = null;

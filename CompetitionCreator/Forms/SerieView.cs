@@ -251,7 +251,7 @@ namespace CompetitionCreator
         }
         private bool selectYearPlan(int weekCount, ref YearPlan result)
         {
-            List<YearPlan> yearPlans = model.yearPlans.reeksen.FindAll(p => (p.Count-1)*2 == weekCount);
+            List<YearPlan> yearPlans = model.yearPlans.reeksen.FindAll(p => p.WeekCount == weekCount);
             List<Selection> possiblePlans = new List<Selection>();
             foreach (YearPlan plan in yearPlans)
             {
@@ -314,7 +314,7 @@ namespace CompetitionCreator
                 YearPlan plan = null;
                 if(selectYearPlan(weekCount, ref plan))
                 {
-                    createPoule(serie, plan.Count, plan, schema);
+                    createPoule(serie, schema.teamCount, plan, schema);
                 }
                 else return;
                 model.RenewConstraints();
@@ -647,7 +647,7 @@ namespace CompetitionCreator
                     {
                         while (serie.teams.Count > serie.poules.Sum(p => p.maxTeams))
                         {
-                            createPoule(serie, plan.Count, plan, schema);
+                            createPoule(serie, schema.teamCount, plan, schema);
                         }
                         // Divide teams
                         DivideTeams(serie);

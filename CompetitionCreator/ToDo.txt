@@ -7,6 +7,13 @@
 - Check of er teams bijzitten met relatief veel conflicts (bv 6 of 7). 
    - Probeer de pijn te verdelen (XY groups opt, evt. daarna met HomeVisit opt).
    - Indien meerdere poules kan het helpen ze naar een andere poule te verplaatsen
+Volgorde:
+- Check inschrijvingen op: reeks, naam, sporthal ingevuld en niet 0
+- Eerst divisie inschrijvingen, dan limburgse inschrijvingen (Opmerkingen gaan anders verloren)
+- Competitie matchen divisie importeren (omzetten naar csv file, en die importeren)
+- Zorgen dat de divisie reeksen ook mee geevalueerd worden!
+
+
 
 Verbeteringen mbt VVB:
 - Competitie matchen inlezen VVB: expliciet serie-id bij de XML

@@ -174,6 +174,7 @@ namespace CompetitionCreator
                         constraints.Add(new ConstraintSchemaTooClose(poule));
                         constraints.Add(new ConstraintPouleInconsistent(poule));
                         constraints.Add(new ConstraintPouleTwoTeamsOfSameClub(poule));
+                        constraints.Add(new ConstraintSchemaTooManyHome(poule));
                         //constraints.Add(new ConstraintPouleOddEvenWeek(poule));
                         //constraints.Add(new ConstraintPouleFullLastTwoWeeks(poule));
                         constraints.Add(new ConstraintSchemaTooManyHomeAfterEachOther(poule));

@@ -99,6 +99,10 @@ namespace CompetitionCreator
         [DefaultValue(1000)]
         public int MatchTooCloseCost { get; set; }
         [Category("Constraints")]
+        [DisplayName("Constraint.Match.Too.Many.Home.Matches")]
+        [DefaultValue(400)]
+        public int MatchTooManyHomeMatches { get; set; }
+        [Category("Constraints")]
         [DisplayName("Constraint.HomeMatches.Too.Many.After.Each.Other")]
         [DefaultValue(4)]
         public int MatchTooManyAfterEachOther { get; set; }

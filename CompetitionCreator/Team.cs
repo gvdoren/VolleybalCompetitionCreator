@@ -121,7 +121,6 @@ namespace CompetitionCreator
             //if (serie != null) serie.RemoveTeam(this);
             model.RemoveTeam(this);
         }
-        public List<DateTime> plannedMatches = new List<DateTime>();
         public static bool Overlap(List<Team> group1, List<Team> group2)
         {
             return group1.Exists(t1 => group2.Exists(t2 => t2 == t1));
