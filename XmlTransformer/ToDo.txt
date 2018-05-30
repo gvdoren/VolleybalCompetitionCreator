@@ -16,3 +16,9 @@
 
 - Teams die niet oorspronkelijk zijn, niet laten zien in het overzicht.
 
+
+Nog te doen:
+- Bij terug importeren van data van VVB, weer terug de poules bij de inschrijvingen krijgen (en bij of alleen bij matches importeren)
+- Divisie wedstrijden importeren
+
+
