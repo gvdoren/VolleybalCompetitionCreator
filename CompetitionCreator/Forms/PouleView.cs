@@ -397,7 +397,7 @@ namespace CompetitionCreator
                 List<Constraint> constraints = new List<Constraint>();
                 foreach (Object obj in objectListWeeks.SelectedObjects)
                 {
-                    KeyValuePair<MatchWeek, int> kvp = (KeyValuePair<MatchWeek, int>)obj;
+                    KeyValuePair<MatchWeek, KeyValuePair<int, int>> kvp = (KeyValuePair<MatchWeek, KeyValuePair<int, int>>)obj;
                     constraints.AddRange(kvp.Key.conflictConstraints);
                 }
                 GlobalState.ShowConstraints(constraints);
