@@ -50,7 +50,7 @@ namespace CompetitionCreator
             }
             return false;
         }
-        public DayOfWeek Day { get { return datetime.DayOfWeek; } }
+        private DayOfWeek Day { get { return datetime.DayOfWeek; } }
         public string DayString
         {
             get
@@ -77,16 +77,26 @@ namespace CompetitionCreator
             }
         }
 
-        private Time time;
+        private Time time = null;
+        public bool IsTimeOverruled()
+        {
+            return time != null;
+        }
         public Time Time
         {
             get
             {
-                return homeTeam.defaultTime;
+                if (time != null)
+                    return time;
+                else
+                    return homeTeam.defaultTime;
             }
             set
             {
-                time = value;
+                if (value == homeTeam.defaultTime)
+                    time = null;
+                else
+                    time = value;
             }
         }
         public Team homeTeam { get { return poule.teams[homeTeamIndex]; } }

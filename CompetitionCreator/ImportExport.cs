@@ -804,6 +804,8 @@ namespace CompetitionCreator
                     writer.WriteAttributeString("homeTeam", match.homeTeamIndex.ToString());
                     writer.WriteAttributeString("visitorTeam", match.visitorTeamIndex.ToString());
                     writer.WriteAttributeString("week", match.weekIndex.ToString());
+                    if(match.IsTimeOverruled())
+                        writer.WriteAttributeString("time", match.Time.ToString());
                     writer.WriteEndElement();
                 }
                 writer.WriteEndElement();
@@ -950,7 +952,11 @@ namespace CompetitionCreator
                     int weekIndex = IntegerAttribute(match, "week");
                     int homeTeam = IntegerAttribute(match, "homeTeam");
                     int visitorTeam = IntegerAttribute(match, "visitorTeam");
-                    po.matches.Add(new Match(weekIndex, homeTeam, visitorTeam, serie, po));
+                    Match m = new Match(weekIndex, homeTeam, visitorTeam, serie, po);
+                    string s = StringOptionalAttribute(match, null, "time");
+                    if(s != null)
+                        m.Time = new Time(DateTime.Parse(s));
+                    po.matches.Add(m);
                 }
             }
         }
@@ -1071,8 +1077,8 @@ namespace CompetitionCreator
                 {
                     string sporthallName = StringAttribute(sporthal, "Name");
                     int id = IntegerAttribute(sporthal, "Id");
-                    string latAttrString = StringOptionalAttribute(sporthal, null, "Latitude");
-                    string lngAttrString = StringOptionalAttribute(sporthal, null, "Longitude");
+                    string latAttrString = StringOptionalAttribute(sporthal, null, "Latitude", "latitude");
+                    string lngAttrString = StringOptionalAttribute(sporthal, null, "Longitude", "longitude");
                     //VVB hack:
                     {
                         if (sporthallName == "-")
@@ -1538,7 +1544,10 @@ namespace CompetitionCreator
                             int visitorPouleTeamIndex = poule.teams.FindIndex(t => t.Id == visitorTeamIndex1);
                             MatchWeek we = new MatchWeek(DateTime.Parse(parameters[dateIndex] + " " + parameters[timeIndex]));
                             int index = poule.weeks.FindIndex(w => w == we);
-                            poule.matches.Add(new Match(index, homePouleTeamIndex, visitorPouleTeamIndex, serie, poule));
+                            Match m = new Match(index, homePouleTeamIndex, visitorPouleTeamIndex, serie, poule);
+                            m.Time = new Time(DateTime.Parse(parameters[timeIndex]));
+                            Time ti = m.Time;
+                            poule.matches.Add(m);
                         }
                     }
                 }
@@ -1784,7 +1793,7 @@ namespace CompetitionCreator
         {
             StreamWriter writer = new StreamWriter(filename);
             //XDocument doc = XDocument.Load(@"http://vvb.volleyadmin.be/services/wedstrijden_xml.php", LoadOptions.SetLineInfo | LoadOptions.SetBaseUri);
-            XDocument doc = XDocument.Load(@"http://www.volleyadmin2.be/services/wedstrijden_xml.php?province_id=4", LoadOptions.SetLineInfo | LoadOptions.SetBaseUri);
+            XDocument doc = XDocument.Load(@"http://www.volleyadmin2.be/services/wedstrijden_xml.php?province_id=11", LoadOptions.SetLineInfo | LoadOptions.SetBaseUri);
             XElement kalender = Element(doc, "kalender");
             // Create mapping to known series
             Dictionary<string, Serie> series = new Dictionary<string, Serie>();

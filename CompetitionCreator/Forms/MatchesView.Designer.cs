@@ -37,8 +37,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.objectListView1 = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn5 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn6 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -187,19 +187,21 @@
             this.olvColumn1.Text = "Datum";
             this.olvColumn1.Width = 70;
             // 
-            // olvColumn2
-            // 
-            this.olvColumn2.AspectName = "homeTeam.defaultTime";
-            this.olvColumn2.CellPadding = null;
-            this.olvColumn2.Text = "Tijd";
-            this.olvColumn2.Width = 40;
-            // 
             // olvColumn3
             // 
             this.olvColumn3.AspectName = "DayString";
             this.olvColumn3.CellPadding = null;
+            this.olvColumn3.DisplayIndex = 1;
             this.olvColumn3.Text = "Dag";
             this.olvColumn3.Width = 35;
+            // 
+            // olvColumn2
+            // 
+            this.olvColumn2.AspectName = "Time";
+            this.olvColumn2.CellPadding = null;
+            this.olvColumn2.DisplayIndex = 2;
+            this.olvColumn2.Text = "Tijd";
+            this.olvColumn2.Width = 40;
             // 
             // olvColumn4
             // 

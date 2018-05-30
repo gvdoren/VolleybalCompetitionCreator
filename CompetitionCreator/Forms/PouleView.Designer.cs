@@ -216,7 +216,7 @@
             // 
             // olvColumn1
             // 
-            this.olvColumn1.AspectName = "homeTeam.defaultTime";
+            this.olvColumn1.AspectName = "Time";
             this.olvColumn1.AspectToStringFormat = "";
             this.olvColumn1.CellPadding = null;
             this.olvColumn1.MaximumWidth = 40;
