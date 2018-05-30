@@ -198,6 +198,8 @@ namespace CompetitionCreator
                     index++;
                 }
             }
+            if (position > newList.Count)
+                newList.Add(t1);
             poule.teams = newList;
         }
         private void Switch_Click(object sender, EventArgs e)
