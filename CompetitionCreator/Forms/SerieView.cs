@@ -32,7 +32,7 @@ namespace CompetitionCreator
             this.model = model;
             this.state = state;
             InitializeComponent();
-            objectListView1.SetObjects(model.series);
+            objectListView1.SetObjects(model.series.Where(s => s.imported == false));
 //            foreach (YearPlan reeks in model.yearPlans.reeksen)
 //            {
 //                comboBox1.Items.Add(reeks.Name);
@@ -82,7 +82,7 @@ namespace CompetitionCreator
         }
         void UpdateSerieList()
         {
-            objectListView1.SetObjects(model.series, true);
+            objectListView1.SetObjects(model.series.Where(s =>s.imported == false), true);
             if (serie != null)
             {
                 objectListView1.SelectedObject = serie;
@@ -658,6 +658,11 @@ namespace CompetitionCreator
                 model.Evaluate(null);
                 model.Changed();
             }
+        }
+
+        private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        {
+
         }
     }
 }

@@ -85,7 +85,7 @@ namespace CompetitionCreator
             form.ShowDialog();
             if (form.Result)
             {
-                InputForm form1 = new InputForm("Maximum number of teams", "Enter the maximum number of teams of this year plan.");
+                InputForm form1 = new InputForm("Number of matches", "Enter the maximum number of matches (weeks) each team plays in this year plan.");
                 form1.ShowDialog();
                 if(form1.Result)
                 {

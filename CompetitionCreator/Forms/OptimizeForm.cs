@@ -408,6 +408,45 @@ namespace CompetitionCreator
         {
             GlobalState.optimizeLevel = comboBox1.SelectedIndex;
         }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            ProgressDialog diag = new ProgressDialog();
+            diag.WorkFunction += OptimizeAllPoulesForever2;
+            diag.CompletionFunction += OptimizePoulesCompleted;
+            diag.Start("Optimizing", null);
+        }
+        private void OptimizeAllPoulesForever2(IProgress intf)
+        {
+            OptimizePoulesForever2(intf, model.poules);
+        }
+        private void OptimizePoulesForever2(IProgress intf, List<Poule> poules)
+        {
+            int minConflict = model.TotalConflicts();
+            bool cont = true;
+            int i = 0;
+            do
+            {
+                OptimizePoules(intf, poules);
+                if (model.TotalConflicts() < minConflict)
+                    minConflict = model.TotalConflicts();
+                Console.WriteLine(string.Format("{0}. Optimize Poules finished: {1} ({2})", i, model.TotalConflicts(), minConflict));
+                if (intf.Cancelled()) cont = false;
+                i++;
+                Random rnd = new Random();
+                foreach (Poule poule in poules)
+                {
+                    for (int count = rnd.Next(0, 2); count > 0; count--)
+                    {
+                        Team temp = poule.teams[0];
+                        poule.teams.RemoveAt(0);
+                        poule.teams.Add(temp);
+                    }
+                }
+                model.Evaluate(null);
+                model.Changed();
+            } while (cont);
+        }
     }
 
 }

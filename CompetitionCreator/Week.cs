@@ -146,15 +146,31 @@ namespace CompetitionCreator
                 cachedDatesB[(int)dow] = false;
             }
         }
+        //public int WeekNr()
+        //{
+        //    int WeekNr = 0;
+        //    System.Globalization.CultureInfo cul = System.Globalization.CultureInfo.CurrentCulture;
+        //    WeekNr = cul.Calendar.GetWeekOfYear(
+        //        date,
+        //        System.Globalization.CalendarWeekRule.FirstFullWeek,
+        //        DayOfWeek.Monday);
+        //    return WeekNr;
+        //}
+        public int WeekNumber { get { return WeekNr(); } }
         public int WeekNr()
         {
-            int WeekNr = 0;
-            System.Globalization.CultureInfo cul = System.Globalization.CultureInfo.CurrentCulture;
-            WeekNr = cul.Calendar.GetWeekOfYear(
-                date,
-                System.Globalization.CalendarWeekRule.FirstFullWeek,
-                DayOfWeek.Monday);
-            return WeekNr;
+            // Seriously cheat.  If its Monday, Tuesday or Wednesday, then it'll 
+            // be the same week# as whatever Thursday, Friday or Saturday are,
+            // and we always get those right
+            DateTime time = date;
+            DayOfWeek day = System.Globalization.CultureInfo.InvariantCulture.Calendar.GetDayOfWeek(time);
+            if (day >= DayOfWeek.Monday && day <= DayOfWeek.Wednesday)
+            {
+                time = time.AddDays(3);
+            }
+
+            // Return the week of our adjusted day
+            return System.Globalization.CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(time, System.Globalization.CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
         }
     }
 }

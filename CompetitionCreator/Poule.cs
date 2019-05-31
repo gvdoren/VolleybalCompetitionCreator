@@ -834,14 +834,14 @@ namespace CompetitionCreator
         }
         public bool OptimizeSchema6Int(Model model, IProgress intf, int optimizationLevel, ref int roundref, ref int count)
         {
-            if (maxTeams != 6) return false;
+            if (maxTeams > 6) return false;
             while(roundref < 2)
             {
                 int round = roundref;
-                UInt32[] days = new UInt32[5];
-                for (int i = 0; i < 5; i++) days[i] = 0;
-                UInt32[] bitPatterns = new UInt32[15];
-                UInt32[] schema = new UInt32[15];
+                UInt32[] days = new UInt32[maxTeams-1];
+                for (int i = 0; i < days.Count(); i++) days[i] = 0;
+                UInt32[] bitPatterns = new UInt32[(maxTeams * (maxTeams-1))/2];
+                UInt32[] schema = new UInt32[(maxTeams * (maxTeams - 1)) / 2];
                 List<Match> selectedMatches = matches.Where(m => m.Week.round == round).ToList();
                 for (int i = 0; i < selectedMatches.Count; i++)
                 {
@@ -849,7 +849,6 @@ namespace CompetitionCreator
                 }
                 List<List<UInt32>> schemas = new List<List<uint>>();
                 RecursiveFullSchema(model, ref days, ref bitPatterns, ref schema, ref schemas, selectedMatches.Count - 1);
-                Console.WriteLine("Counted {0} schemas", schemas.Count);
                 List<int> indexes = new List<int>();
                 foreach (var m in selectedMatches)
                 {
@@ -897,7 +896,7 @@ namespace CompetitionCreator
         {
             if (matchNumber >= 0)
             {
-                for (UInt32 d = 0; d < 5; d++)
+                for (UInt32 d = 0; d < days.Count(); d++)
                 {
                     if ((days[d] & bitPatterns[matchNumber]) == 0)
                     {
@@ -910,12 +909,13 @@ namespace CompetitionCreator
             }
             else
             {
-                List<UInt32> newSchema = new List<uint>();
-                for (int i = 0; i < 15; i++)
-                {
-                    newSchema.Add(schema[i]);
-                }
-                schemas.Add(newSchema);
+                //List<UInt32> newSchema = new List<uint>();
+                //for (int i = 0; i < 15; i++)
+                //{
+                //    newSchema.Add(schema[i]);
+                //}
+                //schemas.Add(newSchema);
+                schemas.Add(schema.ToList());
             }
          }
 

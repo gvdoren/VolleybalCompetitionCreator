@@ -84,15 +84,15 @@ namespace CompetitionCreator
         public int DifferentGroupsOnSameDayOverlappingExtraCost { get; set; }
         [Category("Constraints")]
         [DisplayName("Constraint.Sporthal.NotAvailable.Cost.High")]
-        [DefaultValue(60)]
+        [DefaultValue(70)]
         public int SporthalNotAvailableCostHigh { get; set; }
         [Category("Constraints")]
         [DisplayName("Constraint.Sporthal.NotAvailable.Cost.Medium")]
-        [DefaultValue(40)]
+        [DefaultValue(50)]
         public int SporthalNotAvailableCostMedium { get; set; }
         [Category("Constraints")]
         [DisplayName("Constraint.Sporthal.NotAvailable.Cost.Low")]
-        [DefaultValue(20)]
+        [DefaultValue(30)]
         public int SporthalNotAvailableCostLow { get; set; }
         [Category("Constraints")]
         [DisplayName("Constraint.Match.Too.Close.Costs")]

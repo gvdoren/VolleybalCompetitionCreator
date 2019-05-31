@@ -22,3 +22,8 @@ Nog te doen:
 - Divisie wedstrijden importeren
 
 
+
+Vlaams brabant:
+- Meerder poules selecteren en een reeks aan toevoegen
+
+

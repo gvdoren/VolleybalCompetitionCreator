@@ -177,7 +177,8 @@ namespace CompetitionCreator
                 for (DateTime current = begin; current < end; current = current.AddDays(7))
                 {
                     MatchWeek w = new MatchWeek(current);
-                    availabilityGrid.Rows.Add(w, w.Monday.ToString("dd-MM"), w.Sunday.ToString("dd-MM"), 
+                    availabilityGrid.Rows.Add(w, w.Monday.ToString("dd-MM"), w.Sunday.ToString("dd-MM"),
+                                                    w.WeekNr(),
                                                     sporthal.NotAvailable.Contains(w.Monday) == false, 
                                                     sporthal.NotAvailable.Contains(w.Tuesday) == false,
                                                     sporthal.NotAvailable.Contains(w.Wednesday) == false,
@@ -213,7 +214,7 @@ namespace CompetitionCreator
         }
         private void dataGridView3_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex > 0 && e.RowIndex >= 0)
+            if (e.ColumnIndex > 1 && e.RowIndex >= 0)
             {
                 DataGridViewRow row = availabilityGrid.Rows[e.RowIndex];
                 MatchWeek w = (MatchWeek)row.Cells[0].Value;

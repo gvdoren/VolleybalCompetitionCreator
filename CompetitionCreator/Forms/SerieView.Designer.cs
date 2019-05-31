@@ -305,6 +305,7 @@
             this.webBrowser1.ScrollBarsEnabled = false;
             this.webBrowser1.Size = new System.Drawing.Size(491, 327);
             this.webBrowser1.TabIndex = 8;
+            this.webBrowser1.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.webBrowser1_DocumentCompleted);
             // 
             // checkBox1
             // 

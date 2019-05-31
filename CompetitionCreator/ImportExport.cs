@@ -1144,8 +1144,10 @@ namespace CompetitionCreator
                         {
                             string from = notAvailable.Attribute("from").Value;
                             string until = notAvailable.Attribute("until").Value;
-                            DateTime dtFrom = DateTime.Parse(from);
+                            DateTime dt = DateTime.Parse(from);
+                            DateTime dtFrom = new DateTime(dt.Year, dt.Month, dt.Day);
                             DateTime dtUntil = DateTime.Parse(until);
+
                             while(dtFrom < dtUntil)
                             {
                                
@@ -1381,20 +1383,25 @@ namespace CompetitionCreator
                     sporthallclub = new SporthallAvailability(sporthal);
                     homeClub.sporthalls.Add(sporthallclub);
                 }
+                // Calculate the size of the poule
+                List<string> teamsList = new List<string>();
+                List<string[]> SelectedLines = ParameterLines.FindAll(l => l[serieIndex] == parameters[serieIndex] && l[pouleIndex] == parameters[pouleIndex]);
+                foreach (string[] parameterline in SelectedLines)
+                {
+                    if (teamsList.Contains(parameterline[homeTeamIndex]) == false) teamsList.Add(parameterline[homeTeamIndex]);
+                    if (teamsList.Contains(parameterline[visitorTeamIndex]) == false) teamsList.Add(parameterline[visitorTeamIndex]);
+                }
+                int c = teamsList.Count;
                 // poules toevoegen indien ze niet bestaan
                 Poule poule = serie.poules.Find(s => s.name == parameters[pouleIndex]);
+                if (poule != null && poule.maxTeams < c)
+                {
+                    model.poules.Remove(poule);
+                    serie.poules.Remove(poule);
+                    poule = null;
+                }
                 if (poule == null)
                 {
-                    // Calculate the size of the poule
-                    List<string> teamsList = new List<string>();
-                    List<string[]> SelectedLines = ParameterLines.FindAll(l => l[serieIndex] == parameters[serieIndex] && l[pouleIndex] == parameters[pouleIndex]);
-                    foreach (string[] parameterline in SelectedLines)
-                    {
-                        if (teamsList.Contains(parameterline[homeTeamIndex]) == false) teamsList.Add(parameterline[homeTeamIndex]);
-                        if (teamsList.Contains(parameterline[visitorTeamIndex]) == false) teamsList.Add(parameterline[visitorTeamIndex]);
-                    }
-                    int c = teamsList.Count;
-
                     poule = new Poule(parameters[pouleIndex], c, serie);
                     model.poules.Add(poule);
                     serie.poules.Add(poule);
@@ -1539,6 +1546,7 @@ namespace CompetitionCreator
                         if (parameters[homeTeamIndex].Length > 0 && parameters[visitorTeamIndex].Length > 0)
                         {
                             int homeTeamIndex1 = int.Parse(parameters[homeTeamIdIndex]);
+                            Team t2 = model.teams.Find(t1 => t1.Id == homeTeamIndex1);
                             int homePouleTeamIndex = poule.teams.FindIndex(t => t.Id == homeTeamIndex1);
                             int visitorTeamIndex1 = int.Parse(parameters[visitorTeamIdIndex]);
                             int visitorPouleTeamIndex = poule.teams.FindIndex(t => t.Id == visitorTeamIndex1);

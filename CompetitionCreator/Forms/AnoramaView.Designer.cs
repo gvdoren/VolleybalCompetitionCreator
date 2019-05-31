@@ -52,7 +52,7 @@
             this.objectListView1.Name = "objectListView1";
             this.objectListView1.OwnerDraw = true;
             this.objectListView1.ShowGroups = false;
-            this.objectListView1.Size = new System.Drawing.Size(522, 578);
+            this.objectListView1.Size = new System.Drawing.Size(478, 578);
             this.objectListView1.TabIndex = 0;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
@@ -75,11 +75,11 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(540, 38);
+            this.button1.Location = new System.Drawing.Point(512, 38);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(100, 23);
+            this.button1.Size = new System.Drawing.Size(128, 23);
             this.button1.TabIndex = 1;
-            this.button1.Text = "Create new";
+            this.button1.Text = "Delete all year plans";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -95,11 +95,11 @@
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Location = new System.Drawing.Point(540, 67);
+            this.button2.Location = new System.Drawing.Point(512, 67);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(100, 23);
+            this.button2.Size = new System.Drawing.Size(128, 23);
             this.button2.TabIndex = 4;
-            this.button2.Text = "Create Column";
+            this.button2.Text = "Create new year plan";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
@@ -113,7 +113,7 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.objectListView1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Name = "Year plans";
+            this.Name = "YearPlanView";
             this.Text = "Year plans";
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).EndInit();
             this.ResumeLayout(false);

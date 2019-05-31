@@ -684,12 +684,16 @@ namespace CompetitionCreator
                 int l1count = l1.Count;
                 foreach (Match match in l1)
                 {
-                    if (match.poule.optimizable == false) l1count += 10;
+                    if (match.homeTeam.sporthal.NotAvailable.Contains(match.datetime.Date) == true)
+                        l1count -= 1;
+                    else if (match.poule.optimizable == false) l1count += 10;
                 }
                 int l2count = l2.Count;
                 foreach (Match match in l2)
                 {
-                    if (match.poule.optimizable == false) l2count += 10;
+                    if (match.homeTeam.sporthal.NotAvailable.Contains(match.datetime.Date) == true)
+                        l2count -= 1;
+                    else if (match.poule.optimizable == false) l2count += 10;
                 }
                 return l1count.CompareTo(l2count);
             });
@@ -1178,13 +1182,16 @@ namespace CompetitionCreator
             cost = 0;
             List<Match> AMatches = new List<Match>();
             List<Match> BMatches = new List<Match>();
+            List<Club> clubs = new List<Club>();
             foreach (Team team in GroupA)
             {
                 if(team.poule != null) AMatches.AddRange(team.poule.matches.FindAll(m => m.homeTeam == team && m.RealMatch()));
+                if (clubs.Contains(team.club) == false) clubs.Add(team.club);
             }
             foreach (Team team in GroupB)
             {
                 if (team.poule != null) BMatches.AddRange(team.poule.matches.FindAll(m => m.homeTeam == team && m.RealMatch()));
+                if (clubs.Contains(team.club) == false) clubs.Add(team.club);
             }
             if(AMatches.Count >0 && BMatches.Count >0)
             {
@@ -1200,11 +1207,13 @@ namespace CompetitionCreator
                         // calculate the cost of each overlap to determine which is highest.
                         int costA = calculateCost(overlapA, overlapB);
                         int costB = calculateCost(overlapB, overlapA);
-                        if(costA > costB)
+                        // indien de conflicten bestaan tussen meerdere clubs, op beide de conflicten aanrekenen
+                        if(costA > costB || clubs.Count > 1)
                         {   // show overlapB as conflicts
                             foreach(Match m in overlapB) AddConflictMatch(VisitorHomeBoth.HomeOnly,m);
                             conflict_cost += costB;
-                        } else
+                        } 
+                        if (costA <= costB || clubs.Count > 1)
                         {   // show overlapA as conflicts
                             foreach(Match m in overlapA) AddConflictMatch(VisitorHomeBoth.HomeOnly,m);
                             conflict_cost += costA;

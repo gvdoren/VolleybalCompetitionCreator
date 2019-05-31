@@ -50,16 +50,6 @@
             this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label1 = new System.Windows.Forms.Label();
             this.availabilityGrid = new System.Windows.Forms.DataGridView();
-            this.week = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.until = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.monday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.tuesday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.wednesday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.thursday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.friday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.saturday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.sunday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
@@ -83,6 +73,17 @@
             this.buttonDeleteTeamRequirements = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.label4 = new System.Windows.Forms.Label();
+            this.week = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.until = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.WeekNr = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.monday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.tuesday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.wednesday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.thursday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.friday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.saturday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.sunday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.availabilityGrid)).BeginInit();
@@ -335,6 +336,7 @@
             this.week,
             this.Column2,
             this.until,
+            this.WeekNr,
             this.monday,
             this.tuesday,
             this.wednesday,
@@ -348,82 +350,6 @@
             this.availabilityGrid.Size = new System.Drawing.Size(248, 490);
             this.availabilityGrid.TabIndex = 7;
             this.availabilityGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView3_CellContentClick);
-            // 
-            // week
-            // 
-            this.week.HeaderText = ".";
-            this.week.Name = "week";
-            this.week.Visible = false;
-            // 
-            // Column2
-            // 
-            this.Column2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Column2.DataPropertyName = "Monday";
-            this.Column2.HeaderText = "From";
-            this.Column2.MinimumWidth = 40;
-            this.Column2.Name = "Column2";
-            // 
-            // until
-            // 
-            this.until.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.until.DataPropertyName = "Sunday";
-            this.until.HeaderText = "Until";
-            this.until.Name = "until";
-            // 
-            // monday
-            // 
-            this.monday.HeaderText = "Mon";
-            this.monday.MinimumWidth = 30;
-            this.monday.Name = "monday";
-            this.monday.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.monday.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.monday.Width = 30;
-            // 
-            // tuesday
-            // 
-            this.tuesday.HeaderText = "Tue";
-            this.tuesday.MinimumWidth = 30;
-            this.tuesday.Name = "tuesday";
-            this.tuesday.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.tuesday.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.tuesday.Width = 30;
-            // 
-            // wednesday
-            // 
-            this.wednesday.HeaderText = "Wed";
-            this.wednesday.MinimumWidth = 30;
-            this.wednesday.Name = "wednesday";
-            this.wednesday.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.wednesday.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.wednesday.Width = 30;
-            // 
-            // thursday
-            // 
-            this.thursday.HeaderText = "Thu";
-            this.thursday.MinimumWidth = 30;
-            this.thursday.Name = "thursday";
-            this.thursday.Width = 30;
-            // 
-            // friday
-            // 
-            this.friday.HeaderText = "Fri";
-            this.friday.MinimumWidth = 30;
-            this.friday.Name = "friday";
-            this.friday.Width = 30;
-            // 
-            // saturday
-            // 
-            this.saturday.HeaderText = "Sat";
-            this.saturday.MinimumWidth = 30;
-            this.saturday.Name = "saturday";
-            this.saturday.Width = 30;
-            // 
-            // sunday
-            // 
-            this.sunday.HeaderText = "Sun";
-            this.sunday.MinimumWidth = 30;
-            this.sunday.Name = "sunday";
-            this.sunday.Width = 30;
             // 
             // tabControl1
             // 
@@ -701,6 +627,91 @@
             this.label4.TabIndex = 2;
             this.label4.Text = "Free format constraints:";
             // 
+            // week
+            // 
+            this.week.HeaderText = ".";
+            this.week.Name = "week";
+            this.week.Visible = false;
+            this.week.Width = 20;
+            // 
+            // Column2
+            // 
+            this.Column2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Column2.DataPropertyName = "Monday";
+            this.Column2.HeaderText = "From";
+            this.Column2.MinimumWidth = 40;
+            this.Column2.Name = "Column2";
+            // 
+            // until
+            // 
+            this.until.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.until.DataPropertyName = "Sunday";
+            this.until.HeaderText = "Until";
+            this.until.MinimumWidth = 20;
+            this.until.Name = "until";
+            // 
+            // WeekNr
+            // 
+            this.WeekNr.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.WeekNr.HeaderText = "WkNr";
+            this.WeekNr.MinimumWidth = 20;
+            this.WeekNr.Name = "WeekNr";
+            // 
+            // monday
+            // 
+            this.monday.HeaderText = "Mon";
+            this.monday.MinimumWidth = 30;
+            this.monday.Name = "monday";
+            this.monday.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.monday.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.monday.Width = 30;
+            // 
+            // tuesday
+            // 
+            this.tuesday.HeaderText = "Tue";
+            this.tuesday.MinimumWidth = 30;
+            this.tuesday.Name = "tuesday";
+            this.tuesday.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.tuesday.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.tuesday.Width = 30;
+            // 
+            // wednesday
+            // 
+            this.wednesday.HeaderText = "Wed";
+            this.wednesday.MinimumWidth = 30;
+            this.wednesday.Name = "wednesday";
+            this.wednesday.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.wednesday.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.wednesday.Width = 30;
+            // 
+            // thursday
+            // 
+            this.thursday.HeaderText = "Thu";
+            this.thursday.MinimumWidth = 30;
+            this.thursday.Name = "thursday";
+            this.thursday.Width = 30;
+            // 
+            // friday
+            // 
+            this.friday.HeaderText = "Fri";
+            this.friday.MinimumWidth = 30;
+            this.friday.Name = "friday";
+            this.friday.Width = 30;
+            // 
+            // saturday
+            // 
+            this.saturday.HeaderText = "Sat";
+            this.saturday.MinimumWidth = 30;
+            this.saturday.Name = "saturday";
+            this.saturday.Width = 30;
+            // 
+            // sunday
+            // 
+            this.sunday.HeaderText = "Sun";
+            this.sunday.MinimumWidth = 30;
+            this.sunday.Name = "sunday";
+            this.sunday.Width = 30;
+            // 
             // InschrijvingenView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -780,9 +791,13 @@
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button buttonDeleteTeamRequirements;
+        private BrightIdeasSoftware.OLVColumn olvColumn19;
+        private System.Windows.Forms.Button buttonNewTeamRequirement;
         private System.Windows.Forms.DataGridViewTextBoxColumn week;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
         private System.Windows.Forms.DataGridViewTextBoxColumn until;
+        private System.Windows.Forms.DataGridViewTextBoxColumn WeekNr;
         private System.Windows.Forms.DataGridViewCheckBoxColumn monday;
         private System.Windows.Forms.DataGridViewCheckBoxColumn tuesday;
         private System.Windows.Forms.DataGridViewCheckBoxColumn wednesday;
@@ -790,9 +805,6 @@
         private System.Windows.Forms.DataGridViewCheckBoxColumn friday;
         private System.Windows.Forms.DataGridViewCheckBoxColumn saturday;
         private System.Windows.Forms.DataGridViewCheckBoxColumn sunday;
-        private System.Windows.Forms.Button buttonDeleteTeamRequirements;
-        private BrightIdeasSoftware.OLVColumn olvColumn19;
-        private System.Windows.Forms.Button buttonNewTeamRequirement;
 
     }
 }
