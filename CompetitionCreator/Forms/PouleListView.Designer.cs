@@ -46,8 +46,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.objectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.nameColumn,
-            this.conflictsColumn,
-            this.evaluatedColumn});
+            this.conflictsColumn});
             this.objectListView1.FullRowSelect = true;
             this.objectListView1.HideSelection = false;
             this.objectListView1.Location = new System.Drawing.Point(1, -5);
@@ -74,13 +73,17 @@
             this.conflictsColumn.AspectName = "conflict";
             this.conflictsColumn.CellPadding = null;
             this.conflictsColumn.FillsFreeSpace = true;
+            this.conflictsColumn.MaximumWidth = 60;
             this.conflictsColumn.MinimumWidth = 30;
             this.conflictsColumn.Text = "Conflicts";
+            this.conflictsColumn.Width = 30;
             // 
             // evaluatedColumn
             // 
             this.evaluatedColumn.AspectName = "evaluated";
             this.evaluatedColumn.CellPadding = null;
+            this.evaluatedColumn.DisplayIndex = 2;
+            this.evaluatedColumn.IsVisible = false;
             this.evaluatedColumn.Text = "Evaluated";
             // 
             // button1

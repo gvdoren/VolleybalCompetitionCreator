@@ -50,12 +50,19 @@ namespace CompetitionCreator
         private void objectListView1_SelectedIndexChanged(object sender, EventArgs e)
         {
             GlobalState.selectedClubs.Clear();
+            //GlobalState.selectedPoules.Clear();
             foreach (Object obj in objectListView1.SelectedObjects)
             {
                 Club club = (Club)obj;
                 GlobalState.selectedClubs.Add(club);
+                GlobalState.shownPoules.Clear();
+                foreach(Team team in club.teams)
+                {
+                    if (team.poule != null)
+                        GlobalState.shownPoules.Add(team.poule);
+                }
             }
-            GlobalState.selectedPoules.Clear();
+
             GlobalState.Changed();
         }
         private void objectListView1_MouseDoubleClick(object sender, MouseEventArgs e)

@@ -53,13 +53,14 @@ namespace CompetitionCreator
             //serietreeview.Show(dockPanel);
             
             PouleListView pouleListview = new PouleListView(model, state);
-            pouleListview.ShowHint = DockState.DockLeft;
-            pouleListview.Show(clubview.Pane, DockAlignment.Right, 0.5);
+            //pouleListview.ShowHint = DockState.DockLeft;
+            //pouleListview.Show(clubview.Pane, DockAlignment.Right, 0.5);
             //pouleListview.Show(dockPanel);
             MatchesView constraintview = new MatchesView(model, state);
             constraintview.ShowHint = DockState.DockRight;
             constraintview.Show(dockPanel);
             dockPanel.DockRightPortion = 700;
+            dockPanel.DockLeftPortion = 300;
             model.OnMyChange += state_OnMyChange;
             GlobalState.OnMyChange += state_OnMyChange;
             importExport.OpenLastProject(model);

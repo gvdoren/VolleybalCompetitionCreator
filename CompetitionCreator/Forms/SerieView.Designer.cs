@@ -75,7 +75,7 @@
             this.objectListView1.Location = new System.Drawing.Point(0, 12);
             this.objectListView1.Name = "objectListView1";
             this.objectListView1.ShowGroups = false;
-            this.objectListView1.Size = new System.Drawing.Size(620, 262);
+            this.objectListView1.Size = new System.Drawing.Size(637, 262);
             this.objectListView1.TabIndex = 0;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
@@ -87,20 +87,27 @@
             this.olvColumn1.AspectName = "name";
             this.olvColumn1.CellPadding = null;
             this.olvColumn1.FillsFreeSpace = true;
-            this.olvColumn1.MinimumWidth = 50;
+            this.olvColumn1.MinimumWidth = 100;
             this.olvColumn1.Text = "Serie";
+            this.olvColumn1.Width = 100;
             // 
             // olvColumn2
             // 
             this.olvColumn2.AspectName = "poules.Count";
             this.olvColumn2.CellPadding = null;
+            this.olvColumn2.MaximumWidth = 50;
+            this.olvColumn2.MinimumWidth = 30;
             this.olvColumn2.Text = "Poules";
+            this.olvColumn2.Width = 50;
             // 
             // olvColumn3
             // 
             this.olvColumn3.AspectName = "teams.Count";
             this.olvColumn3.CellPadding = null;
+            this.olvColumn3.MaximumWidth = 45;
+            this.olvColumn3.MinimumWidth = 30;
             this.olvColumn3.Text = "Teams";
+            this.olvColumn3.Width = 45;
             // 
             // objectListView2
             // 
@@ -114,10 +121,10 @@
             this.olvColumn10});
             this.objectListView2.FullRowSelect = true;
             this.objectListView2.HideSelection = false;
-            this.objectListView2.Location = new System.Drawing.Point(626, 12);
+            this.objectListView2.Location = new System.Drawing.Point(643, 13);
             this.objectListView2.Name = "objectListView2";
             this.objectListView2.ShowGroups = false;
-            this.objectListView2.Size = new System.Drawing.Size(154, 261);
+            this.objectListView2.Size = new System.Drawing.Size(109, 261);
             this.objectListView2.TabIndex = 1;
             this.objectListView2.UseCompatibleStateImageBehavior = false;
             this.objectListView2.View = System.Windows.Forms.View.Details;
@@ -128,33 +135,36 @@
             // 
             this.olvColumn4.AspectName = "name";
             this.olvColumn4.CellPadding = null;
-            this.olvColumn4.MaximumWidth = 50;
-            this.olvColumn4.MinimumWidth = 50;
-            this.olvColumn4.Text = "Poules";
-            this.olvColumn4.Width = 50;
+            this.olvColumn4.MaximumWidth = 45;
+            this.olvColumn4.MinimumWidth = 40;
+            this.olvColumn4.Text = "Poule";
+            this.olvColumn4.Width = 40;
             // 
             // olvColumn5
             // 
             this.olvColumn5.AspectName = "TeamCount";
             this.olvColumn5.CellPadding = null;
-            this.olvColumn5.MaximumWidth = 60;
-            this.olvColumn5.MinimumWidth = 60;
+            this.olvColumn5.MaximumWidth = 45;
+            this.olvColumn5.MinimumWidth = 45;
             this.olvColumn5.Text = "Teams";
+            this.olvColumn5.Width = 45;
             // 
             // olvColumn10
             // 
             this.olvColumn10.AspectName = "maxTeams";
             this.olvColumn10.CellPadding = null;
-            this.olvColumn10.Text = "Max";
-            this.olvColumn10.Width = 40;
+            this.olvColumn10.MaximumWidth = 20;
+            this.olvColumn10.MinimumWidth = 20;
+            this.olvColumn10.Text = "#";
+            this.olvColumn10.Width = 20;
             // 
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.Enabled = false;
-            this.button1.Location = new System.Drawing.Point(788, 83);
+            this.button1.Location = new System.Drawing.Point(759, 83);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(118, 23);
+            this.button1.Size = new System.Drawing.Size(147, 23);
             this.button1.TabIndex = 2;
             this.button1.Text = "Create Poule";
             this.button1.UseVisualStyleBackColor = true;
@@ -163,9 +173,9 @@
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Location = new System.Drawing.Point(787, 112);
+            this.button2.Location = new System.Drawing.Point(758, 112);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(120, 23);
+            this.button2.Size = new System.Drawing.Size(149, 23);
             this.button2.TabIndex = 3;
             this.button2.Text = "Delete Poule";
             this.button2.UseVisualStyleBackColor = true;
@@ -179,8 +189,7 @@
             this.objectListView3.AllColumns.Add(this.olvColumn9);
             this.objectListView3.AllColumns.Add(this.olvColumn11);
             this.objectListView3.AllColumns.Add(this.olvColumn12);
-            this.objectListView3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.objectListView3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.objectListView3.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumn6,
@@ -189,10 +198,10 @@
             this.olvColumn9});
             this.objectListView3.FullRowSelect = true;
             this.objectListView3.HideSelection = false;
-            this.objectListView3.Location = new System.Drawing.Point(498, 280);
+            this.objectListView3.Location = new System.Drawing.Point(527, 280);
             this.objectListView3.Name = "objectListView3";
             this.objectListView3.ShowGroups = false;
-            this.objectListView3.Size = new System.Drawing.Size(419, 327);
+            this.objectListView3.Size = new System.Drawing.Size(390, 327);
             this.objectListView3.TabIndex = 4;
             this.objectListView3.UseCellFormatEvents = true;
             this.objectListView3.UseCompatibleStateImageBehavior = false;
@@ -206,8 +215,8 @@
             this.olvColumn6.AspectName = "name";
             this.olvColumn6.CellPadding = null;
             this.olvColumn6.FillsFreeSpace = true;
-            this.olvColumn6.MaximumWidth = 300;
-            this.olvColumn6.MinimumWidth = 100;
+            this.olvColumn6.MaximumWidth = 220;
+            this.olvColumn6.MinimumWidth = 300;
             this.olvColumn6.Text = "Team";
             this.olvColumn6.Width = 300;
             // 
@@ -215,31 +224,27 @@
             // 
             this.olvColumn7.AspectName = "poule.name";
             this.olvColumn7.CellPadding = null;
-            this.olvColumn7.FillsFreeSpace = true;
-            this.olvColumn7.MaximumWidth = 50;
+            this.olvColumn7.MaximumWidth = 45;
             this.olvColumn7.MinimumWidth = 20;
             this.olvColumn7.Text = "Poule";
-            this.olvColumn7.Width = 50;
+            this.olvColumn7.Width = 45;
             // 
             // olvColumn8
             // 
             this.olvColumn8.AspectName = "AvgDistance";
             this.olvColumn8.CellPadding = null;
-            this.olvColumn8.FillsFreeSpace = true;
-            this.olvColumn8.MaximumWidth = 50;
-            this.olvColumn8.MinimumWidth = 20;
+            this.olvColumn8.MaximumWidth = 55;
+            this.olvColumn8.MinimumWidth = 50;
             this.olvColumn8.Text = "Distance";
-            this.olvColumn8.Width = 50;
+            this.olvColumn8.Width = 55;
             // 
             // olvColumn9
             // 
             this.olvColumn9.AspectName = "Ranking";
             this.olvColumn9.CellPadding = null;
-            this.olvColumn9.FillsFreeSpace = true;
-            this.olvColumn9.MaximumWidth = 50;
-            this.olvColumn9.MinimumWidth = 20;
-            this.olvColumn9.Text = "Rangschikking";
-            this.olvColumn9.Width = 50;
+            this.olvColumn9.MaximumWidth = 60;
+            this.olvColumn9.MinimumWidth = 50;
+            this.olvColumn9.Text = "Ranking";
             // 
             // olvColumn11
             // 
@@ -248,7 +253,7 @@
             this.olvColumn11.DisplayIndex = 4;
             this.olvColumn11.IsVisible = false;
             this.olvColumn11.MaximumWidth = 50;
-            this.olvColumn11.MinimumWidth = 50;
+            this.olvColumn11.MinimumWidth = 0;
             this.olvColumn11.Text = "Latitude";
             this.olvColumn11.Width = 50;
             // 
@@ -259,16 +264,16 @@
             this.olvColumn12.DisplayIndex = 5;
             this.olvColumn12.IsVisible = false;
             this.olvColumn12.MaximumWidth = 50;
-            this.olvColumn12.MinimumWidth = 50;
+            this.olvColumn12.MinimumWidth = 0;
             this.olvColumn12.Text = "Longitude";
             this.olvColumn12.Width = 50;
             // 
             // button3
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button3.Location = new System.Drawing.Point(787, 141);
+            this.button3.Location = new System.Drawing.Point(758, 141);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(120, 23);
+            this.button3.Size = new System.Drawing.Size(149, 23);
             this.button3.TabIndex = 5;
             this.button3.Text = "Assign Team(s)";
             this.button3.UseVisualStyleBackColor = true;
@@ -278,17 +283,17 @@
             // 
             this.comboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(787, 31);
+            this.comboBox1.Location = new System.Drawing.Point(758, 31);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(121, 21);
+            this.comboBox1.Size = new System.Drawing.Size(150, 21);
             this.comboBox1.TabIndex = 6;
             // 
             // button4
             // 
             this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button4.Location = new System.Drawing.Point(788, 199);
+            this.button4.Location = new System.Drawing.Point(759, 199);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(120, 23);
+            this.button4.Size = new System.Drawing.Size(149, 23);
             this.button4.TabIndex = 7;
             this.button4.Text = "Optimize Distance";
             this.button4.UseVisualStyleBackColor = true;
@@ -296,14 +301,15 @@
             // 
             // webBrowser1
             // 
-            this.webBrowser1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.webBrowser1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.webBrowser1.Location = new System.Drawing.Point(0, 280);
             this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowser1.Name = "webBrowser1";
             this.webBrowser1.ScriptErrorsSuppressed = true;
             this.webBrowser1.ScrollBarsEnabled = false;
-            this.webBrowser1.Size = new System.Drawing.Size(491, 327);
+            this.webBrowser1.Size = new System.Drawing.Size(521, 327);
             this.webBrowser1.TabIndex = 8;
             this.webBrowser1.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.webBrowser1_DocumentCompleted);
             // 
@@ -313,7 +319,7 @@
             this.checkBox1.AutoSize = true;
             this.checkBox1.Checked = true;
             this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox1.Location = new System.Drawing.Point(788, 228);
+            this.checkBox1.Location = new System.Drawing.Point(760, 228);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(114, 17);
             this.checkBox1.TabIndex = 9;
@@ -323,9 +329,9 @@
             // button6
             // 
             this.button6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button6.Location = new System.Drawing.Point(788, 170);
+            this.button6.Location = new System.Drawing.Point(759, 170);
             this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(118, 23);
+            this.button6.Size = new System.Drawing.Size(147, 23);
             this.button6.TabIndex = 11;
             this.button6.Text = "Automatic Divide";
             this.button6.UseVisualStyleBackColor = true;
@@ -335,9 +341,9 @@
             // 
             this.button7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button7.Enabled = false;
-            this.button7.Location = new System.Drawing.Point(789, 251);
+            this.button7.Location = new System.Drawing.Point(760, 251);
             this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(118, 23);
+            this.button7.Size = new System.Drawing.Size(147, 23);
             this.button7.TabIndex = 10;
             this.button7.Text = "Delete Team";
             this.button7.UseVisualStyleBackColor = true;
@@ -347,7 +353,7 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(788, 13);
+            this.label1.Location = new System.Drawing.Point(758, 12);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(49, 13);
             this.label1.TabIndex = 12;
@@ -357,9 +363,9 @@
             // 
             this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button5.Enabled = false;
-            this.button5.Location = new System.Drawing.Point(788, 54);
+            this.button5.Location = new System.Drawing.Point(759, 54);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(118, 23);
+            this.button5.Size = new System.Drawing.Size(147, 23);
             this.button5.TabIndex = 2;
             this.button5.Text = "Create all / Divide";
             this.button5.UseVisualStyleBackColor = true;

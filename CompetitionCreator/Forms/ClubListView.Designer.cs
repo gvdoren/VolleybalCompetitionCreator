@@ -78,19 +78,25 @@
             // 
             this.olvColumn1.AspectName = "conflict";
             this.olvColumn1.CellPadding = null;
+            this.olvColumn1.MaximumWidth = 55;
             this.olvColumn1.Text = "Conflicts";
+            this.olvColumn1.Width = 50;
             // 
             // olvColumn2
             // 
             this.olvColumn2.AspectName = "teams.Count";
             this.olvColumn2.CellPadding = null;
+            this.olvColumn2.MaximumWidth = 45;
             this.olvColumn2.Text = "Teams";
+            this.olvColumn2.Width = 45;
             // 
             // olvColumn3
             // 
             this.olvColumn3.AspectName = "percentage";
             this.olvColumn3.CellPadding = null;
+            this.olvColumn3.MaximumWidth = 20;
             this.olvColumn3.Text = "%";
+            this.olvColumn3.Width = 20;
             // 
             // ClubListView
             // 

@@ -28,12 +28,12 @@ namespace CompetitionCreator
             objectListView1.UseFiltering = true;
             GlobalState.OnMyChange += new MyEventHandler(state_OnMyChange); 
             model.OnMyChange += state_OnMyChange;
-            if (model.licenseKey.Feature(Security.LicenseKey.FeatureType.Expert))
-            {
-                evaluatedColumn.IsVisible = true;
-                objectListView1.RebuildColumns();
-            }
-            else
+            //if (model.licenseKey.Feature(Security.LicenseKey.FeatureType.Expert))
+            //{
+            //    evaluatedColumn.IsVisible = true;
+            //    objectListView1.RebuildColumns();
+            //}
+            //else
             {
                 evaluatedColumn.IsVisible = false;
                 objectListView1.RebuildColumns();
@@ -58,9 +58,12 @@ namespace CompetitionCreator
             }*/
             lock (model)
             {
-                objectListView1.SetObjects(model.poules);
-                objectListView1.BuildList(true);
-                Refresh();
+                objectListView1.SetObjects(GlobalState.shownPoules);
+                objectListView1.SelectedObjects = GlobalState.selectedPoules;
+                
+                //objectListView1.SetObjects(model.poules);
+                //objectListView1.BuildList();
+                //Refresh();
             }
         }
         public class SerieFilter: IModelFilter 
@@ -147,7 +150,8 @@ namespace CompetitionCreator
 
         private void button1_Click(object sender, EventArgs e)
         {
-            GlobalState.selectedClubs.Clear();
+            //GlobalState.selectedClubs.Clear();
+            GlobalState.shownPoules = model.poules;
             GlobalState.Changed();
         }
 

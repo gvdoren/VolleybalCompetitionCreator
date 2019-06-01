@@ -502,8 +502,8 @@ namespace CompetitionCreator
                             writer.WriteAttributeString("homeTeamId", match.homeTeam.Id.ToString());
                             writer.WriteAttributeString("visitorTeamName", match.visitorTeam.name);
                             writer.WriteAttributeString("visitorTeamId", match.visitorTeam.Id.ToString());
-                            writer.WriteAttributeString("date", match.datetime.ToShortDateString());
-                            writer.WriteAttributeString("time", match.datetime.ToShortTimeString());
+                            writer.WriteAttributeString("date", match.datetime.ToString("d/M/yyyy"));
+                            writer.WriteAttributeString("time", match.datetime.ToString("H:m"));//.ToShortTimeString());
                             writer.WriteAttributeString("SporthallId", match.homeTeam.sporthal.id.ToString());
                             writer.WriteAttributeString("SporthallName", match.homeTeam.sporthal.name);
                             if (match.homeTeam.field != null)
