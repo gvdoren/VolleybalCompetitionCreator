@@ -835,7 +835,7 @@ namespace CompetitionCreator
         public bool OptimizeSchema6Int(Model model, IProgress intf, int optimizationLevel, ref int roundref, ref int count)
         {
             if (maxTeams > 6) return false;
-            while(roundref < 2)
+            while(roundref < 4)
             {
                 int round = roundref;
                 UInt32[] days = new UInt32[maxTeams-1];
@@ -843,6 +843,8 @@ namespace CompetitionCreator
                 UInt32[] bitPatterns = new UInt32[(maxTeams * (maxTeams-1))/2];
                 UInt32[] schema = new UInt32[(maxTeams * (maxTeams - 1)) / 2];
                 List<Match> selectedMatches = matches.Where(m => m.Week.round == round).ToList();
+                if (selectedMatches.Count == 0)
+                    break;
                 for (int i = 0; i < selectedMatches.Count; i++)
                 {
                     bitPatterns[i] = (1u << selectedMatches[i].homeTeamIndex) | (1u << selectedMatches[i].visitorTeamIndex);

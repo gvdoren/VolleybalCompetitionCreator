@@ -601,18 +601,30 @@ namespace CompetitionCreator
                         {
                             if (t1.club == t2.club)
                             {
+                                DateTime[] firstWeekend = new DateTime[4]; // max 4 rounds
+                                for (int i = 0; i < 4; i++)
+                                    firstWeekend[i] = new DateTime(9999, 1, 1);
+                                Match[] firstPlayed = new Match[4];
+
                                 foreach (Match m in poule.matches)
                                 {
+                                    if (m.datetime < firstWeekend[m.Week.round]) 
+                                        firstWeekend[m.Week.round] = m.datetime;
                                     if((m.homeTeam == t1 && m.visitorTeam == t2) ||
                                         (m.homeTeam == t2 && m.visitorTeam == t1)
                                         )
                                     {
-                                        int index = m.weekIndex;
-                                        int firstSameRound = poule.weeks.FindIndex(w => w.round == poule.weeks[index].round);
-                                        if(index != firstSameRound)
-                                        {
-                                            AddConflictMatch(VisitorHomeBoth.HomeOnly,m);
-                                        }
+                                        firstPlayed[m.Week.round] = m;
+                                    }
+                                }
+
+                                for (int i = 0; i< 4;i++)
+                                {
+                                    if (firstPlayed[i] != null)
+                                    {
+                                        var dt = firstPlayed[i].datetime.AddDays(-3);
+                                        if (dt > firstWeekend[i])
+                                            AddConflictMatch(VisitorHomeBoth.HomeOnly, firstPlayed[i]);
                                     }
                                 }
                             }

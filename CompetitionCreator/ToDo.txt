@@ -16,7 +16,6 @@ Volgorde:
 
 
 Verbeteringen mbt VVB:
-- Competitie matchen inlezen VVB: expliciet serie-id bij de XML
 - Gecombineerde XML voor alle inschrijvingen van limburg
 - Robuster maken license-key opslag
 

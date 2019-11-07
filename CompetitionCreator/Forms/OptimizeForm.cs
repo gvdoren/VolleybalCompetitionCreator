@@ -168,8 +168,7 @@ namespace CompetitionCreator
                     }
                     lock (model)
                     {
-                        ImportExport importExport = new ImportExport();
-                        importExport.WriteProject(model, model.savedFileName, true);
+                        ImportExport.WriteProject(model, model.savedFileName, true);
                     }
                 }
             } while (model.TotalConflictsSnapshot<score);
@@ -429,18 +428,25 @@ namespace CompetitionCreator
             {
                 OptimizePoules(intf, poules);
                 if (model.TotalConflicts() < minConflict)
-                    minConflict = model.TotalConflicts();
-                Console.WriteLine(string.Format("{0}. Optimize Poules finished: {1} ({2})", i, model.TotalConflicts(), minConflict));
-                if (intf.Cancelled()) cont = false;
-                i++;
-                Random rnd = new Random();
-                foreach (Poule poule in poules)
                 {
-                    for (int count = rnd.Next(0, 2); count > 0; count--)
+                    minConflict = model.TotalConflicts();
+                    ImportExport.WriteProject(model, ImportExport.BaseDirectory + "\\ContinuousOptimize_"+minConflict.ToString() );
+                }
+                Console.WriteLine(string.Format("{0}. Optimize Poules finished: {1} ({2})", i, model.TotalConflicts(), minConflict));
+                if (intf.Cancelled())
+                    cont = false;
+                else
+                {
+                    i++;
+                    Random rnd = new Random();
+                    foreach (Poule poule in poules)
                     {
-                        Team temp = poule.teams[0];
-                        poule.teams.RemoveAt(0);
-                        poule.teams.Add(temp);
+                        for (int count = rnd.Next(0, 2); count > 0; count--)
+                        {
+                            Team temp = poule.teams[0];
+                            poule.teams.RemoveAt(0);
+                            poule.teams.Add(temp);
+                        }
                     }
                 }
                 model.Evaluate(null);

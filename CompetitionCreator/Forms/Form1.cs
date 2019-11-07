@@ -307,7 +307,7 @@ namespace CompetitionCreator
         }
         public void saveFileDialog1_FileOk3(object sender, CancelEventArgs e)
         {
-            importExport.WriteProject(model, saveFileDialog1.FileName);
+            ImportExport.WriteProject(model, saveFileDialog1.FileName);
         }
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
@@ -371,7 +371,7 @@ namespace CompetitionCreator
 
         private void saveToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            importExport.WriteProject(model, model.savedFileName);
+            ImportExport.WriteProject(model, model.savedFileName);
         }
 
         private void ImportSubscriptionsmodelbeToolStripMenuItem_Click(object sender, EventArgs e)

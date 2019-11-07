@@ -47,23 +47,16 @@ namespace CompetitionCreator
                 model = e.model;
                 model.OnMyChange += state_OnMyChange;
             }
-            if (InvokeRequired)
+            if (objectListView1.InvokeRequired)
             {
-                this.Invoke(new Action(() => state_OnMyChange(source, e)));
+                if (IsHandleCreated)
+                    this.Invoke(new Action(() => state_OnMyChange(source, e)));
                 return;
             }
-            /*if (model.poules.Count != objectListView1.Items.Count)
-            {
-                objectListView1.SetObjects(model.poules);
-            }*/
             lock (model)
             {
                 objectListView1.SetObjects(GlobalState.shownPoules);
                 objectListView1.SelectedObjects = GlobalState.selectedPoules;
-                
-                //objectListView1.SetObjects(model.poules);
-                //objectListView1.BuildList();
-                //Refresh();
             }
         }
         public class SerieFilter: IModelFilter 
@@ -150,7 +143,7 @@ namespace CompetitionCreator
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //GlobalState.selectedClubs.Clear();
+            GlobalState.selectedClubs.Clear();
             GlobalState.shownPoules = model.poules;
             GlobalState.Changed();
         }

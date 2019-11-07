@@ -16,7 +16,7 @@ namespace CompetitionCreator
 {
     class ImportExport
     {
-        static string BaseDirectory = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)+@"\CompetitionCreator";
+        static public string BaseDirectory = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)+@"\CompetitionCreator";
         static void Error(XElement element, string str)
         {
             string filename = element.Document.BaseUri;
@@ -348,7 +348,7 @@ namespace CompetitionCreator
             writer.WriteEndDocument();
             writer.Close();
         }
-        private void WriteClubConstraintsInt(Model model, XmlWriter writer, bool unknown_also)
+        static private void WriteClubConstraintsInt(Model model, XmlWriter writer, bool unknown_also)
         {
             writer.WriteStartElement("Clubs");
             foreach (Club club in model.clubs)
@@ -729,7 +729,7 @@ namespace CompetitionCreator
             }
             writer.Close();
         }
-        public void WriteProject(Model model, string fileName, bool backup = false)
+        static public void WriteProject(Model model, string fileName, bool backup = false)
         {
             XmlWriter writer = null;
             if (backup)
