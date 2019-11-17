@@ -34,7 +34,7 @@ namespace XmlTransformer
     public class ProvincieInfo
     {
         public int Id;
-        public string Prefix;
+        //public List<string> Prefix;
         public string Name;
 
     }
@@ -47,7 +47,7 @@ namespace XmlTransformer
         static public Dictionary<int,int> matchesToBePlayed = new Dictionary<int,int>();
         //static int MIN_NEW_SERIE_ID = 3272;
         //static string startDate = "1/1/2019";
-        static string outDir = "C:\\Users\\Giel\\Documents\\CompetitionCreator\\";
+        static string outDir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\CompetitionCreator\\";
 
         static DateTime generationDate = DateTime.Now;
         static int maxSerieIdWithMatches = 0;
@@ -81,7 +81,7 @@ namespace XmlTransformer
                         if (isProvinciaal)
                             Console.WriteLine("Provinciaal :Wedstrijden van reeks {0} worden meegenomen in de planning", reeks);
                         else
-                            Console.WriteLine("Provinciaal :Wedstrijden van reeks {0} worden meegenomen in de planning", reeks);
+                            Console.WriteLine("Nationaal :Wedstrijden van reeks {0} worden meegenomen in de planning", reeks);
                     }
                 }
                 if (date < generationDate && isProvinciaal)
@@ -95,15 +95,20 @@ namespace XmlTransformer
         static void Main(string[] args)
         {
             ProvincieInfo limburg = new ProvincieInfo();
-            limburg.Name = "Limburg";
+            limburg.Name = "LIMBURG";
             limburg.Id = 4; //VVB internal DB number
-            limburg.Prefix = "L-";
+            //limburg.Prefix = new List<string>(new string[] { "L-" } );
             provincies.Add(limburg);
             ProvincieInfo vlaamsbrabant = new ProvincieInfo();
-            vlaamsbrabant.Name = "Vlaams Brabant";
+            vlaamsbrabant.Name = "VLAAMS-BRABANT";
             vlaamsbrabant.Id = 7; //VVB internal DB number
-            vlaamsbrabant.Prefix = "VB-";
+            //vlaamsbrabant.Prefix = new List<string>(new string[] { "VB-" });
             provincies.Add(vlaamsbrabant);
+            ProvincieInfo antwerpen = new ProvincieInfo();
+            antwerpen.Name = "ANTWERPEN";
+            antwerpen.Id = 1; //VVB internal DB number
+            //vlaamsbrabant.Prefix = new List<string>(new string[] { "AA-", "AH-", "AM-", "AT-"});
+            provincies.Add(antwerpen);
 
 
             List<string> Teams = new List<string>();
@@ -132,9 +137,10 @@ namespace XmlTransformer
             // http://www.volleyadmin2.be/services/wedstrijden_xml.php?province_id=9 W-  West-vlaanderen
             // http://www.volleyadmin2.be/services/wedstrijden_xml.php?province_id=10 BRV- Brugs Recreatief
 
-            
+
 
             Console.WriteLine("Competition creator - Data importer Vlaamse Volleybal Bond");
+            Console.WriteLine(" Selecteer het nummer en druk op <return/enter>");
             int v = 0;
             string val;
             do
@@ -148,8 +154,9 @@ namespace XmlTransformer
                 }
                 val = Console.ReadLine();
             } while (!int.TryParse(val, out v) || v < 0 || v >= provincies.Count);
-
+            Console.WriteLine("De bestanden zijn in opgeslagen in: " + outDir);
             ProvincieInfo provincie = provincies[v];
+            outDir += provincie.Name+"_";
             int year = DateTime.Now.AddMonths(-2).Year;
             // Inschrijvingen alle reeksen alle provincies zonder beker
             string filename = "https://www.volleyadmin2.be/download/seriesubscriptions/"+ (year-2013).ToString() +"_0_1/";
@@ -170,10 +177,21 @@ namespace XmlTransformer
             // Remove niet limburgse clubs, en remove beker teams
             foreach (var club in clubs)
             {
-                string stamNummer = club.Attribute("StamNumber").Value;
-                if (stamNummer.Substring(0, provincie.Prefix.Length) != provincie.Prefix)
-                    toBeRemoved.Add(club);
+                bool remove = true;
                 var teams = club.Element("Teams").Elements("Team");
+                foreach (var t in teams)
+                {
+                    if (t.Attribute("Province") != null)
+                    {
+                        var prov = t.Attribute("Province").Value.ToString();
+                        if (prov == provincie.Name)
+                            remove = false;
+                    }
+                }
+                string stamNummer = club.Attribute("StamNumber").Value;
+                if (remove)
+                    toBeRemoved.Add(club);
+                
                 List<XElement> teamsToBeRemoved = new List<XElement>();
                 foreach (var t in teams)
                 {
