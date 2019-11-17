@@ -242,7 +242,7 @@ namespace CompetitionCreator
             {
                 System.Windows.Forms.MessageBox.Show("Not allowed to change numbers in schema of an imported poule");
             }
-            else if (poule.optimizable == false)
+            else if (poule.Optimize(model) == false)
             {
                 System.Windows.Forms.MessageBox.Show("Not allowed to change numbers in schema");
             }
@@ -319,7 +319,7 @@ namespace CompetitionCreator
             {
                 System.Windows.Forms.MessageBox.Show("Not allowed to change home/visit for imported poules");
             }
-            else if (poule.optimizableHomeVisit == false)
+            else if (poule.OptimizeHomeVisit(model) == false)
             {
                 System.Windows.Forms.MessageBox.Show("Not allowed to change home/visit");
             }
@@ -338,7 +338,7 @@ namespace CompetitionCreator
             {
                 System.Windows.Forms.MessageBox.Show("Not allowed to change home/visit for imported poules");
             }
-            else if (poule.optimizableHomeVisit == false)
+            else if (poule.OptimizeHomeVisit(model) == false)
             {
                 System.Windows.Forms.MessageBox.Show("Not allowed to change home/visit");
             }
@@ -468,7 +468,7 @@ namespace CompetitionCreator
             {
                 System.Windows.Forms.MessageBox.Show("Not allowed to change home/visit for imported teams");
             }
-            else if (poule.optimizableHomeVisit == false)
+            else if (poule.OptimizeHomeVisit(model) == false)
             {
                 System.Windows.Forms.MessageBox.Show("Not allowed to change home/visit");
             }
@@ -529,7 +529,7 @@ namespace CompetitionCreator
                 e.Effect = DragDropEffects.None;
             else if (e.SourceModels.Count != 1)
                 e.Effect = DragDropEffects.None;
-            else if (poule.optimizable == false)
+            else if (poule.OptimizeNumber(model) == false)
                 e.Effect = DragDropEffects.None;
             else
                 e.Effect = DragDropEffects.Move | DragDropEffects.Scroll;

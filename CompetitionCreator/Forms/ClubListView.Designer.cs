@@ -94,13 +94,14 @@
             // 
             this.olvColumn3.AspectName = "percentage";
             this.olvColumn3.CellPadding = null;
-            this.olvColumn3.MaximumWidth = 20;
+            this.olvColumn3.MaximumWidth = 30;
+            this.olvColumn3.MinimumWidth = 25;
             this.olvColumn3.Text = "%";
-            this.olvColumn3.Width = 20;
+            this.olvColumn3.Width = 54;
             // 
             // ClubListView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 262);
             this.Controls.Add(this.objectListView1);

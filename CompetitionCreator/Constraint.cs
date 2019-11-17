@@ -189,9 +189,7 @@ namespace CompetitionCreator
                             match.RealMatch() &&
                             team.sporthal.NotAvailable.Contains(dt) == true)
                         {
-                            if (match.poule.serie.importance == Serie.ImportanceLevels.Low) cost = MySettings.Settings.SporthalNotAvailableCostLow;
-                            if (match.poule.serie.importance == Serie.ImportanceLevels.Medium) cost = MySettings.Settings.SporthalNotAvailableCostMedium;
-                            if (match.poule.serie.importance == Serie.ImportanceLevels.High) cost = MySettings.Settings.SporthalNotAvailableCostHigh;
+                            cost = MySettings.Settings.SporthalNotAvailableCostMedium;
                             this.AddConflictMatch(VisitorHomeBoth.HomeOnly, match);
                         }
                     }
@@ -388,9 +386,7 @@ namespace CompetitionCreator
                     {
                         foreach (Match match in homeFirstHalf)
                         {
-                            if (poule.serie.importance == Serie.ImportanceLevels.Low) conflict_cost += MySettings.Settings.MatchTooManyAfterEachOtherCostLow;
-                            if (poule.serie.importance == Serie.ImportanceLevels.Medium) conflict_cost += MySettings.Settings.MatchTooManyAfterEachOtherCostMedium;
-                            if (poule.serie.importance == Serie.ImportanceLevels.High) conflict_cost += MySettings.Settings.MatchTooManyAfterEachOtherCostHigh;
+                            conflict_cost += MySettings.Settings.MatchTooManyAfterEachOtherCostMedium;
                         }
                     }
                     if (homeSecondHalf.Count > maxNumberHomeMatches(poule.TeamCount))
@@ -698,14 +694,14 @@ namespace CompetitionCreator
                 {
                     if (match.homeTeam.sporthal.NotAvailable.Contains(match.datetime.Date) == true)
                         l1count -= 1;
-                    else if (match.poule.optimizable == false) l1count += 10;
+                    else if (match.poule.Optimize(model) == false) l1count += 10;
                 }
                 int l2count = l2.Count;
                 foreach (Match match in l2)
                 {
                     if (match.homeTeam.sporthal.NotAvailable.Contains(match.datetime.Date) == true)
                         l2count -= 1;
-                    else if (match.poule.optimizable == false) l2count += 10;
+                    else if (match.poule.Optimize(model) == false) l2count += 10;
                 }
                 return l1count.CompareTo(l2count);
             });
@@ -1179,9 +1175,7 @@ namespace CompetitionCreator
             int costOverlap = 0;
             foreach (Match m in overlap1)
             {
-                if (m.serie.importance == Serie.ImportanceLevels.High) costOverlap += MySettings.Settings.DifferentGroupsOnSameDayCostHigh;
-                if (m.serie.importance == Serie.ImportanceLevels.Low) costOverlap += MySettings.Settings.DifferentGroupsOnSameDayCostLow;
-                if (m.serie.importance == Serie.ImportanceLevels.Medium) costOverlap += MySettings.Settings.DifferentGroupsOnSameDayCostMedium;
+                costOverlap += MySettings.Settings.DifferentGroupsOnSameDayCostLow;
                 costOverlap += overlap2.Count(m1 => m1.Overlapp(m)) * MySettings.Settings.DifferentGroupsOnSameDayOverlappingExtraCost; // extra cost when there is overlap
                 if (m.serie.imported) costOverlap += 100; // match cannot be changed.
             }

@@ -10,13 +10,23 @@ namespace CompetitionCreator
         // Temp lists for snapshot
         public bool imported = false;
         private int optimisationThreshold = 200;
-        private int optimisationConflictThreshold = 2;
 
-        public bool optimizable { get { return serie != null && serie.optimizableNumber && imported == false; } }
-        public bool optimizableWeeks { get { return serie != null && serie.optimizableWeeks && imported == false; } }
-        public bool optimizableHomeVisit { get { return serie != null && serie.optimizableHomeVisit && imported == false; } }
-        public bool optimizableMatch { get { return serie != null && serie.optimizableMatch && imported == false; } }
-
+        public bool OptimizeNumber(Model model)
+        {
+            return model.OptimizeNumber && imported == false;
+        }
+        public bool OptimizeHomeVisit(Model model)
+        {
+            return model.OptimizeHomeVisit && imported == false;
+        }
+        public bool OptimizeSchema(Model model)
+        {
+            return model.OptimizeSchema && imported == false;
+        }
+        public bool Optimize(Model model)
+        {
+            return OptimizeNumber(model) || OptimizeHomeVisit(model) || OptimizeSchema(model);
+        }
         public bool evaluated { get { return serie.evaluated && imported == false; } }
         List<Team> resultTeams = new List<Team>();
         List<MatchWeek> resultWeeks = new List<MatchWeek>();
@@ -186,7 +196,7 @@ namespace CompetitionCreator
         public void OptimizeWeeks(Model model, IProgress intf, int optimizationLevel)
         {
             MakeDirty();
-            if (optimizableWeeks)
+            if (OptimizeNumber(model))
             {
                 //SnapShot(model);
                 //if (conflict_cost > 0)
@@ -249,7 +259,7 @@ namespace CompetitionCreator
             }
             model.EvaluateRelatedConstraints(this);
             TotalRelatedConflictsLast = model.TotalRelatedConflicts(this);
-            if (TotalRelatedConflictsLast <= TotalRelatedConflictsSnapshot)
+            if (TotalRelatedConflictsLast < TotalRelatedConflictsSnapshot)
             {
                 // check based on a full check:
                 model.Evaluate(this);
@@ -333,7 +343,7 @@ namespace CompetitionCreator
         {
             List<Team> teamList = null;
             teamList = new List<Team>();
-            if (optimizable)
+            if (OptimizeNumber(model))
             {
                 foreach (Team team in teams)
                 {
@@ -359,7 +369,7 @@ namespace CompetitionCreator
         public void OptimizeTeam(Model model, IProgress intf, Team team, int optimizationLevel)
         {
             MakeDirty();
-            if (serie.optimizableNumber)
+            if (OptimizeNumber(model))
             {
                 //if (conflict_cost > 0)
                 {
@@ -391,31 +401,35 @@ namespace CompetitionCreator
         public void OptimizeTeamAssignment(Model model, IProgress intf)
         {
             MakeDirty();
-            if (optimizable)
+            if (OptimizeNumber(model))
             {
                 //if (conflict_cost > 0)
                 {
-                    if (maxTeams <= 6)
+                    if (maxTeams <= 6 && GlobalState.optimizeLevel > 0)
                     {
                         OptimizeFullTeamAssignment(model, intf);
                     }
                     else // semi-optimisation.
                     {
                         if (intf.Cancelled() == false) OptimizeNumberOnAnalysis(model, intf);
-                        for (int i = 0; i < maxTeams; i++)
+                        if (GlobalState.optimizeLevel > 0)
                         {
-                            intf.Progress(i, maxTeams);
-                            for (int j = 0; j < maxTeams; j++)
+                            for (int i = 0; i < maxTeams; i++)
                             {
-                                if (j != i)
+                                intf.Progress(i, maxTeams);
+                                for (int j = 0; j < maxTeams; j++)
                                 {
-                                    Swap(teams, i, j);
-                                    SnapShotIfImproved(model,false);
-                                    Swap(teams, i, j);
+                                    List<Team> temp = new List<Team>(teams);
+                                    if (j != i)
+                                    {
+                                        Swap(teams, i, j);
+                                        SnapShotIfImproved(model, false);
+                                        Swap(teams, i, j);
+                                    }
+                                    if (intf.Cancelled()) break;
                                 }
                                 if (intf.Cancelled()) break;
                             }
-                            if (intf.Cancelled()) break;
                         }
                     }
                     teams = resultTeams;
@@ -425,220 +439,61 @@ namespace CompetitionCreator
 
         public int[,] AnalyzeTeamAssignment(Model model, IProgress intf)
         {
-            int[,] score = new int[maxTeams+1,maxTeams+1];
+            int[,] score = new int[maxTeams,maxTeams];
             List<Team> fixedOrderList = new List<Team>(teams);
             MakeDirty();
-            if (optimizable)
+            for(int k = 1;k<=maxTeams;k++)
             {
-                for(int k = 1;k<=maxTeams;k++)
+                teams.Add(teams[0]);
+                teams.RemoveAt(0);
+                /*
+                for (int i = 0; i < maxTeams-1; i++)
                 {
-                    teams.Add(teams[0]);
-                    teams.RemoveAt(0);
-                    /*
-                    for (int i = 0; i < maxTeams-1; i++)
-                    {
-                        Swap(teams, i, i+1);
-                    }*/
-                    model.EvaluateRelatedConstraints(this);
-                    int index = 0;
-                    foreach (Team team in fixedOrderList)
-                    {
-                        score[index, (index + maxTeams - k) % maxTeams] = team.conflict;
-                        index++;
-                    }
-                }
- /*               Console.Write("{0,30}", "Teams:");
-                for (int k = 1; k <= maxTeams; k++)
-                {
-                    Console.Write("{0,4}", "p-"+k.ToString());
-                }
-                Console.WriteLine();
-                int index1 = 0;
+                    Swap(teams, i, i+1);
+                }*/
+                model.EvaluateRelatedConstraints(this);
+                int index = 0;
                 foreach (Team team in fixedOrderList)
                 {
-                    Console.Write("{0,30}", team.name);
-                    for (int k = 0; k < maxTeams; k++)
-                    {
-                        Console.Write("{0,4}", score[index1, k]);
-                    }
-                    Console.WriteLine();
-                    index1++;
+                    score[index, (index + maxTeams - k) % maxTeams] = team.conflict;
+                    index++;
                 }
-  * */
-                teams = resultTeams;
             }
+            teams = resultTeams;
             return score;
         }
 
+        public int RandomNumber(int min, int max)
+        {
+            Random random = new Random();
+            return random.Next(min, max);
+        }
         public void OptimizeNumberOnAnalysis(Model model, IProgress intf)
         {
             if (evaluated == false) // This optimization will not work otherwise since all own conflicts are zero
                 return;
             SnapShot(model);
+
+            //var i = RandomNumber(0, maxTeams - 1);
+            //var j = RandomNumber(0, maxTeams);
+            //if (i == j) j++;
+            //Swap(teams, i, j);
             int[,] score = AnalyzeTeamAssignment(model, intf);
-            // Welk team eerst indelen: diegene die in het totaal het meeste conflicten heeft (of het verschil min/max grootste)
-            List<Team> fixedOrderList = new List<Team>(teams);
-            int[] sum = new int[fixedOrderList.Count];
-            for (int index = 0; index < fixedOrderList.Count; index++)
+
+            var algorithm = new GraphAlgorithms.HungarianAlgorithm(score);
+
+            var result = algorithm.Run();
+
+            //printArray(result);
             {
-                sum[index] = 0;
-                for (int index1 = 0; index1 < maxTeams; index1++)
+                var temp = teams;
+                teams = new List<Team>();
+                foreach (var index in result)
                 {
-                    sum[index] += score[index, index1];
+                    teams.Add(temp[index]);
                 }
-            }
-            fixedOrderList.Sort((Team t1, Team t2) => { 
-                int i1 = teams.FindIndex(t => t==t1);
-                int i2 = teams.FindIndex(t => t==t2);
-                return sum[i2].CompareTo(sum[i1]);
-            });
-            // Op basis van huidige ordering
-            int minScore = 0;
-            for (int index = 0; index < fixedOrderList.Count; index++)
-            {
-                minScore += score[index, index];
-            }
-
-            // recalculate on new ordering
-            teams = fixedOrderList;
-            score = AnalyzeTeamAssignment(model, intf);
-
-            // zo snel mogelijk de search afkappen (of toch een threshold toestaan)
-            // score
-            // teamOrder
-            // weekOrder per team
-            int[] teamIndex = new int[fixedOrderList.Count];
-            for (int i = 0; i < fixedOrderList.Count; i++) teamIndex[i] = -1;
-            bool[] selectedWeek1 = new bool[fixedOrderList.Count + 1];
-            for (int i = 0; i <= fixedOrderList.Count; i++) selectedWeek1[i] = false;
-            selectedWeek1[0] = true;
-            teamIndex[0] = 0;
-            int currentTeamNumber = 0;
-            int totalScore = score[0,0];
-
-            int cycle = 0;
-            List<List<Team>>[] options = new List<List<Team>>[1000];
-            for (int i = 0; i < 1000; i++) options[i] = new List<List<Team>>();
-            while (true)
-            {
-                if (cycle++ % 1000 == 0)
-                {
-                    if (intf.Cancelled())
-                        return;
-                    intf.Progress(teamIndex[0], maxTeams);
-                }
-                if (currentTeamNumber >= maxTeams)
-                {
-                    // calculate current schema
-                    if (totalScore < minScore + optimisationConflictThreshold)
-                    {
-                        Team[] reordered = new Team[fixedOrderList.Count];
-                        for (int index = 0; index < fixedOrderList.Count; index++)
-                        {
-                            reordered[teamIndex[index]] = fixedOrderList[index];
-                        }
-
-                        //teams = reordered.ToList();
-
-                        if (options[totalScore].Count < 1000)
-                        {
-                            options[totalScore].Add(reordered.ToList());
-                        }
-
-//                        SnapShot(model);
-//                        if (SnapShotIfImproved(model, true))
-                        
-                        {
-                            minScore = Math.Min(totalScore,minScore);
-                        }
- 
-                    }
-                    // prepare for next
-                    currentTeamNumber--;
-
-                    // next loop always ends, since last is always free
-                    if (teamIndex[currentTeamNumber] >= 0)
-                    {
-                        selectedWeek1[teamIndex[currentTeamNumber]] = false;
-                        totalScore -= score[currentTeamNumber, teamIndex[currentTeamNumber]];
-                    }
-                    do
-                    {
-                        teamIndex[currentTeamNumber]++;
-                    } while (selectedWeek1[teamIndex[currentTeamNumber]] == true);
-                    if (teamIndex[currentTeamNumber] < maxTeams)
-                    {
-                        totalScore += score[currentTeamNumber, teamIndex[currentTeamNumber]];
-                        selectedWeek1[teamIndex[currentTeamNumber]] = true;
-                    }
-                }
-                else
-                {
-                    if (teamIndex[currentTeamNumber] < maxTeams)
-                    {
-                        if (totalScore < minScore + optimisationConflictThreshold)
-                            currentTeamNumber++;
-                        if (currentTeamNumber < maxTeams)
-                        {
-                            // next loop always ends, since last is always free
-                            if (teamIndex[currentTeamNumber] >= 0)
-                            {
-                                selectedWeek1[teamIndex[currentTeamNumber]] = false;
-                                totalScore -= score[currentTeamNumber, teamIndex[currentTeamNumber]];
-                            }
-                            do
-                            {
-                                teamIndex[currentTeamNumber]++;
-                            } while (selectedWeek1[teamIndex[currentTeamNumber]] == true);
-                            if (teamIndex[currentTeamNumber] < maxTeams)
-                            {
-                                totalScore += score[currentTeamNumber, teamIndex[currentTeamNumber]];
-                                selectedWeek1[teamIndex[currentTeamNumber]] = true;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        selectedWeek1[teamIndex[currentTeamNumber]] = false;
-                        totalScore -= score[currentTeamNumber, teamIndex[currentTeamNumber]];
-                        teamIndex[currentTeamNumber] = -1;
-                        currentTeamNumber--;
-                        if (currentTeamNumber < 0) // alle zijn maximaal geweest, einde lus
-                            break;
-
-                        // next loop always ends, since last is always free
-                        if (teamIndex[currentTeamNumber] >= 0)
-                        {
-                            selectedWeek1[teamIndex[currentTeamNumber]] = false;
-                            totalScore -= score[currentTeamNumber, teamIndex[currentTeamNumber]];
-                        }
-                        do
-                        {
-                            teamIndex[currentTeamNumber]++;
-                        } while (selectedWeek1[teamIndex[currentTeamNumber]] == true);
-                        if (teamIndex[currentTeamNumber] < maxTeams)
-                        {
-                            totalScore += score[currentTeamNumber, teamIndex[currentTeamNumber]];
-                            selectedWeek1[teamIndex[currentTeamNumber]] = true;
-                        }
-                    }
-                }
-            }
-            int count = 0;
-            for (int j = 0; j < 100; j++)
-            {
-                foreach (List<Team> list in options[j])
-                {
-                    if (count > 1000)
-                        break;
-                    teams = list;
-                    SnapShotIfImproved(model, false);
-                    //SnapShot(model);
-                    //teams = resultTeams;
-                    //return;
-                    count++;
-                    teams = fixedOrderList;
-                }
+                SnapShotIfImproved(model, false);
+                teams = temp;
             }
             teams = resultTeams;
         }
@@ -646,7 +501,7 @@ namespace CompetitionCreator
         public void OptimizeFullTeamAssignment(Model model, IProgress intf)
         {
             MakeDirty();
-            if (optimizable)
+            if (OptimizeNumber(model))
             {
                 //if (conflict_cost > 0)
                 {
@@ -700,7 +555,7 @@ namespace CompetitionCreator
         }
         public void SwitchHomeTeamVisitorTeam(Model model, Match match)
         {
-            if (optimizableHomeVisit)
+            if (OptimizeHomeVisit(model))
             {
                 int homeMatchesCounthome = 0;
                 int homeMatchesCountvisitor = 0;
@@ -780,7 +635,7 @@ namespace CompetitionCreator
             int compareTo = 0;
             if (tryZeroCostMatches) compareTo = -1;
             MakeDirty();
-            if (optimizableHomeVisit)
+            if (OptimizeHomeVisit(model))
             {
                 foreach (Match match in matches)
                 {
@@ -807,7 +662,7 @@ namespace CompetitionCreator
             int compareTo = 0;
             if (equalAllowed) compareTo = -1;
             MakeDirty();
-            if (optimizableHomeVisit)
+            if (OptimizeHomeVisit(model))
             {
                 List<Match> reverseMatches = new List<Match>(matches);
                 reverseMatches.Reverse();
@@ -926,7 +781,7 @@ namespace CompetitionCreator
             if (maxTeams > 6)
             {
                 MakeDirty();
-                if (optimizableWeeks)
+                if (OptimizeNumber(model))
                 {
                     List<Match>[] matchesPerWeek = new List<Match>[weeks.Count];
                     for (int index = 0; index < weeks.Count; index++)
@@ -1042,7 +897,7 @@ namespace CompetitionCreator
             if (maxTeams > 6)
             {
                 MakeDirty();
-                if (optimizableWeeks)
+                if (OptimizeNumber(model))
                 {
                     int matchCount = 0;
                     for (int index = 0; index < weeks.Count; index++)

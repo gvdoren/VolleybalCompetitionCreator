@@ -748,17 +748,16 @@ namespace CompetitionCreator
             writer.WriteStartElement("Settings");
             writer.WriteAttributeString("Version", model.version);
             writer.WriteAttributeString("Year", model.year.ToString());
+            writer.WriteAttributeString("OptimizeNumber", model.OptimizeNumber.ToString());
+            writer.WriteAttributeString("OptimizeHomeVisit", model.OptimizeHomeVisit.ToString());
+            writer.WriteAttributeString("OptimizeSchema", model.OptimizeSchema.ToString());
             writer.WriteStartElement("Series");
             foreach (Serie serie in model.series)
             {
                 writer.WriteStartElement("Serie");
                 writer.WriteAttributeString("Name", serie.name);
                 writer.WriteAttributeString("Id", serie.id.ToString());
-                writer.WriteAttributeString("OptimizeNumber", serie.optimizableNumber.ToString());
-                writer.WriteAttributeString("OptimizeWeeks", serie.optimizableWeeks.ToString());
-                writer.WriteAttributeString("OptimizeHomeVisit", serie.optimizableHomeVisit.ToString());
                 writer.WriteAttributeString("Evaluated", serie.evaluated.ToString());
-                writer.WriteAttributeString("Importance", serie.importance.ToString());
                 writer.WriteEndElement();
             }
             writer.WriteEndElement();
@@ -894,6 +893,10 @@ namespace CompetitionCreator
                     serie.poules.Add(po);
                     model.poules.Add(po);
                 }
+                else
+                    return;
+
+
                 po.imported = BoolOptionalAttribute(poule, false, "Imported", "SerieImported");
 
                 int index = 0;
@@ -998,6 +1001,10 @@ namespace CompetitionCreator
             XElement settings = Element(competition, "Settings");
             int year = IntegerAttribute(settings, "Year");
             Model modelnew = new Model(year);
+            modelnew.OptimizeNumber = BoolOptionalAttribute(settings, true, "OptimizeNumber");
+            modelnew.OptimizeHomeVisit = BoolOptionalAttribute(settings, false, "OptimizeHomeVisit");
+            modelnew.OptimizeSchema = BoolOptionalAttribute(settings, false, "OptimizeSchema");
+
             ImportTeamSubscriptions(modelnew, competition);
             ImportPoules(modelnew, competition);
             ImportTeamConstraints(modelnew, competition);
@@ -1007,11 +1014,7 @@ namespace CompetitionCreator
                 Serie se = modelnew.series.Find(s => s.id == serieId);
                 if (se != null)
                 {
-                    se.optimizableNumber = BoolAttribute(serie, "OptimizeNumber");
-                    se.optimizableWeeks = BoolAttribute(serie, "OptimizeWeeks");
-                    se.optimizableHomeVisit = BoolAttribute(serie, "OptimizeHomeVisit");
                     se.evaluated = BoolOptionalAttribute(serie, true, "Evaluated");
-                    se.importance = EnumAttribute<Serie.ImportanceLevels>(serie, "Importance");
                 }
             }
             modelnew.savedFileName = filename;

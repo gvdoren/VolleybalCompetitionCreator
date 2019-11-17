@@ -15,6 +15,9 @@ namespace CompetitionCreator
         public void MakeDirty() { stateNotSaved = true; }
         public string savedFileName = "Competition.xml";
         public int year;
+        public bool OptimizeNumber;
+        public bool OptimizeHomeVisit;
+        public bool OptimizeSchema;
         public List<Club> clubs;
         public List<Serie> series = new List<Serie>();
         public List<Poule> poules = new List<Poule>();
