@@ -16,10 +16,8 @@ namespace XmlTransformer
         public int teamId = 0;
         public string teamName = "";
         public int SerieId = 0;
-        public string SerieName = "Onbekend??";
         public int clubId = 0;
         public string clubName = "";
-        public string poule = "";
         public string ranking = "";
         public string score = "";
         public string evenOdd = "";
@@ -31,6 +29,13 @@ namespace XmlTransformer
         public int matchCount = 0;
     }
 
+    public class SerieInfo
+    {
+        public int serieId;
+        public string serieNameVVB;
+        public string serieName;
+        public string poule;
+    }
     public class ProvincieInfo
     {
         public int Id;
@@ -43,13 +48,14 @@ namespace XmlTransformer
     // http://volleyadmin2.be/services/series_xml.php?province_id=4&all=1  voor alle series (zodat ik de id's heb)
     class Program
     {
+        static public Dictionary<int, SerieInfo> serieInfos = new Dictionary<int, SerieInfo>();
         static public Dictionary<int, TeamInfo> teamInfo = new Dictionary<int, TeamInfo>();
         static public Dictionary<int,int> matchesToBePlayed = new Dictionary<int,int>();
         //static int MIN_NEW_SERIE_ID = 3272;
         //static string startDate = "1/1/2019";
         static string outDir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\CompetitionCreator\\";
 
-        static DateTime generationDate = DateTime.Now;
+        static DateTime generationDate = DateTime.Now.AddDays(30);
         static int maxSerieIdWithMatches = 0;
 
         static public List<ProvincieInfo> provincies = new List<ProvincieInfo>();
@@ -174,7 +180,8 @@ namespace XmlTransformer
 
             List<XElement> toBeRemoved = new List<XElement>();
             var clubs = doc.Element("Registrations").Element("Clubs").Elements("Club");
-            // Remove niet limburgse clubs, en remove beker teams
+
+            // Remove clubs outside the province and remove beker teams
             foreach (var club in clubs)
             {
                 bool remove = true;
@@ -204,7 +211,64 @@ namespace XmlTransformer
             }
             foreach (var club in toBeRemoved)
                 club.Remove();
+
+            // Determine the poule letter since this info is not explicitly present in volley admin, except implicitly in name
             foreach (var club in clubs)
+            {
+                var teams = club.Element("Teams").Elements("Team");
+                foreach (var t1 in teams)
+                {
+                    SerieInfo info = new SerieInfo();
+                    info.serieId = int.Parse(t1.Attribute("SerieId").Value);
+                    info.serieNameVVB = t1.Attribute("SerieName").Value;
+                    if (info.serieNameVVB == "")
+                        info.serieNameVVB = "Reeks zonder naam";
+
+                    if (serieInfos.ContainsKey(info.serieId) == false)
+                        serieInfos.Add(info.serieId, info);
+                }
+            }
+            foreach (var info1 in serieInfos)
+            {
+                info1.Value.poule = "A";
+                info1.Value.serieName = info1.Value.serieNameVVB;
+                foreach (var info2 in serieInfos)
+                {
+                    if (info1.Key != info2.Key)
+                    {
+                        var name1 = info1.Value.serieNameVVB.Replace(" ", "").Replace("-", "").ToLower();
+                        var name2 = info2.Value.serieNameVVB.Replace(" ", "").Replace("-", "").ToLower();
+                        var name1_short = name1.Remove(name1.Length - 1);
+                        var name2_short = name2.Remove(name2.Length - 1);
+                        if (name1_short == name2_short && name1 != name2)
+                        {
+                            char pouleLetter = name1[name1.Length - 1].ToString().ToUpper()[0];
+                            if ((pouleLetter >= 'A' && pouleLetter <= 'Z'))
+                            {
+                                info1.Value.poule = pouleLetter.ToString();
+                                var name3 = info1.Value.serieNameVVB;
+                                var name3_short = name3.Remove(name3.Length - 1).Trim();
+                                info1.Value.serieName = name3_short; 
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (info1.Value.poule == "A")
+                {
+                    string sub = info1.Value.serieName;
+                    sub = sub.Substring(sub.Length - 2);
+                    if (sub == " A")
+                        info1.Value.serieName = info1.Value.serieName.Substring(0, info1.Value.serieName.Length - 2);
+                }
+            }
+            foreach (var info1 in serieInfos)
+            {
+                Console.WriteLine("{0} = {1} + {2}", info1.Value.serieNameVVB, info1.Value.serieName, info1.Value.poule);
+            }
+
+                // Build up info on how the teams are linked
+                foreach (var club in clubs)
             {
                 string clubId = club.Attribute("Id").Value;
                 string clubName = club.Attribute("Name").Value;
@@ -213,14 +277,11 @@ namespace XmlTransformer
                 foreach (var t1 in teams)
                 {
                     TeamInfo inf = new TeamInfo();
-                    inf.reeks = GetReeks(t1.Attribute("SerieName").Value);
                     inf.teamId = int.Parse(t1.Attribute("Id").Value);
                     inf.teamName = t1.Attribute("Name").Value;
                     inf.SerieId = int.Parse(t1.Attribute("SerieId").Value);
-                    inf.SerieName = t1.Attribute("SerieName").Value;
                     inf.clubId = int.Parse(clubId);
                     inf.clubName = clubName;
-                    inf.poule = GetReeksNamePouleLetter_new(t1.Attribute("SerieName").Value);
                     string parentIdstr = t1.Attribute("parent_id").Value;
                     if (parentIdstr.Length == 0 || parentIdstr == "0" /*|| !teamInfo.ContainsKey(int.Parse(parentIdstr))*/)
                     {
@@ -242,7 +303,7 @@ namespace XmlTransformer
                     { 
                         inf.registrationTeam.derivedExistingTeamFromThis = true;
                         t1.Attribute("SerieId").SetValue(inf.registrationTeam.SerieId);
-                        t1.Attribute("SerieName").SetValue(inf.registrationTeam.SerieName);
+                        t1.Attribute("SerieName").SetValue(serieInfos[inf.registrationTeam.SerieId].serieNameVVB);
                     }
                     teamInfo.Add(inf.teamId, inf);
                     var attr = t1.Attribute("EvenOdd");
@@ -259,6 +320,7 @@ namespace XmlTransformer
                     }
                 }
             }
+
             // Duplicate constraints for the new teams
             foreach (var t in teamInfo)
             {
@@ -285,6 +347,7 @@ namespace XmlTransformer
                     }
                 }
             }
+
             // Remove teams that are not needed               
             foreach (var club in clubs)
             {
@@ -316,75 +379,12 @@ namespace XmlTransformer
                     t1.Remove();
             }
 
+            doc.Save(outDir + "inschrijvingen_converted.xml");
 
-            // Generate rankings for all teams that have a ranking
-            string outname = outDir+"ranking_converted.xml";
-            using (System.IO.StreamWriter file = new System.IO.StreamWriter(outname))
-            {
-                XDocument doc1 = XDocument.Load("http://www.volleyadmin2.be/services/rangschikking_xml.php?province_id=" + provincie.Id.ToString(), LoadOptions.SetLineInfo | LoadOptions.SetBaseUri);
-                var rangschikkingen = doc1.Element("klassement").Elements("rangschikking");
-                foreach (var rangschikking in rangschikkingen)
-                {
-                    var gespeeldewedstrijden = int.Parse(rangschikking.Element("aantalGespeeldeWedstrijden").Value);
-                    if (gespeeldewedstrijden > 0)
-                    {
-                        var ploegId = int.Parse(rangschikking.Element("ploegid").Value);
-                        if (!teamInfo.ContainsKey(ploegId))
-                            continue;
-                        var rank = rangschikking.Element("volgorde").Value;
-                        var punten = int.Parse(rangschikking.Element("puntentotaal").Value);
-                        rank = rank.Replace(".", "");
-                        teamInfo[ploegId].registrationTeam.ranking = rank.ToString();
-                        teamInfo[ploegId].registrationTeam.score = punten.ToString();
-                        teamInfo[ploegId].matchCount = gespeeldewedstrijden;
-                    }
-                }
-                file.WriteLine("<Rankings>");
-                foreach (var club in clubs)
-                {
-                    var teams = club.Element("Teams").Elements("Team");
-                    foreach (var t1 in teams)
-                    {
-                        int teamId = int.Parse(t1.Attribute("Id").Value);
-                        var info = teamInfo[teamId];
-                        if (info != info.registrationTeam)
-                        {
-                            string commentStart = "";
-                            string commentEnd = "";
-                            if (!info.newRegistration)
-                            {
-                                commentStart = "<!-- No new registration. No ranking needed. ";
-                                commentEnd = "-->";
-                            } else if (info.reeks != info.registrationTeam.reeks)
-                            {
-                                commentStart = "<!-- Team changed from Serie.  Ranking not valid";
-                                commentEnd = "-->";
-                            }
-                            if (info.registrationTeam.ranking != "" && info.registrationTeam.ranking != "") // when team & registration team are created in second round
-                            {
-                                file.WriteLine(commentStart + "  <Ranking serieId='{0}' serieName='{1}' pouleName='' teamId='{2}' teamName='{3}' ranking='{4}' score='{5}' /> " + commentEnd,
-                                    info.SerieId,
-                                    info.SerieName, // newSerieName waarom was dit nieuwseriename
-                                    info.teamId,
-                                    info.teamName,
-                                    info.registrationTeam.ranking,
-                                    info.registrationTeam.score);
-                            }
-                        }
-                    }
-
-                }
-                doc.Save(outDir+"inschrijvingen_converted.xml");
-                file.WriteLine("</Rankings>");
-                file.Close();
-
-                StreamWriter writer = new StreamWriter(outDir+"competition_converted.csv");
-                GenerateCompetition(writer, wedstrijden_limburg);
-                GenerateCompetition(writer, wedstrijden_nationaal);
-                writer.Close();
-
-
-            }
+            StreamWriter writer = new StreamWriter(outDir + "competition_converted.csv");
+            GenerateCompetition(writer, wedstrijden_limburg);
+            GenerateCompetition(writer, wedstrijden_nationaal);
+            writer.Close();
         }
         static void GenerateCompetition(StreamWriter writer, IEnumerable<XElement> wedstrijden)
         {
@@ -396,9 +396,17 @@ namespace XmlTransformer
                     continue;
                 var thuisPloegId = int.Parse(wedstrijd.Element("thuisploeg_id").Value);
                 var bezoekersPloegId = int.Parse(wedstrijd.Element("bezoekersploeg_id").Value);
+                // Are it relevant teams?
+                if (!teamInfo.Keys.Contains(thuisPloegId) && !teamInfo.Keys.Contains(bezoekersPloegId))
+                    continue;
+                // Are there still matches to be played
+                if (teamInfo.Keys.Contains(thuisPloegId) && teamInfo[thuisPloegId].registrationTeam.matchesToBePlayed == 0)
+                    continue;
+                if (teamInfo.Keys.Contains(bezoekersPloegId) && teamInfo[bezoekersPloegId].registrationTeam.matchesToBePlayed == 0)
+                    continue;
+
                 var thuisPloeg = wedstrijd.Element("thuisploeg").Value;
                 var bezoekersPloeg = wedstrijd.Element("bezoekersploeg").Value;
-                TeamInfo info = null;
                 string thuisclubname = "??";
                 int thuisclubId = 0;
                 string bezoekersclubname = "??";
@@ -408,31 +416,24 @@ namespace XmlTransformer
                     if (teamInfo[thuisPloegId].registrationTeam.matchesToBePlayed == 0)
                         continue;
                     var thuisPloegInfo = teamInfo[thuisPloegId];
-                    info = thuisPloegInfo;
                     thuisPloeg = thuisPloegInfo.teamName;
                     thuisclubname = thuisPloegInfo.clubName;
                     thuisclubId = thuisPloegInfo.clubId;
                 } 
-                else if (teamInfo.Keys.Contains(bezoekersPloegId))
+                if (teamInfo.Keys.Contains(bezoekersPloegId))
                 {
                     if (teamInfo[bezoekersPloegId].registrationTeam.matchesToBePlayed == 0)
                         continue;
                     var bezoekersPloegInfo = teamInfo[bezoekersPloegId];
-                    info = bezoekersPloegInfo;
                     bezoekersPloeg = bezoekersPloegInfo.teamName;
                     bezoekersclubname = bezoekersPloegInfo.clubName;
                     bezoekersclubId = bezoekersPloegInfo.clubId;
                 }
-                else
-                    continue;
-                var poule = info.poule;
-                // De serie van het geregistreerde team moet genomen worden om goed te mappen op de inschrijvingen.
-                //var serieName = info.registrationTeam.SerieName; //thuisPloegInfo.SerieName;
-                //var serieId = info.registrationTeam.SerieId;     // thuisPloegInfo.SerieId;
 
                 var serieId = int.Parse(wedstrijd.Element("reeksid").Value);
-                var serieName = wedstrijd.Element("reeks").Value;
-                
+                var poule = serieInfos[serieId].poule;
+                var serieName = serieInfos[serieId].serieName;
+
 
                 var sporthal = wedstrijd.Element("sporthal").Value.Replace(",", " ");
                 var sporthalId = -1;
@@ -443,24 +444,5 @@ namespace XmlTransformer
             }
         }
 
-        static string GetReeksNamePouleLetter_new(string reeks)
-        {
-            reeks = reeks.Replace("R2", "").Trim();
-            if (reeks.Substring(reeks.Length - 2, 1) == " ")
-                return reeks.Substring(reeks.Length - 1, 1);
-            return "A";
-        }
-        // Kopie from html-overview?
-        static string GetReeks(string reeks)
-        {
-            reeks = reeks.Replace(" ", "");
-
-	        reeks = reeks.Replace(",", "");
-	        reeks = reeks.Replace("R2","");
-	        reeks = reeks.Replace("(4-4)","");
-	        reeks = reeks.ToLower();
-	        reeks = reeks.Replace("starttovolley", "start2volley");
-	        return reeks;
-        }
     }
 }

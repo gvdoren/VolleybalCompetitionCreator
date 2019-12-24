@@ -495,25 +495,30 @@ namespace CompetitionCreator
                             days[index] |= bitMask;
                         }
                     }
+                    int rounds = 0;
                     for (int m1 = 0; m1 < poule.matches.Count; m1++)
                     {
                         Match match1 = poule.matches[m1];
+                        if (match1.Week.round > rounds)
+                            rounds = match1.Week.round;
                         if (match1.RealMatch())
                         {
                             HomeMatches[match1.homeTeam.Index]++;
                             VisitorMatches[match1.visitorTeam.Index]++;
                         }
                     }
+                    double expectedMatches = ((double)((poule.TeamCount - 1) * (rounds+1)))/ 2;
+
                     foreach (Team t in poule.teams)
                     {
                         if (t.RealTeam())
                         {
-                            if (HomeMatches[t.Index] != poule.TeamCount - 1)
+                            if (HomeMatches[t.Index] > expectedMatches + 0.51 || HomeMatches[t.Index] < expectedMatches - 0.51)
                             {
                                AddError(string.Format("Poule consistency: Aantal thuis matches klopt niet (poule: {0}, team: {1})", poule.fullName, t.name),
                                                  "The cause can be that an invalid xml is used as input, or that indicates a bug in the program. In both cases save your project and contact the author.");
                             }
-                            if (VisitorMatches[t.Index] != poule.TeamCount - 1)
+                            if (VisitorMatches[t.Index] > expectedMatches + 0.51 || VisitorMatches[t.Index] < expectedMatches - 0.51)
                             {
                                AddError(string.Format("Poule consistency: Aantal uit matches klopt niet (poule: {0}, team: {1})", poule.fullName, t.name),
                                                  "The cause can be that an invalid xml is used as input, or that indicates a bug in the program. In both cases save your project and contact the author.");

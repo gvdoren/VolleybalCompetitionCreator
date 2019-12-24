@@ -27,3 +27,89 @@ Vlaams brabant:
 - Meerder poules selecteren en een reeks aan toevoegen
 
 
+
+Ranking code:
+
+
+            // Generate rankings for all teams that have a ranking
+            string outname = outDir+"ranking_converted.xml";
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(outname))
+            {
+                XDocument doc1 = XDocument.Load("http://www.volleyadmin2.be/services/rangschikking_xml.php?province_id=" + provincie.Id.ToString(), LoadOptions.SetLineInfo | LoadOptions.SetBaseUri);
+                var rangschikkingen = doc1.Element("klassement").Elements("rangschikking");
+                foreach (var rangschikking in rangschikkingen)
+                {
+                    var gespeeldewedstrijden = int.Parse(rangschikking.Element("aantalGespeeldeWedstrijden").Value);
+                    if (gespeeldewedstrijden > 0)
+                    {
+                        var ploegId = int.Parse(rangschikking.Element("ploegid").Value);
+                        if (!teamInfo.ContainsKey(ploegId))
+                            continue;
+                        var rank = rangschikking.Element("volgorde").Value;
+                        var punten = int.Parse(rangschikking.Element("puntentotaal").Value);
+                        rank = rank.Replace(".", "");
+                        teamInfo[ploegId].registrationTeam.ranking = rank.ToString();
+                        teamInfo[ploegId].registrationTeam.score = punten.ToString();
+                        teamInfo[ploegId].matchCount = gespeeldewedstrijden;
+                    }
+                }
+                file.WriteLine("<Rankings>");
+                foreach (var club in clubs)
+                {
+                    var teams = club.Element("Teams").Elements("Team");
+                    foreach (var t1 in teams)
+                    {
+                        int teamId = int.Parse(t1.Attribute("Id").Value);
+                        var info = teamInfo[teamId];
+                        if (info != info.registrationTeam)
+                        {
+                            string commentStart = "";
+                            string commentEnd = "";
+                            if (!info.newRegistration)
+                            {
+                                commentStart = "<!-- No new registration. No ranking needed. ";
+                                commentEnd = "-->";
+                            } else if (info.reeks != info.registrationTeam.reeks)
+                            {
+                                commentStart = "<!-- Team changed from Serie.  Ranking not valid";
+                                commentEnd = "-->";
+                            }
+                            if (info.registrationTeam.ranking != "" && info.registrationTeam.ranking != "") // when team & registration team are created in second round
+                            {
+                                file.WriteLine(commentStart + "  <Ranking serieId='{0}' serieName='{1}' pouleName='' teamId='{2}' teamName='{3}' ranking='{4}' score='{5}' /> " + commentEnd,
+                                    info.SerieId,
+                                    serieInfos[info.SerieId].serieName, // newSerieName waarom was dit nieuwseriename
+                                    info.teamId,
+                                    info.teamName,
+                                    info.registrationTeam.ranking,
+                                    info.registrationTeam.score);
+                            }
+                        }
+                    }
+
+                }
+                doc.Save(outDir+"inschrijvingen_converted.xml");
+                file.WriteLine("</Rankings>");
+                file.Close();
+
+                StreamWriter writer = new StreamWriter(outDir+"competition_converted.csv");
+                GenerateCompetition(writer, wedstrijden_limburg);
+                GenerateCompetition(writer, wedstrijden_nationaal);
+                writer.Close();
+
+
+            }
+
+
+	    // Kopie from html-overview?
+        static string GetReeks(string reeks)
+        {
+            reeks = reeks.Replace(" ", "");
+
+	        reeks = reeks.Replace(",", "");
+	        reeks = reeks.Replace("R2","");
+	        reeks = reeks.Replace("(4-4)","");
+	        reeks = reeks.ToLower();
+	        reeks = reeks.Replace("starttovolley", "start2volley");
+	        return reeks;
+        }
