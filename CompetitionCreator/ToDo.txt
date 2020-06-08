@@ -18,6 +18,8 @@ Volgorde:
 Verbeteringen mbt VVB:
 - Gecombineerde XML voor alle inschrijvingen van limburg
 - Robuster maken license-key opslag
+- Schema's editen
+- Constraints verwijderen (select all)
 
 Ideeen:
 - Ontmoedigen reserve week (als het niet uitmaakt)

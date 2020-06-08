@@ -34,7 +34,7 @@ namespace CompetitionCreator
         }
         public MatchWeek(string datestr)
         {
-            date = DateTime.ParseExact(datestr, "yyyy-MM-dd", null).Date;
+            date = ImportExport.ParseDateTime(datestr).Date;
             CalculateMonday();
         }
         public MatchWeek(DateTime date)

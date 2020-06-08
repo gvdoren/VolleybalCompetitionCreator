@@ -7,6 +7,7 @@ using System.Text;
 using System.IO;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Security
 {
@@ -260,7 +261,8 @@ namespace Security
                     if (msg) MessageBox.Show("License Key is not for this computer");
                     return false;
                 }
-                date = DateTime.Parse(results[0]);
+                CultureInfo provider = CultureInfo.InvariantCulture;
+                date = DateTime.ParseExact(results[0], "d/M/yyyy", provider);
                 user = results[1];
                 returnvalue = true;
             }

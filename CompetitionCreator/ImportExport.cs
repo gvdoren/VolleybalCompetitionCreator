@@ -16,6 +16,28 @@ namespace CompetitionCreator
 {
     class ImportExport
     {
+        public static DateTime ParseDateTime(string datumString)
+        {
+            DateTime result;
+            bool success = DateTime.TryParseExact(datumString, "d/M/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out result);
+            if (!success)
+                success = DateTime.TryParseExact(datumString, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out result);
+            if (!success)
+                success = DateTime.TryParseExact(datumString, "d/M/yyyy H:m", CultureInfo.InvariantCulture, DateTimeStyles.None, out result);
+            if (success == false)
+                throw new Exception(datumString + " is not a date");
+            return result;
+        }
+
+        public static DateTime ParseTime(string timeString)
+        {
+            DateTime result;
+            bool success = DateTime.TryParseExact(timeString, "H:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out result);
+            if (success == false)
+                throw new Exception(timeString + " is not a time");
+            return result;
+        }
+
         static public string BaseDirectory = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)+@"\CompetitionCreator";
         static void Error(XElement element, string str)
         {
@@ -179,7 +201,7 @@ namespace CompetitionCreator
         }
         public static DateTime DateAttribute(XElement element, params String[] attributeStrings)
         {
-            DateTime result;
+            DateTime result = new DateTime();
             XAttribute attr = null;
             foreach (string attribute in attributeStrings)
             {
@@ -190,13 +212,41 @@ namespace CompetitionCreator
             {
                 Error(element, "misses the attribute: '" + attributeStrings[0].ToString() + "'");
             }
-            bool success = DateTime.TryParse(attr.Value.ToString(), out result);
-            if (success == false)
+            try
+            {
+                result = ParseDateTime(attr.Value.ToString());
+            }
+            catch (Exception)
             {
                 Error(attr, "is not an date");
             }
             return result;
         }
+
+        public static DateTime TimeAttribute(XElement element, params String[] attributeStrings)
+        {
+            DateTime result = new DateTime();
+            XAttribute attr = null;
+            foreach (string attribute in attributeStrings)
+            {
+                attr = element.Attribute(attribute);
+                if (attr != null) break;
+            }
+            if (attr == null)
+            {
+                Error(element, "misses the attribute: '" + attributeStrings[0].ToString() + "'");
+            }
+            try
+            {
+                result = ParseTime(attr.Value.ToString());
+            }
+            catch (Exception)
+            {
+                Error(attr, "is not an time");
+            }
+            return result;
+        }
+
         public static string StringAttribute(XElement element, params String[] attributeStrings)
         {
             XAttribute attr = null;
@@ -502,8 +552,8 @@ namespace CompetitionCreator
                             writer.WriteAttributeString("homeTeamId", match.homeTeam.Id.ToString());
                             writer.WriteAttributeString("visitorTeamName", match.visitorTeam.name);
                             writer.WriteAttributeString("visitorTeamId", match.visitorTeam.Id.ToString());
-                            writer.WriteAttributeString("date", match.datetime.ToString("d/M/yyyy"));
-                            writer.WriteAttributeString("time", match.datetime.ToString("H:m"));//.ToShortTimeString());
+                            writer.WriteAttributeString("date", match.datetime.ToString("yyyy-MM-dd"));
+                            writer.WriteAttributeString("time", match.datetime.ToString("uu:mm"));//.ToShortTimeString());
                             writer.WriteAttributeString("SporthallId", match.homeTeam.sporthal.id.ToString());
                             writer.WriteAttributeString("SporthallName", match.homeTeam.sporthal.name);
                             if (match.homeTeam.field != null)
@@ -958,7 +1008,7 @@ namespace CompetitionCreator
                     Match m = new Match(weekIndex, homeTeam, visitorTeam, serie, po);
                     string s = StringOptionalAttribute(match, null, "time");
                     if(s != null)
-                        m.Time = new Time(DateTime.Parse(s));
+                        m.Time = new Time(ParseTime(s));
                     po.matches.Add(m);
                 }
             }
@@ -1147,9 +1197,9 @@ namespace CompetitionCreator
                         {
                             string from = notAvailable.Attribute("from").Value;
                             string until = notAvailable.Attribute("until").Value;
-                            DateTime dt = DateTime.Parse(from);
+                            DateTime dt = ParseDateTime(from);
                             DateTime dtFrom = new DateTime(dt.Year, dt.Month, dt.Day);
-                            DateTime dtUntil = DateTime.Parse(until);
+                            DateTime dtUntil = ParseDateTime(until);
 
                             while(dtFrom < dtUntil)
                             {
@@ -1163,7 +1213,7 @@ namespace CompetitionCreator
                     {
                         foreach (var date in Element(sporthal, "NotAvailable").Elements("Date"))
                         {
-                            DateTime dt = DateTime.Parse(date.Value.ToString());
+                            DateTime dt = ParseDateTime(date.Value.ToString());
                             if (sp.NotAvailable.Contains(dt) == false) sp.NotAvailable.Add(dt);
                         }
                     }
@@ -1204,7 +1254,7 @@ namespace CompetitionCreator
                     string DayString = StringAttribute(team, "Day");
                     if (DayString == "7") DayString = "0";
                     DayOfWeek day = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), DayString);
-                    Time time = new Time(DateAttribute(team, "StartTime"));
+                    Time time = new Time(TimeAttribute(team, "StartTime"));
                     te.defaultDay = day;
                     te.defaultTime = time;
                     string teamGroup = StringOptionalAttribute(team, "-", "Group");
@@ -1436,7 +1486,7 @@ namespace CompetitionCreator
                     if (team == null)
                     {
                         team = new Team(teamId, parameters[homeTeamIndex], poule, serie, homeClub);
-                        DateTime date = DateTime.Parse(parameters[dateIndex] + " " + parameters[timeIndex]);
+                        DateTime date = ParseDateTime(parameters[dateIndex] + " " + parameters[timeIndex]);
                         Dictionary<DayOfWeek, int> dow = new Dictionary<DayOfWeek, int>();
                         Dictionary<Time, int> ti = new Dictionary<Time, int>();
                         foreach (string[] parameterline in ParameterLines)
@@ -1444,7 +1494,7 @@ namespace CompetitionCreator
                             if (parameterline[homeTeamIndex] == parameters[homeTeamIndex] &&
                                 parameterline[homeTeamIdIndex] == parameters[homeTeamIdIndex])
                             {
-                                DateTime d = DateTime.Parse(parameterline[dateIndex] + " " + parameterline[timeIndex]);
+                                DateTime d = ParseDateTime(parameterline[dateIndex] + " " + parameterline[timeIndex]);
                                 if (dow.ContainsKey(d.DayOfWeek) == false) dow.Add(d.DayOfWeek, 0);
                                 Time nt = new Time(d);
                                 if (ti.ContainsKey(nt) == false) ti.Add(nt, 0);
@@ -1490,7 +1540,7 @@ namespace CompetitionCreator
                     if (team == null)
                     {
                         team = new Team(teamId, parameters[visitorTeamIndex], poule, serie, visitorClub);
-                        DateTime date = DateTime.Parse(parameters[dateIndex] + " " + parameters[timeIndex]);
+                        DateTime date = ParseDateTime(parameters[dateIndex] + " " + parameters[timeIndex]);
                         Dictionary<DayOfWeek, int> dow = new Dictionary<DayOfWeek, int>();
                         Dictionary<Time, int> ti = new Dictionary<Time, int>();
                         foreach (string[] parameterline in ParameterLines)
@@ -1498,7 +1548,7 @@ namespace CompetitionCreator
                             if (parameterline[homeTeamIndex] == parameters[visitorTeamIndex] &&
                                 parameterline[homeTeamIdIndex] == parameters[visitorTeamIdIndex])
                             {
-                                DateTime d = DateTime.Parse(parameterline[dateIndex] + " " + parameterline[timeIndex]);
+                                DateTime d = ParseDateTime(parameterline[dateIndex] + " " + parameterline[timeIndex]);
                                 if (dow.ContainsKey(d.DayOfWeek) == false) dow.Add(d.DayOfWeek, 0);
                                 Time nt = new Time(d);
                                 if (ti.ContainsKey(nt) == false) ti.Add(nt, 0);
@@ -1534,7 +1584,7 @@ namespace CompetitionCreator
                 {
                     if (parameters[pouleIndex] == poule.name && poule.serie.id == int.Parse(parameters[serieIdIndex]))
                     {
-                        MatchWeek we = new MatchWeek(DateTime.Parse(parameters[dateIndex] + " " + parameters[timeIndex]));
+                        MatchWeek we = new MatchWeek(ParseDateTime(parameters[dateIndex] + " " + parameters[timeIndex]));
                         if (poule.weeks.Find(w => w == we) == null) poule.weeks.Add(we);
                     }
                 }
@@ -1553,10 +1603,10 @@ namespace CompetitionCreator
                             int homePouleTeamIndex = poule.teams.FindIndex(t => t.Id == homeTeamIndex1);
                             int visitorTeamIndex1 = int.Parse(parameters[visitorTeamIdIndex]);
                             int visitorPouleTeamIndex = poule.teams.FindIndex(t => t.Id == visitorTeamIndex1);
-                            MatchWeek we = new MatchWeek(DateTime.Parse(parameters[dateIndex] + " " + parameters[timeIndex]));
+                            MatchWeek we = new MatchWeek(ParseDateTime(parameters[dateIndex] + " " + parameters[timeIndex]));
                             int index = poule.weeks.FindIndex(w => w == we);
                             Match m = new Match(index, homePouleTeamIndex, visitorPouleTeamIndex, serie, poule);
-                            m.Time = new Time(DateTime.Parse(parameters[timeIndex]));
+                            m.Time = new Time(ParseTime(parameters[timeIndex]));
                             Time ti = m.Time;
                             poule.matches.Add(m);
                         }
@@ -1731,11 +1781,11 @@ namespace CompetitionCreator
                                 // (string)match["datetime"]
                                 CultureInfo provider = CultureInfo.InvariantCulture;
                                 string datetimeStr = (string)match["datetime"];
-                                //DateTime datetime = DateTime.ParseExact(datetimeStr, "MM/dd/yyyy HH:mm:ss", provider);
+                                //DateTime datetime = ParseDateTime(datetimeStr);
 
                                 DateTime datetime = UnixTimeStampToDateTime(double.Parse(datetimeStr) / 1000);
 
-                                //datetime = DateTime.ParseExact("2013-09-22T11:00:00+02:00", "yyyy-MM-ddTHH:mm:sszzz", null);
+                                //datetime = ParseDateTime("2013-09-22T11:00:00+02:00");
                                 string homeTeamName = (string)match["homeTeam"];
                                 int homeTeamId = registrationMapping[(int)match["homeTeamId"]];
                                 string visitorTeamName = (string)match["visitorTeam"];
@@ -1868,7 +1918,7 @@ namespace CompetitionCreator
                     bezoekersclubname = bezoekersclub.name;
                     bezoekersclubId = bezoekersclub.Id;
                 }
-                DateTime date = DateTime.Parse(datum);
+                DateTime date = ParseDateTime(datum);
                 sporthal = sporthal.Replace(",", " ");
                 sporthal = sporthal.Replace(",", " ");
                 int sporthalId = -1;

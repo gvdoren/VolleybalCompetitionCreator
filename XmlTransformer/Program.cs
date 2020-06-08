@@ -55,7 +55,7 @@ namespace XmlTransformer
         //static string startDate = "1/1/2019";
         static string outDir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\CompetitionCreator\\";
 
-        static DateTime generationDate = DateTime.Now.AddDays(30);
+        static DateTime generationDate = DateTime.Now.AddDays(0);
         static int maxSerieIdWithMatches = 0;
 
         static public List<ProvincieInfo> provincies = new List<ProvincieInfo>();
