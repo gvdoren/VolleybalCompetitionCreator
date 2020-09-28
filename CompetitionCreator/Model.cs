@@ -209,6 +209,7 @@ namespace CompetitionCreator
                     ConstructGroupConstraintsDay(day);
                 }
                 ConstructGroupConstraintsWeekend();
+                //ConstructGroupConstraintsWeekendForClub();
 
                 // Deze moet als laatste
                 foreach (Team te in teams)
@@ -343,6 +344,38 @@ namespace CompetitionCreator
                 }
             } while (team != null);
 
+        }
+
+        public void ConstructGroupConstraintsWeekendForClub()
+        {
+            foreach (var club in clubs)
+            {
+                bool groupX = false;
+                bool groupY = false;
+                foreach (var team in club.teams)
+                {
+                    if (team.group == TeamGroups.GroupX)
+                        groupX = true;
+                    if (team.group == TeamGroups.GroupY)
+                        groupY = true;
+                }
+                TeamGroups group = TeamGroups.NoGroup;
+                if (groupX && !groupY)
+                    group = TeamGroups.GroupX;
+                if (!groupX && groupY)
+                    group = TeamGroups.GroupY;
+                if (group != TeamGroups.NoGroup)
+                {
+                    // ToDo: Different type of constraint is required
+                    ConstraintGrouping groupCon = new ConstraintGrouping();
+                    groupCon.name = "Teams in different groups play on same weekends(Club)";
+                    foreach (var team in club.teams)
+                    {
+                        groupCon.GroupA.Add(team);
+                    }
+                    constraints.Add(groupCon);
+                }
+            }
         }
 
         public int TotalConflictsSnapshot = 0;

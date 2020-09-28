@@ -60,6 +60,7 @@
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(468, 20);
             this.textBox2.TabIndex = 2;
+            this.textBox2.Text = "E6E5-1537-7C47-E331-7653-645A-0BCE-E26B";
             // 
             // label1
             // 

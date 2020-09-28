@@ -21,7 +21,13 @@ namespace CompetitionCreator
             DateTime result;
             bool success = DateTime.TryParseExact(datumString, "d/M/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out result);
             if (!success)
+                success = DateTime.TryParseExact(datumString, "yyyy-MM-dd H:m:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out result);
+            if (!success)
+                success = DateTime.TryParseExact(datumString, "yyyy-MM-dd H:m", CultureInfo.InvariantCulture, DateTimeStyles.None, out result);
+            if (!success)
                 success = DateTime.TryParseExact(datumString, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out result);
+            if (!success)
+                success = DateTime.TryParseExact(datumString, "d/M/yyyy H:m:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out result);
             if (!success)
                 success = DateTime.TryParseExact(datumString, "d/M/yyyy H:m", CultureInfo.InvariantCulture, DateTimeStyles.None, out result);
             if (success == false)
@@ -438,7 +444,7 @@ namespace CompetitionCreator
                             foreach (DateTime date in sporthal.NotAvailable)
                             {
                                 //writer.WriteStartElement("Date");
-                                writer.WriteElementString("Date", date.ToShortDateString());
+                                writer.WriteElementString("Date", date.ToString("yyyy-MM-dd"));
                                 //writer.WriteEndElement();
                             }
                             writer.WriteEndElement();
@@ -553,7 +559,7 @@ namespace CompetitionCreator
                             writer.WriteAttributeString("visitorTeamName", match.visitorTeam.name);
                             writer.WriteAttributeString("visitorTeamId", match.visitorTeam.Id.ToString());
                             writer.WriteAttributeString("date", match.datetime.ToString("yyyy-MM-dd"));
-                            writer.WriteAttributeString("time", match.datetime.ToString("uu:mm"));//.ToShortTimeString());
+                            writer.WriteAttributeString("time", match.datetime.ToString("H:mm"));//.ToShortTimeString());
                             writer.WriteAttributeString("SporthallId", match.homeTeam.sporthal.id.ToString());
                             writer.WriteAttributeString("SporthallName", match.homeTeam.sporthal.name);
                             if (match.homeTeam.field != null)
@@ -628,7 +634,7 @@ namespace CompetitionCreator
                     {
                         if (match.RealMatch())
                         {
-                            writer.Write("{0},{1},{2},{3},{4},{5},{6},{7},{8}", poule.serie.name, poule.fullName, match.datetime.ToShortDateString(), match.DayString, match.Time.ToString(), match.homeTeam.club.name, match.homeTeam.name, match.visitorTeam.club.name, match.visitorTeam.name);
+                            writer.Write("{0},{1},{2},{3},{4},{5},{6},{7},{8}", poule.serie.name, poule.fullName, match.datetime.ToString("yyyy-MM-dd"), match.DayString, match.Time.ToString(), match.homeTeam.club.name, match.homeTeam.name, match.visitorTeam.club.name, match.visitorTeam.name);
 
                             foreach (Constraint con in match.conflictConstraints)
                             {
@@ -841,7 +847,7 @@ namespace CompetitionCreator
                     writer.WriteStartElement("Week");
                     int round = week.round + 1;
                     writer.WriteAttributeString("Round", round.ToString());
-                    writer.WriteAttributeString("Date", week.Monday.Date.ToShortDateString());
+                    writer.WriteAttributeString("Date", week.Monday.Date.ToString("yyyy-MM-dd"));
                     if (week.dayOverruled) writer.WriteAttributeString("OverruledDay", "true");
                     writer.WriteEndElement();
                 }
@@ -869,7 +875,7 @@ namespace CompetitionCreator
                 {
                     writer.WriteStartElement("DateConstraint");
                     writer.WriteAttributeString("TeamId", con.team.Id.ToString());
-                    writer.WriteAttributeString("Date", con.date.ToShortDateString());
+                    writer.WriteAttributeString("Date", con.date.ToString("yyyy-MM-dd"));
                     writer.WriteAttributeString("What", con.homeVisitNone.ToString());
                     writer.WriteAttributeString("Cost", con.cost.ToString());
                     writer.WriteEndElement();
@@ -1805,7 +1811,7 @@ namespace CompetitionCreator
                                     sporthalId = club.sporthalls[0].sporthall.id;
                                 }
                                 sporthal = sporthal.Replace(",", " ");
-                                string date = datetime.ToShortDateString();
+                                string date = datetime.ToString("yyyy-MM-dd");
                                 string aanvangsuur = datetime.ToShortTimeString();
                                 string thuisclubname = club.name;
                                 int thuisclubId = club.Id;
@@ -1923,7 +1929,7 @@ namespace CompetitionCreator
                 sporthal = sporthal.Replace(",", " ");
                 int sporthalId = -1;
                 writer.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15}",
-                    reeks, reeksId, poule, pouleId, thuisploeg, thuisploegId, bezoekersploeg, bezoekersploegId, sporthal, sporthalId, date.ToShortDateString(), aanvangsuur, thuisclubname, thuisclubId, bezoekersclubname, bezoekersclubId);
+                    reeks, reeksId, poule, pouleId, thuisploeg, thuisploegId, bezoekersploeg, bezoekersploegId, sporthal, sporthalId, date.ToString("yyyy-MM-dd"), aanvangsuur, thuisclubname, thuisclubId, bezoekersclubname, bezoekersclubId);
             }
             writer.Close();
         }

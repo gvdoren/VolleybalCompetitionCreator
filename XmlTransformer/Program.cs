@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
+using System.Globalization;
 
 namespace XmlTransformer
 {
@@ -60,6 +61,7 @@ namespace XmlTransformer
 
         static public List<ProvincieInfo> provincies = new List<ProvincieInfo>();
         static public List<string> reeksMatches = new List<string>();
+        static public List<int> reeksMatchesExist = new List<int>();
         static void CheckMatchesToBePlayed(IEnumerable<XElement> wedstrijden, bool isProvinciaal)
         {
             foreach (var wedstrijd in wedstrijden)
@@ -72,7 +74,12 @@ namespace XmlTransformer
                 var bezoekersPloegId = int.Parse(wedstrijd.Element("bezoekersploeg_id").Value);
                 var reeksId = int.Parse(wedstrijd.Element("reeksid").Value);
                 var reeks = wedstrijd.Element("reeks").Value;
-                DateTime date = DateTime.Parse(wedstrijd.Element("datum").Value);
+                //Console.WriteLine(wedstrijd.Element("datum").Value);
+                //DateTime date = DateTime.Parse(wedstrijd.Element("datum").Value);
+
+                DateTime date;
+                DateTime.TryParseExact(wedstrijd.Element("datum").Value, "d/M/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out date);
+
                 if (date > generationDate)
                 {
                     if (matchesToBePlayed.Keys.Contains(thuisPloegId) == false)
@@ -94,6 +101,7 @@ namespace XmlTransformer
                 {
                     if (reeksId > maxSerieIdWithMatches)
                         maxSerieIdWithMatches = reeksId;
+                    reeksMatchesExist.Add(reeksId);
                 }
             }
         }
@@ -294,7 +302,8 @@ namespace XmlTransformer
                     }
                     if (matchesToBePlayed.Keys.Contains(inf.teamId))
                         inf.registrationTeam.matchesToBePlayed = matchesToBePlayed[inf.teamId];
-                    if (inf.SerieId >= maxSerieIdWithMatches)
+                    if (reeksMatchesExist.Contains(inf.SerieId) == false)
+//                    if (inf.SerieId >= maxSerieIdWithMatches)
                     {
                         inf.newRegistration = true;
                         if (inf.registrationTeam != inf)
@@ -360,7 +369,8 @@ namespace XmlTransformer
                     var info = teamInfo[teamId];
                     bool rootTeam = info.registrationTeam == info;
                     // Van de oude teams zoveel mogelijk weggooien
-                    if (serieId < maxSerieIdWithMatches)
+                    if (reeksMatchesExist.Contains(serieId))
+//                        if (serieId < maxSerieIdWithMatches)
                     {
                         // Poules that were created, but not used anymore in the second half
                         if (!rootTeam && info.registrationTeam.matchesToBePlayed == 0)
@@ -437,10 +447,14 @@ namespace XmlTransformer
 
                 var sporthal = wedstrijd.Element("sporthal").Value.Replace(",", " ");
                 var sporthalId = -1;
-                DateTime date = DateTime.Parse(wedstrijd.Element("datum").Value);
+
+                DateTime date;
+                DateTime.TryParseExact(wedstrijd.Element("datum").Value, "d/M/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out date);
+
+                //DateTime date = DateTime.Parse(wedstrijd.Element("datum").Value);
                 var aanvangsuur = wedstrijd.Element("aanvangsuur").Value;
                 writer.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15}",
-                    serieName, serieId, poule, -1, thuisPloeg, thuisPloegId, bezoekersPloeg, bezoekersPloegId, sporthal, sporthalId, date.ToShortDateString(), aanvangsuur, thuisclubname, thuisclubId, bezoekersclubname, bezoekersclubId);
+                    serieName, serieId, poule, -1, thuisPloeg, thuisPloegId, bezoekersPloeg, bezoekersPloegId, sporthal, sporthalId, date.ToString("yyyy-MM-dd"), aanvangsuur, thuisclubname, thuisclubId, bezoekersclubname, bezoekersclubId);
             }
         }
 

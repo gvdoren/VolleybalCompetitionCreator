@@ -124,24 +124,6 @@ namespace CompetitionCreator
             objectListView3.SelectedObjects = teams;
             objectListView3_SelectionChanged(null, null);
         }
-        private void DisplayHtml(string html)
-        {
-            Console.Write(html);
-            webBrowser1.Navigate("about:blank");
-            try
-            {
-                if (webBrowser1.Document != null)
-                {
-                    webBrowser1.Document.Write(string.Empty);
-                }
-                webBrowser1.DocumentText = html;
-            }
-            catch (Exception)
-            {
-                Error.AddManualError("Error showing html. Possible cause: no internet connection.");
-                MessageBox.Show("Error showing html. Possible cause: no internet connection.");
-            } // do nothing with this
-        }
         void UpdateWebBrowser()
         {
             List<Sporthal> sl = new List<Sporthal>();
@@ -183,11 +165,6 @@ namespace CompetitionCreator
                             button4.Enabled = false;
                         }
                     }
-                }
-                if (geoInfo) DisplayHtml(firstHalf + markers + secondHalf);
-                else
-                {
-                    DisplayHtml(noLatLng);
                 }
             }
             else

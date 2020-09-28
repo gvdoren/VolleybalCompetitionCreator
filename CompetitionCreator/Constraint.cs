@@ -674,6 +674,8 @@ namespace CompetitionCreator
             conflict_cost = 0;
             conflictMatches.Clear();
             int maxTeams = 0;
+            bool sat = false;
+            bool sun = false;
             SortedList<MatchWeek, List<Match>> CountPerWeek = new SortedList<MatchWeek, List<Match>>();
             foreach (Team team in listTeams)
             {
@@ -689,7 +691,13 @@ namespace CompetitionCreator
                         }
                     }
                 }
+                if (team.defaultDay == DayOfWeek.Saturday)
+                    sat = true;
+                if (team.defaultDay == DayOfWeek.Sunday)
+                    sun = true;
             }
+            if (sat & sun)
+                sun = false;
             List<List<Match>> sortedCounts = CountPerWeek.Values.ToList();
             sortedCounts.Sort(delegate(List<Match> l1, List<Match> l2)
             {
@@ -698,20 +706,21 @@ namespace CompetitionCreator
                 foreach (Match match in l1)
                 {
                     if (match.homeTeam.sporthal.NotAvailable.Contains(match.datetime.Date) == true)
-                        l1count -= 1;
+                        l1count -= 10;
                     else if (match.poule.Optimize(model) == false) l1count += 10;
                 }
                 int l2count = l2.Count;
                 foreach (Match match in l2)
                 {
                     if (match.homeTeam.sporthal.NotAvailable.Contains(match.datetime.Date) == true)
-                        l2count -= 1;
+                        l2count -= 10;
                     else if (match.poule.Optimize(model) == false) l2count += 10;
                 }
                 return l1count.CompareTo(l2count);
             });
             int week_cost = cost;
-            for (int i = 0; i < sortedCounts.Count - maxTeams; i++) // 12 teams, 11 thuiswedstrijden, dus hier is 1 extra wedstrijd toegestaan
+//            for (int i = 0; i < sortedCounts.Count - maxTeams + 1; i++) // 11 thuiswedstrijden, precies genoeg. Oud: 12 teams, 11 thuiswedstrijden, dus hier is 1 extra wedstrijd toegestaan
+            for (int i = sortedCounts.Count - maxTeams -1; i >= 0; i--) // 11 thuiswedstrijden, precies genoeg. Oud: 12 teams, 11 thuiswedstrijden, dus hier is 1 extra wedstrijd toegestaan
             {
                 foreach (Match match in sortedCounts[i])
                 {
@@ -1039,7 +1048,7 @@ namespace CompetitionCreator
                     result.Add("'uit te spelen'");
                     break;
             }
-            result.Add(" op " + date.ToShortDateString());
+            result.Add(" op " + date.ToString("yyyy-MM-dd"));
 
             return result.ToArray();
         }

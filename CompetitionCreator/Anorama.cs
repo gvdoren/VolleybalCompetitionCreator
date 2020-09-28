@@ -83,8 +83,8 @@ namespace CompetitionCreator
                 writer.WriteStartDocument();
                 writer.WriteStartElement("Annorama");
                 writer.WriteAttributeString("Title", title);
-                writer.WriteAttributeString("Start", start.ToShortDateString());
-                writer.WriteAttributeString("End", end.ToShortDateString());
+                writer.WriteAttributeString("Start", start.ToString("yyyy-MM-dd"));
+                writer.WriteAttributeString("End", end.ToString("yyyy-MM-dd"));
                 writer.WriteStartElement("Reeksen");
                 int i=0;
                 foreach (YearPlan reeks in reeksen)
@@ -98,7 +98,7 @@ namespace CompetitionCreator
                         if (week.weekNr >= 0)
                         {
                             writer.WriteStartElement("Week");
-                            writer.WriteAttributeString("Date", week.week.Saturday.ToShortDateString());
+                            writer.WriteAttributeString("Date", week.week.Saturday.ToString("yyyy-MM-dd"));
                             if (week.week.dayOverruled) writer.WriteAttributeString("OverruledDay", week.week.OverruledDay.ToString());
                             if (week.week.round >= 0) writer.WriteAttributeString("Round", week.week.round.ToString());
                             writer.WriteAttributeString("WeekNumber", week.weekNr.ToString());

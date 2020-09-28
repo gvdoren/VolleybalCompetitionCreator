@@ -294,7 +294,7 @@ namespace Security
             {
                 sb[(int)f] = '1';
             }
-            string total = date.ToShortDateString() + "|||" + user + "|||" + fingerprint+ "|||"+sb.ToString();
+            string total = date.ToString("d/M/yyyy") + "|||" + user + "|||" + fingerprint+ "|||"+sb.ToString();
             return StringCipher.Encrypt(total, fingerprint);
         }
         public DateTime ValidUntil()

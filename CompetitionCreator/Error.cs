@@ -15,7 +15,7 @@ namespace CompetitionCreator
         public bool HasTime { get; set; }
         public string GetTime()
         {
-            return datetime.ToShortDateString() + " "+ datetime.ToShortTimeString();
+            return datetime.ToString("yyyy-MM-dd") + " "+ datetime.ToString("yyyy-MM-dd");
         }
         public void AddDetailHtml(string html)
         {

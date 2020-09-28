@@ -63,7 +63,7 @@ namespace CompetitionCreator
             {
                 return PlayTime(OverruledDay) + "* - " + PlayTime(OverruledDay);
             } else
-            return Monday.ToShortDateString() + "-" + Monday.AddDays(6).ToShortDateString();
+            return Monday.ToString("yyyy-MM-dd") + "-" + Monday.AddDays(6).ToString("yyyy-MM-dd");
         }
         public string Start
         {
