@@ -15,6 +15,7 @@ namespace XmlTransformer
         public TeamInfo registrationTeam = null;
         //public string usedByTeamId = "";
         public int teamId = 0;
+        public int parentId = 0;
         public string teamName = "";
         public int SerieId = 0;
         public int clubId = 0;
@@ -27,6 +28,7 @@ namespace XmlTransformer
         public bool derivedNewRegistrationFromThis = false;
         public bool derivedExistingTeamFromThis = false;
         public int matchesToBePlayed = 0;
+        public bool reeksMatchesExist = false;
         public int matchCount = 0;
     }
 
@@ -56,7 +58,7 @@ namespace XmlTransformer
         //static string startDate = "1/1/2019";
         static string outDir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\CompetitionCreator\\";
 
-        static DateTime generationDate = DateTime.Now.AddDays(0);
+        static DateTime generationDate = DateTime.Now.AddDays(30);
         static int maxSerieIdWithMatches = 0;
 
         static public List<ProvincieInfo> provincies = new List<ProvincieInfo>();
@@ -97,12 +99,15 @@ namespace XmlTransformer
                             Console.WriteLine("Nationaal :Wedstrijden van reeks {0} worden meegenomen in de planning", reeks);
                     }
                 }
-                if (date < generationDate && isProvinciaal)
-                {
-                    if (reeksId > maxSerieIdWithMatches)
-                        maxSerieIdWithMatches = reeksId;
+                if (reeksMatchesExist.Contains(reeksId) == false)
                     reeksMatchesExist.Add(reeksId);
-                }
+
+//                if (date < generationDate && isProvinciaal)
+//                {
+//                    reeksMatchesExist.Add(reeksId);
+//                    // if (reeksId > maxSerieIdWithMatches)
+//                    //     maxSerieIdWithMatches = reeksId;
+//                }
             }
         }
 
@@ -177,14 +182,14 @@ namespace XmlTransformer
             XDocument doc = XDocument.Load(filename, LoadOptions.SetLineInfo | LoadOptions.SetBaseUri);
 
             // Wedstrijden van geselecteerde provincie + alle wedstrijden nationaal
-            XDocument doc_limburg = XDocument.Load("http://www.volleyadmin2.be/services/wedstrijden_xml.php?province_id=" + provincie.Id.ToString(), LoadOptions.SetLineInfo | LoadOptions.SetBaseUri);
-            var wedstrijden_limburg = doc_limburg.Element("kalender").Elements("wedstrijd");
-            CheckMatchesToBePlayed(wedstrijden_limburg, true);
+            XDocument doc_provincie = XDocument.Load("http://www.volleyadmin2.be/services/wedstrijden_xml.php?province_id=" + provincie.Id.ToString(), LoadOptions.SetLineInfo | LoadOptions.SetBaseUri);
+            var wedstrijden = doc_provincie.Element("kalender").Elements("wedstrijd");
+            CheckMatchesToBePlayed(wedstrijden, true);
             XDocument doc_nationaal = XDocument.Load("http://www.volleyadmin2.be/services/wedstrijden_xml.php?province_id=11", LoadOptions.SetLineInfo | LoadOptions.SetBaseUri);
             var wedstrijden_nationaal = doc_nationaal.Element("kalender").Elements("wedstrijd");
             CheckMatchesToBePlayed(wedstrijden_nationaal, false);
 
-            Console.WriteLine("Min Serie Id: {0}", maxSerieIdWithMatches);
+            //Console.WriteLine("Min Serie Id: {0}", maxSerieIdWithMatches);
 
             List<XElement> toBeRemoved = new List<XElement>();
             var clubs = doc.Element("Registrations").Element("Clubs").Elements("Club");
@@ -275,8 +280,8 @@ namespace XmlTransformer
                 Console.WriteLine("{0} = {1} + {2}", info1.Value.serieNameVVB, info1.Value.serieName, info1.Value.poule);
             }
 
-                // Build up info on how the teams are linked
-                foreach (var club in clubs)
+            // Read all information to handle crosslinks that have forward linkage
+            foreach (var club in clubs)
             {
                 string clubId = club.Attribute("Id").Value;
                 string clubName = club.Attribute("Name").Value;
@@ -291,40 +296,56 @@ namespace XmlTransformer
                     inf.clubId = int.Parse(clubId);
                     inf.clubName = clubName;
                     string parentIdstr = t1.Attribute("parent_id").Value;
-                    if (parentIdstr.Length == 0 || parentIdstr == "0" /*|| !teamInfo.ContainsKey(int.Parse(parentIdstr))*/)
+                    if (parentIdstr.Length == 0 || parentIdstr == "0")
                     {
-                        inf.registrationTeam = inf;
+                        inf.parentId = inf.teamId; // Of parentId 0
                     }
-                    else
+                    else 
                     {
-                        int parentId = int.Parse(parentIdstr);
-                        inf.registrationTeam = teamInfo[parentId];
-                    }
-                    if (matchesToBePlayed.Keys.Contains(inf.teamId))
-                        inf.registrationTeam.matchesToBePlayed = matchesToBePlayed[inf.teamId];
-                    if (reeksMatchesExist.Contains(inf.SerieId) == false)
-//                    if (inf.SerieId >= maxSerieIdWithMatches)
-                    {
-                        inf.newRegistration = true;
-                        if (inf.registrationTeam != inf)
-                            inf.registrationTeam.derivedNewRegistrationFromThis = true;
-                    } else if (inf.registrationTeam != inf)
-                    { 
-                        inf.registrationTeam.derivedExistingTeamFromThis = true;
-                        t1.Attribute("SerieId").SetValue(inf.registrationTeam.SerieId);
-                        t1.Attribute("SerieName").SetValue(serieInfos[inf.registrationTeam.SerieId].serieNameVVB);
+                        inf.parentId = int.Parse(parentIdstr);
                     }
                     teamInfo.Add(inf.teamId, inf);
+                    // Ensure that EvenOdd is allways present and store it in the info
                     var attr = t1.Attribute("EvenOdd");
-                    if(attr == null)
+                    if (attr == null)
                     {
                         XAttribute eo = new XAttribute("EvenOdd", "");
                         t1.Add(eo);
                     }
                     inf.evenOdd = t1.Attribute("EvenOdd").Value;
-                    // Copy even/odd info from registration team
-                    if (inf.registrationTeam.matchesToBePlayed > 0)
+                }
+            }
+
+
+            // Build up info on how the teams are linked
+            foreach (var club in clubs)
+            {
+                string clubId = club.Attribute("Id").Value;
+                string clubName = club.Attribute("Name").Value;
+
+                var teams = club.Element("Teams").Elements("Team");
+                foreach (var t1 in teams)
+                {
+                    var teamId = int.Parse(t1.Attribute("Id").Value);
+                    TeamInfo inf = teamInfo[teamId];
+                    inf.registrationTeam = teamInfo[inf.parentId];
+
+                    if (matchesToBePlayed.Keys.Contains(inf.teamId))
+                        inf.registrationTeam.matchesToBePlayed = matchesToBePlayed[inf.teamId];
+                    if (reeksMatchesExist.Contains(inf.SerieId) == false)
                     {
+                        inf.newRegistration = true;
+                        if (inf.registrationTeam != inf)
+                            inf.registrationTeam.derivedNewRegistrationFromThis = true;
+                    }
+                    else
+                        inf.reeksMatchesExist = true;
+                    // Copy attributes from registration team
+                    if (inf.registrationTeam != inf)
+                    {
+                        inf.registrationTeam.derivedExistingTeamFromThis = true;
+                        t1.Attribute("SerieId").SetValue(inf.registrationTeam.SerieId);
+                        t1.Attribute("SerieName").SetValue(serieInfos[inf.registrationTeam.SerieId].serieNameVVB);
                         t1.Attribute("EvenOdd").SetValue(inf.registrationTeam.evenOdd);
                     }
                 }
@@ -369,8 +390,7 @@ namespace XmlTransformer
                     var info = teamInfo[teamId];
                     bool rootTeam = info.registrationTeam == info;
                     // Van de oude teams zoveel mogelijk weggooien
-                    if (reeksMatchesExist.Contains(serieId))
-//                        if (serieId < maxSerieIdWithMatches)
+                    if (info.reeksMatchesExist)
                     {
                         // Poules that were created, but not used anymore in the second half
                         if (!rootTeam && info.registrationTeam.matchesToBePlayed == 0)
@@ -392,7 +412,7 @@ namespace XmlTransformer
             doc.Save(outDir + "inschrijvingen_converted.xml");
 
             StreamWriter writer = new StreamWriter(outDir + "competition_converted.csv");
-            GenerateCompetition(writer, wedstrijden_limburg);
+            GenerateCompetition(writer, wedstrijden);
             GenerateCompetition(writer, wedstrijden_nationaal);
             writer.Close();
         }
