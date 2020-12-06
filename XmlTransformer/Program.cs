@@ -409,9 +409,9 @@ namespace XmlTransformer
                     t1.Remove();
             }
 
-            doc.Save(outDir + "inschrijvingen_converted.xml");
+            doc.Save(outDir + "inschrijvingen.xml");
 
-            StreamWriter writer = new StreamWriter(outDir + "competition_converted.csv");
+            StreamWriter writer = new StreamWriter(outDir + "huidige_wedstrijden.csv");
             GenerateCompetition(writer, wedstrijden);
             GenerateCompetition(writer, wedstrijden_nationaal);
             writer.Close();
