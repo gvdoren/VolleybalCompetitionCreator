@@ -311,9 +311,6 @@
     <Content Include="Schemas\schema_T06_R4_W20.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Schemas\schema_T06_R4_W20 - Copy.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Schemas\schema_T08_R2_W14.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

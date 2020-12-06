@@ -33,7 +33,7 @@ namespace CompetitionCreator
                 Schema newSchema = new Schema();
                 newSchema.Read(file);
                 schemas.Add(schemas.Count, newSchema);
-                comboBox1.Items.Add(fi.Name);
+                comboBox1.Items.Add(newSchema.name);
             }
             if (comboBox1.Items.Count > 0)
             {
@@ -185,6 +185,29 @@ namespace CompetitionCreator
 
         }
 
+        private void button1_Click(object sender, EventArgs e) // load new schema
+        {
+            openFileDialog1 = new OpenFileDialog();
+            openFileDialog1.FileName = "Schema.csv";
+            openFileDialog1.Filter = "Csv (*.csv)|*.csv";
+            //openFileDialog1.InitialDirectory = BaseDirectory;
+            openFileDialog1.FileOk += new CancelEventHandler(openFileDialog1_FileOk1);
+            openFileDialog1.ShowDialog();
+        }
+
+        public void openFileDialog1_FileOk1(object sender, CancelEventArgs e)
+        {
+            FileInfo fi = new FileInfo(openFileDialog1.FileName);
+            Schema newSchema = new Schema();
+            newSchema.Read(openFileDialog1.FileName);
+            schemas.Add(schemas.Count, newSchema);
+            comboBox1.Items.Add(newSchema.name);
+            try
+            {
+                File.Copy(openFileDialog1.FileName, System.Windows.Forms.Application.StartupPath + @"/Schemas/Custom_" + fi.Name);
+            }
+            catch { }
+        }
     }
     class DelegateSchemaObject
     {

@@ -30,7 +30,7 @@ namespace CompetitionCreator
         public string name;
         public override string ToString()
         {
-            return teamCount.ToString() + " - "+name;
+            return name;
         }
         SchemaWeek week(int i) { return weeks[i]; }
         public void Read(string fileName)
@@ -69,7 +69,13 @@ namespace CompetitionCreator
                 }
                 teamCount = weeks[0].matches.Count*2;
                 FileInfo fi = new FileInfo(fileName);
-                name = fi.Name;
+                
+                int round1 = 0;
+                foreach (var w in weeks)
+                    if (w.Value.round > round1)
+                        round1 = w.Value.round;
+
+                name = "T" + teamCount.ToString("D2") + "_W" + weeks.Count.ToString("D2") + "_R" + (round1+1).ToString("D2") + "  (" + fi.Name + ")";
             }
             catch(Exception ex)
             {

@@ -82,7 +82,7 @@ namespace CompetitionCreator
         }
         void UpdateSerieList()
         {
-            objectListView1.SetObjects(model.series.Where(s =>s.imported == false), true);
+            objectListView1.SetObjects(model.series.Where(s =>s.imported == false && s.teams.Count > 0 ), true);
             if (serie != null)
             {
                 objectListView1.SelectedObject = serie;
