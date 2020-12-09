@@ -235,6 +235,7 @@ namespace Security
             Rankings,
             Utilities,
             Expert,
+            DirectImport,
             SecondFeature
         };
         public LicenseKey(string Key)

@@ -376,22 +376,41 @@ namespace CompetitionCreator
 
         private void ImportSubscriptionsmodelbeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            InputForm form = new InputForm("Input the URL of the website that has the registrations", "URL:", MySettings.Settings.RegistrationsXML);
-            form.ShowDialog();
-            if(form.Result == true)
+            if (model.licenseKey.ValidUntil() < DateTime.Now)
             {
-                try
+                MessageBox.Show("License not valid any more");
+                return;
+            }
+            var year = DateTime.Now.AddMonths(-4).Year;
+            Model newModel = new Model(year);
+            model.Changed(newModel);
+            newModel.Evaluate(null);
+            newModel.Changed();
+        
+            var list = new List<Selection>();
+            foreach (var provincie in SiteImporter.SiteImporter.provincies)
+            {
+                Selection sel = new Selection(provincie.Name, provincie);
+                list.Add(sel);
+            }
+            try
+            {
+                var diag = new SelectionDialog(list);
+                diag.ShowDialog();
+                if (diag.Ok)
                 {
-                    importExport.ImportTeamSubscriptions(model, XDocument.Load(form.GetInputString(), LoadOptions.SetLineInfo | LoadOptions.SetBaseUri).Root);
+                    var provincie = (SiteImporter.ProvincieInfo)diag.Selection.obj;
+                    SiteImporter.SiteImporter.ImportSite(provincie);
+                    importExport.ImportTeamSubscriptions(model, XDocument.Load(BaseDirectory + "\\" + provincie.Name + "_inschrijvingen.xml", LoadOptions.SetLineInfo | LoadOptions.SetBaseUri).Root);
+                    importExport.ImportCSV(model, BaseDirectory + "\\" + provincie.Name + "_huidige_wedstrijden.csv");
                     model.RenewConstraints();
                     model.Evaluate(null);
                     model.Changed();
                 }
-                catch 
-                {
-                    MessageBox.Show("Failed importing registrations. Did you use the correct URL?");
-                }
-
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Failed to import data from Volley Vlaanderen site (" + ex.ToString() + ")");
             }
         }
 
@@ -766,7 +785,6 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             {
                 this.exportToolStripMenuItem.Enabled = false;
                 //this.importToolStripMenuItem.Enabled = false;
-                importSubscriptionsToolStripMenuItem.Enabled = false;
                 reportToolStripMenuItem1.Enabled = false;
                 this.saveToolStripMenuItem.Enabled = false;
                 this.saveToolStripMenuItem1.Enabled = false;
@@ -775,24 +793,32 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             {
                 this.exportToolStripMenuItem.Enabled = true;
                 //this.importToolStripMenuItem.Enabled = true;
-                importSubscriptionsToolStripMenuItem.Enabled = true;
                 reportToolStripMenuItem1.Enabled = true;
                 this.saveToolStripMenuItem.Enabled = true;
                 this.saveToolStripMenuItem1.Enabled = true;
                 this.reportToolStripMenuItem1.Enabled = true;
             }
-            if(model.licenseKey.Feature(Security.LicenseKey.FeatureType.Rankings))
+            if (model.licenseKey.Feature(Security.LicenseKey.FeatureType.Rankings))
             {
                 this.importRankingToolStripMenuItem.Visible = true;
                 this.importRankingWebsiteToolStripMenuItem.Visible = true;
                 this.cSVCompetitionToolStripMenuItem.Visible = true;
-            } else
+            }
+            else
             {
                 this.importRankingToolStripMenuItem.Visible = false;
                 this.importRankingWebsiteToolStripMenuItem.Visible = false;
                 this.cSVCompetitionToolStripMenuItem.Visible = false;
             }
-            if(model.licenseKey.Feature(Security.LicenseKey.FeatureType.Utilities))
+            if (model.licenseKey.Feature(Security.LicenseKey.FeatureType.DirectImport))
+            {
+                importSubscriptionsToolStripMenuItem.Visible = true;
+            }
+            else
+            {
+                importSubscriptionsToolStripMenuItem.Visible = false;
+            }
+            if (model.licenseKey.Feature(Security.LicenseKey.FeatureType.Utilities))
             {
                 this.utilitiesToolStripMenuItem.Visible = true;
             }
