@@ -693,19 +693,11 @@ namespace CompetitionCreator
             while(roundref < 4)
             {
                 int round = roundref;
-                UInt32[] days = new UInt32[maxTeams-1];
-                for (int i = 0; i < days.Count(); i++) days[i] = 0;
                 UInt32[] bitPatterns = new UInt32[(maxTeams * (maxTeams-1))/2];
                 UInt32[] schema = new UInt32[(maxTeams * (maxTeams - 1)) / 2];
                 List<Match> selectedMatches = matches.Where(m => m.Week.round == round).ToList();
                 if (selectedMatches.Count == 0)
                     break;
-                for (int i = 0; i < selectedMatches.Count; i++)
-                {
-                    bitPatterns[i] = (1u << selectedMatches[i].homeTeamIndex) | (1u << selectedMatches[i].visitorTeamIndex);
-                }
-                List<List<UInt32>> schemas = new List<List<uint>>();
-                RecursiveFullSchema(model, ref days, ref bitPatterns, ref schema, ref schemas, selectedMatches.Count - 1);
                 List<int> indexes = new List<int>();
                 foreach (var m in selectedMatches)
                 {
@@ -714,6 +706,15 @@ namespace CompetitionCreator
                         indexes.Add(m.weekIndex);
                     }
                 }
+                UInt32[] days = new UInt32[indexes.Count];
+                for (int i = 0; i < days.Count(); i++) days[i] = 0;
+
+                for (int i = 0; i < selectedMatches.Count; i++)
+                {
+                    bitPatterns[i] = (1u << selectedMatches[i].homeTeamIndex) | (1u << selectedMatches[i].visitorTeamIndex);
+                }
+                List<List<UInt32>> schemas = new List<List<uint>>();
+                RecursiveFullSchema(model, ref days, ref bitPatterns, ref schema, ref schemas, selectedMatches.Count - 1);
                 while(count < schemas.Count)
                 {
                     var sch = schemas[count];
