@@ -1333,6 +1333,20 @@ namespace CompetitionCreator
                     {
                         sporthall.team = te;
                     }
+
+                    if (clubId != 0)
+                    {
+                        if (sporthall.id == 0)
+                        {
+                            CompetitionCreator.Error.AddManualError("No sporthal assigned", "No sporthal for club: " + clubName + " Team: " + teamName + " Reeks: " + serie.name);
+                        }
+                        else if (sporthall.lng == 0 || sporthall.lat == 0)
+                        {
+                            CompetitionCreator.Error.AddManualError("Sporthal without Latitude and Longitude ",
+                                            "Club: " + clubName + " Team: " + teamName + " Sporthal: '" + sporthall.name + "' has no latitude & longitude specified. The consequence is that no distance between sporthalls can be calculated.");
+                        }
+                    }
+
                     string fieldName = StringOptionalAttribute(team, null, "FieldName");
                     if(fieldName != null)
                     {
@@ -1427,21 +1441,6 @@ namespace CompetitionCreator
                         //System.Windows.Forms.MessageBox.Show(string.Format("Club id '{0}' is unknown", visitorClubId));
                     }
                 }
-                int sporthalId = int.Parse(parameters[sporthallIdIndex]);
-                Sporthal sporthal = model.sporthalls.Find(s => s.id == sporthalId);
-                if (sporthal == null)
-                {
-                    sporthal = new Sporthal(sporthalId, parameters[sporthallIndex]);
-                    model.sporthalls.Add(sporthal);
-                    //                    System.Windows.Forms.MessageBox.Show(string.Format("Sporthal id '{0}' is unknown", sporthalId));
-                }
-                // sporthal aan club toevoegen indien deze nog niet bestaat
-                SporthallAvailability sporthallclub = homeClub.sporthalls.Find(sp => sp.sporthall == sporthal);
-                if (sporthallclub == null)
-                {
-                    sporthallclub = new SporthallAvailability(sporthal);
-                    homeClub.sporthalls.Add(sporthallclub);
-                }
                 // Calculate the size of the poule
                 List<string> teamsList = new List<string>();
                 List<string[]> SelectedLines = ParameterLines.FindAll(l => l[serieIndex] == parameters[serieIndex] && l[pouleIndex] == parameters[pouleIndex]);
@@ -1526,7 +1525,25 @@ namespace CompetitionCreator
                     {
                         team.serie = serie;
                     }
-                    team.sporthal = homeClub.sporthalls[0]; // just first sporthal.
+                    if (team.sporthal == null)
+                    {
+                        // Voeg unknown toe.
+                        int sporthalId = 0;
+                        Sporthal sporthal = model.sporthalls.Find(s => s.id == sporthalId);
+                        if (sporthal == null)
+                        {
+                            sporthal = new Sporthal(0, "Unknown");
+                            model.sporthalls.Add(sporthal);
+                        }
+                        // sporthal aan club toevoegen indien deze nog niet bestaat
+                        SporthallAvailability sporthallclub = homeClub.sporthalls.Find(sp => sp.sporthall == sporthal);
+                        if (sporthallclub == null)
+                        {
+                            sporthallclub = new SporthallAvailability(sporthal);
+                            homeClub.sporthalls.Add(sporthallclub);
+                        }
+                        team.sporthal = homeClub.sporthalls[0]; // just first sporthal.
+                    }
                     poule.AddTeam(team);
                 }
                 
@@ -1798,7 +1815,7 @@ namespace CompetitionCreator
                                 int visitorTeamId = registrationMapping[(int)match["visitorTeamId"]];
                                 int visitorClubId = clubMapping[(int)match["visitorTeamId"]];
                                 string sporthal = "-";
-                                int sporthalId = -1;
+                                int sporthalId = 0;
                                 try
                                 {
                                     sporthalId = (int)match["sporthallId"];
@@ -1927,7 +1944,7 @@ namespace CompetitionCreator
                 DateTime date = ParseDateTime(datum);
                 sporthal = sporthal.Replace(",", " ");
                 sporthal = sporthal.Replace(",", " ");
-                int sporthalId = -1;
+                int sporthalId = 0;
                 writer.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15}",
                     reeks, reeksId, poule, pouleId, thuisploeg, thuisploegId, bezoekersploeg, bezoekersploegId, sporthal, sporthalId, date.ToString("yyyy-MM-dd"), aanvangsuur, thuisclubname, thuisclubId, bezoekersclubname, bezoekersclubId);
             }

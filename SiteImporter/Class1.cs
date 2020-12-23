@@ -324,13 +324,19 @@ namespace SiteImporter
                             inf.registrationTeam.derivedNewRegistrationFromThis = true;
                     }
                     else
+                    {
                         inf.reeksMatchesExist = true;
-                    // Copy attributes from registration team
+                        if (inf.registrationTeam != inf)
+                        {
+                            // Gebruik de oorspronkelijk reeks ipv de vervolgreeks als er al wedstrijden zijn
+                            t1.Attribute("SerieId").SetValue(inf.registrationTeam.SerieId);
+                            t1.Attribute("SerieName").SetValue(serieInfos[inf.registrationTeam.SerieId].serieNameVVB);
+                        }
+                    }
+                     // Copy attributes from registration team
                     if (inf.registrationTeam != inf)
                     {
                         inf.registrationTeam.derivedExistingTeamFromThis = true;
-                        t1.Attribute("SerieId").SetValue(inf.registrationTeam.SerieId);
-                        t1.Attribute("SerieName").SetValue(serieInfos[inf.registrationTeam.SerieId].serieNameVVB);
                         t1.Attribute("EvenOdd").SetValue(inf.registrationTeam.evenOdd);
                     }
                 }
@@ -453,7 +459,7 @@ namespace SiteImporter
 
 
                 var sporthal = wedstrijd.Element("sporthal").Value.Replace(",", " ");
-                var sporthalId = -1;
+                var sporthalId = 0;
 
                 DateTime date;
                 DateTime.TryParseExact(wedstrijd.Element("datum").Value, "d/M/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out date);
