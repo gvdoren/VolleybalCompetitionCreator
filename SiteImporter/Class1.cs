@@ -69,7 +69,7 @@ namespace SiteImporter
 
         static public List<string> reeksMatches = new List<string>();
         static public List<int> reeksMatchesExist = new List<int>();
-        static void CheckMatchesToBePlayed(IEnumerable<XElement> wedstrijden, bool isProvinciaal)
+        static void CheckMatchesToBePlayed(IEnumerable<XElement> wedstrijden)
         {
             foreach (var wedstrijd in wedstrijden)
             {
@@ -98,10 +98,7 @@ namespace SiteImporter
                     if (!reeksMatches.Contains(reeks))
                     {
                         reeksMatches.Add(reeks);
-                        if (isProvinciaal)
-                            Console.WriteLine("Provinciaal :Wedstrijden van reeks {0} worden meegenomen in de planning", reeks);
-                        else
-                            Console.WriteLine("Nationaal :Wedstrijden van reeks {0} worden meegenomen in de planning", reeks);
+                        Console.WriteLine("Provinciaal :Wedstrijden van reeks {0} worden meegenomen in de planning", reeks);
                     }
                 }
                 if (reeksMatchesExist.Contains(reeksId) == false)
@@ -161,10 +158,10 @@ namespace SiteImporter
             // Wedstrijden van geselecteerde provincie + alle wedstrijden nationaal
             XDocument doc_provincie = XDocument.Load("http://www.volleyadmin2.be/services/wedstrijden_xml.php?province_id=" + provincie.Id.ToString(), LoadOptions.SetLineInfo | LoadOptions.SetBaseUri);
             var wedstrijden = doc_provincie.Element("kalender").Elements("wedstrijd");
-            CheckMatchesToBePlayed(wedstrijden, true);
+            CheckMatchesToBePlayed(wedstrijden);
             XDocument doc_nationaal = XDocument.Load("http://www.volleyadmin2.be/services/wedstrijden_xml.php?province_id=11", LoadOptions.SetLineInfo | LoadOptions.SetBaseUri);
             var wedstrijden_nationaal = doc_nationaal.Element("kalender").Elements("wedstrijd");
-            CheckMatchesToBePlayed(wedstrijden_nationaal, false);
+            CheckMatchesToBePlayed(wedstrijden_nationaal);
 
             //Console.WriteLine("Min Serie Id: {0}", maxSerieIdWithMatches);
 
@@ -185,7 +182,6 @@ namespace SiteImporter
                             remove = false;
                     }
                 }
-                string stamNummer = club.Attribute("StamNumber").Value;
                 if (remove)
                     toBeRemoved.Add(club);
 
