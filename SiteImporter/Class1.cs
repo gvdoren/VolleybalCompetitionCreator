@@ -13,62 +13,43 @@ namespace SiteImporter
 
     public class TeamInfo
     {
-        public TeamInfo registrationTeam = null;
-        //public string usedByTeamId = "";
         public int teamId = 0;
         public int parentId = 0;
         public string teamName = "";
         public int SerieId = 0;
         public int clubId = 0;
         public string clubName = "";
-        public string ranking = "";
-        public string score = "";
         public string evenOdd = "";
-        public string reeks = "";
-        public bool newRegistration = false;
-        public bool derivedNewRegistrationFromThis = false;
-        public bool derivedExistingTeamFromThis = false;
-        public int matchesToBePlayed = 0;
-        public bool reeksMatchesExist = false;
-        public int matchCount = 0;
+        public bool vervolgReeks = false;
+        public bool generateMatches = false;
     }
 
-    public class SerieInfo
-    {
-        public int serieId;
-        public string serieNameVVB;
-        public string serieName;
-        public string poule;
-    }
     public class ProvincieInfo
     {
         public int Id;
-        //public List<string> Prefix;
         public string Name;
-
+        public bool RemoveTeams;
     }
 
     public class SiteImporter
     {
         public static ProvincieInfo[] provincies = {
-            new ProvincieInfo { Name = "LIMBURG", Id = 4 },
-            new ProvincieInfo { Name = "VLAAMS-BRABANT", Id = 7 },
-            new ProvincieInfo { Name = "ANTWERPEN", Id = 1 },
+            new ProvincieInfo { Name = "LIMBURG", Id = 4 , RemoveTeams = false},
+            new ProvincieInfo { Name = "VLAAMS-BRABANT", Id = 7 , RemoveTeams = false },
+            new ProvincieInfo { Name = "ANTWERPEN", Id = 1 , RemoveTeams = false },
+            new ProvincieInfo { Name = "WEST-VLAANDEREN", Id = 9 , RemoveTeams = false },
+            new ProvincieInfo { Name = "OOST-VLAANDEREN", Id = 5 , RemoveTeams = false },
+            new ProvincieInfo { Name = "VOLLEY VLAANDEREN", Id = 11 , RemoveTeams = true }
         };
         // https://www.volleyadmin2.be/download/seriesubscriptions/5_11/  Divisie inschrijvingen voor Limburg
         // http://volleyadmin2.be/services/series_xml.php?province_id=4&all=1  voor alle series (zodat ik de id's heb)
-        static public Dictionary<int, SerieInfo> serieInfos = new Dictionary<int, SerieInfo>();
+        static public Dictionary<int, string> serieNames = new Dictionary<int,string>();
         static public Dictionary<int, TeamInfo> teamInfo = new Dictionary<int, TeamInfo>();
         static public Dictionary<int, int> matchesToBePlayed = new Dictionary<int, int>();
-        //static int MIN_NEW_SERIE_ID = 3272;
-        //static string startDate = "1/1/2019";
         static string outDir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\CompetitionCreator\\";
-
         static DateTime generationDate = DateTime.Now.AddDays(30);
-        static int maxSerieIdWithMatches = 0;
-
-        static public List<string> reeksMatches = new List<string>();
         static public List<int> reeksMatchesExist = new List<int>();
+        static public Dictionary<int, int> teamIdMapping = new Dictionary<int, int>();
         static void CheckMatchesToBePlayed(IEnumerable<XElement> wedstrijden)
         {
             foreach (var wedstrijd in wedstrijden)
@@ -95,32 +76,21 @@ namespace SiteImporter
                         matchesToBePlayed.Add(bezoekersPloegId, 0);
                     matchesToBePlayed[thuisPloegId]++;
                     matchesToBePlayed[bezoekersPloegId]++;
-                    if (!reeksMatches.Contains(reeks))
-                    {
-                        reeksMatches.Add(reeks);
-                        Console.WriteLine("Provinciaal :Wedstrijden van reeks {0} worden meegenomen in de planning", reeks);
-                    }
                 }
                 if (reeksMatchesExist.Contains(reeksId) == false)
                     reeksMatchesExist.Add(reeksId);
-
-                //                if (date < generationDate && isProvinciaal)
-                //                {
-                //                    reeksMatchesExist.Add(reeksId);
-                //                    // if (reeksId > maxSerieIdWithMatches)
-                //                    //     maxSerieIdWithMatches = reeksId;
-                //                }
             }
         }
 
 
         public static void ImportSite(ProvincieInfo provincie)
         {
-            serieInfos = new Dictionary<int, SerieInfo>();
+            bool nationaal = provincie.RemoveTeams; // For nationaal the teams are removed that are not part of volley vlaanderen
+            serieNames = new Dictionary<int, string>();
             teamInfo = new Dictionary<int, TeamInfo>();
             matchesToBePlayed = new Dictionary<int, int>();
-            reeksMatches = new List<string>();
             reeksMatchesExist = new List<int>();
+            teamIdMapping = new Dictionary<int, int>();
 
             List<string> Teams = new List<string>();
             //string filename = "C:\\Users\\Giel\\Documents\\CompetitionCreator\\KLVV competitie 2016_2017\\2e helft\\inschrijvingen_20161210.xml";
@@ -138,6 +108,10 @@ namespace SiteImporter
             // 2. Deze moet geadministreerd worden bij het 'originele team' van de inschrijving
             // 3. De nieuwe inschrijving moet ook bij zijn originele inschrijving kijken, voor de rangschikking
             // 4. Rangschikking is alleen geldig indien de reeks nog gelijk is
+
+            // Rangschikking is eruit gehaald. Wat doen om dit terug te krijgen:
+            // Score gaat naar de parent toe. Nieuwe team neem score van parent over. Hoe controleer je of het team van reeks is veranderd. Zou nieuw team moeten zijn.
+
 
             // Provincies:
             // http://www.volleyadmin2.be/services/wedstrijden_xml.php?province_id=1 A?- Antwerpen?
@@ -163,8 +137,6 @@ namespace SiteImporter
             var wedstrijden_nationaal = doc_nationaal.Element("kalender").Elements("wedstrijd");
             CheckMatchesToBePlayed(wedstrijden_nationaal);
 
-            //Console.WriteLine("Min Serie Id: {0}", maxSerieIdWithMatches);
-
             List<XElement> toBeRemoved = new List<XElement>();
             var clubs = doc.Element("Registrations").Element("Clubs").Elements("Club");
 
@@ -172,236 +144,193 @@ namespace SiteImporter
             foreach (var club in clubs)
             {
                 bool remove = true;
-                var teams = club.Element("Teams").Elements("Team");
-                foreach (var t in teams)
+                if (club.Element("Teams") != null)
                 {
-                    if (t.Attribute("Province") != null)
+                    var teams = club.Element("Teams").Elements("Team");
+                    List<XElement> teamsToBeRemoved = new List<XElement>();
+                    foreach (var t in teams)
                     {
-                        var prov = t.Attribute("Province").Value.ToString();
-                        if (prov == provincie.Name)
-                            remove = false;
+                        if (t.Attribute("Province") != null)
+                        {
+                            var prov = t.Attribute("Province").Value.ToString();
+                            if (prov == provincie.Name)
+                                remove = false;
+                            else if (provincie.RemoveTeams)
+                                teamsToBeRemoved.Add(t);
+                        }
+                        
+
                     }
+                    if (remove)
+                        toBeRemoved.Add(club);
+
+                    foreach (var t in teams)
+                    {
+                        var serieName = t.Attribute("SerieName").Value;
+                        if ((serieName.Contains("Beker") || serieName.Contains("beker")) && !teamsToBeRemoved.Contains(t))
+                            teamsToBeRemoved.Add(t);
+                    }
+                    foreach (var t in teamsToBeRemoved)
+                        t.Remove();
                 }
-                if (remove)
+                else
                     toBeRemoved.Add(club);
 
-                List<XElement> teamsToBeRemoved = new List<XElement>();
-                foreach (var t in teams)
-                {
-                    var serieName = t.Attribute("SerieName").Value;
-                    if (serieName.Contains("Beker") || serieName.Contains("beker"))
-                        teamsToBeRemoved.Add(t);
-                }
-                foreach (var t in teamsToBeRemoved)
-                    t.Remove();
             }
             foreach (var club in toBeRemoved)
                 club.Remove();
 
-            // Determine the poule letter since this info is not explicitly present in volley admin, except implicitly in name
+            // Create lookup for teamId -> teamName
             foreach (var club in clubs)
             {
-                var teams = club.Element("Teams").Elements("Team");
-                foreach (var t1 in teams)
+                if (club.Element("Teams") != null)
                 {
-                    SerieInfo info = new SerieInfo();
-                    info.serieId = int.Parse(t1.Attribute("SerieId").Value);
-                    info.serieNameVVB = t1.Attribute("SerieName").Value;
-                    if (info.serieNameVVB == "")
-                        info.serieNameVVB = "Reeks zonder naam";
 
-                    if (serieInfos.ContainsKey(info.serieId) == false)
-                        serieInfos.Add(info.serieId, info);
-                }
-            }
-            foreach (var info1 in serieInfos)
-            {
-                info1.Value.poule = "A";
-                info1.Value.serieName = info1.Value.serieNameVVB;
-                foreach (var info2 in serieInfos)
-                {
-                    if (info1.Key != info2.Key)
+                    var teams = club.Element("Teams").Elements("Team");
+                    foreach (var t1 in teams)
                     {
-                        var name1 = info1.Value.serieNameVVB.Replace(" ", "").Replace("-", "").ToLower();
-                        var name2 = info2.Value.serieNameVVB.Replace(" ", "").Replace("-", "").ToLower();
-                        var name1_short = name1.Remove(name1.Length - 1);
-                        var name2_short = name2.Remove(name2.Length - 1);
-                        if (name1_short == name2_short && name1 != name2)
-                        {
-                            char pouleLetter = name1[name1.Length - 1].ToString().ToUpper()[0];
-                            if ((pouleLetter >= 'A' && pouleLetter <= 'Z'))
-                            {
-                                info1.Value.poule = pouleLetter.ToString();
-                                var name3 = info1.Value.serieNameVVB;
-                                var name3_short = name3.Remove(name3.Length - 1).Trim();
-                                info1.Value.serieName = name3_short;
-                                break;
-                            }
-                        }
+                        var serieId = int.Parse(t1.Attribute("SerieId").Value);
+                        string serieName = t1.Attribute("SerieName").Value;
+                        if (serieName == "")
+                            serieName = "Reeks zonder naam";
+
+                        if (!serieNames.ContainsKey(serieId))
+                            serieNames.Add(serieId, serieName);
                     }
                 }
-                if (info1.Value.poule == "A")
-                {
-                    string sub = info1.Value.serieName;
-                    sub = sub.Substring(sub.Length - 2);
-                    if (sub == " A")
-                        info1.Value.serieName = info1.Value.serieName.Substring(0, info1.Value.serieName.Length - 2);
-                }
             }
-            foreach (var info1 in serieInfos)
-            {
-                Console.WriteLine("{0} = {1} + {2}", info1.Value.serieNameVVB, info1.Value.serieName, info1.Value.poule);
-            }
-
             // Read all information to handle crosslinks that have forward linkage
             foreach (var club in clubs)
             {
                 string clubId = club.Attribute("Id").Value;
                 string clubName = club.Attribute("Name").Value;
-
-                var teams = club.Element("Teams").Elements("Team");
-                foreach (var t1 in teams)
+                if (club.Element("Teams") != null)
                 {
-                    TeamInfo inf = new TeamInfo();
-                    inf.teamId = int.Parse(t1.Attribute("Id").Value);
-                    inf.teamName = t1.Attribute("Name").Value;
-                    inf.SerieId = int.Parse(t1.Attribute("SerieId").Value);
-                    inf.clubId = int.Parse(clubId);
-                    inf.clubName = clubName;
-                    string parentIdstr = t1.Attribute("parent_id").Value;
-                    if (parentIdstr.Length == 0 || parentIdstr == "0")
-                    {
-                        inf.parentId = inf.teamId; // Of parentId 0
-                    }
-                    else
-                    {
-                        inf.parentId = int.Parse(parentIdstr);
-                    }
-                    teamInfo.Add(inf.teamId, inf);
-                    // Ensure that EvenOdd is allways present and store it in the info
-                    var attr = t1.Attribute("EvenOdd");
-                    if (attr == null)
-                    {
-                        XAttribute eo = new XAttribute("EvenOdd", "");
-                        t1.Add(eo);
-                    }
-                    inf.evenOdd = t1.Attribute("EvenOdd").Value;
-                }
-            }
 
-
-            // Build up info on how the teams are linked
-            foreach (var club in clubs)
-            {
-                string clubId = club.Attribute("Id").Value;
-                string clubName = club.Attribute("Name").Value;
-
-                var teams = club.Element("Teams").Elements("Team");
-                List<XElement> teamsToDelete = new List<XElement>();
-                foreach (var t1 in teams)
-                {
-                    var teamId = int.Parse(t1.Attribute("Id").Value);
-                    TeamInfo inf = teamInfo[teamId];
-                    if (teamInfo.ContainsKey(inf.parentId))
-                        inf.registrationTeam = teamInfo[inf.parentId];
-                    else
+                    var teams = club.Element("Teams").Elements("Team");
+                    foreach (var t1 in teams)
                     {
-                        teamInfo.Remove(teamId);
-                        teamsToDelete.Add(t1);
-                        continue;
-                    }
-
-                    if (matchesToBePlayed.Keys.Contains(inf.teamId))
-                        inf.registrationTeam.matchesToBePlayed = matchesToBePlayed[inf.teamId];
-                    if (reeksMatchesExist.Contains(inf.SerieId) == false)
-                    {
-                        inf.newRegistration = true;
-                        if (inf.registrationTeam != inf)
-                            inf.registrationTeam.derivedNewRegistrationFromThis = true;
-                    }
-                    else
-                    {
-                        inf.reeksMatchesExist = true;
-                        if (inf.registrationTeam != inf)
+                        TeamInfo inf = new TeamInfo();
+                        inf.teamId = int.Parse(t1.Attribute("Id").Value);
+                        inf.teamName = t1.Attribute("Name").Value;
+                        inf.SerieId = int.Parse(t1.Attribute("SerieId").Value);
+                        inf.clubId = int.Parse(clubId);
+                        inf.clubName = clubName;
+                        string parentIdstr = t1.Attribute("parent_id").Value;
+                        if (parentIdstr.Length == 0 || parentIdstr == "0")
                         {
-                            // Gebruik de oorspronkelijk reeks ipv de vervolgreeks als er al wedstrijden zijn
-                            t1.Attribute("SerieId").SetValue(inf.registrationTeam.SerieId);
-                            t1.Attribute("SerieName").SetValue(serieInfos[inf.registrationTeam.SerieId].serieNameVVB);
+                            inf.parentId = inf.teamId; // Of parentId 0
+                        }
+                        else
+                        {
+                            inf.parentId = int.Parse(parentIdstr);
+                        }
+                        teamInfo.Add(inf.teamId, inf);
+                        // Ensure that EvenOdd is allways present and store it in the info
+                        var attr = t1.Attribute("EvenOdd");
+                        if (attr == null)
+                        {
+                            XAttribute eo = new XAttribute("EvenOdd", "");
+                            t1.Add(eo);
+                        }
+                        inf.evenOdd = t1.Attribute("EvenOdd").Value;
+                    }
+                    // Verwijder teams waar de parent niet voor bestaat
+                    List<XElement> teamsToDelete = new List<XElement>();
+
+                    teams = club.Element("Teams").Elements("Team");
+                    foreach (var t1 in teams)
+                    {
+                        var teamId = int.Parse(t1.Attribute("Id").Value);
+                        TeamInfo inf = teamInfo[teamId];
+                        if (teamInfo.ContainsKey(inf.parentId))
+                            t1.Attribute("EvenOdd").Value = teamInfo[inf.parentId].evenOdd;
+                        else
+                        {
+                            Console.WriteLine("Warning: Team parent Id does not exist (anymore)");
+                            teamInfo.Remove(teamId);
+                            teamsToDelete.Add(t1);
+                            continue;
                         }
                     }
-                     // Copy attributes from registration team
-                    if (inf.registrationTeam != inf)
+                    foreach (var t1 in teamsToDelete)
+                        t1.Remove();
+                    // Verwijder (teams in) vervolg reeksen die wedstrijden hadden, maar nu niet meer (oude reeksen) - behalve hoofdreeksen
+                    teamsToDelete = new List<XElement>();
+
+                    teams = club.Element("Teams").Elements("Team");
+                    foreach (var t1 in teams)
                     {
-                        inf.registrationTeam.derivedExistingTeamFromThis = true;
-                        t1.Attribute("EvenOdd").SetValue(inf.registrationTeam.evenOdd);
+                        var teamId = int.Parse(t1.Attribute("Id").Value);
+                        var serieId = int.Parse(t1.Attribute("SerieId").Value);
+                        TeamInfo inf = teamInfo[teamId];
+                        if (inf.parentId != teamId)
+                        {
+                            if (!matchesToBePlayed.ContainsKey(teamId) && reeksMatchesExist.Contains(serieId))
+                                teamsToDelete.Add(t1);
+                            else
+                                teamInfo[inf.parentId].vervolgReeks = true;
+                        }
+                    }
+                    foreach (var t1 in teamsToDelete)
+                        t1.Remove();
+                    // Verwijder teams in hoofdreeksen waarvan vervolg reeksen bestaan zonder wedstrijden.
+                    teamsToDelete = new List<XElement>();
+                    teams = club.Element("Teams").Elements("Team");
+                    foreach (var t1 in teams)
+                    {
+                        var teamId = int.Parse(t1.Attribute("Id").Value);
+                        TeamInfo inf = teamInfo[teamId];
+                        if (inf.vervolgReeks == true)
+                            teamsToDelete.Add(t1);
+                    }
+                    foreach (var t1 in teamsToDelete)
+                        t1.Remove();
+                    // Administrate for which teams matches must be generated.
+                    teams = club.Element("Teams").Elements("Team");
+                    foreach (var t1 in teams)
+                    {
+                        var teamId = int.Parse(t1.Attribute("Id").Value);
+                        TeamInfo inf = teamInfo[teamId];
+                        inf.generateMatches = true;
+                    }
+                    // Create team id mapping (from original to new team)
+                    teams = club.Element("Teams").Elements("Team");
+                    foreach (var t1 in teams)
+                    {
+                        var teamId = int.Parse(t1.Attribute("Id").Value);
+                        TeamInfo inf = teamInfo[teamId];
+                        if (teamId != inf.parentId)
+                        {
+                            if (teamIdMapping.ContainsKey(teamId))
+                                Console.WriteLine("Warning: A team is mapped multiple times!");
+                            teamIdMapping[inf.parentId] = teamId;
+                        }
                     }
                 }
-                foreach (var t1 in teamsToDelete)
-                    t1.Remove();
             }
-
-            // Duplicate constraints for the new teams
-            foreach (var t in teamInfo)
+            // Rewrite constraints for the new teams Ids
+            clubs = doc.Element("Registrations").Element("Clubs").Elements("Club");
+            foreach (var club in clubs)
             {
-                var team = t.Value;
-                if (team.newRegistration == false && team.registrationTeam.matchesToBePlayed == 0)
-                    continue;
-                clubs = doc.Element("Registrations").Element("Clubs").Elements("Club");
-                foreach (var club in clubs)
+                if (club.Element("TeamConstraints") != null)
                 {
                     var constraints = club.Element("TeamConstraints").Elements("TeamConstraint");
                     foreach (var con in constraints)
                     {
-                        XElement duplicate = con;
-                        if (int.Parse(duplicate.Attribute("Team1Id").Value) == team.registrationTeam.teamId && team.teamId != team.registrationTeam.teamId)
-                        {
-                            duplicate.Attribute("Team1Id").SetValue(team.teamId);
-                            club.Element("TeamConstraints").Add(duplicate);
-                        }
-                        else if (int.Parse(duplicate.Attribute("Team2Id").Value) == team.registrationTeam.teamId && team.teamId != team.registrationTeam.teamId)
-                        {
-                            duplicate.Attribute("Team2Id").SetValue(team.teamId);
-                            club.Element("TeamConstraints").Add(duplicate);
-                        }
+                        var team1Id = int.Parse(con.Attribute("Team1Id").Value);
+                        var team2Id = int.Parse(con.Attribute("Team2Id").Value);
+                        if (teamIdMapping.ContainsKey(team1Id))
+                            con.Attribute("Team1Id").Value = teamIdMapping[team1Id].ToString();
+                        if (teamIdMapping.ContainsKey(team2Id))
+                            con.Attribute("Team2Id").Value = teamIdMapping[team2Id].ToString();
                     }
                 }
             }
-
-            // Remove teams that are not needed               
-            foreach (var club in clubs)
-            {
-                List<XElement> teamsToDelete = new List<XElement>();
-                var teams = club.Element("Teams").Elements("Team");
-                foreach (var t1 in teams)
-                {
-                    int teamId = int.Parse(t1.Attribute("Id").Value);
-                    int serieId = int.Parse(t1.Attribute("SerieId").Value);
-                    var info = teamInfo[teamId];
-                    bool rootTeam = info.registrationTeam == info;
-                    // Van de oude teams zoveel mogelijk weggooien
-                    if (info.reeksMatchesExist)
-                    {
-                        // Poules that were created, but not used anymore in the second half
-                        if (!rootTeam && info.registrationTeam.matchesToBePlayed == 0)
-                            teamsToDelete.Add(t1);
-                    }
-                    if (rootTeam && info.derivedNewRegistrationFromThis)
-                        teamsToDelete.Add(t1);
-                    // Registration team from which a derived team exists that still has to play
-                    else if (rootTeam && info.derivedExistingTeamFromThis && info.registrationTeam.matchesToBePlayed > 0)
-                        teamsToDelete.Add(t1);
-                    // Team dat in de eerste ronde aanwezig was, maar nu niet meer (dus deleted)
-                    else if (rootTeam && !info.newRegistration && info.registrationTeam.matchesToBePlayed == 0)
-                        teamsToDelete.Add(t1);
-                }
-                foreach (var t1 in teamsToDelete)
-                    t1.Remove();
-            }
-
             doc.Save(outDir + provincie.Name + "_inschrijvingen.xml");
 
             StreamWriter writer = new StreamWriter(outDir + provincie.Name + "_huidige_wedstrijden.csv");
-            GenerateCompetition(writer, wedstrijden);
+            if (!nationaal) GenerateCompetition(writer, wedstrijden);
             GenerateCompetition(writer, wedstrijden_nationaal);
             writer.Close();
         }
@@ -415,24 +344,17 @@ namespace SiteImporter
                     continue;
                 var thuisPloegId = int.Parse(wedstrijd.Element("thuisploeg_id").Value);
                 var bezoekersPloegId = int.Parse(wedstrijd.Element("bezoekersploeg_id").Value);
-                // Are it relevant teams?
-                if (!teamInfo.Keys.Contains(thuisPloegId) && !teamInfo.Keys.Contains(bezoekersPloegId))
-                    continue;
-                // Are there still matches to be played
-                if (teamInfo.Keys.Contains(thuisPloegId) && teamInfo[thuisPloegId].registrationTeam.matchesToBePlayed == 0)
-                    continue;
-                if (teamInfo.Keys.Contains(bezoekersPloegId) && teamInfo[bezoekersPloegId].registrationTeam.matchesToBePlayed == 0)
-                    continue;
-
                 var thuisPloeg = wedstrijd.Element("thuisploeg").Value;
                 var bezoekersPloeg = wedstrijd.Element("bezoekersploeg").Value;
+                if (!teamInfo.Keys.Contains(thuisPloegId) && !teamInfo.Keys.Contains(bezoekersPloegId))
+                    continue;
                 string thuisclubname = "??";
                 int thuisclubId = 0;
                 string bezoekersclubname = "??";
                 int bezoekersclubId = 0;
                 if (teamInfo.Keys.Contains(thuisPloegId))
                 {
-                    if (teamInfo[thuisPloegId].registrationTeam.matchesToBePlayed == 0)
+                    if (!teamInfo[thuisPloegId].generateMatches)
                         continue;
                     var thuisPloegInfo = teamInfo[thuisPloegId];
                     thuisPloeg = thuisPloegInfo.teamName;
@@ -441,7 +363,7 @@ namespace SiteImporter
                 }
                 if (teamInfo.Keys.Contains(bezoekersPloegId))
                 {
-                    if (teamInfo[bezoekersPloegId].registrationTeam.matchesToBePlayed == 0)
+                    if (!teamInfo[bezoekersPloegId].generateMatches)
                         continue;
                     var bezoekersPloegInfo = teamInfo[bezoekersPloegId];
                     bezoekersPloeg = bezoekersPloegInfo.teamName;
@@ -450,8 +372,8 @@ namespace SiteImporter
                 }
 
                 var serieId = int.Parse(wedstrijd.Element("reeksid").Value);
-                var poule = serieInfos[serieId].poule;
-                var serieName = serieInfos[serieId].serieName;
+                var poule = "-"; // All imported teams have - as poule (serie is unique)
+                var serieName = serieNames[serieId];
 
 
                 var sporthal = wedstrijd.Element("sporthal").Value.Replace(",", " ");
@@ -460,7 +382,6 @@ namespace SiteImporter
                 DateTime date;
                 DateTime.TryParseExact(wedstrijd.Element("datum").Value, "d/M/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out date);
 
-                //DateTime date = DateTime.Parse(wedstrijd.Element("datum").Value);
                 var aanvangsuur = wedstrijd.Element("aanvangsuur").Value;
                 writer.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15}",
                     serieName, serieId, poule, -1, thuisPloeg, thuisPloegId, bezoekersPloeg, bezoekersPloegId, sporthal, sporthalId, date.ToString("yyyy-MM-dd"), aanvangsuur, thuisclubname, thuisclubId, bezoekersclubname, bezoekersclubId);

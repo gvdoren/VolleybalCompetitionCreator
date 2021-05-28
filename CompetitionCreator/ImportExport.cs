@@ -1226,134 +1226,137 @@ namespace CompetitionCreator
                     if (cl.sporthalls.Contains(sp) == false) cl.sporthalls.Add(sp);
                 }
 
-                foreach (var team in club.Element("Teams").Elements("Team"))
+                if (club.Element("Teams") != null)
                 {
-                    int id = IntegerAttribute(team, "Id");
-                    int serieId = IntegerAttribute(team, "SerieId", "SerieSortId");
-                    string seriePrefix = StringAttribute(team, "SerieName");
-                    Serie serie = model.series.Find(s => s.id == serieId);
-                    if (serie == null)
+                    foreach (var team in club.Element("Teams").Elements("Team"))
                     {
-                        serie = new Serie(serieId, seriePrefix, model);
-                        model.series.Add(serie);
-                    }
-                    string teamName = StringAttribute(team, "Name");
-                    // Search both on name & id, since the national Id's are not unique.
-                    Team te = null;
-                    if (id >= 0)
-                    {
-                        te = cl.teams.Find(t => t.Id == id && t.serie == serie);
-                        cl.teams.RemoveAll(t => t.Id == id && t.serie != serie);
-                    }
-                    else te = cl.teams.Find(t => t.Id == id && t.name == teamName && t.serie == serie);
-                    if (te == null)
-                    {
-                        te = new Team(id, teamName, null, serie, cl);
-                        model.teams.Add(te);
-                    }
-                    else
-                    {
-                        // not removing poule. Used for re-reading subscriptions
-                        //if (te.poule != null) te.poule.RemoveTeam(te);
-                    }
-                    // new team, or check on changed data (re-reading subscriptions)
-                    string DayString = StringAttribute(team, "Day");
-                    if (DayString == "7") DayString = "0";
-                    DayOfWeek day = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), DayString);
-                    Time time = new Time(TimeAttribute(team, "StartTime"));
-                    te.defaultDay = day;
-                    te.defaultTime = time;
-                    string teamGroup = StringOptionalAttribute(team, "-", "Group");
-                    te.group = TeamGroups.NoGroup;
-                    if (teamGroup != "-") te.group = TeamGroups.NoGroup;
-                    if (teamGroup == "A") te.group = TeamGroups.GroupX;
-                    if (teamGroup == "B") te.group = TeamGroups.GroupY;
-                    if (teamGroup == "X") te.group = TeamGroups.GroupX;
-                    if (teamGroup == "Y") te.group = TeamGroups.GroupY;
-
-                    if (BoolOptionalAttribute(team, false, "Deleted")) te.DeleteTeam(model); // remains only in the club administration.
-                    te.fixedNumber = IntegerOptionalAttribute(team, -1, "FixedNumber");
-                    string extraTimeString = StringOptionalAttribute(team, null, "extraTimeBefore"); // bijvoorbeeld voor reserve wedstrijd 
-                    if (extraTimeString != null)
-                    {
-                        double extraTime;
-                        bool ok = double.TryParse(extraTimeString, NumberStyles.Number, CultureInfo.InvariantCulture, out extraTime);
-                        if (ok) serie.extraTimeBefore = extraTime;
-                    }
-                    string EvenOdd = StringOptionalAttribute(team, null, "EvenOdd");
-                    if (EvenOdd != null)
-                    {
-                        if (MySettings.Settings.TranslateEvenOddToGroupXY)
+                        int id = IntegerAttribute(team, "Id");
+                        int serieId = IntegerAttribute(team, "SerieId", "SerieSortId");
+                        string seriePrefix = StringAttribute(team, "SerieName");
+                        Serie serie = model.series.Find(s => s.id == serieId);
+                        if (serie == null)
                         {
-                            te.group = TeamGroups.NoGroup;
-                            if (EvenOdd == "Even") te.group = TeamGroups.GroupX;
-                            if (EvenOdd == "Odd") te.group = TeamGroups.GroupY;
+                            serie = new Serie(serieId, seriePrefix, model);
+                            model.series.Add(serie);
+                        }
+                        string teamName = StringAttribute(team, "Name");
+                        // Search both on name & id, since the national Id's are not unique.
+                        Team te = null;
+                        if (id >= 0)
+                        {
+                            te = cl.teams.Find(t => t.Id == id && t.serie == serie);
+                            cl.teams.RemoveAll(t => t.Id == id && t.serie != serie);
+                        }
+                        else te = cl.teams.Find(t => t.Id == id && t.name == teamName && t.serie == serie);
+                        if (te == null)
+                        {
+                            te = new Team(id, teamName, null, serie, cl);
+                            model.teams.Add(te);
                         }
                         else
                         {
-                            te.EvenOdd = Team.WeekRestrictionEnum.All;
-                            if (EvenOdd == "Even") te.EvenOdd = Team.WeekRestrictionEnum.Even;
-                            if (EvenOdd == "Odd") te.EvenOdd = Team.WeekRestrictionEnum.Odd;
+                            // not removing poule. Used for re-reading subscriptions
+                            //if (te.poule != null) te.poule.RemoveTeam(te);
                         }
-                    }
-                    te.email = StringOptionalAttribute(team, "ContactEmail");
-                    // VVB hack: can be removed.
-                    /*
-                    XElement constraints = OptionalElement(team, "Restrictions", "Constraints");
-                    if (constraints != null)
-                    {
-                        // Create a seperate entity for the team
-                        te.sporthal = new SporthallAvailability(sp2);
-                        te.sporthal.teamId = te.Id;
-                        te.club.sporthalls.Add(te.sporthal);
-                        foreach (var constraint in constraints.Elements("Restriction"))
-                        {
-                            DateTime date = DateAttribute(constraint, "Date", "PlayDate");
-                            te.sporthal.NotAvailable.Add(date);
-                        }
-                    }*/
-                    int sporthalId = IntegerAttribute(team, "SporthallId");
-                    //string sporthallName = StringAttribute(team, "SporthallName");
+                        // new team, or check on changed data (re-reading subscriptions)
+                        string DayString = StringAttribute(team, "Day");
+                        if (DayString == "7") DayString = "0";
+                        DayOfWeek day = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), DayString);
+                        Time time = new Time(TimeAttribute(team, "StartTime"));
+                        te.defaultDay = day;
+                        te.defaultTime = time;
+                        string teamGroup = StringOptionalAttribute(team, "-", "Group");
+                        te.group = TeamGroups.NoGroup;
+                        if (teamGroup != "-") te.group = TeamGroups.NoGroup;
+                        if (teamGroup == "A") te.group = TeamGroups.GroupX;
+                        if (teamGroup == "B") te.group = TeamGroups.GroupY;
+                        if (teamGroup == "X") te.group = TeamGroups.GroupX;
+                        if (teamGroup == "Y") te.group = TeamGroups.GroupY;
 
-                    SporthallAvailability sporthall = cl.sporthalls.Find(s => s.sporthall.id == sporthalId && s.teamId == id);
-                    if (sporthall == null)
-                        sporthall = cl.sporthalls.Find(s => s.sporthall.id == sporthalId);
-                    // VVB hack: we hebben een alternatieve sporthal genomen specifiek voor dit team (van een ander team)
-                    if (sporthall == null)
-                        sporthall = cl.sporthalls.Find(s => s.teamId == id);
-                    if (sporthall == null)
-                        sporthall = cl.sporthalls.Find(sp => sp.id == sporthalId);
-                    if (sporthall == null)
-                    {
-                        sporthall = new SporthallAvailability(new Sporthal(sporthalId, "Unknown"));
-                        cl.sporthalls.Add(sporthall);
-                    }
-                    te.sporthal = sporthall;
-                    if (sporthall.teamId == te.Id)
-                    {
-                        sporthall.team = te;
-                    }
-
-                    if (clubId != 0)
-                    {
-                        if (sporthall.id == 0)
+                        if (BoolOptionalAttribute(team, false, "Deleted")) te.DeleteTeam(model); // remains only in the club administration.
+                        te.fixedNumber = IntegerOptionalAttribute(team, -1, "FixedNumber");
+                        string extraTimeString = StringOptionalAttribute(team, null, "extraTimeBefore"); // bijvoorbeeld voor reserve wedstrijd 
+                        if (extraTimeString != null)
                         {
-                            CompetitionCreator.Error.AddManualError("No sporthal assigned", "No sporthal for club: " + clubName + " Team: " + teamName + " Reeks: " + serie.name);
+                            double extraTime;
+                            bool ok = double.TryParse(extraTimeString, NumberStyles.Number, CultureInfo.InvariantCulture, out extraTime);
+                            if (ok) serie.extraTimeBefore = extraTime;
                         }
-                        else if (sporthall.lng == 0 || sporthall.lat == 0)
+                        string EvenOdd = StringOptionalAttribute(team, null, "EvenOdd");
+                        if (EvenOdd != null)
                         {
-                            CompetitionCreator.Error.AddManualError("Sporthal without Latitude and Longitude ",
-                                            "Club: " + clubName + " Team: " + teamName + " Sporthal: '" + sporthall.name + "' has no latitude & longitude specified. The consequence is that no distance between sporthalls can be calculated.");
+                            if (MySettings.Settings.TranslateEvenOddToGroupXY)
+                            {
+                                te.group = TeamGroups.NoGroup;
+                                if (EvenOdd == "Even") te.group = TeamGroups.GroupX;
+                                if (EvenOdd == "Odd") te.group = TeamGroups.GroupY;
+                            }
+                            else
+                            {
+                                te.EvenOdd = Team.WeekRestrictionEnum.All;
+                                if (EvenOdd == "Even") te.EvenOdd = Team.WeekRestrictionEnum.Even;
+                                if (EvenOdd == "Odd") te.EvenOdd = Team.WeekRestrictionEnum.Odd;
+                            }
                         }
-                    }
+                        te.email = StringOptionalAttribute(team, "ContactEmail");
+                        // VVB hack: can be removed.
+                        /*
+                        XElement constraints = OptionalElement(team, "Restrictions", "Constraints");
+                        if (constraints != null)
+                        {
+                            // Create a seperate entity for the team
+                            te.sporthal = new SporthallAvailability(sp2);
+                            te.sporthal.teamId = te.Id;
+                            te.club.sporthalls.Add(te.sporthal);
+                            foreach (var constraint in constraints.Elements("Restriction"))
+                            {
+                                DateTime date = DateAttribute(constraint, "Date", "PlayDate");
+                                te.sporthal.NotAvailable.Add(date);
+                            }
+                        }*/
+                        int sporthalId = IntegerAttribute(team, "SporthallId");
+                        //string sporthallName = StringAttribute(team, "SporthallName");
 
-                    string fieldName = StringOptionalAttribute(team, null, "FieldName");
-                    if(fieldName != null)
-                    {
-                        int FieldId = IntegerAttribute(team, "FieldId");
-                        te.field = new Field();
-                        te.field.Id = FieldId;
-                        te.field.Name = fieldName;
+                        SporthallAvailability sporthall = cl.sporthalls.Find(s => s.sporthall.id == sporthalId && s.teamId == id);
+                        if (sporthall == null)
+                            sporthall = cl.sporthalls.Find(s => s.sporthall.id == sporthalId);
+                        // VVB hack: we hebben een alternatieve sporthal genomen specifiek voor dit team (van een ander team)
+                        if (sporthall == null)
+                            sporthall = cl.sporthalls.Find(s => s.teamId == id);
+                        if (sporthall == null)
+                            sporthall = cl.sporthalls.Find(sp => sp.id == sporthalId);
+                        if (sporthall == null)
+                        {
+                            sporthall = new SporthallAvailability(new Sporthal(sporthalId, "Unknown"));
+                            cl.sporthalls.Add(sporthall);
+                        }
+                        te.sporthal = sporthall;
+                        if (sporthall.teamId == te.Id)
+                        {
+                            sporthall.team = te;
+                        }
+
+                        if (clubId != 0)
+                        {
+                            if (sporthall.id == 0)
+                            {
+                                CompetitionCreator.Error.AddManualError("No sporthal assigned", "No sporthal for club: " + clubName + " Team: " + teamName + " Reeks: " + serie.name);
+                            }
+                            else if (sporthall.lng == 0 || sporthall.lat == 0)
+                            {
+                                CompetitionCreator.Error.AddManualError("Sporthal without Latitude and Longitude ",
+                                                "Club: " + clubName + " Team: " + teamName + " Sporthal: '" + sporthall.name + "' has no latitude & longitude specified. The consequence is that no distance between sporthalls can be calculated.");
+                            }
+                        }
+
+                        string fieldName = StringOptionalAttribute(team, null, "FieldName");
+                        if (fieldName != null)
+                        {
+                            int FieldId = IntegerAttribute(team, "FieldId");
+                            te.field = new Field();
+                            te.field.Id = FieldId;
+                            te.field.Name = fieldName;
+                        }
                     }
                 }
             }
