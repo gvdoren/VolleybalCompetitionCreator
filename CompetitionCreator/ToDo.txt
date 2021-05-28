@@ -1,4 +1,10 @@
-﻿Belangrijk:
+﻿Schema's:
+- Only (checkbox)
+  * 2 rounds
+  * teams <= total
+
+
+Belangrijk:
 - zet op de site er expliciet bij dat ze aangeven of hun nationale teams in X of Y of nogroup zit.
 - Eventueel naar alle clubs de indeling in reeksen sturen voordat de kalender wordt gemaakt.
 - Week eerder de sluitingsdatum. (eerste week poules indelen, en terugkoppelen)

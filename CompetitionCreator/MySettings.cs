@@ -76,7 +76,7 @@ namespace CompetitionCreator
         public int DifferentGroupsOnSameDayCostMedium { get; set; }
         [Category("Constraints")]
         [DisplayName("Constraint.Different.Groups.On.Same.Day.Cost.Low")]
-        [DefaultValue(20)]
+        [DefaultValue(30)]
         public int DifferentGroupsOnSameDayCostLow { get; set; }
         [Category("Constraints")]
         [DisplayName("Constraint.Different.Groups.On.Same.Day.Overlapping.Extra.Cost")]

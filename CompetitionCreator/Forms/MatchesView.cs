@@ -65,11 +65,14 @@ namespace CompetitionCreator
                             {
                                 if (match.homeTeam.club == club)
                                 {
-                                    allSelectedMatches++;
-                                    if(checkBoxConflictsOnly.Checked == false || match.conflict >0 )
-                                        matches.Add(match);
-                                    if (match.conflict > 0)
-                                        conflicts++;
+                                    if (!matches.Contains(match))
+                                    {
+                                        allSelectedMatches++;
+                                        if (checkBoxConflictsOnly.Checked == false || match.conflict > 0)
+                                            matches.Add(match);
+                                        if (match.conflict > 0)
+                                            conflicts++;
+                                    }
                                 }
                             }
                         }
@@ -82,11 +85,14 @@ namespace CompetitionCreator
                 {
                     foreach (Match match in poule.matches)
                     {
-                        allSelectedMatches++;
-                        if (checkBoxConflictsOnly.Checked == false || match.conflict > 0)
-                            matches.Add(match);
-                        if (match.conflict > 0)
-                            conflicts++;
+                        if (!matches.Contains(match))
+                        {
+                            allSelectedMatches++;
+                            if (checkBoxConflictsOnly.Checked == false || match.conflict > 0)
+                                matches.Add(match);
+                            if (match.conflict > 0)
+                                conflicts++;
+                        }
                     }
                 }
             }

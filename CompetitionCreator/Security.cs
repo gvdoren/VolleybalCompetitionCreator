@@ -22,16 +22,19 @@ namespace Security
         {
             if (string.IsNullOrEmpty(fingerPrint))
             {
-                //fingerPrint = GetHash("CPU >> " + cpuId() + 
-                //                      "\nBIOS >> " + biosId() + 
-                //                      "\nBASE >> " + baseId() +
-                //                      "\nDISK >> "+ diskId() + 
-                //                      "\nVIDEO >> " + videoId() +
-                //                      "\nMAC >> "+ macId()
-                //                     );
-                fingerPrint = "E6E5-1537-7C47-E331-7653-645A-0BCE-E26B";
+               fingerPrint = "E6E5-1537-7C47-E331-7653-645A-0BCE-E26B";
             }
             return fingerPrint;
+        }
+        public static string RealValue()
+        {
+            return GetHash("CPU >> " + cpuId() +
+                                      "\nBIOS >> " + biosId() +
+                                      "\nBASE >> " + baseId() +
+                                      "\nDISK >> " + diskId() +
+                                      "\nVIDEO >> " + videoId() +
+                                      "\nMAC >> " + macId()
+                                     );
         }
         private static string GetHash(string s)
         {

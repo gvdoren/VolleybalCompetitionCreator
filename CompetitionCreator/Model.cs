@@ -270,7 +270,30 @@ namespace CompetitionCreator
                         foreach (Club club in tempRemainingClubs)
                         {
                             List<Team> selectedX = club.GetGroupX().FindAll(t => t.defaultDay == team.defaultDay && t.evaluated);
+                            // Extend group X with teams that play in same sporthal on same day
+                            //List<Team> selectedXext = teams.FindAll(
+                            //    t => selectedX.Any(
+                            //        t1 => t1 != t && 
+                            //        t1.sporthal.sporthall.id == t.sporthal.sporthall.id && 
+                            //        t1.sporthal.sporthall.id != 0
+                            //        t.group == t1.group && 
+                            //        t.group != TeamGroups.NoGroup &&
+                            //        t.defaultDay == t1.defaultDay));
+                            //selectedX.AddRange(selectedXext);
+                            
                             List<Team> selectedY = club.GetGroupY().FindAll(t => t.defaultDay == team.defaultDay && t.evaluated);
+                            // Extend group X with teams that play in same sporthal on same day
+                            //List<Team> selectedYext = teams.FindAll(
+                            //    t => selectedY.Any(
+                            //        t1 => t1 != t && 
+                            //        t1.sporthal.sporthall.id == t.sporthal.sporthall.id && 
+                            //        t1.sporthal.sporthall.id != 0
+                            //        t.group == t1.group && 
+                            //        t.group != TeamGroups.NoGroup &&
+                            //        t.defaultDay == t1.defaultDay));
+                            //selectedY.AddRange(selectedYext);
+
+
                             if (Team.Overlap(selectedX, groupCon.GroupA))
                             {
                                 Team.AddIfNeeded(groupCon.GroupA, selectedX);

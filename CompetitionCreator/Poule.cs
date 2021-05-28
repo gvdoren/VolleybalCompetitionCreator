@@ -13,15 +13,15 @@ namespace CompetitionCreator
 
         public bool OptimizeNumber(Model model)
         {
-            return model.OptimizeNumber && imported == false;
+            return model.OptimizeNumber && imported == false && serie.optimize == true;
         }
         public bool OptimizeHomeVisit(Model model)
         {
-            return model.OptimizeHomeVisit && imported == false;
+            return model.OptimizeHomeVisit && imported == false && serie.optimize == true;
         }
         public bool OptimizeSchema(Model model)
         {
-            return model.OptimizeSchema && imported == false;
+            return model.OptimizeSchema && imported == false && serie.optimize == true;
         }
         public bool Optimize(Model model)
         {

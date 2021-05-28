@@ -20,7 +20,7 @@ namespace CompetitionCreator
         }
         private void ShowInfo()
         {
-            label1.Text = "Computer: " + Security.FingerPrint.Value();
+            label1.Text = "Computer: " + Security.FingerPrint.RealValue();
             if (model.licenseKey.Valid())
             {
                 string expired = "";
@@ -46,7 +46,7 @@ namespace CompetitionCreator
                 user = model.licenseKey.ValidUser();
                 oldLicense = Properties.Settings.Default.LicenseKey;
             }
-            System.Diagnostics.Process.Start(string.Format("http://competitioncreator.doren.be/license.php?HwId={0}&user={1}&oldLicense={2}",Security.FingerPrint.Value(), user, oldLicense));
+            System.Diagnostics.Process.Start(string.Format("http://competitioncreator.doren.be/license.php?HwId={0}&user={1}&oldLicense={2}",Security.FingerPrint.RealValue(), user, oldLicense));
         }
 
         private void button2_Click(object sender, EventArgs e)

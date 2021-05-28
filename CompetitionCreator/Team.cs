@@ -140,6 +140,18 @@ namespace CompetitionCreator
         }
         public string Lat { get { if (sporthal != null) return sporthal.lat.ToString(); else return "-"; } }
         public string Lng { get { if (sporthal != null) return sporthal.lng.ToString(); else return "-"; } }
+
+        public bool HasDistanceInfo()
+        {
+            if (RealTeam())
+            {
+                if (sporthal == null)
+                    return false;
+                if (sporthal.lat == 0 && sporthal.lng == 0)
+                    return false;
+            }
+            return true;
+        }
     }
 
 }

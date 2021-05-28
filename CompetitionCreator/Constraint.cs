@@ -184,7 +184,7 @@ namespace CompetitionCreator
                 {
                     foreach (Match match in poule.matches)
                     {
-                        DateTime dt = match.datetime.Date;
+                        DateTime dt = match.dateday.Date;
                         if (match.homeTeam == team &&
                             match.RealMatch() &&
                             team.sporthal.NotAvailable.Contains(dt) == true)
@@ -684,7 +684,8 @@ namespace CompetitionCreator
                     if (team.poule.TeamCount > maxTeams) maxTeams = team.poule.TeamCount;
                     foreach (Match match in team.poule.matches)
                     {
-                        if (match.RealMatch() && match.homeTeam == team)
+                        // Alleen als speeldatum toevoegen als de sporthal beschikbaar is. Anders wordt het een populaire datum.
+                        if (match.RealMatch() && match.homeTeam == team && match.homeTeam.sporthal.NotAvailable.Contains(match.datetime.Date) == false && match.poule.Optimize(model))
                         {
                             if (CountPerWeek.ContainsKey(match.Week) == false) CountPerWeek.Add(match.Week, new List<Match>());
                             CountPerWeek[match.Week].Add(match);
@@ -701,22 +702,7 @@ namespace CompetitionCreator
             List<List<Match>> sortedCounts = CountPerWeek.Values.ToList();
             sortedCounts.Sort(delegate(List<Match> l1, List<Match> l2)
             {
-                // ensure that the series that cannot be optimized weight more in selecting the weekends
-                int l1count = l1.Count;
-                foreach (Match match in l1)
-                {
-                    if (match.homeTeam.sporthal.NotAvailable.Contains(match.datetime.Date) == true)
-                        l1count -= 10;
-                    else if (match.poule.Optimize(model) == false) l1count += 10;
-                }
-                int l2count = l2.Count;
-                foreach (Match match in l2)
-                {
-                    if (match.homeTeam.sporthal.NotAvailable.Contains(match.datetime.Date) == true)
-                        l2count -= 10;
-                    else if (match.poule.Optimize(model) == false) l2count += 10;
-                }
-                return l1count.CompareTo(l2count);
+                return l1.Count.CompareTo(l2.Count);
             });
             int week_cost = cost;
 //            for (int i = 0; i < sortedCounts.Count - maxTeams + 1; i++) // 11 thuiswedstrijden, precies genoeg. Oud: 12 teams, 11 thuiswedstrijden, dus hier is 1 extra wedstrijd toegestaan
@@ -1190,7 +1176,7 @@ namespace CompetitionCreator
             foreach (Match m in overlap1)
             {
                 costOverlap += MySettings.Settings.DifferentGroupsOnSameDayCostLow;
-                costOverlap += overlap2.Count(m1 => m1.Overlapp(m)) * MySettings.Settings.DifferentGroupsOnSameDayOverlappingExtraCost; // extra cost when there is overlap
+                //costOverlap += overlap2.Count(m1 => m1.Overlapp(m)) * MySettings.Settings.DifferentGroupsOnSameDayOverlappingExtraCost; // extra cost when there is overlap
                 if (m.serie.imported) costOverlap += 100; // match cannot be changed.
             }
             return costOverlap;
@@ -1216,12 +1202,30 @@ namespace CompetitionCreator
             if(AMatches.Count >0 && BMatches.Count >0)
             {
                 // Walk through the weeks of the AMatches. This can be done since we are looking for the overlap
-                AMatches.Sort((x, y) => x.datetime.CompareTo(y.datetime));
-                MatchWeek week = AMatches[0].Week;
-                while(week != null)
+                Dictionary<MatchWeek, List<Match>> AMatchesPerWeek = new Dictionary<MatchWeek, List<Match>>();
+                Dictionary<MatchWeek, List<Match>> BMatchesPerWeek = new Dictionary<MatchWeek, List<Match>>();
+
+                foreach (var m in AMatches)
                 {
-                    List<Match> overlapA = AMatches.FindAll(m => m.Week == week);
-                    List<Match> overlapB = BMatches.FindAll(m => m.Week == week);
+                    if (!AMatchesPerWeek.ContainsKey(m.Week))
+                        AMatchesPerWeek.Add(m.Week, new List<Match>());
+                    if (!BMatchesPerWeek.ContainsKey(m.Week))
+                        BMatchesPerWeek.Add(m.Week, new List<Match>());
+                    AMatchesPerWeek[m.Week].Add(m);
+                }
+                foreach (var m in BMatches)
+                {
+                    if (!AMatchesPerWeek.ContainsKey(m.Week))
+                        AMatchesPerWeek.Add(m.Week, new List<Match>());
+                    if (!BMatchesPerWeek.ContainsKey(m.Week))
+                        BMatchesPerWeek.Add(m.Week, new List<Match>());
+                    BMatchesPerWeek[m.Week].Add(m);
+                }
+
+                foreach (var week in AMatchesPerWeek.Keys)
+                {
+                    List<Match> overlapA = AMatchesPerWeek[week];
+                    List<Match> overlapB = BMatchesPerWeek[week];
                     if(overlapA.Count >0 && overlapB.Count >0)
                     {
                         // calculate the cost of each overlap to determine which is highest.
@@ -1239,17 +1243,6 @@ namespace CompetitionCreator
                             conflict_cost += costA;
                         }
                     }
-                    // looking for the next week
-                    MatchWeek nextWeek = null;
-                    foreach(Match m in AMatches)
-                    {
-                        if(m.Week > week)
-                        {
-                            nextWeek = m.Week;
-                            break;
-                        }
-                    }
-                    week = nextWeek;
                 } 
             }
         }

@@ -31,6 +31,15 @@ namespace CompetitionCreator
                 return date;
             }
         }
+
+        public DateTime dateday
+        {
+            get
+            {
+                return Week.PlayTime(homeTeam.defaultDay);
+            }
+        }
+
         public bool Overlapp(Match m)
         {
             if (RealMatch() && m.RealMatch())

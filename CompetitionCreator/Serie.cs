@@ -23,6 +23,7 @@ namespace CompetitionCreator
         public string name { get; set; }
         public int id { get; set; }
         public bool evaluated { get; set; }
+        public bool optimize { get; set; }
         public List<Poule> poules = new List<Poule>();
         public bool Nationaal = false;
         
@@ -33,6 +34,7 @@ namespace CompetitionCreator
             this.name = name;
             extraTimeBefore = 0;
             evaluated = true;
+            optimize = true;
             // geen reserve match
         }
         

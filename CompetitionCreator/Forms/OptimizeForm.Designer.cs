@@ -42,6 +42,7 @@
             this.NumberOptimization = new System.Windows.Forms.CheckBox();
             this.HomeVisitOptimization = new System.Windows.Forms.CheckBox();
             this.SchemaOptimization = new System.Windows.Forms.CheckBox();
+            this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -53,6 +54,7 @@
             this.objectListView1.AllColumns.Add(this.nameColumn);
             this.objectListView1.AllColumns.Add(this.evaluatedColumn);
             this.objectListView1.AllColumns.Add(this.importedColumn);
+            this.objectListView1.AllColumns.Add(this.olvColumn1);
             this.objectListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -65,13 +67,14 @@
             this.objectListView1.FullRowSelect = true;
             this.objectListView1.GridLines = true;
             this.objectListView1.HideSelection = false;
-            this.objectListView1.Location = new System.Drawing.Point(4, 13);
-            this.objectListView1.MaximumSize = new System.Drawing.Size(1000, 9999);
+            this.objectListView1.Location = new System.Drawing.Point(2, 8);
+            this.objectListView1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.objectListView1.MaximumSize = new System.Drawing.Size(602, 6501);
             this.objectListView1.Name = "objectListView1";
             this.objectListView1.OwnerDraw = true;
             this.objectListView1.ShowGroups = false;
             this.objectListView1.ShowImagesOnSubItems = true;
-            this.objectListView1.Size = new System.Drawing.Size(284, 502);
+            this.objectListView1.Size = new System.Drawing.Size(172, 328);
             this.objectListView1.TabIndex = 0;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.UseSubItemCheckBoxes = true;
@@ -109,9 +112,10 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(7, 25);
+            this.button1.Location = new System.Drawing.Point(4, 16);
+            this.button1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(184, 35);
+            this.button1.Size = new System.Drawing.Size(110, 23);
             this.button1.TabIndex = 1;
             this.button1.Text = "Optimize";
             this.button1.UseVisualStyleBackColor = true;
@@ -120,9 +124,10 @@
             // button3
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button3.Location = new System.Drawing.Point(5, 25);
+            this.button3.Location = new System.Drawing.Point(3, 16);
+            this.button3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(190, 33);
+            this.button3.Size = new System.Drawing.Size(114, 21);
             this.button3.TabIndex = 3;
             this.button3.Text = "Optimize";
             this.button3.UseVisualStyleBackColor = true;
@@ -132,9 +137,11 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.button1);
-            this.groupBox1.Location = new System.Drawing.Point(574, 11);
+            this.groupBox1.Location = new System.Drawing.Point(344, 7);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(197, 83);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Size = new System.Drawing.Size(118, 54);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "All";
@@ -143,9 +150,11 @@
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.button3);
-            this.groupBox2.Location = new System.Drawing.Point(574, 100);
+            this.groupBox2.Location = new System.Drawing.Point(344, 65);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(201, 78);
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox2.Size = new System.Drawing.Size(121, 51);
             this.groupBox2.TabIndex = 9;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Selected Clubs";
@@ -155,9 +164,11 @@
             this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox3.Controls.Add(this.label1);
             this.groupBox3.Controls.Add(this.comboBox1);
-            this.groupBox3.Location = new System.Drawing.Point(559, 312);
+            this.groupBox3.Location = new System.Drawing.Point(335, 203);
+            this.groupBox3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(206, 170);
+            this.groupBox3.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox3.Size = new System.Drawing.Size(124, 110);
             this.groupBox3.TabIndex = 10;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Expert";
@@ -166,9 +177,10 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(67, 19);
+            this.label1.Location = new System.Drawing.Point(40, 12);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(149, 20);
+            this.label1.Size = new System.Drawing.Size(94, 13);
             this.label1.TabIndex = 12;
             this.label1.Text = "Optimization Type:";
             // 
@@ -176,9 +188,10 @@
             // 
             this.comboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(11, 53);
+            this.comboBox1.Location = new System.Drawing.Point(7, 34);
+            this.comboBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(189, 28);
+            this.comboBox1.Size = new System.Drawing.Size(115, 21);
             this.comboBox1.TabIndex = 11;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             this.comboBox1.SelectedValueChanged += new System.EventHandler(this.comboBox1_SelectedValueChanged);
@@ -187,9 +200,10 @@
             // 
             this.NumberOptimization.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.NumberOptimization.AutoSize = true;
-            this.NumberOptimization.Location = new System.Drawing.Point(331, 41);
+            this.NumberOptimization.Location = new System.Drawing.Point(191, 27);
+            this.NumberOptimization.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.NumberOptimization.Name = "NumberOptimization";
-            this.NumberOptimization.Size = new System.Drawing.Size(189, 24);
+            this.NumberOptimization.Size = new System.Drawing.Size(121, 17);
             this.NumberOptimization.TabIndex = 11;
             this.NumberOptimization.Text = "Number optimization";
             this.NumberOptimization.UseVisualStyleBackColor = true;
@@ -199,9 +213,10 @@
             // 
             this.HomeVisitOptimization.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.HomeVisitOptimization.AutoSize = true;
-            this.HomeVisitOptimization.Location = new System.Drawing.Point(331, 89);
+            this.HomeVisitOptimization.Location = new System.Drawing.Point(191, 58);
+            this.HomeVisitOptimization.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.HomeVisitOptimization.Name = "HomeVisitOptimization";
-            this.HomeVisitOptimization.Size = new System.Drawing.Size(213, 24);
+            this.HomeVisitOptimization.Size = new System.Drawing.Size(136, 17);
             this.HomeVisitOptimization.TabIndex = 12;
             this.HomeVisitOptimization.Text = "Home/Visit optimization";
             this.HomeVisitOptimization.UseVisualStyleBackColor = true;
@@ -211,19 +226,28 @@
             // 
             this.SchemaOptimization.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.SchemaOptimization.AutoSize = true;
-            this.SchemaOptimization.Location = new System.Drawing.Point(331, 134);
+            this.SchemaOptimization.Location = new System.Drawing.Point(191, 87);
+            this.SchemaOptimization.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.SchemaOptimization.Name = "SchemaOptimization";
-            this.SchemaOptimization.Size = new System.Drawing.Size(191, 24);
+            this.SchemaOptimization.Size = new System.Drawing.Size(123, 17);
             this.SchemaOptimization.TabIndex = 13;
             this.SchemaOptimization.Text = "Schema optimization";
             this.SchemaOptimization.UseVisualStyleBackColor = true;
             this.SchemaOptimization.CheckedChanged += new System.EventHandler(this.SchemaOptimization_CheckedChanged);
             // 
+            // olvColumn1
+            // 
+            this.olvColumn1.AspectName = "optimize";
+            this.olvColumn1.CellPadding = null;
+            this.olvColumn1.CheckBoxes = true;
+            this.olvColumn1.IsVisible = false;
+            this.olvColumn1.Text = "Optimize";
+            // 
             // OptimizeForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(775, 527);
+            this.ClientSize = new System.Drawing.Size(465, 343);
             this.Controls.Add(this.SchemaOptimization);
             this.Controls.Add(this.HomeVisitOptimization);
             this.Controls.Add(this.NumberOptimization);
@@ -232,6 +256,7 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.objectListView1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "OptimizeForm";
             this.Text = "OptimizeForm";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.OptimizeForm_FormClosed);
@@ -261,5 +286,6 @@
         private System.Windows.Forms.CheckBox NumberOptimization;
         private System.Windows.Forms.CheckBox HomeVisitOptimization;
         private System.Windows.Forms.CheckBox SchemaOptimization;
+        private BrightIdeasSoftware.OLVColumn olvColumn1;
     }
 }

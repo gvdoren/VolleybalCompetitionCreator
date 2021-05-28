@@ -45,7 +45,7 @@ namespace CompetitionCreator
                 newSchema.Read(file);
                 schemas.Add(newSchema);
             }
-            schemas.Sort((s1,s2) => s1.teamCount.CompareTo(s2.teamCount));
+            schemas.Sort((s1,s2) => s1.name.CompareTo(s2.name));
             foreach (Schema schema in schemas)
             {
                 comboBox1.Items.Add(schema);
@@ -252,7 +252,7 @@ namespace CompetitionCreator
             }
             return false;
         }
-        private void createPoule(Serie serie, int teamCount, YearPlan reeks, Schema schema)
+        private Poule createPoule(Serie serie, int teamCount, YearPlan reeks, Schema schema)
         {
             char Letter = 'A';
             List<Poule> poules = serie.poules.ToList();
@@ -279,7 +279,7 @@ namespace CompetitionCreator
                 poule.CreateMatchesFromSchemaFiles(schema, serie, poule);
             serie.poules.Add(poule);
             model.poules.Add(poule);
-
+            return poule;
         }
         private void button1_Click(object sender, EventArgs e)
         {
@@ -317,17 +317,43 @@ namespace CompetitionCreator
         }
         private void OptimizeDistance()
         {
+            List<Poule> SelectedPoules = new List<Poule>();
+            foreach (Poule p in objectListView2.SelectedObjects)
+            {
+                SelectedPoules.Add(p);
+            }
+            if (SelectedPoules.Count == 0) SelectedPoules.AddRange(serie.poules);
+            OptimizeDistanceInternal(serie, SelectedPoules);
+        }
+        private bool OptimizeDistanceInternal(Serie serie, List<Poule> SelectedPoules)
+        {
+            if (SelectedPoules.Count <= 1)
+                return false;
             try
             {
-                // determine the selected poules. If nothing is selected, all poules in the series are included.
-                List<Poule> SelectedPoules = new List<Poule>();
-                foreach (Poule p in objectListView2.SelectedObjects)
+                List<Team> teamsWithoutDistance = new List<Team>();
+                foreach(var p in SelectedPoules)
                 {
-                    SelectedPoules.Add(p);
+                    foreach (var t in p.teams)
+                        if (!t.HasDistanceInfo())
+                            teamsWithoutDistance.Add(t);
                 }
-                if (SelectedPoules.Count == 0) SelectedPoules.AddRange(serie.poules);
+                if (teamsWithoutDistance.Count > 0)
+                {
+                    string str = "Failed to optimize the poules. No location info for:";
+                    foreach (var t in teamsWithoutDistance)
+                        str += Environment.NewLine + " - " + t.name; 
+                    MessageBox.Show(str);
+                    return false;
+                }
 
-                int minimumTeams = serie.teams.Count / serie.poules.Count;
+                int count = 0;
+                foreach(var p in SelectedPoules)
+                {
+                    count += p.TeamCount;
+                }
+                // determine the selected poules. If nothing is selected, all poules in the series are included.
+                int minimumTeams = count / SelectedPoules.Count;
                 foreach (Team team in serie.teams)
                 {
                     if (team.RealTeam())
@@ -403,10 +429,12 @@ namespace CompetitionCreator
             {
                 Error.AddManualError("Error occured while optimizing distances.", ex.ToString());
                 MessageBox.Show(ex.ToString());
+                return false;
             }
             model.RenewConstraints();
             model.Evaluate(null);
             model.Changed();
+            return true;
         }
 
         private void SerieView_FormClosed(object sender, FormClosedEventArgs e)
@@ -622,12 +650,17 @@ namespace CompetitionCreator
                 {
                     foreach (Serie serie in objectListView1.SelectedObjects)
                     {
+                        List<Poule> poules = new List<Poule>();
                         while (serie.teams.Count > serie.poules.Sum(p => p.maxTeams))
                         {
-                            createPoule(serie, schema.teamCount, plan, schema);
+                            poules.Add(createPoule(serie, schema.teamCount, plan, schema));
                         }
                         // Divide teams
                         DivideTeams(serie);
+                        bool optimize = true;
+                        for (int i = 0; i < 5; i++)
+                            if (optimize)
+                                optimize = OptimizeDistanceInternal(serie, poules);
                     }
                 }
                 else return;
