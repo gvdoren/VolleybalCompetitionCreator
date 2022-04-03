@@ -23,13 +23,25 @@ namespace CompetitionCreator
             return false;
 
         }
+
+        public List<Club> SharingSporthal = new List<Club>();
         public List<Team> GetGroupX()
         {
-            return teams.FindAll(t => t.group == TeamGroups.GroupX);
+            var X = teams.FindAll(t => t.group == TeamGroups.GroupX);
+            foreach (var club in SharingSporthal)
+            {
+                X.AddRange(club.teams.FindAll(t => t.group == TeamGroups.GroupX));
+            }
+            return X;
         }
         public List<Team> GetGroupY()
         {
-            return teams.FindAll(t => t.group == TeamGroups.GroupY);
+            var Y = teams.FindAll(t => t.group == TeamGroups.GroupY);
+            foreach (var club in SharingSporthal)
+            {
+                Y.AddRange(club.teams.FindAll(t => t.group == TeamGroups.GroupY));
+            }
+            return Y;
         }
  
         public bool RemoveTeam(Team team)

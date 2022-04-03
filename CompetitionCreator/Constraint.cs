@@ -674,8 +674,6 @@ namespace CompetitionCreator
             conflict_cost = 0;
             conflictMatches.Clear();
             int maxTeams = 0;
-            bool sat = false;
-            bool sun = false;
             SortedList<MatchWeek, List<Match>> CountPerWeek = new SortedList<MatchWeek, List<Match>>();
             foreach (Team team in listTeams)
             {
@@ -692,13 +690,7 @@ namespace CompetitionCreator
                         }
                     }
                 }
-                if (team.defaultDay == DayOfWeek.Saturday)
-                    sat = true;
-                if (team.defaultDay == DayOfWeek.Sunday)
-                    sun = true;
             }
-            if (sat & sun)
-                sun = false;
             List<List<Match>> sortedCounts = CountPerWeek.Values.ToList();
             sortedCounts.Sort(delegate(List<Match> l1, List<Match> l2)
             {
@@ -1071,6 +1063,9 @@ namespace CompetitionCreator
         }
         public List<Team> GroupA = new List<Team>();
         public List<Team> GroupB = new List<Team>();
+
+        public List<MatchWeek> AWeeks = new List<MatchWeek>();
+        public List<MatchWeek> BWeeks = new List<MatchWeek>();
         public ConstraintGrouping()
         {
             VisitorAlso = false;
@@ -1181,8 +1176,152 @@ namespace CompetitionCreator
             }
             return costOverlap;
         }
+
+        struct counters
+        {
+            public counters(int A, int B)
+            {
+                countA = A;
+                countB = B;
+                nonChangeableA = 0;
+                nonChangeableB = 0;
+            }
+            public counters(counters c)
+            {
+                countA = c.countA;
+                countB = c.countB;
+                nonChangeableA = c.nonChangeableA;
+                nonChangeableB = c.nonChangeableB;
+            }
+            public int countA;
+            public int countB;
+            public int nonChangeableA;
+            public int nonChangeableB;
+
+        };
+        public void DetermineWeeks()
+        {
+//            Console.Write("A: ");
+//            foreach (var w in AWeeks)
+//                Console.Write("{0}, ", w.WeekNumber);
+//            Console.WriteLine();
+//            Console.Write("B: ");
+//            foreach (var w in AWeeks)
+//                Console.Write("{0}, ", w.WeekNumber);
+//            Console.WriteLine();
+
+            AWeeks = new List<MatchWeek>();
+            BWeeks = new List<MatchWeek>();
+            SortedDictionary<MatchWeek, counters> weeks = new SortedDictionary<MatchWeek, counters>();
+            foreach (Team team in GroupA)
+            {
+                if (team.poule != null)
+                {
+                    foreach (Match match in team.poule.matches)
+                    {
+                        if (!weeks.ContainsKey(match.Week))
+                            weeks.Add(match.Week, new counters());
+                        if (match.RealMatch() && team == match.homeTeam)
+                        {
+                            var c = new counters(weeks[match.Week]);
+                            c.countA++;
+                            if (team.poule.imported)
+                                c.nonChangeableA++;
+                            weeks[match.Week] = c;
+                        }
+                    }
+                }
+            }
+            foreach (Team team in GroupB)
+            {
+                if (team.poule != null)
+                {
+                    foreach (Match match in team.poule.matches)
+                    {
+                        if (!weeks.ContainsKey(match.Week))
+                            weeks.Add(match.Week, new counters());
+                        if (match.RealMatch() && team == match.homeTeam)
+                        {
+                            var c = new counters(weeks[match.Week]);
+                            c.countB++;
+                            if (team.poule.imported)
+                                c.nonChangeableB++;
+                            weeks[match.Week] = c;
+                        }
+                    }
+                }
+            }
+
+            for (int i = 0; i + 1 < weeks.Count; i += 2)
+            {
+                var el1 = weeks.ElementAt(i);
+                var el2 = weeks.ElementAt(i + 1);
+                if (el1.Value.nonChangeableA + el2.Value.nonChangeableB > el1.Value.nonChangeableB + el2.Value.nonChangeableA)
+                {
+                    AWeeks.Add(el1.Key);
+                    BWeeks.Add(el2.Key);
+                }
+                else if (el1.Value.nonChangeableA + el2.Value.nonChangeableB < el1.Value.nonChangeableB + el2.Value.nonChangeableA)
+                {
+                    AWeeks.Add(el2.Key);
+                    BWeeks.Add(el1.Key);
+                }
+                else
+                if (el1.Value.countA + el2.Value.countB > el1.Value.countB + el2.Value.countA)
+                {
+                    AWeeks.Add(el1.Key);
+                    BWeeks.Add(el2.Key);
+                }
+                else if (el1.Value.countA + el2.Value.countB < el1.Value.countB + el2.Value.countA)
+                {
+                    AWeeks.Add(el2.Key);
+                    BWeeks.Add(el1.Key);
+                }
+                else
+                {
+                    if (new Random().Next(2) == 0)
+                    {
+                        AWeeks.Add(el2.Key);
+                        BWeeks.Add(el1.Key);
+                    }
+                    else
+                    {
+                        AWeeks.Add(el1.Key);
+                        BWeeks.Add(el2.Key);
+                    }
+                }
+            }
+            // Determine who gets the last week
+            if (weeks.Count % 2 == 1)
+            {
+                if (GroupA.Count > GroupB.Count)
+                    AWeeks.Add(weeks.Keys.Last());
+                else
+                    BWeeks.Add(weeks.Keys.Last());
+            }
+//            foreach (var el in weeks)
+//            {
+//                Console.WriteLine("{0}: A:{1} B:{2}", el.Key.WeekNumber, el.Value.countA, el.Value.countB);
+//            }
+//
+//            Console.Write("new A: ");
+//            foreach (var w in AWeeks)
+//                Console.Write("{0}, ", w.WeekNumber);
+//            Console.WriteLine();
+//            Console.Write("new B: ");
+//            foreach (var w in AWeeks)
+//                Console.Write("{0}, ", w.WeekNumber);
+//            Console.WriteLine();
+        }
+
+        static uint evaluateCount = 0;
         public override void Evaluate(Model model)
         {
+            if (evaluateCount == 0)
+                DetermineWeeks();
+            if (evaluateCount == 10000)
+                evaluateCount = 0;
+            evaluateCount++;
             conflictMatches.Clear();
             conflict_cost = 0;
             cost = 0;
@@ -1191,59 +1330,25 @@ namespace CompetitionCreator
             List<Club> clubs = new List<Club>();
             foreach (Team team in GroupA)
             {
-                if(team.poule != null) AMatches.AddRange(team.poule.matches.FindAll(m => m.homeTeam == team && m.RealMatch()));
-                if (clubs.Contains(team.club) == false) clubs.Add(team.club);
+                if (team.poule != null)
+                {
+                    foreach (var match in team.poule.matches)
+                    {
+                        if (match.homeTeam == team && match.RealMatch() && BWeeks.Contains(match.Week))
+                            AddConflictMatch(VisitorHomeBoth.HomeOnly, match);
+                    }
+                }
             }
             foreach (Team team in GroupB)
             {
-                if (team.poule != null) BMatches.AddRange(team.poule.matches.FindAll(m => m.homeTeam == team && m.RealMatch()));
-                if (clubs.Contains(team.club) == false) clubs.Add(team.club);
-            }
-            if(AMatches.Count >0 && BMatches.Count >0)
-            {
-                // Walk through the weeks of the AMatches. This can be done since we are looking for the overlap
-                Dictionary<MatchWeek, List<Match>> AMatchesPerWeek = new Dictionary<MatchWeek, List<Match>>();
-                Dictionary<MatchWeek, List<Match>> BMatchesPerWeek = new Dictionary<MatchWeek, List<Match>>();
-
-                foreach (var m in AMatches)
+                if (team.poule != null)
                 {
-                    if (!AMatchesPerWeek.ContainsKey(m.Week))
-                        AMatchesPerWeek.Add(m.Week, new List<Match>());
-                    if (!BMatchesPerWeek.ContainsKey(m.Week))
-                        BMatchesPerWeek.Add(m.Week, new List<Match>());
-                    AMatchesPerWeek[m.Week].Add(m);
-                }
-                foreach (var m in BMatches)
-                {
-                    if (!AMatchesPerWeek.ContainsKey(m.Week))
-                        AMatchesPerWeek.Add(m.Week, new List<Match>());
-                    if (!BMatchesPerWeek.ContainsKey(m.Week))
-                        BMatchesPerWeek.Add(m.Week, new List<Match>());
-                    BMatchesPerWeek[m.Week].Add(m);
-                }
-
-                foreach (var week in AMatchesPerWeek.Keys)
-                {
-                    List<Match> overlapA = AMatchesPerWeek[week];
-                    List<Match> overlapB = BMatchesPerWeek[week];
-                    if(overlapA.Count >0 && overlapB.Count >0)
+                    foreach (var match in team.poule.matches)
                     {
-                        // calculate the cost of each overlap to determine which is highest.
-                        int costA = calculateCost(overlapA, overlapB);
-                        int costB = calculateCost(overlapB, overlapA);
-                        // indien de conflicten bestaan tussen meerdere clubs, op beide de conflicten aanrekenen
-                        if(costA > costB || clubs.Count > 1)
-                        {   // show overlapB as conflicts
-                            foreach(Match m in overlapB) AddConflictMatch(VisitorHomeBoth.HomeOnly,m);
-                            conflict_cost += costB;
-                        } 
-                        if (costA <= costB || clubs.Count > 1)
-                        {   // show overlapA as conflicts
-                            foreach(Match m in overlapA) AddConflictMatch(VisitorHomeBoth.HomeOnly,m);
-                            conflict_cost += costA;
-                        }
+                        if (match.homeTeam == team && match.RealMatch() && AWeeks.Contains(match.Week))
+                            AddConflictMatch(VisitorHomeBoth.HomeOnly, match);
                     }
-                } 
+                }
             }
         }
         private void CheckAtSameDay()

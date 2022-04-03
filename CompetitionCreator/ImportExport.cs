@@ -1386,6 +1386,7 @@ namespace CompetitionCreator
                 }
             }
             CalculateDistancesSporthalls(model);
+            DetermineClubsSharingSporthalls(model);
         }
 
         public void ImportCSV(Model model, string fileName)
@@ -1667,6 +1668,37 @@ namespace CompetitionCreator
 
             }
         }
+
+        public bool Overlap(List<SporthallAvailability> l1, List<SporthallAvailability> l2)
+        {
+            foreach(var s1 in l1)
+            {
+                bool overlap = l2.Exists(s2 => { return s1.sporthall.id == s2.sporthall.id && s1.sporthall.id != 0; });
+                if (overlap)
+                    return true;
+            }
+            return false;
+        }
+
+        public void DetermineClubsSharingSporthalls(Model model)
+        {
+            foreach (Club club in model.clubs)
+            {
+                foreach(Club club1 in model.clubs)
+                {
+                    if (club != club1 && Overlap(club.sporthalls, club1.sporthalls))
+                    {
+                        if (!club.SharingSporthal.Contains(club1))
+                        {
+                            club.SharingSporthal.Add(club1);
+                            Console.WriteLine(club.name + " - " + club1.name);
+                        }
+
+                    }
+                }
+            }
+        }
+
 
         public void CompareRegistrations(Model model, string openFileName, string saveFileName)
         {
