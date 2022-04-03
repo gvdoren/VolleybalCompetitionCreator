@@ -1314,7 +1314,7 @@ namespace CompetitionCreator
 //            Console.WriteLine();
         }
 
-        static uint evaluateCount = 0;
+        uint evaluateCount = 0;
         public override void Evaluate(Model model)
         {
             if (evaluateCount == 0)
