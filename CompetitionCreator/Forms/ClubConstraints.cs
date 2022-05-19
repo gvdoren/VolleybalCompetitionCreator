@@ -28,9 +28,6 @@ namespace CompetitionCreator
             GlobalState.OnMyChange += new MyEventHandler(state_OnMyChange);
             if (GlobalState.selectedClubs.Count > 0) SetClub(GlobalState.selectedClubs[0]);
             objectListView2.SetObjects(model.constraints.FindAll(c => (c as DateConstraint) != null && c.club == club));
-
-                        
-          //  model.OnMyChange += state_OnMyChange;
         }
 
 
@@ -109,6 +106,7 @@ namespace CompetitionCreator
             UpdateTeamsTab();
             UpdateFreeFormatTab();
             UpdateTeamConstraints();
+            checkBox1.Checked = club.PerWeek;
         }
 
         private void dataGridView2_SelectionChanged(object sender, EventArgs e)
@@ -719,6 +717,15 @@ namespace CompetitionCreator
                 objectListView3.BuildList(true);
 
             }
+            UpdateTeamConstraints();
+            model.RenewConstraints();
+            model.Evaluate(null);
+            model.Changed();
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            club.PerWeek = checkBox1.Checked;
             UpdateTeamConstraints();
             model.RenewConstraints();
             model.Evaluate(null);

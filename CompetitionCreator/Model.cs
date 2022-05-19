@@ -204,11 +204,12 @@ namespace CompetitionCreator
                 }
                                 
                 // All group related constraints
-                foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
-                {
-                    ConstructGroupConstraintsDay(day);
-                }
-                ConstructGroupConstraintsWeekend();
+                //foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
+                //{
+                //    ConstructGroupConstraintsDay(day);
+                //}
+                ConstructGroupConstraintsDay();
+                //ConstructGroupConstraintsWeekend();
                 //ConstructGroupConstraintsWeekendForClub();
 
                 // Deze moet als laatste
@@ -232,108 +233,220 @@ namespace CompetitionCreator
             }
         }
 
-        public void ConstructGroupConstraintsDay(DayOfWeek day)
+        bool EqualDay(Team team, DayOfWeek day2)
         {
-            // Grouping of teams, and creating the constraints for it
-            // first day constraints
-            List<TeamConstraint> remaining = teamConstraints.FindAll(c => c.team1 != null && c.team1.defaultDay == day && 
-                                                                      c.team2 != null && c.team2.defaultDay == day && 
-                                                                      (c.what == TeamConstraint.What.HomeNotOnSameDay || c.what == TeamConstraint.What.HomeOnSameDay) &&
-                                                                      c.team1.evaluated && c.team2.evaluated);
-            List<Club> remainingClubs = clubs.FindAll(c => c.teams.Exists(t => t.defaultDay == day && t.group != TeamGroups.NoGroup && t.evaluated));
-            // find the first constraint in remaining that is day related
-            Team team = null;
-            do
+            if (team.club.PerWeek) // eigenlijk per week
+                return true;
+            return team.defaultDay == day2;
+        }
+
+        class XY
+        {
+            public List<Team> X = new List<Team>();
+            public List<Team> Y = new List<Team>();
+        }
+
+        void CreateGroupsPerClub(Club club, DayOfWeek day, ref XY xy)
+        {
+            foreach (var t in club.teams.Where(t => t.defaultDay == day && t.evaluated))
             {
-                team = null;
-                // selecteer team waar vanuit het maken van de groepen begint
-                if (remaining.Count > 0) team = remaining[0].team1;
-                else if (remainingClubs.Count > 0) team = remainingClubs[0].teams.Find(t => t.defaultDay == day && t.group != TeamGroups.NoGroup && t.evaluated);
-                if (team != null)
+                if (t.group == TeamGroups.GroupX)
+                    xy.X.Add(t);
+                if (t.group == TeamGroups.GroupY)
+                    xy.Y.Add(t);
+
+            }
+        }
+
+        XY GetGroup(ref List<XY> XY_groups, Team team, ref bool X)
+        {
+            foreach(var selectedXy in XY_groups)
+            {
+                if (selectedXy.X.Contains(team))
                 {
-                    ConstraintGrouping groupCon = new ConstraintGrouping();
-                    groupCon.name = "Teams in different groups play on same day";
-                    groupCon.GroupA.Add(team);
-                    bool added = false;
-                    do
-                    {
-                        added = false;
-                        List<TeamConstraint> newCons = remaining.FindAll(c => groupCon.AddTeamConstraintDay(c));
-                        foreach (TeamConstraint tc in newCons)
-                        {
-                            remaining.Remove(tc);
-                            added = true;
-                        }
-                        // check overlap met (X en A) of (Y en B) => X toevoegen aan A, Y toevoegen aan B
-                        // check overlap met (X en B) of (Y en A) => X toevoegen aan B, Y toevoegen aan A
-                        List<Club> tempRemainingClubs = new List<Club>(remainingClubs);
-                        foreach (Club club in tempRemainingClubs)
-                        {
-                            List<Team> selectedX = club.GetGroupX().FindAll(t => t.defaultDay == team.defaultDay && t.evaluated);
-                            // Extend group X with teams that play in same sporthal on same day
-                            //List<Team> selectedXext = teams.FindAll(
-                            //    t => selectedX.Any(
-                            //        t1 => t1 != t && 
-                            //        t1.sporthal.sporthall.id == t.sporthal.sporthall.id && 
-                            //        t1.sporthal.sporthall.id != 0
-                            //        t.group == t1.group && 
-                            //        t.group != TeamGroups.NoGroup &&
-                            //        t.defaultDay == t1.defaultDay));
-                            //selectedX.AddRange(selectedXext);
-                            
-                            List<Team> selectedY = club.GetGroupY().FindAll(t => t.defaultDay == team.defaultDay && t.evaluated);
-                            // Extend group X with teams that play in same sporthal on same day
-                            //List<Team> selectedYext = teams.FindAll(
-                            //    t => selectedY.Any(
-                            //        t1 => t1 != t && 
-                            //        t1.sporthal.sporthall.id == t.sporthal.sporthall.id && 
-                            //        t1.sporthal.sporthall.id != 0
-                            //        t.group == t1.group && 
-                            //        t.group != TeamGroups.NoGroup &&
-                            //        t.defaultDay == t1.defaultDay));
-                            //selectedY.AddRange(selectedYext);
-
-
-                            if (Team.Overlap(selectedX, groupCon.GroupA))
-                            {
-                                Team.AddIfNeeded(groupCon.GroupA, selectedX);
-                                Team.AddIfNeeded(groupCon.GroupB, selectedY);
-                                added = true;
-                                remainingClubs.Remove(club);
-                            }
-                            else if (Team.Overlap(selectedX, groupCon.GroupB))
-                            {
-                                Team.AddIfNeeded(groupCon.GroupA, selectedY);
-                                Team.AddIfNeeded(groupCon.GroupB, selectedX);
-                                added = true;
-                                remainingClubs.Remove(club);
-                            }
-                            else if (Team.Overlap(selectedY, groupCon.GroupA))
-                            {
-                                Team.AddIfNeeded(groupCon.GroupA, selectedY);
-                                Team.AddIfNeeded(groupCon.GroupB, selectedX);
-                                added = true;
-                                remainingClubs.Remove(club);
-                            }
-                            else if (Team.Overlap(selectedY, groupCon.GroupB))
-                            {
-                                Team.AddIfNeeded(groupCon.GroupA, selectedX);
-                                Team.AddIfNeeded(groupCon.GroupB, selectedY);
-                                added = true;
-                                remainingClubs.Remove(club);
-                            }
-                        }
-
-                    } while (added);
-                    Error error = groupCon.GetError();
-                    // Als ze allemaal in 1 group zitten, komt er een constraint dat ze in zo weinig mogelijk dagen moeten spelen
-                    if (groupCon.GroupA.Count == 0) constraints.Add(new ConstraintNotAllInSameHomeDay(groupCon.GroupB));
-                    else if (groupCon.GroupB.Count == 0) constraints.Add(new ConstraintNotAllInSameHomeDay(groupCon.GroupA));
-                    else constraints.Add(groupCon);
+                    X = true;
+                    return selectedXy;
                 }
-            } while (team != null);
+                if (selectedXy.Y.Contains(team))
+                {
+                    X = false;
+                    return selectedXy;
+                }
+            }
+            XY xy = new XY();
+            xy.X.Add(team);
+            X = true;
+            return xy;
+        }
+
+        bool SwitchGroup(XY xy)
+        {
+            foreach (var t in xy.X)
+                if (t.group == TeamGroups.GroupX)
+                    return false;
+            foreach (var t in xy.Y)
+                if (t.group == TeamGroups.GroupY)
+                    return false;
+            var temp = xy.X;
+            xy.X = xy.Y;
+            xy.Y = temp;
+            return true;
+        }
+
+        XY MergeGroup(XY xy1, XY xy2, bool sw = false)
+        {
+            if (sw)
+            {
+                var ok = SwitchGroup(xy1);
+                if (!ok) ok = SwitchGroup(xy2);
+                if (!ok)
+                    throw new Exception("X and Y are stronger than team constraints");
+            }
+
+            XY xy = new XY();
+            xy.X = new List<Team>(xy1.X);
+            xy.Y = new List<Team>(xy1.Y);
+            xy.X.AddRange(xy2.X);
+            xy.Y.AddRange(xy2.Y);
+            return xy;
+        }
+        void IgnoredError(TeamConstraint c)
+        {
+            CompetitionCreator.Error.AddManualError("Conflicting team constraint: ",
+                string.Format("Team constraint ignored:<br/>" +
+                "Team1: {0}({1}) - {5}<br/>" +
+                "Team2: {2}({3}) - {6}<br/>" +
+                "What:  {4}<br/>" +
+                "Explanation: Teams on same day/week should be in same group or teams on different day/week should be in different group", c.team1str, c.team1Id, c.team2str, c.team2Id, c.what.ToString(), c.team1.GroupName, c.team2.GroupName));
 
         }
+
+        public void ConstructGroupConstraintsDay()
+        {
+            List<XY> XY_groups = new List<XY>();
+
+            // Groups per club (that share a sporthall)
+            List<Club> remaining = new List<Club>(clubs);
+            while (remaining.Count > 0)
+            {
+                List<Club> sharedClubs = new List<Club>();
+                var selectedClub = remaining.First();
+                sharedClubs.Add(selectedClub);
+                remaining.Remove(selectedClub);
+                var perWeek = selectedClub.PerWeek;
+                foreach (var sharedClub in selectedClub.SharingSporthal)
+                {
+                    remaining.Remove(sharedClub);
+                    sharedClubs.Add(sharedClub);
+                    if (sharedClub.PerWeek)
+                        perWeek = true;
+                }
+                if (perWeek)
+                {
+                    XY xy = new XY();
+                    foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
+                        foreach (var sharedClub in sharedClubs)
+                            CreateGroupsPerClub(sharedClub, day, ref xy);
+                    if (xy.X.Count + xy.Y.Count > 1)
+                        XY_groups.Add(xy);
+                }
+                else
+                {
+                    foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
+                    {
+                        XY xy = new XY();
+                        foreach (var sharedClub in sharedClubs)
+                            CreateGroupsPerClub(sharedClub, day, ref xy);
+                        if (xy.X.Count + xy.Y.Count > 1)
+                            XY_groups.Add(xy);
+                    }
+                }
+            }
+
+            // Merge groups based on day constraints
+            foreach (var dayContraint in  teamConstraints.FindAll(c => c.team1 != null && c.team2 != null &&
+                                                                      (c.what == TeamConstraint.What.HomeNotOnSameDay || c.what == TeamConstraint.What.HomeOnSameDay) &&
+                                                                      c.team1.evaluated && c.team2.evaluated))
+            {
+                bool x1 = false;
+                var group1 = GetGroup(ref XY_groups, dayContraint.team1, ref x1);
+                bool x2 = false;
+                var group2 = GetGroup(ref XY_groups, dayContraint.team2, ref x2);
+                if (group1 == group2 && ((x1==x2) != (dayContraint.what == TeamConstraint.What.HomeOnSameDay)))
+                    IgnoredError(dayContraint);
+                else if (group1 == group2)
+                {
+                    // Nothing has to be changed, are already in same group in correct x en y
+                }
+                else
+                {
+                    bool sw = (x1 == x2) != (dayContraint.what == TeamConstraint.What.HomeOnSameDay); // switch needed
+                    try
+                    {
+                        XY_groups.Add(MergeGroup(group1, group2, sw));
+                        XY_groups.Remove(group1);
+                        XY_groups.Remove(group2);
+                    }
+                    catch 
+                    {
+                        IgnoredError(dayContraint);
+                    }
+                }
+            }
+
+            // Merge groups based on week constraints
+            foreach (var dayContraint in teamConstraints.FindAll(c => c.team1 != null && c.team2 != null &&
+                                                                     (c.what == TeamConstraint.What.HomeInSameWeekend || c.what == TeamConstraint.What.HomeNotInSameWeekend) &&
+                                                                     c.team1.evaluated && c.team2.evaluated))
+            {
+                bool x1 = false;
+                var group1 = GetGroup(ref XY_groups, dayContraint.team1, ref x1);
+                bool x2 = false;
+                var group2 = GetGroup(ref XY_groups, dayContraint.team2, ref x2);
+                if (group1 == group2 && ((x1 == x2) != (dayContraint.what == TeamConstraint.What.HomeInSameWeekend)))
+                    IgnoredError(dayContraint);
+                else if (group1 == group2)
+                {
+                    // Nothing has to be changed, are already in same group in correct x en y
+                }
+                else
+                {
+                    bool sw = (x1 == x2) != (dayContraint.what == TeamConstraint.What.HomeInSameWeekend); //switch needed
+                    try
+                    {
+                        XY_groups.Add(MergeGroup(group1, group2, sw));
+                        XY_groups.Remove(group1);
+                        XY_groups.Remove(group2);
+                    }
+                    catch
+                    {
+                        IgnoredError(dayContraint);
+                    }
+                }
+            }
+
+            // Create constraints
+            foreach (var xy in XY_groups)
+            { 
+                if (xy.X.Count == 0)
+                {
+                    constraints.Add(new ConstraintNotAllInSameHomeDay(xy.Y));
+                }
+                else if (xy.Y.Count == 0)
+                {
+                    constraints.Add(new ConstraintNotAllInSameHomeDay(xy.X));
+                }
+                else
+                {
+                    ConstraintGrouping groupCon = new ConstraintGrouping();
+                    groupCon.name = "Teams in different groups play in same week";
+                    groupCon.GroupA.AddRange(xy.X);
+                    groupCon.GroupB.AddRange(xy.Y);
+                    constraints.Add(groupCon);
+                }
+            }
+        }
+        
         public void ConstructGroupConstraintsWeekend()
         {
             // Grouping of teams, and creating the constraints for it

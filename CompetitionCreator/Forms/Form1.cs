@@ -323,8 +323,23 @@ namespace CompetitionCreator
         public void openFileDialog1_FileOk1(object sender, CancelEventArgs e)
         {
             importExport.LoadFullCompetition(model, openFileDialog1.FileName);
+            closeViews();
         }
 
+        private void closeViews()
+        {
+            List<DockContent> contents = new List<DockContent>();
+            foreach (DockContent content in this.dockPanel.Contents)
+            {
+                var constraintView = content as MatchesView;
+                var clubview = content as ClubListView;
+
+                if (clubview == null && constraintView == null)
+                    contents.Add(content);
+            }
+            foreach(var content in contents)
+                content.Close();
+        }
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
             int year = model.licenseKey.ValidUntil().Year;
@@ -349,6 +364,7 @@ namespace CompetitionCreator
                 model.Changed(newModel);
                 newModel.Evaluate(null);
                 newModel.Changed();
+                closeViews();
             }
         }
         private void teamsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -403,6 +419,7 @@ namespace CompetitionCreator
                     SiteImporter.SiteImporter.ImportSite(provincie);
                     importExport.ImportTeamSubscriptions(model, XDocument.Load(BaseDirectory + "\\" + provincie.Name + "_inschrijvingen.xml", LoadOptions.SetLineInfo | LoadOptions.SetBaseUri).Root);
                     importExport.ImportCSV(model, BaseDirectory + "\\" + provincie.Name + "_huidige_wedstrijden.csv");
+                    closeViews();
                     model.RenewConstraints();
                     model.Evaluate(null);
                     model.Changed();
@@ -509,6 +526,7 @@ namespace CompetitionCreator
         public void openFileDialog1_FileOk3(object sender, CancelEventArgs e)
         {
             importExport.ImportTeamSubscriptions(model, XDocument.Load(openFileDialog1.FileName, LoadOptions.SetLineInfo|LoadOptions.SetBaseUri).Root);
+            closeViews();
             model.RenewConstraints();
             model.Evaluate(null);
             model.Changed();

@@ -1185,6 +1185,8 @@ namespace CompetitionCreator
                 countB = B;
                 nonChangeableA = 0;
                 nonChangeableB = 0;
+                sporthalNotAvailableA = 0;
+                sporthalNotAvailableB = 0;
             }
             public counters(counters c)
             {
@@ -1192,12 +1194,23 @@ namespace CompetitionCreator
                 countB = c.countB;
                 nonChangeableA = c.nonChangeableA;
                 nonChangeableB = c.nonChangeableB;
+                sporthalNotAvailableA = c.sporthalNotAvailableA;
+                sporthalNotAvailableB = c.sporthalNotAvailableB;
             }
             public int countA;
             public int countB;
             public int nonChangeableA;
             public int nonChangeableB;
+            public int sporthalNotAvailableA;
+            public int sporthalNotAvailableB;
 
+            public int score(bool A)
+            {
+                if (A)
+                    return (nonChangeableA - nonChangeableB) * 100 + countA - countB - sporthalNotAvailableA;
+                else
+                    return (nonChangeableB - nonChangeableA) * 100 + countB - countA - sporthalNotAvailableB;
+            }
         };
         public void DetermineWeeks()
         {
@@ -1227,6 +1240,8 @@ namespace CompetitionCreator
                             c.countA++;
                             if (team.poule.imported)
                                 c.nonChangeableA++;
+                            if (team.sporthal.NotAvailable.Contains(match.datetime.Date))
+                                c.sporthalNotAvailableA++;
                             weeks[match.Week] = c;
                         }
                     }
@@ -1246,59 +1261,83 @@ namespace CompetitionCreator
                             c.countB++;
                             if (team.poule.imported)
                                 c.nonChangeableB++;
+                            if (team.sporthal.NotAvailable.Contains(match.datetime.Date))
+                                c.sporthalNotAvailableB++;
                             weeks[match.Week] = c;
                         }
                     }
                 }
             }
 
-            for (int i = 0; i + 1 < weeks.Count; i += 2)
+            bool turnA = true;
+            while (weeks.Count > 0)
             {
-                var el1 = weeks.ElementAt(i);
-                var el2 = weeks.ElementAt(i + 1);
-                if (el1.Value.nonChangeableA + el2.Value.nonChangeableB > el1.Value.nonChangeableB + el2.Value.nonChangeableA)
+                int score = int.MinValue;
+                MatchWeek week = null;
+                foreach(var kvp in weeks)
                 {
-                    AWeeks.Add(el1.Key);
-                    BWeeks.Add(el2.Key);
-                }
-                else if (el1.Value.nonChangeableA + el2.Value.nonChangeableB < el1.Value.nonChangeableB + el2.Value.nonChangeableA)
-                {
-                    AWeeks.Add(el2.Key);
-                    BWeeks.Add(el1.Key);
-                }
-                else
-                if (el1.Value.countA + el2.Value.countB > el1.Value.countB + el2.Value.countA)
-                {
-                    AWeeks.Add(el1.Key);
-                    BWeeks.Add(el2.Key);
-                }
-                else if (el1.Value.countA + el2.Value.countB < el1.Value.countB + el2.Value.countA)
-                {
-                    AWeeks.Add(el2.Key);
-                    BWeeks.Add(el1.Key);
-                }
-                else
-                {
-                    if (new Random().Next(2) == 0)
+                    if (kvp.Value.score(turnA) > score)
                     {
-                        AWeeks.Add(el2.Key);
-                        BWeeks.Add(el1.Key);
-                    }
-                    else
-                    {
-                        AWeeks.Add(el1.Key);
-                        BWeeks.Add(el2.Key);
+                        score = kvp.Value.score(turnA);
+                        week = kvp.Key;
                     }
                 }
-            }
-            // Determine who gets the last week
-            if (weeks.Count % 2 == 1)
-            {
-                if (GroupA.Count > GroupB.Count)
-                    AWeeks.Add(weeks.Keys.Last());
+                if (turnA)
+                    AWeeks.Add(week);
                 else
-                    BWeeks.Add(weeks.Keys.Last());
+                    BWeeks.Add(week);
+                turnA = !turnA;
+                weeks.Remove(week);
             }
+
+
+  //          for (int i = 0; i + 1 < weeks.Count; i += 2)
+  //          {
+  //              var el1 = weeks.ElementAt(i);
+  //              var el2 = weeks.ElementAt(i + 1);
+  //              if (el1.Value.nonChangeableA + el2.Value.nonChangeableB > el1.Value.nonChangeableB + el2.Value.nonChangeableA)
+  //              {
+  //                  AWeeks.Add(el1.Key);
+  //                  BWeeks.Add(el2.Key);
+  //              }
+  //              else if (el1.Value.nonChangeableA + el2.Value.nonChangeableB < el1.Value.nonChangeableB + el2.Value.nonChangeableA)
+  //              {
+  //                  AWeeks.Add(el2.Key);
+  //                  BWeeks.Add(el1.Key);
+  //              }
+  //              else
+  //              if (el1.Value.countA + el2.Value.countB > el1.Value.countB + el2.Value.countA)
+  //              {
+  //                  AWeeks.Add(el1.Key);
+  //                  BWeeks.Add(el2.Key);
+  //              }
+  //              else if (el1.Value.countA + el2.Value.countB < el1.Value.countB + el2.Value.countA)
+  //              {
+  //                  AWeeks.Add(el2.Key);
+  //                  BWeeks.Add(el1.Key);
+  //              }
+  //              else
+  //              {
+  //                  if (new Random().Next(2) == 0)
+  //                  {
+  //                      AWeeks.Add(el2.Key);
+  //                      BWeeks.Add(el1.Key);
+  //                  }
+  //                  else
+  //                  {
+  //                      AWeeks.Add(el1.Key);
+  //                      BWeeks.Add(el2.Key);
+  //                  }
+  //              }
+  //          }
+  //          // Determine who gets the last week
+  //          if (weeks.Count % 2 == 1)
+  //          {
+  //              if (GroupA.Count > GroupB.Count)
+  //                  AWeeks.Add(weeks.Keys.Last());
+  //              else
+  //                  BWeeks.Add(weeks.Keys.Last());
+  //          }
 //            foreach (var el in weeks)
 //            {
 //                Console.WriteLine("{0}: A:{1} B:{2}", el.Key.WeekNumber, el.Value.countA, el.Value.countB);
@@ -1319,9 +1358,9 @@ namespace CompetitionCreator
         {
             if (evaluateCount == 0)
                 DetermineWeeks();
-            if (evaluateCount == 10000)
-                evaluateCount = 0;
             evaluateCount++;
+            if (evaluateCount > 1000)
+                evaluateCount = 0;
             conflictMatches.Clear();
             conflict_cost = 0;
             cost = 0;

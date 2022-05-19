@@ -73,6 +73,7 @@
             this.buttonDeleteTeamRequirements = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.label4 = new System.Windows.Forms.Label();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.week = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.until = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -138,11 +139,11 @@
             this.objectListView1.GridLines = true;
             this.objectListView1.HasCollapsibleGroups = false;
             this.objectListView1.HideSelection = false;
-            this.objectListView1.Location = new System.Drawing.Point(3, 209);
+            this.objectListView1.Location = new System.Drawing.Point(3, 248);
             this.objectListView1.MultiSelect = false;
             this.objectListView1.Name = "objectListView1";
             this.objectListView1.ShowGroups = false;
-            this.objectListView1.Size = new System.Drawing.Size(729, 163);
+            this.objectListView1.Size = new System.Drawing.Size(736, 257);
             this.objectListView1.TabIndex = 0;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
@@ -281,7 +282,7 @@
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(725, 160);
+            this.textBox1.Size = new System.Drawing.Size(732, 160);
             this.textBox1.TabIndex = 3;
             // 
             // dataGridView2
@@ -293,11 +294,12 @@
             this.dataGridView2.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
             this.Column5});
-            this.dataGridView2.Location = new System.Drawing.Point(741, 10);
+            this.dataGridView2.Location = new System.Drawing.Point(745, 10);
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.RowHeadersVisible = false;
+            this.dataGridView2.RowHeadersWidth = 62;
             this.dataGridView2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView2.Size = new System.Drawing.Size(248, 87);
+            this.dataGridView2.Size = new System.Drawing.Size(288, 87);
             this.dataGridView2.TabIndex = 5;
             this.dataGridView2.SelectionChanged += new System.EventHandler(this.dataGridView2_SelectionChanged);
             // 
@@ -305,11 +307,13 @@
             // 
             this.Column1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.Column1.HeaderText = "Sporthal";
+            this.Column1.MinimumWidth = 8;
             this.Column1.Name = "Column1";
             // 
             // Column5
             // 
             this.Column5.HeaderText = "TeamId";
+            this.Column5.MinimumWidth = 8;
             this.Column5.Name = "Column5";
             this.Column5.Width = 50;
             // 
@@ -317,9 +321,9 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(738, 123);
+            this.label1.Location = new System.Drawing.Point(745, 100);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(84, 13);
+            this.label1.Size = new System.Drawing.Size(130, 20);
             this.label1.TabIndex = 6;
             this.label1.Text = "Beschikbaar op:";
             // 
@@ -344,10 +348,11 @@
             this.friday,
             this.saturday,
             this.sunday});
-            this.availabilityGrid.Location = new System.Drawing.Point(741, 151);
+            this.availabilityGrid.Location = new System.Drawing.Point(745, 151);
             this.availabilityGrid.Name = "availabilityGrid";
             this.availabilityGrid.RowHeadersVisible = false;
-            this.availabilityGrid.Size = new System.Drawing.Size(248, 490);
+            this.availabilityGrid.RowHeadersWidth = 62;
+            this.availabilityGrid.Size = new System.Drawing.Size(288, 623);
             this.availabilityGrid.TabIndex = 7;
             this.availabilityGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView3_CellContentClick);
             // 
@@ -450,7 +455,7 @@
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button3.Enabled = false;
-            this.button3.Location = new System.Drawing.Point(643, 378);
+            this.button3.Location = new System.Drawing.Point(649, 511);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(89, 23);
             this.button3.TabIndex = 9;
@@ -461,7 +466,7 @@
             // 
             this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button4.Enabled = false;
-            this.button4.Location = new System.Drawing.Point(551, 377);
+            this.button4.Location = new System.Drawing.Point(595, 510);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(89, 23);
             this.button4.TabIndex = 9;
@@ -473,7 +478,7 @@
             // 
             this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button5.Enabled = false;
-            this.button5.Location = new System.Drawing.Point(550, 378);
+            this.button5.Location = new System.Drawing.Point(556, 511);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(89, 23);
             this.button5.TabIndex = 9;
@@ -489,7 +494,7 @@
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(9, 9);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(104, 13);
+            this.label2.Size = new System.Drawing.Size(155, 20);
             this.label2.TabIndex = 11;
             this.label2.Text = "Date constraints:";
             // 
@@ -507,11 +512,12 @@
             this.olvColumn24,
             this.olvColumn20});
             this.objectListView3.FullRowSelect = true;
+            this.objectListView3.HideSelection = false;
             this.objectListView3.Location = new System.Drawing.Point(6, 23);
             this.objectListView3.MultiSelect = false;
             this.objectListView3.Name = "objectListView3";
             this.objectListView3.ShowGroups = false;
-            this.objectListView3.Size = new System.Drawing.Size(712, 168);
+            this.objectListView3.Size = new System.Drawing.Size(716, 168);
             this.objectListView3.TabIndex = 12;
             this.objectListView3.UseCompatibleStateImageBehavior = false;
             this.objectListView3.View = System.Windows.Forms.View.Details;
@@ -552,7 +558,7 @@
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(8, 9);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(108, 13);
+            this.label3.Size = new System.Drawing.Size(161, 20);
             this.label3.TabIndex = 11;
             this.label3.Text = "Team constraints:";
             // 
@@ -562,10 +568,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl2.Controls.Add(this.tabPage1);
             this.tabControl2.Controls.Add(this.tabPage2);
-            this.tabControl2.Location = new System.Drawing.Point(3, 391);
+            this.tabControl2.Location = new System.Drawing.Point(3, 524);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(729, 250);
+            this.tabControl2.Size = new System.Drawing.Size(736, 250);
             this.tabControl2.TabIndex = 13;
             // 
             // tabPage1
@@ -574,10 +580,10 @@
             this.tabPage1.Controls.Add(this.buttonDeleteTeamRequirements);
             this.tabPage1.Controls.Add(this.objectListView3);
             this.tabPage1.Controls.Add(this.label3);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Location = new System.Drawing.Point(4, 29);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(721, 224);
+            this.tabPage1.Size = new System.Drawing.Size(728, 217);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Team constraints";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -585,7 +591,7 @@
             // buttonNewTeamRequirement
             // 
             this.buttonNewTeamRequirement.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonNewTeamRequirement.Location = new System.Drawing.Point(559, 197);
+            this.buttonNewTeamRequirement.Location = new System.Drawing.Point(566, 197);
             this.buttonNewTeamRequirement.Name = "buttonNewTeamRequirement";
             this.buttonNewTeamRequirement.Size = new System.Drawing.Size(75, 23);
             this.buttonNewTeamRequirement.TabIndex = 13;
@@ -596,7 +602,7 @@
             // buttonDeleteTeamRequirements
             // 
             this.buttonDeleteTeamRequirements.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonDeleteTeamRequirements.Location = new System.Drawing.Point(640, 197);
+            this.buttonDeleteTeamRequirements.Location = new System.Drawing.Point(647, 197);
             this.buttonDeleteTeamRequirements.Name = "buttonDeleteTeamRequirements";
             this.buttonDeleteTeamRequirements.Size = new System.Drawing.Size(75, 23);
             this.buttonDeleteTeamRequirements.TabIndex = 13;
@@ -610,10 +616,10 @@
             this.tabPage2.Controls.Add(this.button2);
             this.tabPage2.Controls.Add(this.label2);
             this.tabPage2.Controls.Add(this.button1);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Location = new System.Drawing.Point(4, 29);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(721, 224);
+            this.tabPage2.Size = new System.Drawing.Size(728, 217);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Date Requirements";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -623,13 +629,27 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(8, 11);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(117, 13);
+            this.label4.Size = new System.Drawing.Size(189, 20);
             this.label4.TabIndex = 2;
             this.label4.Text = "Free format constraints:";
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(3, 205);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(295, 24);
+            this.checkBox1.TabIndex = 14;
+            this.checkBox1.Text = "Team groups hold for week iso day";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // week
             // 
             this.week.HeaderText = ".";
+            this.week.MinimumWidth = 8;
             this.week.Name = "week";
             this.week.Visible = false;
             this.week.Width = 20;
@@ -714,9 +734,10 @@
             // 
             // InschrijvingenView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1004, 642);
+            this.ClientSize = new System.Drawing.Size(1048, 775);
+            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
@@ -794,6 +815,7 @@
         private System.Windows.Forms.Button buttonDeleteTeamRequirements;
         private BrightIdeasSoftware.OLVColumn olvColumn19;
         private System.Windows.Forms.Button buttonNewTeamRequirement;
+        private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.DataGridViewTextBoxColumn week;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
         private System.Windows.Forms.DataGridViewTextBoxColumn until;
@@ -805,6 +827,5 @@
         private System.Windows.Forms.DataGridViewCheckBoxColumn friday;
         private System.Windows.Forms.DataGridViewCheckBoxColumn saturday;
         private System.Windows.Forms.DataGridViewCheckBoxColumn sunday;
-
     }
 }

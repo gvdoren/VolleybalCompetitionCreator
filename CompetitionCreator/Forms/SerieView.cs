@@ -506,6 +506,10 @@ namespace CompetitionCreator
         private void button6_Click(object sender, EventArgs e)
         {
             DivideTeams(serie);
+            bool optimize = true;
+            for (int i = 0; i < 5; i++)
+                if (optimize)
+                    optimize = OptimizeDistanceInternal(serie, serie.poules);
         }
         private void DivideTeams(Serie serie)
         {
@@ -547,54 +551,52 @@ namespace CompetitionCreator
                 }
                 return 0;
             });
+
             List<Poule> poules = new List<Poule>();
             poules.AddRange(serie.poules);
             poules.Sort(delegate(Poule p1, Poule p2)
             {
-                return p1.name.CompareTo(p2.name);
+                if (p1.maxTeams > p2.maxTeams) return 1;
+                if (p1.maxTeams < p2.maxTeams) return -1;
+                return 0;
             });
-            // Bereken in welke minimale poule ze moeten zitten (indien meerdere teams van 1 club)
-            Dictionary<Poule, List<Team>> pouleteams = new Dictionary<Poule, List<Team>>();
-            foreach(Poule poule in poules)
-            {
-                pouleteams[poule] = new List<Team>();
-            }
-            foreach(Team team in tms.Reverse<Team>())
-            {
-                foreach(Poule poule in poules.Reverse<Poule>())
-                {
-                    if(pouleteams[poule].Exists( t => t.club == team.club) == false)
-                    {
-                        pouleteams[poule].Add(team);
-                        break;
-                    }
-                }
-            }
-            // dan alles opnieuw indelen
+
             int remainingPoules = serie.poules.Count;
+            // Van kleine naar grote poule (misschien nog ooit omdraaien als je niet wilt dat de hoge rangschikking in een kleine poule zit)
+            // Dan tms omdraaien en 
             foreach (Poule p in poules)
             {
                 double avg = Math.Ceiling(((double)tms.Count) / remainingPoules);
-                foreach (Team team in pouleteams[p])
+                remainingPoules--;
+                List<Club> clubs = tms.Select(t => t.club).ToList();
+                foreach(var cl in clubs)
                 {
+                    var count = tms.Count(t => t.club == cl);
+                    var q = 1;
+                    while (count > q * remainingPoules && p.TeamCount < p.maxTeams && p.TeamCount < avg)
+                    {
+                        var team = tms.First(t => t.club == cl);
+                        p.AddTeam(team);
+                        tms.Remove(team);
+                        count--;
+                        q++;
+                    }
+                }
+                for (int i = 0; p.TeamCount < avg && p.TeamCount < p.maxTeams && i < tms.Count ; i++)
+                {
+                    var team = tms[i];
+                    var count = p.teams.Count(t => t.club == team.club);
+                    // skip team of identical club if possible
+                    if (count > 0)
+                        continue;
                     p.AddTeam(team);
                     tms.Remove(team);
                 }
-                for (int i = p.TeamCount; i < avg; i++)
+                while (p.TeamCount < p.maxTeams && tms.Count > 0 && p.TeamCount < avg)
                 {
-                    int index = tms.FindIndex(t1 => p.teams.Exists(t2 => t2.club == t1.club) == false);
-                    if (index == -1)
-                        index = 0; // teams of dezelfde club moeten bij elkaar (bijv. maar 1 poule)
-                    p.AddTeam(tms[index]);
-                    // verwijder team uit de lijst van minimale plekken
-                    foreach (Poule poule in poules)
-                    {
-                        if (pouleteams[poule].Contains(tms[index]))
-                            pouleteams[poule].Remove(tms[index]);
-                    }
-                    tms.RemoveAt(index);
+                    p.AddTeam(tms[0]);
+                    tms.RemoveAt(0);
                 }
-                remainingPoules--;
             }
             model.RenewConstraints();
             model.Evaluate(null);

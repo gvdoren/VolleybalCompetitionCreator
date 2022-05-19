@@ -87,6 +87,7 @@ namespace CompetitionCreator
         public string Stamnumber { get; set; }
         public bool ConstraintNotAtTheSameTime = false;
         public bool Dirty = true;
+        public bool PerWeek = false;
         public static Club CreateNullClub()
         {
             Club club = new Club(-2, "----", "");
