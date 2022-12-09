@@ -1,4 +1,14 @@
-﻿Schema's:
+﻿15-6-2022:
+Voor clubs met alleen X, wordt nu ook dezelde code als X en Y gebruikt. 
+* DetermineWeeks: Daar zit nog een issue in. Door het opnieuw verdelen van de weken gaat de score weer terug omhoog.
+
+18-6-2022:
+* Uit/thuis spelen beperken. Nu staat dat op max 3. Echter, als er 1 thuiswedstrijd tussen zit dan mogen er weer 3. Als dat ook nog net een wedstrijden tegen virtueel team is.
+* Beter om max thuis / max uit tot dan toe altijd te beperken tot 3. Dan krijg je dit issue niet.
+
+
+
+Schema's:
 - Only (checkbox)
   * 2 rounds
   * teams <= total

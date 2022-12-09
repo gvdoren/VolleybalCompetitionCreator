@@ -427,23 +427,17 @@ namespace CompetitionCreator
 
             // Create constraints
             foreach (var xy in XY_groups)
-            { 
-                if (xy.X.Count == 0)
-                {
-                    constraints.Add(new ConstraintNotAllInSameHomeDay(xy.Y));
-                }
-                else if (xy.Y.Count == 0)
-                {
-                    constraints.Add(new ConstraintNotAllInSameHomeDay(xy.X));
-                }
+            {
+                ConstraintGrouping groupCon = new ConstraintGrouping();
+
+                if (xy.X.Count == 0 || xy.Y.Count == 0)
+                    groupCon.name = "Only 1 Group. Too many weekends are used.";
                 else
-                {
-                    ConstraintGrouping groupCon = new ConstraintGrouping();
-                    groupCon.name = "Teams in different groups play in same week";
-                    groupCon.GroupA.AddRange(xy.X);
-                    groupCon.GroupB.AddRange(xy.Y);
-                    constraints.Add(groupCon);
-                }
+                    groupCon.name = "Teams in different groups play in same week.";
+
+                groupCon.GroupA.AddRange(xy.X);
+                groupCon.GroupB.AddRange(xy.Y);
+                constraints.Add(groupCon);
             }
         }
         

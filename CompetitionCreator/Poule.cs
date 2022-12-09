@@ -292,16 +292,14 @@ namespace CompetitionCreator
         }
         public void CopyAndClearSnapShot(Model model)
         {
-            if (snapShotTaken == false)
+            if (snapShotTaken)
             {
                 snapShotTaken = false;
+                teams = resultTeams;
+                weeks = resultWeeks;
+                matches = CopyMatches(resultMatches);
+                model.Evaluate(null);
             }
-            snapShotTaken = false;
-            teams = resultTeams;
-            weeks = resultWeeks;
-            matches = CopyMatches(resultMatches);
-            snapShotTaken = false;
-            model.Evaluate(null);
         }
 
         private void Swap(List<MatchWeek> list, int i, int j)
@@ -432,7 +430,7 @@ namespace CompetitionCreator
                             }
                         }
                     }
-                    teams = resultTeams;
+                    teams = new List<Team>(resultTeams);
                 }
             }
         }
@@ -459,7 +457,7 @@ namespace CompetitionCreator
                     index++;
                 }
             }
-            teams = resultTeams;
+            teams = new List<Team>(resultTeams);
             return score;
         }
 
@@ -495,7 +493,7 @@ namespace CompetitionCreator
                 SnapShotIfImproved(model, false);
                 teams = temp;
             }
-            teams = resultTeams;
+            teams = new List<Team>(resultTeams);
         }
         
         public void OptimizeFullTeamAssignment(Model model, IProgress intf)
@@ -512,7 +510,7 @@ namespace CompetitionCreator
                         GenerateTeamCombination(model, temp, intf);
                     }
                     catch { }
-                    teams = resultTeams;
+                    teams = new List<Team>(resultTeams);
 
                 }
             }

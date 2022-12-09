@@ -1069,7 +1069,7 @@ namespace CompetitionCreator
         public ConstraintGrouping()
         {
             VisitorAlso = false;
-            name = "Teams in verschillende groupen!";
+            name = "Group constraints";
         }
         public override bool RelatedTo(List<Team> teams)
         {
@@ -1206,23 +1206,12 @@ namespace CompetitionCreator
 
             public int score(bool A)
             {
-                if (A)
-                    return (nonChangeableA - nonChangeableB) * 100 + countA - countB - sporthalNotAvailableA;
-                else
-                    return (nonChangeableB - nonChangeableA) * 100 + countB - countA - sporthalNotAvailableB;
+                int temp = (nonChangeableA - nonChangeableB) * 100 + countA - countB - sporthalNotAvailableA + sporthalNotAvailableB; ;
+                return A? temp:-temp;
             }
         };
         public void DetermineWeeks()
         {
-//            Console.Write("A: ");
-//            foreach (var w in AWeeks)
-//                Console.Write("{0}, ", w.WeekNumber);
-//            Console.WriteLine();
-//            Console.Write("B: ");
-//            foreach (var w in AWeeks)
-//                Console.Write("{0}, ", w.WeekNumber);
-//            Console.WriteLine();
-
             AWeeks = new List<MatchWeek>();
             BWeeks = new List<MatchWeek>();
             SortedDictionary<MatchWeek, counters> weeks = new SortedDictionary<MatchWeek, counters>();
@@ -1289,69 +1278,7 @@ namespace CompetitionCreator
                 turnA = !turnA;
                 weeks.Remove(week);
             }
-
-
-  //          for (int i = 0; i + 1 < weeks.Count; i += 2)
-  //          {
-  //              var el1 = weeks.ElementAt(i);
-  //              var el2 = weeks.ElementAt(i + 1);
-  //              if (el1.Value.nonChangeableA + el2.Value.nonChangeableB > el1.Value.nonChangeableB + el2.Value.nonChangeableA)
-  //              {
-  //                  AWeeks.Add(el1.Key);
-  //                  BWeeks.Add(el2.Key);
-  //              }
-  //              else if (el1.Value.nonChangeableA + el2.Value.nonChangeableB < el1.Value.nonChangeableB + el2.Value.nonChangeableA)
-  //              {
-  //                  AWeeks.Add(el2.Key);
-  //                  BWeeks.Add(el1.Key);
-  //              }
-  //              else
-  //              if (el1.Value.countA + el2.Value.countB > el1.Value.countB + el2.Value.countA)
-  //              {
-  //                  AWeeks.Add(el1.Key);
-  //                  BWeeks.Add(el2.Key);
-  //              }
-  //              else if (el1.Value.countA + el2.Value.countB < el1.Value.countB + el2.Value.countA)
-  //              {
-  //                  AWeeks.Add(el2.Key);
-  //                  BWeeks.Add(el1.Key);
-  //              }
-  //              else
-  //              {
-  //                  if (new Random().Next(2) == 0)
-  //                  {
-  //                      AWeeks.Add(el2.Key);
-  //                      BWeeks.Add(el1.Key);
-  //                  }
-  //                  else
-  //                  {
-  //                      AWeeks.Add(el1.Key);
-  //                      BWeeks.Add(el2.Key);
-  //                  }
-  //              }
-  //          }
-  //          // Determine who gets the last week
-  //          if (weeks.Count % 2 == 1)
-  //          {
-  //              if (GroupA.Count > GroupB.Count)
-  //                  AWeeks.Add(weeks.Keys.Last());
-  //              else
-  //                  BWeeks.Add(weeks.Keys.Last());
-  //          }
-//            foreach (var el in weeks)
-//            {
-//                Console.WriteLine("{0}: A:{1} B:{2}", el.Key.WeekNumber, el.Value.countA, el.Value.countB);
-//            }
-//
-//            Console.Write("new A: ");
-//            foreach (var w in AWeeks)
-//                Console.Write("{0}, ", w.WeekNumber);
-//            Console.WriteLine();
-//            Console.Write("new B: ");
-//            foreach (var w in AWeeks)
-//                Console.Write("{0}, ", w.WeekNumber);
-//            Console.WriteLine();
-        }
+          }
 
         uint evaluateCount = 0;
         public override void Evaluate(Model model)
@@ -1359,7 +1286,7 @@ namespace CompetitionCreator
             if (evaluateCount == 0)
                 DetermineWeeks();
             evaluateCount++;
-            if (evaluateCount > 1000)
+            if (evaluateCount > 10000)
                 evaluateCount = 0;
             conflictMatches.Clear();
             conflict_cost = 0;
