@@ -333,6 +333,7 @@ namespace CompetitionCreator
             {
                 List<Match> sortedMatches = new List<Match>(poule.matches);
                 sortedMatches.Sort(delegate(Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
+                sortedMatches = sortedMatches.Where((Match m) => m.RealMatch()).ToList();
                 foreach (Team team in poule.teams)
                 {
                     List<Match> maxMatches = new List<Match>();
@@ -347,11 +348,9 @@ namespace CompetitionCreator
                     {
                         if (match.homeTeam == team)
                         {
-                            if (match.RealMatch())
-                            {
-                                if (matchNr < poule.maxTeams) homeFirstHalf.Add(match);
-                                else homeSecondHalf.Add(match);
-                            }
+                            if (matchNr < poule.TeamCount) homeFirstHalf.Add(match);
+                            else homeSecondHalf.Add(match);
+
                             visitorMatches = new List<Match>();
                             homeMatches.Add(match);
                             matchNr++;
@@ -381,6 +380,8 @@ namespace CompetitionCreator
                             else AddConflictMatch(VisitorHomeBoth.VisitorOnly, match);
                         }
                     }
+                    if (maxMatches.Count >= MySettings.Settings.MatchTooManyAfterEachOther - 1)
+                        cost += 5;
                     // Ideal to spread home/visit evenly. Also for further optimisation
                     conflict_cost += Math.Max(0, homeFirstHalf.Count - ((int)((poule.TeamCount + 1) / 2)));
                     conflict_cost += Math.Max(0, homeSecondHalf.Count - ((int)((poule.TeamCount + 1) / 2)));
@@ -396,7 +397,7 @@ namespace CompetitionCreator
                     {
                         foreach (Match match in homeSecondHalf)
                         {
-                            conflict_cost += cost;
+                            conflict_cost += MySettings.Settings.MatchTooManyAfterEachOtherCostMedium;
                             //AddConflictMatch(VisitorHomeBoth.HomeOnly, match);
                         }
                     }
@@ -628,7 +629,11 @@ namespace CompetitionCreator
                                     {
                                         var dt = firstPlayed[i].datetime.AddDays(-3);
                                         if (dt > firstWeekend[i])
+                                        {
                                             AddConflictMatch(VisitorHomeBoth.HomeOnly, firstPlayed[i]);
+                                            // The earlier the better to have this game. Required for optimization
+                                            conflict_cost += (int)dt.Subtract(firstWeekend[i]).TotalSeconds;
+                                        }
                                     }
                                 }
                             }
