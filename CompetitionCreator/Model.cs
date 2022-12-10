@@ -82,6 +82,18 @@ namespace CompetitionCreator
             }
 
         }
+
+        public void ReInit()
+        {
+            lock (this)
+            {
+                foreach (Constraint constraint in constraints)
+                {
+                    constraint.ReInit();
+                }
+            }
+        }
+
         public void Evaluate(Poule p)
         {
             lock (this)
@@ -225,7 +237,8 @@ namespace CompetitionCreator
                     constraints.Add(new ConstraintClubTooManyConflicts(club));
                     constraints.Add(new ConstraintTeamNaming(club));
                 }
-
+                foreach (var con in constraints)
+                    con.ReInit();
                 foreach (Poule poule in poules)
                 {
                     poule.CalculateRelatedConstraints(this);

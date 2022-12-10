@@ -41,6 +41,9 @@ namespace CompetitionCreator
 
     public abstract class Constraint
     {
+        public virtual void ReInit()
+        { }
+
         public bool VisitorAlso = true;
         List<Error> errors = new List<Error>();
         public List<Error> GetErrors()
@@ -1070,6 +1073,7 @@ namespace CompetitionCreator
         {
             VisitorAlso = false;
             name = "Group constraints";
+            ReInit();
         }
         public override bool RelatedTo(List<Team> teams)
         {
@@ -1206,7 +1210,7 @@ namespace CompetitionCreator
 
             public int score(bool A)
             {
-                int temp = (nonChangeableA - nonChangeableB) * 100 + countA - countB - sporthalNotAvailableA + sporthalNotAvailableB; ;
+                int temp = (nonChangeableA - nonChangeableB) * 10 + countA - countB - (sporthalNotAvailableA + sporthalNotAvailableB) * 10;
                 return A? temp:-temp;
             }
         };
@@ -1280,14 +1284,12 @@ namespace CompetitionCreator
             }
           }
 
-        uint evaluateCount = 0;
+        public override void ReInit()
+        {
+            DetermineWeeks();
+        }
         public override void Evaluate(Model model)
         {
-            if (evaluateCount == 0)
-                DetermineWeeks();
-            evaluateCount++;
-            if (evaluateCount > 10000)
-                evaluateCount = 0;
             conflictMatches.Clear();
             conflict_cost = 0;
             cost = 0;

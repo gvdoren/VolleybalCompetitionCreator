@@ -154,6 +154,7 @@ namespace CompetitionCreator
                             }
                         }
                         model.Evaluate(poule);
+                        model.ReInit();
                         model.Changed();
                     }
                     lock (model)
