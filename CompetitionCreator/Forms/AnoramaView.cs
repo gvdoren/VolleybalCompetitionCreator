@@ -28,8 +28,11 @@ namespace CompetitionCreator
         }
         private void UpdateForm()
         {
-            while (objectListView1.AllColumns.Count > 1) objectListView1.AllColumns.RemoveAt(1);
-            while (objectListView1.Columns.Count > 1) objectListView1.Columns.RemoveAt(1);
+            objectListView1.AllColumns.RemoveRange(1, objectListView1.AllColumns.Count -1);
+            objectListView1.Columns.Clear();
+            objectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            objectListView1.AllColumns[0]});
+
             List<YearPlanWeek> anWeeks = new List<YearPlanWeek>();
             MatchWeek week = new MatchWeek(model.yearPlans.start);
             DateTime current = model.yearPlans.start;
@@ -58,14 +61,14 @@ namespace CompetitionCreator
                 olvColumn.CellPadding = null;
                 olvColumn.CheckBoxes = false;
                 olvColumn.Text = reeks.Name;
-                olvColumn.Width = 25;
-                olvColumn.AutoResize(ColumnHeaderAutoResizeStyle.HeaderSize);
+                olvColumn.Width = Math.Max(20 + reeks.Name.Length * 5, 25);
+                //olvColumn.AutoResize(ColumnHeaderAutoResizeStyle.HeaderSize);
                 olvColumn.Sortable = false;
                 //olvColumn.AspectName = "weekNrString";
             }
             anWeeks.Sort((anw1, anw2) => { return anw1.week.CompareTo(anw2.week); });
             objectListView1.SetObjects(anWeeks);
-            objectListView1.BuildList(false);
+            objectListView1.BuildList(true);
             label1.Text = model.yearPlans.title;
         }
         private void button1_Click(object sender, EventArgs e)
@@ -85,77 +88,40 @@ namespace CompetitionCreator
             form.ShowDialog();
             if (form.Result)
             {
-                InputForm form1 = new InputForm("Number of matches", "Enter the maximum number of matches (weeks) each team plays in this year plan.");
-                form1.ShowDialog();
-                if(form1.Result)
-                {
-                    int count = 0;
-                    if (int.TryParse(form1.GetInputString(), out count))
-                    {
-                        model.yearPlans.reeksen.Add(model.yearPlans.CreateYearPlan(form.GetInputString(),count));
-                        UpdateForm();
-                        model.yearPlans.WriteXML();
-                    }
-                }
+               model.yearPlans.reeksen.Add(model.yearPlans.CreateYearPlan(form.GetInputString()));
+               UpdateForm();
+               model.yearPlans.WriteXML();
             }
-
         }
 
-
-        private void objectListView1_MouseClick(object sender, MouseEventArgs e)
-        {
-        }
-
-        private void objectListView1_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-        }
 
         private void objectListView1_CellClick(object sender, CellClickEventArgs e)
         {
-            if (e.Column.Index > model.yearPlans.reeksen.Count) return;
+            if (e.Column == null || e.Column.Index > model.yearPlans.reeksen.Count) return;
             YearPlanWeek week = (YearPlanWeek)objectListView1.SelectedObject;
             if (e.Column.Index > 0)
             {
                 YearPlan reeks = model.yearPlans.reeksen[e.Column.Index - 1];
                 YearPlanWeek anWeek = reeks.weeks.Find(w => w.week == week.week);
-                if (e.Column.Index > 0)
+                if (anWeek != null)
+                    reeks.weeks.Remove(anWeek);
+                else
                 {
-                    List<Selection> list = new List<Selection>();
-                    for (int i = 1; i <= reeks.WeekCount + 2; i++)
+                    for (int i = 1; ; i++)
                     {
                         if (reeks.weeks.Exists(w => w.weekNr == i) == false)
                         {
                             YearPlanWeek w = new YearPlanWeek(week.week);
                             w.weekNr = i;
-                            string reserve = "";
-                            if (i > reeks.WeekCount)
-                            {
-                                w.week.round = i - reeks.WeekCount - 1;
-                                reserve = " (Reserve round-"+(w.week.round+1).ToString() + ")";
-                            }
-                            Selection sel = new Selection(i.ToString() + reserve, w);
-                            list.Add(sel);
+                            reeks.weeks.Add(w);
+                            break;
                         }
                     }
-                    Selection sel1 = new Selection("No matches", null);
-                    list.Add(sel1);
-                    if (list.Find(el => el.selected == true) == null && list.Count > 0) list[0].selected = true;
-
-                    SelectionDialog diag = new SelectionDialog(list, false);
-                    diag.Text = "Select the week number:";
-                    diag.ShowDialog();
-                    if (diag.Ok)
-                    {
-                        if (anWeek != null)
-                            reeks.weeks.Remove(anWeek);
-                        if (diag.Selection.obj != null)
-                        {
-                            reeks.weeks.Add((YearPlanWeek) diag.Selection.obj);
-                        } 
-                    }
-                    objectListView1.BuildList(true);
-                    model.yearPlans.WriteXML();
                 }
+                objectListView1.BuildList(true);
+                objectListView1.RedrawItems(e.Column.Index, e.Column.Index+1,  false);
+                model.yearPlans.WriteXML();
+               
             }
         }
 
@@ -202,7 +168,7 @@ namespace CompetitionCreator
             {
                 YearPlanWeek we = (YearPlanWeek)rowObject;
                 YearPlanWeek anWe = reeks.weeks.Find(w => w.week == we.week);
-                if (anWe!= null) return anWe.weekNrString(reeks.WeekCount);
+                if (anWe != null) return anWe.weekNr.ToString();
                 else return "-";
             };
         }

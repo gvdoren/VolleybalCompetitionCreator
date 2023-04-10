@@ -47,6 +47,7 @@
             this.olvColumn1});
             this.objectListView1.FullRowSelect = true;
             this.objectListView1.GridLines = true;
+            this.objectListView1.HideSelection = false;
             this.objectListView1.Location = new System.Drawing.Point(12, 38);
             this.objectListView1.MultiSelect = false;
             this.objectListView1.Name = "objectListView1";
@@ -58,19 +59,16 @@
             this.objectListView1.View = System.Windows.Forms.View.Details;
             this.objectListView1.CellClick += new System.EventHandler<BrightIdeasSoftware.CellClickEventArgs>(this.objectListView1_CellClick);
             this.objectListView1.CellRightClick += new System.EventHandler<BrightIdeasSoftware.CellRightClickEventArgs>(this.objectListView1_CellRightClick);
-            this.objectListView1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.objectListView1_MouseClick);
-            this.objectListView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.objectListView1_MouseDoubleClick);
             // 
             // olvColumn1
             // 
             this.olvColumn1.AspectName = "Representation";
             this.olvColumn1.AspectToStringFormat = "";
             this.olvColumn1.CellPadding = null;
-            this.olvColumn1.FillsFreeSpace = true;
-            this.olvColumn1.MinimumWidth = 70;
+            this.olvColumn1.MinimumWidth = 100;
             this.olvColumn1.Sortable = false;
             this.olvColumn1.Text = "Week";
-            this.olvColumn1.Width = 70;
+            this.olvColumn1.Width = 140;
             // 
             // button1
             // 

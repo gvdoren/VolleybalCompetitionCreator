@@ -11,7 +11,6 @@ namespace CompetitionCreator
     public class YearPlan
     {
         public string Name;
-        public int WeekCount;
         public List<YearPlanWeek> weeks = new List<YearPlanWeek>();
     }
     
@@ -39,13 +38,7 @@ namespace CompetitionCreator
         }
         public string weekNrString(int max)
         {
-            if (weekNr < 0) return "-";
-            else
-            {
-                string reserve = "";
-                if (weekNr > max) reserve = " R-"+week.round;
-                return weekNr.ToString() + reserve;
-            }
+            return weekNr.ToString();
         }
     }
 
@@ -66,11 +59,10 @@ namespace CompetitionCreator
         {
             return reeksen.Find(w => w.Name == name);
         }
-        public YearPlan CreateYearPlan(string name, int weekCount)
+        public YearPlan CreateYearPlan(string name)
         {
             YearPlan reeks = new YearPlan();
             reeks.Name = name;
-            reeks.WeekCount = weekCount;
        
             return reeks;
         }
@@ -91,7 +83,6 @@ namespace CompetitionCreator
                 {
                     writer.WriteStartElement("Reeks");
                     writer.WriteAttributeString("Name", reeks.Name);
-                    writer.WriteAttributeString("WeekCount", reeks.WeekCount.ToString());
                     writer.WriteStartElement("Weeks");
                     foreach (YearPlanWeek week in reeks.weeks)
                     {
@@ -130,8 +121,7 @@ namespace CompetitionCreator
                 foreach (XElement reeks in Reeksen)
                 {
                     string name = ImportExport.StringAttribute(reeks, "Name");
-                    int weekCount = ImportExport.IntegerAttribute(reeks, "WeekCount");
-                    YearPlan re = CreateYearPlan(name, weekCount);
+                    YearPlan re = CreateYearPlan(name);
                     IEnumerable<XElement> Weeks = ImportExport.Element(reeks, "Weeks").Elements("Week");
                     foreach (XElement week in Weeks)
                     {

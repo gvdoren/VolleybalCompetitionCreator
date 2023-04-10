@@ -228,7 +228,7 @@ namespace CompetitionCreator
         }
         private bool selectYearPlan(int weekCount, ref YearPlan result)
         {
-            List<YearPlan> yearPlans = model.yearPlans.reeksen.FindAll(p => p.WeekCount == weekCount);
+            List<YearPlan> yearPlans = model.yearPlans.reeksen.FindAll(p => p.weeks.Count == weekCount);
             List<Selection> possiblePlans = new List<Selection>();
             foreach (YearPlan plan in yearPlans)
             {
