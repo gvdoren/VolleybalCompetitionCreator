@@ -1216,7 +1216,7 @@ namespace CompetitionCreator
 
             public int score(bool A)
             {
-                int temp = (nonChangeableA - nonChangeableB) * 10 + countA - countB - (sporthalNotAvailableA + sporthalNotAvailableB) * 10;
+                int temp = (nonChangeableA - nonChangeableB) * 10 + countA - countB - (sporthalNotAvailableA - sporthalNotAvailableB) * 10;
                 return A? temp:-temp;
             }
         };
