@@ -328,6 +328,7 @@ namespace CompetitionCreator
         public override void Evaluate(Model model)
         {
             conflict_cost = 0;
+            cost = MySettings.Settings.MatchTooManyAfterEachOtherCostLow;
             conflictMatches.Clear();
             if (poule.evaluated)
             {
