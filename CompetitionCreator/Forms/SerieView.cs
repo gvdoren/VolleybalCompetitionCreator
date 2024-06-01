@@ -129,7 +129,7 @@ namespace CompetitionCreator
             List<Sporthal> sl = new List<Sporthal>();
             if (objectListView1.SelectedObjects.Count > 0)
             {
-                bool geoInfo = false;
+                // bool geoInfo = false;
                 string markers = "";
                 bool first = true;
                 button4.Enabled = objectListView1.SelectedObjects.Count == 1; // Not optimizing when multiple are selected
@@ -158,7 +158,7 @@ namespace CompetitionCreator
                             markers += string.Format("['{0}',{1},{2},'{3}']\n", name, lat.ToString(CultureInfo.InvariantCulture), lng.ToString(CultureInfo.InvariantCulture), letter);
                             first = false;
                             sl.Add(t.sporthal.sporthall);
-                            geoInfo = true;
+                            // geoInfo = true;
                         }
                         else
                         {

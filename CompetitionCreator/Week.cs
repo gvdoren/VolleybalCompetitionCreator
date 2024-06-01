@@ -46,6 +46,7 @@ namespace CompetitionCreator
         {
             this.round = week.round;
             this.dayOverruled = week.dayOverruled;
+            this.OverruledDay = week.OverruledDay;
             this.date = week.date;
             CalculateMonday();
         }

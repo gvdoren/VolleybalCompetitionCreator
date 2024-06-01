@@ -132,7 +132,7 @@ namespace CompetitionCreator
         public int NotAllInSameWeekCost { get; set; }
         [Category("Constraints")]
         [DisplayName("Constraint.Play.At.Same.Time.Cost")]
-        [DefaultValue(1)]
+        [DefaultValue(10000)]
         public int PlayAtSameTime { get; set; }
         [Category("Constraints")]
         [DisplayName("Constraint.Play.At.Same.Time.Normal.Length.Match")]

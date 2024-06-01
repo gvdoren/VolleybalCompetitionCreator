@@ -127,6 +127,7 @@ namespace CompetitionCreator
                 foreach (Constraint constraint in constraints)
                 {
                     conflicts += constraint.conflict_cost;
+                    //Console.WriteLine("{0} - {1}", constraint.name, constraint.conflict_cost);
                 }
                 return conflicts;
             }

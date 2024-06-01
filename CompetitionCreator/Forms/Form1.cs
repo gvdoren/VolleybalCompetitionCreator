@@ -418,7 +418,7 @@ namespace CompetitionCreator
                     var provincie = (SiteImporter.ProvincieInfo)diag.Selection.obj;
                     SiteImporter.SiteImporter.ImportSite(provincie);
                     importExport.ImportTeamSubscriptions(model, XDocument.Load(BaseDirectory + "\\" + provincie.Name + "_inschrijvingen.xml", LoadOptions.SetLineInfo | LoadOptions.SetBaseUri).Root);
-                    importExport.ImportCSV(model, BaseDirectory + "\\" + provincie.Name + "_huidige_wedstrijden.csv");
+                    importExport.ImportCSV(model, BaseDirectory + "\\" + provincie.Name + "_huidige_wedstrijden.csv", false);
                     closeViews();
                     model.RenewConstraints();
                     model.Evaluate(null);
@@ -512,7 +512,7 @@ namespace CompetitionCreator
         }
         public void openFileDialog1_FileOk2(object sender, CancelEventArgs e)
         {
-            importExport.ImportCSV(model, openFileDialog1.FileName);
+            importExport.ImportCSV(model, openFileDialog1.FileName, true);
         }
         private void subscriptionsToolStripMenuItem1_Click(object sender, EventArgs e)
         {
@@ -895,7 +895,40 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
         }
 
+        private void directFromVolleyVlaanderenCalendarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (model.licenseKey.ValidUntil() < DateTime.Now)
+            {
+                MessageBox.Show("License not valid any more");
+                return;
+            }
+            var list = new List<Selection>();
+            foreach (var provincie in SiteImporter.SiteImporter.provincies)
+            {
+                Selection sel = new Selection(provincie.Name, provincie);
+                list.Add(sel);
+            }
+            try
+            {
+                var diag = new SelectionDialog(list);
+                diag.ShowDialog();
+                if (diag.Ok)
+                {
+                    var provincie = (SiteImporter.ProvincieInfo)diag.Selection.obj;
+                    SiteImporter.SiteImporter.ImportSite(provincie);
+                    importExport.ImportCSV(model, BaseDirectory + "\\" + provincie.Name + "_huidige_wedstrijden.csv", true);
+                    closeViews();
+                    model.RenewConstraints();
+                    model.Evaluate(null);
+                    model.Changed();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Failed to import data from Volley Vlaanderen site (" + ex.ToString() + ")");
+            }
 
+        }
     }
 }
 

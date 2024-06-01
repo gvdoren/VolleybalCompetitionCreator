@@ -112,6 +112,8 @@ namespace CompetitionCreator
             OptimizePoules(intf, model.poules);
         }
 
+        static int countReInit = 0;
+
         private void OptimizePoules(IProgress intf, List<Poule> poules)
         {
             int score;
@@ -127,12 +129,14 @@ namespace CompetitionCreator
                             lock (model)
                             {
                                 intf.SetText("Optimizing - " + poule.serie.name + poule.name);
-                                poule.SnapShot(model);
+                                poule.SetInitialSnapShot(model);
                                 poule.OptimizeTeamAssignment(model, intf);
                                 //poule.OptimizeTeams(model, intf, state.optimizeLevel);
                                 if (poule.OptimizeSchema(model))
                                 {
+                                    poule.RestoreSnapShot(poule.bestSnapShot);
                                     if (intf.Cancelled() == false) poule.OptimizeWeeks(model, intf, GlobalState.optimizeLevel);
+                                    poule.RestoreSnapShot(poule.bestSnapShot);
                                     if (poule.maxTeams > 6)
                                     {
                                         if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema(model, intf, 4, GlobalState.optimizeLevel);
@@ -148,13 +152,13 @@ namespace CompetitionCreator
                                 }
                                 if (intf.Cancelled() == false) poule.OptimizeHomeVisitor(model, GlobalState.optimizeLevel > 0);
                                 if (intf.Cancelled() == false) poule.OptimizeHomeVisitorReverse(model, GlobalState.optimizeLevel > 0);
-                                poule.CopyAndClearSnapShot(model);
-                                Console.WriteLine(" - {1}:totalConflicts: {0}", model.TotalConflicts(), poule.fullName);
+                                poule.RestoreSnapShot(poule.bestSnapShot);
+
+                                model.Evaluate(poule);
                                 if (intf.Cancelled()) return;
                             }
                         }
                         model.Evaluate(poule);
-                        model.ReInit();
                         model.Changed();
                     }
                     lock (model)
@@ -162,6 +166,11 @@ namespace CompetitionCreator
                         ImportExport.WriteProject(model, model.savedFileName, true);
                     }
                 }
+
+                // This can increase cost, so not too often
+                if (countReInit++ % 10 == 0)
+                    model.ReInit();
+                model.Evaluate(null);
             } while (model.TotalConflictsSnapshot<score);
         }
         private void OptimizePoulesCompleted(IProgress intf)
@@ -279,9 +288,9 @@ namespace CompetitionCreator
                             lock (model)
                             {
                                 intf.SetText("Optimizing - " + poule.serie.name + poule.name);
-                                poule.SnapShot(model);
+                                poule.SetInitialSnapShot(model);
                                 poule.OptimizeHomeVisitor(model);
-                                poule.CopyAndClearSnapShot(model);
+                                poule.SetBestSnapShot(poule.bestSnapShot);
                                 if (intf.Cancelled()) return;
                             }
                         }

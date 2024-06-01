@@ -7,6 +7,18 @@ namespace CompetitionCreator
 {
     public class Poule: ConstraintAdmin
     {
+        public class SnapShot
+        {
+            public List<Team> resultTeams = new List<Team>();
+            public List<MatchWeek> resultWeeks = new List<MatchWeek>();
+            public List<Match> resultMatches = new List<Match>();
+            public int TotalRelatedConflicts = 0;
+            public int TotalConflicts = -1;
+        }
+
+        Stack<SnapShot> snapShots = new Stack<SnapShot>();
+        public SnapShot bestSnapShot = new SnapShot();
+
         // Temp lists for snapshot
         public bool imported = false;
         private int optimisationThreshold = 200;
@@ -28,12 +40,7 @@ namespace CompetitionCreator
             return OptimizeNumber(model) || OptimizeHomeVisit(model) || OptimizeSchema(model);
         }
         public bool evaluated { get { return serie.evaluated && imported == false; } }
-        List<Team> resultTeams = new List<Team>();
-        List<MatchWeek> resultWeeks = new List<MatchWeek>();
-        List<Match> resultMatches = new List<Match>();
-        List<Match> bla = new List<Match>();
         public List<Constraint> relatedConstraints = new List<Constraint>();
-        int minConflicts = 0;
         private int _maxTeams;
         public int maxTeams { get { return _maxTeams;}}
         public Serie serie = null;
@@ -132,12 +139,15 @@ namespace CompetitionCreator
             }
             return matches1;
         }
-        public void MakeDirty()
+
+        public List<MatchWeek> CopyWeeks(List<MatchWeek> weeks_org)
         {
-            foreach (Team team in teams)
+            List<MatchWeek> weeks1 = new List<MatchWeek>();
+            foreach (MatchWeek week in weeks_org)
             {
-                if (team.club != null) team.club.Dirty = true;
+                weeks1.Add(new MatchWeek(week));
             }
+            return weeks1;
         }
 
         public void CalculateRelatedConstraints(Model model)
@@ -195,10 +205,8 @@ namespace CompetitionCreator
 
         public void OptimizeWeeks(Model model, IProgress intf, int optimizationLevel)
         {
-            MakeDirty();
             if (OptimizeNumber(model))
             {
-                //SnapShot(model);
                 //if (conflict_cost > 0)
                 {
                     int round = 0;
@@ -215,33 +223,35 @@ namespace CompetitionCreator
                                 intf.Progress(totalIndex, weeks.Count);
                                 for (int j = i + 1; j < currentRoundList.Count; j++)
                                 {
+                                    var startSnapShot = CreateSnapShot(model);
                                     Swap(currentRoundList, i, j);
                                     weeks = new List<MatchWeek>(previousRoundList);
                                     weeks.AddRange(currentRoundList);
                                     weeks.AddRange(nextRoundList);
-                                    SnapShotIfImproved(model,false);
-                                    if (TotalRelatedConflictsLast < TotalRelatedConflictsSnapshot + optimisationThreshold)
+                                    var result = SnapShotIfImproved(model,false);
+                                    if (result == SnapshotStatus.Better || result == SnapshotStatus.Close)
                                     {
                                         if (optimizationLevel > 0) OptimizeHomeVisitor(model, optimizationLevel > 1);
                                     }
-                                    Swap(currentRoundList, i, j); 
+                                    RestoreSnapShot(startSnapShot);
                                     if (intf.Cancelled()) return;
-                                    matches = CopyMatches(resultMatches);
                                 }
-                                weeks = resultWeeks;
                                 if (intf.Cancelled()) break;
                             }
                         }
                         else // full optimalisation
                         {
+                            var startSnapShot = CreateSnapShot(model);
                             try
                             {
                                 List<MatchWeek> remaining = currentRoundList;
                                 weeks = new List<MatchWeek>(previousRoundList);
                                 GenerateWeekCombination(model, ref weeks, remaining, nextRoundList, intf);
-                                weeks = resultWeeks;
                             }
-                            catch { }
+                            finally 
+                            { 
+                                RestoreSnapShot(startSnapShot);
+                            }
                         }
                         totalIndex += currentRoundList.Count;
                         round++;
@@ -249,57 +259,62 @@ namespace CompetitionCreator
                 }
             }
         }
-        private int TotalRelatedConflictsSnapshot = 0;
-        private int TotalRelatedConflictsLast = 0;
-        public bool SnapShotIfImproved(Model model, bool equalAllowed = true)
+        public enum SnapshotStatus { Worse, Close, Better };
+        public SnapshotStatus SnapShotIfImproved(Model model, bool equalAllowed = true)
         {
-            if (snapShotTaken == false)
-            {
-                snapShotTaken = false;
-            }
-            model.EvaluateRelatedConstraints(this);
-            TotalRelatedConflictsLast = model.TotalRelatedConflicts(this);
-            if (TotalRelatedConflictsLast < TotalRelatedConflictsSnapshot)
+            SnapshotStatus result = SnapshotStatus.Worse;
+            var snapShot = CreateSnapShot(model);
+            if (snapShot.TotalRelatedConflicts < bestSnapShot.TotalRelatedConflicts)
             {
                 // check based on a full check:
                 model.Evaluate(this);
-                int total = model.TotalConflicts();
-                if (total < model.TotalConflictsSnapshot || (equalAllowed && total == model.TotalConflictsSnapshot))
-                {
-                    model.TotalConflictsSnapshot = total;
+                snapShot.TotalConflicts = model.TotalConflicts();
+                if (snapShot.TotalRelatedConflicts < bestSnapShot.TotalRelatedConflicts + optimisationThreshold)
+                    result = SnapshotStatus.Close;
+                if (snapShot.TotalConflicts < bestSnapShot.TotalConflicts || (equalAllowed && snapShot.TotalConflicts == bestSnapShot.TotalConflicts))
+                { 
+                    bestSnapShot = snapShot;
                     model.stateNotSaved = true;
-                    SnapShot(model);
-                    return true;
+                    result = SnapshotStatus.Better;
                 }
             }
-            return false;
+            return result;
         }
-        bool snapShotTaken = false;
-        public void SnapShot(Model model)
+        public SnapShot CreateSnapShot(Model model)
         {
-            if (snapShotTaken == true)
-            {
-                snapShotTaken = true;
-            }
-            snapShotTaken = true;
-            //model.Evaluate(null);
             model.EvaluateRelatedConstraints(this);
-            TotalRelatedConflictsSnapshot = model.TotalRelatedConflicts(this);
-            resultTeams = new List<Team>(teams);
-            resultWeeks = new List<MatchWeek>(weeks);
-            resultMatches = CopyMatches(matches);
-            minConflicts = conflict_cost;
+            SnapShot snapShot = new Poule.SnapShot();
+            snapShot.TotalRelatedConflicts = model.TotalRelatedConflicts(this);
+            snapShot.resultTeams = new List<Team>(teams);
+            snapShot.resultWeeks = CopyWeeks(weeks);
+            snapShot.resultMatches = CopyMatches(matches);
+            return snapShot;
         }
-        public void CopyAndClearSnapShot(Model model)
+
+        public void SetInitialSnapShot(Model model)
         {
-            if (snapShotTaken)
-            {
-                snapShotTaken = false;
-                teams = resultTeams;
-                weeks = resultWeeks;
-                matches = CopyMatches(resultMatches);
-                model.Evaluate(null);
-            }
+            var sn = CreateSnapShot(model);
+            model.Evaluate(this);
+            sn.TotalConflicts = model.TotalConflicts();
+            bestSnapShot = sn;
+        }
+
+        public void SetBestSnapShot(SnapShot snapShot)
+        {
+            SnapShot newSnapShot = new Poule.SnapShot();
+            newSnapShot.TotalRelatedConflicts = snapShot.TotalRelatedConflicts;
+            newSnapShot.resultTeams = new List<Team>(snapShot.resultTeams);
+            newSnapShot.resultWeeks = CopyWeeks(snapShot.resultWeeks);
+            newSnapShot.resultMatches = CopyMatches(snapShot.resultMatches);
+
+            bestSnapShot = newSnapShot;
+        }
+
+        public void RestoreSnapShot(SnapShot snapShot)
+        {
+            teams = new List<Team>(snapShot.resultTeams);
+            weeks = CopyWeeks(snapShot.resultWeeks);
+            matches = CopyMatches(snapShot.resultMatches);
         }
 
         private void Swap(List<MatchWeek> list, int i, int j)
@@ -366,12 +381,11 @@ namespace CompetitionCreator
 
         public void OptimizeTeam(Model model, IProgress intf, Team team, int optimizationLevel)
         {
-            MakeDirty();
             if (OptimizeNumber(model))
             {
                 //if (conflict_cost > 0)
                 {
-                    SnapShot(model);
+                    var startSnapShot = CreateSnapShot(model);
                     int teamindex = teams.FindIndex(t => t == team);
                     for (int i = 0; i < maxTeams; i++)
                     {
@@ -391,18 +405,18 @@ namespace CompetitionCreator
                             break;
                         }
                     }
-                    CopyAndClearSnapShot(model);
+                    RestoreSnapShot(startSnapShot);
                 }
             }
         }
 
         public void OptimizeTeamAssignment(Model model, IProgress intf)
         {
-            MakeDirty();
             if (OptimizeNumber(model))
             {
                 //if (conflict_cost > 0)
                 {
+                    var startSnapShot = CreateSnapShot(model);
                     if (maxTeams <= 6 && GlobalState.optimizeLevel > 0)
                     {
                         OptimizeFullTeamAssignment(model, intf);
@@ -430,16 +444,16 @@ namespace CompetitionCreator
                             }
                         }
                     }
-                    teams = new List<Team>(resultTeams);
+                    RestoreSnapShot(startSnapShot);
                 }
             }
         }
 
         public int[,] AnalyzeTeamAssignment(Model model, IProgress intf)
         {
+            var startSnapShot = CreateSnapShot(model);
             int[,] score = new int[maxTeams,maxTeams];
             List<Team> fixedOrderList = new List<Team>(teams);
-            MakeDirty();
             for(int k = 1;k<=maxTeams;k++)
             {
                 teams.Add(teams[0]);
@@ -457,7 +471,7 @@ namespace CompetitionCreator
                     index++;
                 }
             }
-            teams = new List<Team>(resultTeams);
+            RestoreSnapShot(startSnapShot);
             return score;
         }
 
@@ -470,7 +484,7 @@ namespace CompetitionCreator
         {
             if (evaluated == false) // This optimization will not work otherwise since all own conflicts are zero
                 return;
-            SnapShot(model);
+            var startSnapShot = CreateSnapShot(model);
 
             //var i = RandomNumber(0, maxTeams - 1);
             //var j = RandomNumber(0, maxTeams);
@@ -493,16 +507,16 @@ namespace CompetitionCreator
                 SnapShotIfImproved(model, false);
                 teams = temp;
             }
-            teams = new List<Team>(resultTeams);
+            RestoreSnapShot(startSnapShot);
         }
         
         public void OptimizeFullTeamAssignment(Model model, IProgress intf)
         {
-            MakeDirty();
             if (OptimizeNumber(model))
             {
                 //if (conflict_cost > 0)
                 {
+                    var startSnapShot = CreateSnapShot(model);
                     List<Team> temp = new List<Team>(teams);
                     teams = new List<Team>();
                     try
@@ -510,7 +524,7 @@ namespace CompetitionCreator
                         GenerateTeamCombination(model, temp, intf);
                     }
                     catch { }
-                    teams = new List<Team>(resultTeams);
+                    RestoreSnapShot(startSnapShot);
 
                 }
             }
@@ -632,7 +646,6 @@ namespace CompetitionCreator
             bool changed = false;
             int compareTo = 0;
             if (tryZeroCostMatches) compareTo = -1;
-            MakeDirty();
             if (OptimizeHomeVisit(model))
             {
                 foreach (Match match in matches)
@@ -640,7 +653,7 @@ namespace CompetitionCreator
                     if (match.conflict_cost > compareTo)
                     {
                         SwitchHomeTeamVisitorTeam(model, match);
-                        if (SnapShotIfImproved(model,false) == false)
+                        if (SnapShotIfImproved(model,false) == SnapshotStatus.Worse)
                         { // switch back
                             SwitchHomeTeamVisitorTeam(model, match);
                         }
@@ -650,8 +663,6 @@ namespace CompetitionCreator
                         }
                     }
                 }
-                if(changed) 
-                    matches = CopyMatches(resultMatches);
             }
             return changed;
         }
@@ -659,7 +670,6 @@ namespace CompetitionCreator
         {
             int compareTo = 0;
             if (equalAllowed) compareTo = -1;
-            MakeDirty();
             if (OptimizeHomeVisit(model))
             {
                 List<Match> reverseMatches = new List<Match>(matches);
@@ -669,13 +679,12 @@ namespace CompetitionCreator
                     if (match.conflict_cost > compareTo)
                     {
                         SwitchHomeTeamVisitorTeam(model, match);
-                        if (SnapShotIfImproved(model, false) == false)
+                        if (SnapShotIfImproved(model, false) == SnapshotStatus.Worse)
                         { // switch back
                             SwitchHomeTeamVisitorTeam(model, match);
                         }
                     }
                 }
-                matches = CopyMatches(resultMatches);
             }
         }
         public bool OptimizeSchema6(Model model, IProgress intf, int optimizationLevel)
@@ -719,10 +728,7 @@ namespace CompetitionCreator
                     count++;
                     intf.Progress(count, schemas.Count * 2);
                     if (intf.Cancelled())
-                    {
-                        matches = CopyMatches(resultMatches);
                         return false;
-                    }
 
                     //List<Match> selectedMatches1 = matches.Where(m => m.Week.round == round).ToList();
                     for (int i = 0; i < selectedMatches.Count; i++)
@@ -730,8 +736,8 @@ namespace CompetitionCreator
                         Match m = selectedMatches[i];
                         m.weekIndex = indexes[(int)sch[i]];
                     }
-                    SnapShotIfImproved(model,false);
-                    if (TotalRelatedConflictsLast < TotalRelatedConflictsSnapshot + optimisationThreshold) // kans nog aanwezig op goede score
+                    var result = SnapShotIfImproved(model,false);
+                    if (result == SnapshotStatus.Better || result == SnapshotStatus.Close) // kans nog aanwezig op goede score
                     {
                         if (optimizationLevel > 1)
                         {
@@ -779,7 +785,6 @@ namespace CompetitionCreator
         {
             if (maxTeams > 6)
             {
-                MakeDirty();
                 if (OptimizeNumber(model))
                 {
                     List<Match>[] matchesPerWeek = new List<Match>[weeks.Count];
@@ -792,7 +797,6 @@ namespace CompetitionCreator
                         intf.Progress(index1, weeks.Count);
                         if (intf.Cancelled())
                         {
-                            matches = CopyMatches(resultMatches);
                             return false;
                         }
                         try
@@ -832,10 +836,9 @@ namespace CompetitionCreator
                                         }
                                         if (validWeek)
                                         {
-                                            int tempTotalConflicts = model.TotalConflictsSnapshot;
                                             SwitchMatches(index1, matches1, index2, matches2);
-                                            SnapShotIfImproved(model, false);
-                                            if (TotalRelatedConflictsLast < TotalRelatedConflictsSnapshot + optimisationThreshold)
+                                            var result = SnapShotIfImproved(model, false);
+                                            if (result == SnapshotStatus.Better || result == SnapshotStatus.Close)
                                             {
                                                 if (OptimizeHomeVisitor(model, optimizationLevel > 1))
                                                     throw new Exception();  // admin is not correct any more
@@ -895,7 +898,6 @@ namespace CompetitionCreator
         {
             if (maxTeams > 6)
             {
-                MakeDirty();
                 if (OptimizeNumber(model))
                 {
                     int matchCount = 0;
@@ -904,10 +906,7 @@ namespace CompetitionCreator
                         int round = weeks[index].round;
                         intf.Progress(index, weeks.Count);
                         if (intf.Cancelled())
-                        {
-                            matches = CopyMatches(resultMatches);
                             return false;
-                        }
                         try
                         {
                             List<Match> matchesDay = matches.Where(m => m.weekIndex == index).ToList();
@@ -949,15 +948,14 @@ namespace CompetitionCreator
                                                 Match match_1 = threeMatches[index2][0];
                                                 Match match_2 = threeMatches[index2][1];
                                                 Match match_3 = threeMatches[index2][2];
-                                                int tempTotalConflicts = model.TotalConflictsSnapshot;
                                                 match1.weekIndex = index2;
                                                 match2.weekIndex = index2;
                                                 match3.weekIndex = index2;
                                                 match_1.weekIndex = index;
                                                 match_2.weekIndex = index;
                                                 match_3.weekIndex = index;
-                                                SnapShotIfImproved(model,false);
-                                                if (TotalRelatedConflictsLast < TotalRelatedConflictsSnapshot + optimisationThreshold)
+                                                var result = SnapShotIfImproved(model,false);
+                                                if (result == SnapshotStatus.Better || result == SnapshotStatus.Close)
                                                 {
                                                     if (OptimizeHomeVisitor(model, optimizationLevel > 1))
                                                         throw new Exception();  // admin is not correct any more

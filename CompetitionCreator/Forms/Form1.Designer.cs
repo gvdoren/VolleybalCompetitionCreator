@@ -57,6 +57,7 @@
             this.importRankingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importRankingWebsiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cSVCompetitionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importSavedOutputOverlappingCompetition = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportCompetitionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportRegistrationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -102,10 +103,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dockPanel.DocumentStyle = WeifenLuo.WinFormsUI.Docking.DocumentStyle.DockingWindow;
-            this.dockPanel.Location = new System.Drawing.Point(0, 42);
-            this.dockPanel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.dockPanel.Location = new System.Drawing.Point(0, 27);
             this.dockPanel.Name = "dockPanel";
-            this.dockPanel.Size = new System.Drawing.Size(960, 323);
+            this.dockPanel.Size = new System.Drawing.Size(640, 210);
             dockPanelGradient1.EndColor = System.Drawing.SystemColors.ControlLight;
             dockPanelGradient1.StartColor = System.Drawing.SystemColors.ControlLight;
             autoHideStripSkin1.DockStripGradient = dockPanelGradient1;
@@ -156,7 +156,6 @@
             // 
             // menuStrip1
             // 
-            this.menuStrip1.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.invoerToolStripMenuItem,
@@ -167,7 +166,8 @@
             this.errorsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(960, 35);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 1, 0, 1);
+            this.menuStrip1.Size = new System.Drawing.Size(640, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -183,14 +183,14 @@
             this.reportToolStripMenuItem1,
             this.utilitiesToolStripMenuItem});
             this.invoerToolStripMenuItem.Name = "invoerToolStripMenuItem";
-            this.invoerToolStripMenuItem.Size = new System.Drawing.Size(54, 29);
+            this.invoerToolStripMenuItem.Size = new System.Drawing.Size(37, 22);
             this.invoerToolStripMenuItem.Text = "File";
             this.invoerToolStripMenuItem.DropDownOpened += new System.EventHandler(this.invoerToolStripMenuItem_DropDownOpened);
             // 
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.newToolStripMenuItem.Text = "New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
@@ -198,7 +198,7 @@
             // 
             this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
             this.loadToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.loadToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.loadToolStripMenuItem.Text = "Open ...";
             this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
             // 
@@ -206,14 +206,14 @@
             // 
             this.saveToolStripMenuItem1.Name = "saveToolStripMenuItem1";
             this.saveToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem1.Size = new System.Drawing.Size(270, 34);
+            this.saveToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.saveToolStripMenuItem1.Text = "Save";
             this.saveToolStripMenuItem1.Click += new System.EventHandler(this.saveToolStripMenuItem1_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveToolStripMenuItem.Text = "Save as ...";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
@@ -224,45 +224,53 @@
             this.importSubscriptionsToolStripMenuItem,
             this.importRankingToolStripMenuItem,
             this.importRankingWebsiteToolStripMenuItem,
-            this.cSVCompetitionToolStripMenuItem});
+            this.cSVCompetitionToolStripMenuItem,
+            this.importSavedOutputOverlappingCompetition});
             this.importToolStripMenuItem.Name = "importToolStripMenuItem";
-            this.importToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.importToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.importToolStripMenuItem.Text = "Import";
             // 
             // subscriptionsToolStripMenuItem1
             // 
             this.subscriptionsToolStripMenuItem1.Name = "subscriptionsToolStripMenuItem1";
-            this.subscriptionsToolStripMenuItem1.Size = new System.Drawing.Size(349, 34);
+            this.subscriptionsToolStripMenuItem1.Size = new System.Drawing.Size(306, 22);
             this.subscriptionsToolStripMenuItem1.Text = "Registrations - file";
             this.subscriptionsToolStripMenuItem1.Click += new System.EventHandler(this.subscriptionsToolStripMenuItem1_Click);
             // 
             // importSubscriptionsToolStripMenuItem
             // 
             this.importSubscriptionsToolStripMenuItem.Name = "importSubscriptionsToolStripMenuItem";
-            this.importSubscriptionsToolStripMenuItem.Size = new System.Drawing.Size(349, 34);
-            this.importSubscriptionsToolStripMenuItem.Text = "Direct from Volley Vlaanderen";
+            this.importSubscriptionsToolStripMenuItem.Size = new System.Drawing.Size(306, 22);
+            this.importSubscriptionsToolStripMenuItem.Text = "Direct from Volley Vlaanderen - registrations";
             this.importSubscriptionsToolStripMenuItem.Click += new System.EventHandler(this.ImportSubscriptionsmodelbeToolStripMenuItem_Click);
             // 
             // importRankingToolStripMenuItem
             // 
             this.importRankingToolStripMenuItem.Name = "importRankingToolStripMenuItem";
-            this.importRankingToolStripMenuItem.Size = new System.Drawing.Size(349, 34);
+            this.importRankingToolStripMenuItem.Size = new System.Drawing.Size(306, 22);
             this.importRankingToolStripMenuItem.Text = "Ranking - file";
             this.importRankingToolStripMenuItem.Click += new System.EventHandler(this.importRankingToolStripMenuItem_Click);
             // 
             // importRankingWebsiteToolStripMenuItem
             // 
             this.importRankingWebsiteToolStripMenuItem.Name = "importRankingWebsiteToolStripMenuItem";
-            this.importRankingWebsiteToolStripMenuItem.Size = new System.Drawing.Size(349, 34);
+            this.importRankingWebsiteToolStripMenuItem.Size = new System.Drawing.Size(306, 22);
             this.importRankingWebsiteToolStripMenuItem.Text = "Ranking - website";
             this.importRankingWebsiteToolStripMenuItem.Click += new System.EventHandler(this.importRankingWebsiteToolStripMenuItem_Click);
             // 
             // cSVCompetitionToolStripMenuItem
             // 
             this.cSVCompetitionToolStripMenuItem.Name = "cSVCompetitionToolStripMenuItem";
-            this.cSVCompetitionToolStripMenuItem.Size = new System.Drawing.Size(349, 34);
+            this.cSVCompetitionToolStripMenuItem.Size = new System.Drawing.Size(306, 22);
             this.cSVCompetitionToolStripMenuItem.Text = "Competition (.csv)";
             this.cSVCompetitionToolStripMenuItem.Click += new System.EventHandler(this.cSVCompetitionToolStripMenuItem_Click);
+            // 
+            // importSavedOutputOverlappingCompetition
+            // 
+            this.importSavedOutputOverlappingCompetition.Name = "importSavedOutputOverlappingCompetition";
+            this.importSavedOutputOverlappingCompetition.Size = new System.Drawing.Size(306, 22);
+            this.importSavedOutputOverlappingCompetition.Text = "Optimized related competition";
+            this.importSavedOutputOverlappingCompetition.Click += new System.EventHandler(this.directFromVolleyVlaanderenCalendarToolStripMenuItem_Click);
             // 
             // exportToolStripMenuItem
             // 
@@ -270,20 +278,20 @@
             this.exportCompetitionToolStripMenuItem,
             this.exportRegistrationsToolStripMenuItem});
             this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            this.exportToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exportToolStripMenuItem.Text = "Export";
             // 
             // exportCompetitionToolStripMenuItem
             // 
             this.exportCompetitionToolStripMenuItem.Name = "exportCompetitionToolStripMenuItem";
-            this.exportCompetitionToolStripMenuItem.Size = new System.Drawing.Size(346, 34);
+            this.exportCompetitionToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
             this.exportCompetitionToolStripMenuItem.Text = "Generated Competition (.xml)";
             this.exportCompetitionToolStripMenuItem.Click += new System.EventHandler(this.exportCompetitionToolStripMenuItem_Click);
             // 
             // exportRegistrationsToolStripMenuItem
             // 
             this.exportRegistrationsToolStripMenuItem.Name = "exportRegistrationsToolStripMenuItem";
-            this.exportRegistrationsToolStripMenuItem.Size = new System.Drawing.Size(346, 34);
+            this.exportRegistrationsToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
             this.exportRegistrationsToolStripMenuItem.Text = "Club Registrations (.xml)";
             this.exportRegistrationsToolStripMenuItem.Click += new System.EventHandler(this.exportRegistrationsToolStripMenuItem_Click);
             // 
@@ -297,48 +305,48 @@
             this.matchescsvToolStripMenuItem1,
             this.statisticscsvToolStripMenuItem1});
             this.reportToolStripMenuItem1.Name = "reportToolStripMenuItem1";
-            this.reportToolStripMenuItem1.Size = new System.Drawing.Size(270, 34);
+            this.reportToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.reportToolStripMenuItem1.Text = "Reports";
             // 
             // conflictPerTypeToolStripMenuItem
             // 
             this.conflictPerTypeToolStripMenuItem.Name = "conflictPerTypeToolStripMenuItem";
-            this.conflictPerTypeToolStripMenuItem.Size = new System.Drawing.Size(298, 34);
+            this.conflictPerTypeToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
             this.conflictPerTypeToolStripMenuItem.Text = "Conflict per Type (.csv)";
             this.conflictPerTypeToolStripMenuItem.Click += new System.EventHandler(this.conflictPerTypeToolStripMenuItem_Click);
             // 
             // conflictsPerClubToolStripMenuItem
             // 
             this.conflictsPerClubToolStripMenuItem.Name = "conflictsPerClubToolStripMenuItem";
-            this.conflictsPerClubToolStripMenuItem.Size = new System.Drawing.Size(298, 34);
+            this.conflictsPerClubToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
             this.conflictsPerClubToolStripMenuItem.Text = "Conflicts per Club (.csv)";
             this.conflictsPerClubToolStripMenuItem.Click += new System.EventHandler(this.conflictsPerClubToolStripMenuItem_Click);
             // 
             // matchesPerClubcsvToolStripMenuItem
             // 
             this.matchesPerClubcsvToolStripMenuItem.Name = "matchesPerClubcsvToolStripMenuItem";
-            this.matchesPerClubcsvToolStripMenuItem.Size = new System.Drawing.Size(298, 34);
+            this.matchesPerClubcsvToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
             this.matchesPerClubcsvToolStripMenuItem.Text = "Matches per Club (.csv)";
             this.matchesPerClubcsvToolStripMenuItem.Click += new System.EventHandler(this.matchesPerClubcsvToolStripMenuItem_Click);
             // 
             // poulesSeriescsvToolStripMenuItem1
             // 
             this.poulesSeriescsvToolStripMenuItem1.Name = "poulesSeriescsvToolStripMenuItem1";
-            this.poulesSeriescsvToolStripMenuItem1.Size = new System.Drawing.Size(298, 34);
+            this.poulesSeriescsvToolStripMenuItem1.Size = new System.Drawing.Size(200, 22);
             this.poulesSeriescsvToolStripMenuItem1.Text = "Poules + Series (.csv)";
             this.poulesSeriescsvToolStripMenuItem1.Click += new System.EventHandler(this.poulesSeriescsvToolStripMenuItem1_Click);
             // 
             // matchescsvToolStripMenuItem1
             // 
             this.matchescsvToolStripMenuItem1.Name = "matchescsvToolStripMenuItem1";
-            this.matchescsvToolStripMenuItem1.Size = new System.Drawing.Size(298, 34);
+            this.matchescsvToolStripMenuItem1.Size = new System.Drawing.Size(200, 22);
             this.matchescsvToolStripMenuItem1.Text = "Matches (.csv)";
             this.matchescsvToolStripMenuItem1.Click += new System.EventHandler(this.matchescsvToolStripMenuItem1_Click);
             // 
             // statisticscsvToolStripMenuItem1
             // 
             this.statisticscsvToolStripMenuItem1.Name = "statisticscsvToolStripMenuItem1";
-            this.statisticscsvToolStripMenuItem1.Size = new System.Drawing.Size(298, 34);
+            this.statisticscsvToolStripMenuItem1.Size = new System.Drawing.Size(200, 22);
             this.statisticscsvToolStripMenuItem1.Text = "Statistics (.csv)";
             this.statisticscsvToolStripMenuItem1.Click += new System.EventHandler(this.statisticscsvToolStripMenuItem1_Click);
             // 
@@ -349,27 +357,27 @@
             this.convertKlvvToCSVToolStripMenuItem,
             this.vVBConvertToolStripMenuItem});
             this.utilitiesToolStripMenuItem.Name = "utilitiesToolStripMenuItem";
-            this.utilitiesToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.utilitiesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.utilitiesToolStripMenuItem.Text = "Utilities";
             // 
             // clubteamVergelijkingToolStripMenuItem
             // 
             this.clubteamVergelijkingToolStripMenuItem.Name = "clubteamVergelijkingToolStripMenuItem";
-            this.clubteamVergelijkingToolStripMenuItem.Size = new System.Drawing.Size(380, 34);
+            this.clubteamVergelijkingToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
             this.clubteamVergelijkingToolStripMenuItem.Text = "Vergelijk Teams met ander project";
             this.clubteamVergelijkingToolStripMenuItem.Click += new System.EventHandler(this.clubteamVergelijkingToolStripMenuItem_Click);
             // 
             // convertKlvvToCSVToolStripMenuItem
             // 
             this.convertKlvvToCSVToolStripMenuItem.Name = "convertKlvvToCSVToolStripMenuItem";
-            this.convertKlvvToCSVToolStripMenuItem.Size = new System.Drawing.Size(380, 34);
+            this.convertKlvvToCSVToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
             this.convertKlvvToCSVToolStripMenuItem.Text = "Convert KLVV-site to CSV";
             this.convertKlvvToCSVToolStripMenuItem.Click += new System.EventHandler(this.convertKlvvToCSVToolStripMenuItem_Click);
             // 
             // vVBConvertToolStripMenuItem
             // 
             this.vVBConvertToolStripMenuItem.Name = "vVBConvertToolStripMenuItem";
-            this.vVBConvertToolStripMenuItem.Size = new System.Drawing.Size(380, 34);
+            this.vVBConvertToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
             this.vVBConvertToolStripMenuItem.Text = "Convert VVB-site to CSV";
             this.vVBConvertToolStripMenuItem.Click += new System.EventHandler(this.vVBConvertToolStripMenuItem_Click);
             // 
@@ -381,34 +389,34 @@
             this.poulesToolStripMenuItem,
             this.schemasToolStripMenuItem});
             this.manageToolStripMenuItem.Name = "manageToolStripMenuItem";
-            this.manageToolStripMenuItem.Size = new System.Drawing.Size(58, 29);
+            this.manageToolStripMenuItem.Size = new System.Drawing.Size(39, 22);
             this.manageToolStripMenuItem.Text = "Edit";
             // 
             // yearPlansToolStripMenuItem1
             // 
             this.yearPlansToolStripMenuItem1.Name = "yearPlansToolStripMenuItem1";
-            this.yearPlansToolStripMenuItem1.Size = new System.Drawing.Size(216, 34);
+            this.yearPlansToolStripMenuItem1.Size = new System.Drawing.Size(142, 22);
             this.yearPlansToolStripMenuItem1.Text = "Year plan";
             this.yearPlansToolStripMenuItem1.Click += new System.EventHandler(this.yearplanToolStripMenuItem1_Click);
             // 
             // subscriptionsToolStripMenuItem
             // 
             this.subscriptionsToolStripMenuItem.Name = "subscriptionsToolStripMenuItem";
-            this.subscriptionsToolStripMenuItem.Size = new System.Drawing.Size(216, 34);
+            this.subscriptionsToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.subscriptionsToolStripMenuItem.Text = "Registrations";
             this.subscriptionsToolStripMenuItem.Click += new System.EventHandler(this.subscriptionsToolStripMenuItem_Click);
             // 
             // poulesToolStripMenuItem
             // 
             this.poulesToolStripMenuItem.Name = "poulesToolStripMenuItem";
-            this.poulesToolStripMenuItem.Size = new System.Drawing.Size(216, 34);
+            this.poulesToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.poulesToolStripMenuItem.Text = "Poules";
             this.poulesToolStripMenuItem.Click += new System.EventHandler(this.poulesToolStripMenuItem_Click);
             // 
             // schemasToolStripMenuItem
             // 
             this.schemasToolStripMenuItem.Name = "schemasToolStripMenuItem";
-            this.schemasToolStripMenuItem.Size = new System.Drawing.Size(216, 34);
+            this.schemasToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.schemasToolStripMenuItem.Text = "Schemas";
             this.schemasToolStripMenuItem.Click += new System.EventHandler(this.schemasToolStripMenuItem_Click);
             // 
@@ -420,41 +428,41 @@
             this.teamsToolStripMenuItem,
             this.constraintsToolStripMenuItem});
             this.viewsToolStripMenuItem.Name = "viewsToolStripMenuItem";
-            this.viewsToolStripMenuItem.Size = new System.Drawing.Size(96, 29);
+            this.viewsToolStripMenuItem.Size = new System.Drawing.Size(66, 22);
             this.viewsToolStripMenuItem.Text = "Conflicts";
             // 
             // clubsToolStripMenuItem
             // 
             this.clubsToolStripMenuItem.Name = "clubsToolStripMenuItem";
-            this.clubsToolStripMenuItem.Size = new System.Drawing.Size(180, 34);
+            this.clubsToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.clubsToolStripMenuItem.Text = "Clubs";
             this.clubsToolStripMenuItem.Click += new System.EventHandler(this.clubsToolStripMenuItem_Click);
             // 
             // seriesToolStripMenuItem
             // 
             this.seriesToolStripMenuItem.Name = "seriesToolStripMenuItem";
-            this.seriesToolStripMenuItem.Size = new System.Drawing.Size(180, 34);
+            this.seriesToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.seriesToolStripMenuItem.Text = "Poules";
             this.seriesToolStripMenuItem.Click += new System.EventHandler(this.seriesToolStripMenuItem_Click);
             // 
             // teamsToolStripMenuItem
             // 
             this.teamsToolStripMenuItem.Name = "teamsToolStripMenuItem";
-            this.teamsToolStripMenuItem.Size = new System.Drawing.Size(180, 34);
+            this.teamsToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.teamsToolStripMenuItem.Text = "Teams";
             this.teamsToolStripMenuItem.Click += new System.EventHandler(this.teamsToolStripMenuItem_Click);
             // 
             // constraintsToolStripMenuItem
             // 
             this.constraintsToolStripMenuItem.Name = "constraintsToolStripMenuItem";
-            this.constraintsToolStripMenuItem.Size = new System.Drawing.Size(180, 34);
+            this.constraintsToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.constraintsToolStripMenuItem.Text = "Matches";
             this.constraintsToolStripMenuItem.Click += new System.EventHandler(this.constraintsToolStripMenuItem_Click);
             // 
             // optimizeToolStripMenuItem
             // 
             this.optimizeToolStripMenuItem.Name = "optimizeToolStripMenuItem";
-            this.optimizeToolStripMenuItem.Size = new System.Drawing.Size(100, 29);
+            this.optimizeToolStripMenuItem.Size = new System.Drawing.Size(67, 22);
             this.optimizeToolStripMenuItem.Text = "Optimize";
             this.optimizeToolStripMenuItem.Click += new System.EventHandler(this.optimizeToolStripMenuItem_Click);
             // 
@@ -469,34 +477,34 @@
             this.licenseToolStripMenuItem,
             this.settingsToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(65, 29);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 22);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // helpToolStripMenuItem1
             // 
             this.helpToolStripMenuItem1.Name = "helpToolStripMenuItem1";
-            this.helpToolStripMenuItem1.Size = new System.Drawing.Size(178, 34);
+            this.helpToolStripMenuItem1.Size = new System.Drawing.Size(116, 22);
             this.helpToolStripMenuItem1.Text = "Help";
             this.helpToolStripMenuItem1.Click += new System.EventHandler(this.helpToolStripMenuItem1_Click);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(178, 34);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click_1);
             // 
             // licenseToolStripMenuItem
             // 
             this.licenseToolStripMenuItem.Name = "licenseToolStripMenuItem";
-            this.licenseToolStripMenuItem.Size = new System.Drawing.Size(178, 34);
+            this.licenseToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.licenseToolStripMenuItem.Text = "License";
             this.licenseToolStripMenuItem.Click += new System.EventHandler(this.licenseToolStripMenuItem_Click_1);
             // 
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(178, 34);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.settingsToolStripMenuItem.Text = "Settings";
             this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
@@ -504,7 +512,7 @@
             // 
             this.errorsToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.errorsToolStripMenuItem.Name = "errorsToolStripMenuItem";
-            this.errorsToolStripMenuItem.Size = new System.Drawing.Size(74, 29);
+            this.errorsToolStripMenuItem.Size = new System.Drawing.Size(49, 22);
             this.errorsToolStripMenuItem.Text = "Errors";
             this.errorsToolStripMenuItem.Click += new System.EventHandler(this.errorsToolStripMenuItem_Click);
             // 
@@ -517,10 +525,9 @@
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 371);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 240);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Padding = new System.Windows.Forms.Padding(2, 0, 21, 0);
-            this.statusStrip1.Size = new System.Drawing.Size(960, 32);
+            this.statusStrip1.Size = new System.Drawing.Size(640, 22);
             this.statusStrip1.TabIndex = 2;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -528,21 +535,20 @@
             // 
             this.toolStripStatusLabel1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(179, 25);
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(118, 17);
             this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
             this.toolStripStatusLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(960, 403);
+            this.ClientSize = new System.Drawing.Size(640, 262);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.dockPanel);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "Form1";
             this.Text = "Competition Creator Tool";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
@@ -605,6 +611,7 @@
         private System.Windows.Forms.ToolStripMenuItem errorsToolStripMenuItem;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.ToolStripMenuItem importSavedOutputOverlappingCompetition;
     }
 }
 

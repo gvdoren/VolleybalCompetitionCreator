@@ -1393,7 +1393,7 @@ namespace CompetitionCreator
             DetermineClubsSharingSporthalls(model);
         }
 
-        public void ImportCSV(Model model, string fileName)
+        public void ImportCSV(Model model, string fileName, bool strict)
         {
             const int serieIndex = 0;
             const int serieIdIndex = 1;
@@ -1403,8 +1403,8 @@ namespace CompetitionCreator
             const int homeTeamIdIndex = 5;
             const int visitorTeamIndex = 6;
             const int visitorTeamIdIndex = 7;
-            const int sporthallIndex = 8;
-            const int sporthallIdIndex = 9;
+            //const int sporthallIndex = 8;
+            //const int sporthallIdIndex = 9;
             const int dateIndex = 10;
             const int timeIndex = 11;
             const int homeClubIndex = 12;
@@ -1459,9 +1459,12 @@ namespace CompetitionCreator
                 }
                 int c = teamsList.Count;
                 // poules toevoegen indien ze niet bestaan
-                Poule poule = serie.poules.Find(s => s.name == parameters[pouleIndex]);
+                var pouleName = parameters[pouleIndex];
+                Poule poule = serie.poules.Find(s => s.name == pouleName);
                 if (poule != null && poule.maxTeams < c)
                 {
+                    if (strict && !poule.imported)
+                        throw new Exception($"Poule {pouleName} is created in the Competition Creator and imported from the matches");
                     model.poules.Remove(poule);
                     serie.poules.Remove(poule);
                     poule = null;
@@ -1474,6 +1477,8 @@ namespace CompetitionCreator
                 }
                 else
                 {
+                    if (strict && !poule.imported)
+                        throw new Exception($"Poule {pouleName} is created in the Competition Creator and imported from the matches");
                     // matches will be added
                     poule.matches.Clear();
                     poule.weeks.Clear();

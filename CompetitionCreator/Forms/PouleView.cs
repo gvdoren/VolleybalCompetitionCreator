@@ -256,9 +256,9 @@ namespace CompetitionCreator
         }
         private void OptimizeWeekAssignment(IProgress intf)
         {
-            poule.SnapShot(model);
+            poule.SetInitialSnapShot(model);
             poule.OptimizeWeeks(model, intf, GlobalState.optimizeLevel);
-            poule.CopyAndClearSnapShot(model);
+            poule.SetBestSnapShot(poule.bestSnapShot);
         }
         private void OptimizeWeekAssignmentCompleted(IProgress intf)
         {
@@ -269,9 +269,9 @@ namespace CompetitionCreator
         }
         private void OptimizeTeamAssignment(IProgress intf)
         {
-            poule.SnapShot(model);
+            poule.SetInitialSnapShot(model);
             poule.OptimizeTeamAssignment(model, intf);
-            poule.CopyAndClearSnapShot(model);
+            poule.SetBestSnapShot(poule.bestSnapShot);
         }
         private void OptimizeTeamAssignmentCompleted(IProgress intf)
         {
@@ -344,10 +344,10 @@ namespace CompetitionCreator
             }
             else
             {
-                poule.SnapShot(model);
+                poule.SetInitialSnapShot(model);
                 poule.OptimizeHomeVisitor(model);
                 poule.OptimizeHomeVisitorReverse(model);
-                poule.CopyAndClearSnapShot(model);
+                poule.SetBestSnapShot(poule.bestSnapShot);
                 model.Changed();
             }
         }
@@ -434,11 +434,11 @@ namespace CompetitionCreator
         private void OptimizePoule(IProgress intf)
         {
             intf.SetText("Optimizing poule - " + poule.serie.name + poule.name);
-            poule.SnapShot(model);
+            poule.SetInitialSnapShot(model);
             poule.OptimizeTeamAssignment(model, intf);
             poule.OptimizeHomeVisitor(model);
             poule.OptimizeWeeks(model, intf, GlobalState.optimizeLevel);
-            poule.CopyAndClearSnapShot(model);
+            poule.SetBestSnapShot(poule.bestSnapShot);
             model.Evaluate(null);
             if (intf.Cancelled()) return;
         }
@@ -453,9 +453,9 @@ namespace CompetitionCreator
         private void AnalyzePoule(IProgress intf)
         {
             intf.SetText("Analysing poule - " + poule.serie.name + poule.name);
-            poule.SnapShot(model);
+            poule.SetInitialSnapShot(model);
             poule.AnalyzeTeamAssignment(model, intf);
-            poule.CopyAndClearSnapShot(model);
+            poule.SetBestSnapShot(poule.bestSnapShot);
             model.Evaluate(null);
             if (intf.Cancelled()) return;
 
@@ -474,9 +474,9 @@ namespace CompetitionCreator
             }
             else
             {
-                poule.SnapShot(model);
+                poule.SetInitialSnapShot(model);
                 poule.OptimizeHomeVisitorReverse(model);
-                poule.CopyAndClearSnapShot(model);
+                poule.SetBestSnapShot(poule.bestSnapShot);
                 model.Changed();
             }
         }
@@ -546,9 +546,9 @@ namespace CompetitionCreator
         private void AnalyzeAndOptimizePoule(IProgress intf)
         {
             intf.SetText("Analysing poule - " + poule.serie.name + poule.name);
-            poule.SnapShot(model);
+            poule.SetInitialSnapShot(model);
             poule.OptimizeNumberOnAnalysis(model, intf);
-            poule.CopyAndClearSnapShot(model);
+            poule.SetBestSnapShot(poule.bestSnapShot);
             model.Evaluate(null);
             if (intf.Cancelled()) return;
 
@@ -556,9 +556,9 @@ namespace CompetitionCreator
 
         private void OptimizeFullSchema(IProgress intf)
         {
-            poule.SnapShot(model);
+            poule.SetInitialSnapShot(model);
             poule.OptimizeSchema6(model, intf, GlobalState.optimizeLevel);
-            poule.CopyAndClearSnapShot(model);
+            poule.SetBestSnapShot(poule.bestSnapShot);
         }
         private void OptimizeFullSchemaCompleted(IProgress intf)
         {
