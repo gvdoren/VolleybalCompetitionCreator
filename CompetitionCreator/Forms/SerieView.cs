@@ -32,7 +32,7 @@ namespace CompetitionCreator
             this.model = model;
             this.state = state;
             InitializeComponent();
-            objectListView1.SetObjects(model.series.Where(s => s.imported == false));
+            objectListView1.SetObjects(model.series.Where(s => s.imported == false && s.optimize == true));
 //            foreach (YearPlan reeks in model.yearPlans.reeksen)
 //            {
 //                comboBox1.Items.Add(reeks.Name);
