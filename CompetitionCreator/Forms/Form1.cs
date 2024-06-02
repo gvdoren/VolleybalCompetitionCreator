@@ -21,10 +21,10 @@ namespace CompetitionCreator
         ImportExport importExport = new ImportExport();
         GlobalState state = new GlobalState();
         string BaseDirectory = "";
-            
+
         public Form1()
         {
-            BaseDirectory = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)+@"\CompetitionCreator";
+            BaseDirectory = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\CompetitionCreator";
             if (Directory.Exists(BaseDirectory) == false)
             {
                 Directory.CreateDirectory(BaseDirectory);
@@ -32,17 +32,17 @@ namespace CompetitionCreator
             InitializeComponent();
             // reading club-constraints
             model = new Model(DateTime.Now.Year);
-            
+
             Text = string.Format("Competition Creator Tool ({0})", model.year);
 
             this.WindowState = FormWindowState.Maximized;
-            ClubListView clubview = new ClubListView(model,state);
+            ClubListView clubview = new ClubListView(model, state);
             clubview.ShowHint = DockState.DockLeft;
             clubview.Show(dockPanel);
             ConstraintListView conflicts = new ConstraintListView(model, state);
-//            conflicts.ShowHint = DockState.DockLeft;
-//            conflicts.Show(dockPanel.  previousPane,DockAlignment.Top,0.1);
-//            dockPanel.DockTopPortion = 100;
+            //            conflicts.ShowHint = DockState.DockLeft;
+            //            conflicts.Show(dockPanel.  previousPane,DockAlignment.Top,0.1);
+            //            dockPanel.DockTopPortion = 100;
 
             //SerieView serieview = new SerieView(model, state);
             //serieview.ShowHint = DockState.DockRight;
@@ -51,7 +51,7 @@ namespace CompetitionCreator
             //SerieTreeView serietreeview = new SerieTreeView(model, state);
             //serietreeview.ShowHint = DockState.DockRight;
             //serietreeview.Show(dockPanel);
-            
+
             PouleListView pouleListview = new PouleListView(model, state);
             //pouleListview.ShowHint = DockState.DockLeft;
             //pouleListview.Show(clubview.Pane, DockAlignment.Right, 0.5);
@@ -89,7 +89,7 @@ namespace CompetitionCreator
                 {
                     totErrors.AddRange(con.GetErrors());
                 }
-                if(totErrors.Count>0)
+                if (totErrors.Count > 0)
                     this.errorsToolStripMenuItem.ForeColor = Color.Red;
                 else
                     this.errorsToolStripMenuItem.ForeColor = Color.Black;
@@ -152,7 +152,7 @@ namespace CompetitionCreator
             }
             clubview = new ClubListView(model, state);
             clubview.ShowHint = DockState.DockLeft;
-            
+
             clubview.Show(this.dockPanel);
 
         }
@@ -337,7 +337,7 @@ namespace CompetitionCreator
                 if (clubview == null && constraintView == null)
                     contents.Add(content);
             }
-            foreach(var content in contents)
+            foreach (var content in contents)
                 content.Close();
         }
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
@@ -348,10 +348,10 @@ namespace CompetitionCreator
                 year = DateTime.Now.Year + 1;
             }
             List<Selection> list = new List<Selection>();
-            for(int i = year-3; i <= year; i++)
+            for (int i = year - 3; i <= year; i++)
             {
                 Selection sel = new Selection(i.ToString(), i);
-                if (i == year-1) sel.selected = true;
+                if (i == year - 1) sel.selected = true;
                 list.Add(sel);
             }
             SelectionDialog diag = new SelectionDialog(list);
@@ -402,7 +402,7 @@ namespace CompetitionCreator
             model.Changed(newModel);
             newModel.Evaluate(null);
             newModel.Changed();
-        
+
             var list = new List<Selection>();
             foreach (var provincie in SiteImporter.SiteImporter.provincies)
             {
@@ -439,7 +439,7 @@ namespace CompetitionCreator
 
         private void exportCompetitionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-           
+
             DateTime now = DateTime.Now;
             saveFileDialog1 = new SaveFileDialog();
             saveFileDialog1.FileName = string.Format("ExportedCompetition{0:00}{1:00}{2:00}_{3:00}{4:00}.xml", now.Year, now.Month, now.Day, now.Hour, now.Minute);
@@ -459,7 +459,7 @@ namespace CompetitionCreator
                 selection.Add(sel);
             }
 
-            SelectionDialog diag = new SelectionDialog(selection,true);
+            SelectionDialog diag = new SelectionDialog(selection, true);
             diag.ShowDialog();
             List<Serie> series = new List<Serie>();
             if (diag.Ok)
@@ -525,7 +525,7 @@ namespace CompetitionCreator
         }
         public void openFileDialog1_FileOk3(object sender, CancelEventArgs e)
         {
-            importExport.ImportTeamSubscriptions(model, XDocument.Load(openFileDialog1.FileName, LoadOptions.SetLineInfo|LoadOptions.SetBaseUri).Root);
+            importExport.ImportTeamSubscriptions(model, XDocument.Load(openFileDialog1.FileName, LoadOptions.SetLineInfo | LoadOptions.SetBaseUri).Root);
             closeViews();
             model.RenewConstraints();
             model.Evaluate(null);
@@ -574,7 +574,7 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         }
         public void saveFileDialog1_FileOk10(object sender, CancelEventArgs e)
         {
-            importExport.WriteClubConstraints(model, saveFileDialog1.FileName, false /* zonder nationale teams*/); 
+            importExport.WriteClubConstraints(model, saveFileDialog1.FileName, false /* zonder nationale teams*/);
         }
 
         private void importRankingToolStripMenuItem_Click(object sender, EventArgs e)
@@ -590,7 +590,7 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         {
             try
             {
-                importExport.ImportRanking(model, XDocument.Load(openFileDialog1.FileName, LoadOptions.SetLineInfo|LoadOptions.SetBaseUri).Root);
+                importExport.ImportRanking(model, XDocument.Load(openFileDialog1.FileName, LoadOptions.SetLineInfo | LoadOptions.SetBaseUri).Root);
             }
             catch (Exception exc)
             {
@@ -660,7 +660,7 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         {
             saveFileDialog1 = new SaveFileDialog();
             DateTime now = DateTime.Now;
-            saveFileDialog1.FileName = string.Format("ConflictReportPerType{0:00}{1:00}{2:00}_{3:00}{4:00}.csv", now.Year, now.Month, now.Day, now.Hour, now.Minute); 
+            saveFileDialog1.FileName = string.Format("ConflictReportPerType{0:00}{1:00}{2:00}_{3:00}{4:00}.csv", now.Year, now.Month, now.Day, now.Hour, now.Minute);
             saveFileDialog1.InitialDirectory = BaseDirectory;
             saveFileDialog1.FileOk += new CancelEventHandler(saveFileDialog1_FileOk);
             saveFileDialog1.ShowDialog();
@@ -674,7 +674,7 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         {
             saveFileDialog1 = new SaveFileDialog();
             DateTime now = DateTime.Now;
-            saveFileDialog1.FileName = string.Format("ConflictReportPerClub{0:00}{1:00}{2:00}_{3:00}{4:00}.csv", now.Year, now.Month, now.Day, now.Hour, now.Minute); 
+            saveFileDialog1.FileName = string.Format("ConflictReportPerClub{0:00}{1:00}{2:00}_{3:00}{4:00}.csv", now.Year, now.Month, now.Day, now.Hour, now.Minute);
             saveFileDialog1.InitialDirectory = BaseDirectory;
             saveFileDialog1.FileOk += new CancelEventHandler(saveFileDialog1_FileOk1);
             saveFileDialog1.ShowDialog();
@@ -775,11 +775,11 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             {
                 try
                 {
-                    importExport.ImportRanking(model, XDocument.Load(form.GetInputString(), LoadOptions.SetLineInfo|LoadOptions.SetBaseUri).Root);
+                    importExport.ImportRanking(model, XDocument.Load(form.GetInputString(), LoadOptions.SetLineInfo | LoadOptions.SetBaseUri).Root);
                 }
                 catch (Exception exc)
                 {
-                    CompetitionCreator.Error.AddManualError("Failed importing ranking. ",exc.ToString());
+                    CompetitionCreator.Error.AddManualError("Failed importing ranking. ", exc.ToString());
                     MessageBox.Show("Failed importing ranking. Error: " + exc.ToString());
                 }
                 model.Evaluate(null);
@@ -790,13 +790,13 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         private void invoerToolStripMenuItem_DropDownOpened(object sender, EventArgs e)
         {
             DateTime last = DateTime.Now;
-            foreach(Poule poule in model.poules)
+            foreach (Poule poule in model.poules)
             {
-                DateTime l1 = poule.weeks[poule.weeks.Count-1].Saturday;
-                if(l1<last) last = l1;
+                DateTime l1 = poule.weeks[poule.weeks.Count - 1].Saturday;
+                if (l1 < last) last = l1;
             }
             if (model.licenseKey.Valid() == false ||
-                DateTime.Now > model.licenseKey.ValidUntil()||
+                DateTime.Now > model.licenseKey.ValidUntil() ||
                 last > model.licenseKey.ValidUntil() ||
                 (model.teams.Count > 1000 && model.licenseKey.Feature(Security.LicenseKey.FeatureType.Above1000Teams) == false)
                 )
@@ -807,7 +807,8 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 this.saveToolStripMenuItem.Enabled = false;
                 this.saveToolStripMenuItem1.Enabled = false;
                 this.reportToolStripMenuItem1.Enabled = false;
-            } else 
+            }
+            else
             {
                 this.exportToolStripMenuItem.Enabled = true;
                 //this.importToolStripMenuItem.Enabled = true;
@@ -846,7 +847,7 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             }
             if (model.licenseKey.Feature(Security.LicenseKey.FeatureType.Expert))
             {
-
+                importSavedOutputOverlappingCompetition.Visible = true;
             }
             else
             {
@@ -855,6 +856,7 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 this.conflictsPerClubToolStripMenuItem.Visible = false;
                 this.matchescsvToolStripMenuItem1.Visible = false;
                 this.statisticscsvToolStripMenuItem1.Visible = false;
+                this.importSavedOutputOverlappingCompetition.Visible = false;
             }
 
         }
@@ -895,39 +897,26 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
         }
 
-        private void directFromVolleyVlaanderenCalendarToolStripMenuItem_Click(object sender, EventArgs e)
+        private void importSavedOutputOverlappingCompetition_Click(object sender, EventArgs e)
         {
             if (model.licenseKey.ValidUntil() < DateTime.Now)
             {
                 MessageBox.Show("License not valid any more");
                 return;
             }
-            var list = new List<Selection>();
-            foreach (var provincie in SiteImporter.SiteImporter.provincies)
-            {
-                Selection sel = new Selection(provincie.Name, provincie);
-                list.Add(sel);
-            }
-            try
-            {
-                var diag = new SelectionDialog(list);
-                diag.ShowDialog();
-                if (diag.Ok)
-                {
-                    var provincie = (SiteImporter.ProvincieInfo)diag.Selection.obj;
-                    SiteImporter.SiteImporter.ImportSite(provincie);
-                    importExport.ImportCSV(model, BaseDirectory + "\\" + provincie.Name + "_huidige_wedstrijden.csv", true);
-                    closeViews();
-                    model.RenewConstraints();
-                    model.Evaluate(null);
-                    model.Changed();
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Failed to import data from Volley Vlaanderen site (" + ex.ToString() + ")");
-            }
 
+            openFileDialog1 = new OpenFileDialog();
+            openFileDialog1.FileName = "FullCompetition.xml";
+            openFileDialog1.Filter = "Xml (*.xml)|*.xml";
+            openFileDialog1.InitialDirectory = BaseDirectory;
+            openFileDialog1.FileOk += new CancelEventHandler(openFileDialog2_FileOk1);
+            openFileDialog1.ShowDialog();
+        }
+
+        public void openFileDialog2_FileOk1(object sender, CancelEventArgs e)
+        {
+            importExport.LoadSavedOverlappingComptition(model, openFileDialog1.FileName);
+            closeViews();
         }
     }
 }

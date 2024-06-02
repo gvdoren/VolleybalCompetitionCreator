@@ -44,7 +44,7 @@ namespace CompetitionCreator
             return result;
         }
 
-        static public string BaseDirectory = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)+@"\CompetitionCreator";
+        static public string BaseDirectory = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\CompetitionCreator";
         static void Error(XElement element, string str)
         {
             string filename = element.Document.BaseUri;
@@ -52,8 +52,8 @@ namespace CompetitionCreator
             int lineNumber = info.LineNumber;
             int linePosition = info.LinePosition;
             string prefix = filename + "(" + lineNumber.ToString() + "," + linePosition.ToString() + ")\n\n Element '" + element.Name + "' ";
-            CompetitionCreator.Error.AddManualError("Reading the input file failed. ", 
-                                                    "The input file that is read is not conform the expected scheme. Possibly an old file is read that is not conform the current scheme any more. <br/>"+
+            CompetitionCreator.Error.AddManualError("Reading the input file failed. ",
+                                                    "The input file that is read is not conform the expected scheme. Possibly an old file is read that is not conform the current scheme any more. <br/>" +
                                                     prefix + str);
             MessageBox.Show("Error reading xml data", prefix + str);
             throw new Exception(prefix + str);
@@ -65,8 +65,8 @@ namespace CompetitionCreator
             int lineNumber = info.LineNumber;
             int linePosition = info.LinePosition;
             string prefix = filename + "(" + lineNumber.ToString() + "," + linePosition.ToString() + ")\n\n";
-            CompetitionCreator.Error.AddManualError("Reading the input file failed. ", 
-                                                    "The input file that is read is not conform the expected scheme. Possibly an old file is read that is not conform the current scheme any more.<br/>"+
+            CompetitionCreator.Error.AddManualError("Reading the input file failed. ",
+                                                    "The input file that is read is not conform the expected scheme. Possibly an old file is read that is not conform the current scheme any more.<br/>" +
                                                     prefix + str);
             MessageBox.Show("Error reading xml data", prefix + str);
             throw new Exception(prefix + str);
@@ -78,7 +78,7 @@ namespace CompetitionCreator
             int lineNumber = info.LineNumber;
             int linePosition = info.LinePosition;
             string prefix = filename + "(" + lineNumber.ToString() + "," + linePosition.ToString() + ")\n\n Attribute '" + attribute.Name + "'";
-            CompetitionCreator.Error.AddManualError("Reading the input file failed. ", 
+            CompetitionCreator.Error.AddManualError("Reading the input file failed. ",
                                                     "The input file that is read is not conform the expected scheme. Possibly an old file is read that is not conform the current scheme any more.<br/>" +
                                                     prefix + str);
             MessageBox.Show(prefix + str);
@@ -429,7 +429,7 @@ namespace CompetitionCreator
                             writer.WriteAttributeString("Latitude", sporthal.lat.ToString(CultureInfo.InvariantCulture));
                             writer.WriteAttributeString("Longitude", sporthal.lng.ToString(CultureInfo.InvariantCulture));
                             if (sporthal.team != null) writer.WriteAttributeString("TeamId", sporthal.team.Id.ToString());
-                            if(sporthal.fields.Count>0)
+                            if (sporthal.fields.Count > 0)
                             {
                                 writer.WriteStartElement("Fields");
                                 foreach (Field f in sporthal.fields)
@@ -685,7 +685,7 @@ namespace CompetitionCreator
             StreamWriter writer = new StreamWriter(filename);
             string name = "";
             string title = "";
-            model.constraints.Sort(delegate(Constraint c1, Constraint c2) { return c1.Title.CompareTo(c2.Title); });
+            model.constraints.Sort(delegate (Constraint c1, Constraint c2) { return c1.Title.CompareTo(c2.Title); });
             foreach (Constraint constraint in model.constraints)
             {
                 if (constraint.conflict_cost > 0)
@@ -721,7 +721,7 @@ namespace CompetitionCreator
                 if (club.conflict_cost > 0)
                 {
                     writer.WriteLine("{0}", club.name);
-                    club.conflictConstraints.Sort(delegate(Constraint c1, Constraint c2) { return c1.Title.CompareTo(c2.Title); });
+                    club.conflictConstraints.Sort(delegate (Constraint c1, Constraint c2) { return c1.Title.CompareTo(c2.Title); });
                     foreach (Constraint constraint in club.conflictConstraints)
                     {
                         if (constraint.conflict_cost > 0)
@@ -768,7 +768,7 @@ namespace CompetitionCreator
                 }
 
                 writer.WriteLine("{0}", club.name);
-                matches.Sort(delegate(Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
+                matches.Sort(delegate (Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
                 foreach (Match match in matches)
                 {
                     if (match.RealMatch())
@@ -794,7 +794,7 @@ namespace CompetitionCreator
                 string dir = BaseDirectory + "\\Backup\\";
                 if (Directory.Exists(dir) == false)
                     Directory.CreateDirectory(dir);
-                writer = XmlWriter.Create(dir+"backup.xml");
+                writer = XmlWriter.Create(dir + "backup.xml");
             }
             else
             {
@@ -860,7 +860,7 @@ namespace CompetitionCreator
                     writer.WriteAttributeString("homeTeam", match.homeTeamIndex.ToString());
                     writer.WriteAttributeString("visitorTeam", match.visitorTeamIndex.ToString());
                     writer.WriteAttributeString("week", match.weekIndex.ToString());
-                    if(match.IsTimeOverruled())
+                    if (match.IsTimeOverruled())
                         writer.WriteAttributeString("time", match.Time.ToString());
                     writer.WriteEndElement();
                 }
@@ -1014,7 +1014,7 @@ namespace CompetitionCreator
                     int visitorTeam = IntegerAttribute(match, "visitorTeam");
                     Match m = new Match(weekIndex, homeTeam, visitorTeam, serie, po);
                     string s = StringOptionalAttribute(match, null, "time");
-                    if(s != null)
+                    if (s != null)
                         m.Time = new Time(ParseTime(s));
                     po.matches.Add(m);
                 }
@@ -1096,6 +1096,107 @@ namespace CompetitionCreator
                 CompetitionCreator.Error.AddManualError("Loading competition failed.", string.Format("Project '{0}' could not be opened. The XML might not be correct, or the syntax is of an previous version. \n Exception: {1}", filename, exc.ToString()));
                 MessageBox.Show(string.Format("Project '{0}' could not be opened. The XML might not be correct, or the syntax is of an previous version. \n Exception: {1}", filename, exc.ToString()));
             }
+        }
+
+        public void LoadSavedOverlappingComptition(Model model, string filename)
+        {
+            // Save current xml model
+            string dir = BaseDirectory + "\\Backup\\";
+            if (Directory.Exists(dir) == false)
+                Directory.CreateDirectory(dir);
+            WriteProject(model, dir + "currentProject.xml", false);
+            // Merge two models
+            XDocument doc1 = XDocument.Load(dir + "currentProject.xml", LoadOptions.SetLineInfo | LoadOptions.SetBaseUri);
+            XDocument doc2 = XDocument.Load(filename, LoadOptions.SetLineInfo | LoadOptions.SetBaseUri);
+
+            XElement competition1 = Element(doc1, "Competition");
+            XElement competition2 = Element(doc2, "Competition");
+            XElement settings1 = Element(competition1, "Settings");
+            XElement settings2 = Element(competition2, "Settings");
+            int year1 = IntegerAttribute(settings1, "Year");
+            int year2 = IntegerAttribute(settings2, "Year");
+            if (year1 != year2)
+                MessageBox.Show(string.Format("Project '{0}' is for year {1}, while the current project is for year {2}", filename, year2, year1));
+
+            // Removing info that might be imported before
+            List<XElement> toBeRemoved = new List<XElement>();
+            foreach (XElement serie2 in Element(settings2, "Series").Elements("Serie"))
+            {
+                int serieId2 = IntegerAttribute(serie2, "Id");
+                foreach (XElement serie1 in Element(settings1, "Series").Elements("Serie"))
+                {
+                    int serieId1 = IntegerAttribute(serie1, "Id");
+                    if (serieId2 == serieId1)
+                        toBeRemoved.Add(serie1);
+                }
+                foreach (XElement poule1 in Element(competition1, "Poules").Elements("Poule"))
+                {
+                    int serieId1 = IntegerAttribute(poule1, "SerieId");
+                    if (serieId2 == serieId1)
+                        toBeRemoved.Add(poule1);
+                }
+            }
+            foreach (XElement club1 in Element(competition1, "Clubs").Elements("Club"))
+            {
+                int clubId1 = IntegerAttribute(club1, "Id");
+                if (clubId1 == 0)
+                    toBeRemoved.Add(club1);
+            }
+            foreach (var t in toBeRemoved)
+                t.Remove();
+
+            // Adding
+            XElement clubs = Element(competition1, "Clubs");
+            var club = new XElement("Club");
+            club.Add(new XAttribute("Id", 0));
+            club.Add(new XAttribute("Name", "National clubs"));
+            club.Add(new XElement("FreeFormatConstraint"));
+            club.Add(new XElement("Sporthalls"));
+            club.Add(new XElement("Teams"));
+            clubs.Add(club);
+            foreach (XElement club2 in Element(competition2, "Clubs").Elements("Club"))
+            {
+                bool found = false;
+                int clubId2 = IntegerAttribute(club2, "Id");
+                foreach (XElement club1 in Element(competition1, "Clubs").Elements("Club"))
+                {
+                    int clubId1 = IntegerAttribute(club1, "Id");
+                    if (clubId1 == clubId2)
+                        found = true;
+                }
+                if (!found)
+                {
+                    foreach (XElement team2 in Element(club2, "Teams").Elements("Team"))
+                    {
+                        var teams1 = club.Element("Teams");
+                        teams1.Add(team2);
+                    }
+                    foreach (XElement sporthall2 in Element(club2, "Sporthalls").Elements("Sporthall"))
+                    {
+                        int sporthallId2 = IntegerAttribute(sporthall2, "Id");
+                        found = false;
+                        foreach (XElement sporthall1 in Element(club, "Sporthalls").Elements("Sporthall"))
+                        {
+                            int sporthallId1 = IntegerAttribute(sporthall1, "Id");
+                            if (sporthallId1 == sporthallId2)
+                                found = true;
+                        }
+                        var sporthalls1 = club.Element("Sporthalls");
+                        if (!found)
+                            sporthalls1.Add(sporthall2);
+                    }
+                }
+            }
+            var poules1 = competition1.Element("Poules");
+            foreach (XElement poule2 in Element(competition2, "Poules").Elements("Poule"))
+            {
+                var attr2 = poule2.Attribute("Imported");
+                if (attr2 == null)
+                    poule2.Add(new XAttribute("Imported", "True"));
+                poules1.Add(poule2);
+            }
+            doc1.Save(dir + "CombinedCompetition.xml");
+            LoadFullCompetition(model, dir + "CombinedCompetition.xml");
         }
 
         public void ImportTeamSubscriptions(Model model, XElement doc)
@@ -1184,7 +1285,7 @@ namespace CompetitionCreator
                         cl.sporthalls.Add(sp);
                     }
                     XElement Fields = OptionalElement(sporthal, "Fields");
-                    if(Fields != null)
+                    if (Fields != null)
                     {
                         foreach (var field in Fields.Elements("Field"))
                         {
@@ -1209,15 +1310,15 @@ namespace CompetitionCreator
                             DateTime dtFrom = new DateTime(dt.Year, dt.Month, dt.Day);
                             DateTime dtUntil = ParseDateTime(until);
 
-                            while(dtFrom < dtUntil)
+                            while (dtFrom < dtUntil)
                             {
-                               
+
                                 if (sp.NotAvailable.Contains(dtFrom) == false) sp.NotAvailable.Add(dtFrom);
                                 dtFrom = dtFrom.AddDays(1);
                             }
                         }
                     }
-                    else if(OptionalElement(sporthal,"NotAvailable") != null)
+                    else if (OptionalElement(sporthal, "NotAvailable") != null)
                     {
                         foreach (var date in Element(sporthal, "NotAvailable").Elements("Date"))
                         {
@@ -1534,7 +1635,7 @@ namespace CompetitionCreator
                         //serie.AddTeam(team);
                         homeClub.AddTeam(team);
                     }
-                    else 
+                    else
                     {
                         team.serie = serie;
                     }
@@ -1559,7 +1660,7 @@ namespace CompetitionCreator
                     }
                     poule.AddTeam(team);
                 }
-                
+
                 // visitor teams (sommige competities hebben geen heen, en terug reeks
                 if (parameters[visitorTeamIndex].Length > 0 && visitorClub != null)
                 {
@@ -1680,7 +1781,7 @@ namespace CompetitionCreator
 
         public bool Overlap(List<SporthallAvailability> l1, List<SporthallAvailability> l2)
         {
-            foreach(var s1 in l1)
+            foreach (var s1 in l1)
             {
                 bool overlap = l2.Exists(s2 => { return s1.sporthall.id == s2.sporthall.id && s1.sporthall.id != 0; });
                 if (overlap)
@@ -1693,7 +1794,7 @@ namespace CompetitionCreator
         {
             foreach (Club club in model.clubs)
             {
-                foreach(Club club1 in model.clubs)
+                foreach (Club club1 in model.clubs)
                 {
                     if (club != club1 && Overlap(club.sporthalls, club1.sporthalls))
                     {
@@ -1931,14 +2032,14 @@ namespace CompetitionCreator
                 int thuisploegId = IntegerElement(wedstrijd, "thuisploeg_id");
                 string stamnummer = StringElement(wedstrijd, "stamnummer_thuisclub");
                 Team team = model.teams.Find(t => t.Id == thuisploegId && t.club.Stamnumber == stamnummer);
-                if(team != null)
+                if (team != null)
                 {
-                    if(series.ContainsKey(poule))
+                    if (series.ContainsKey(poule))
                     { // check to be sure
-                        if(team.serie.id != series[poule].id)
+                        if (team.serie.id != series[poule].id)
                         {
                             CompetitionCreator.Error.AddManualError("Inconsistent data ",
-                                        "Team id "+thuisploegId+" has a serie id "+team.serie.id+" that is different from another team in that poule ("+poule+"), other serie id: "+series[poule].id);
+                                        "Team id " + thuisploegId + " has a serie id " + team.serie.id + " that is different from another team in that poule (" + poule + "), other serie id: " + series[poule].id);
                             MessageBox.Show("Team id " + thuisploegId + " has a serie id " + team.serie.id + " that is different from another team in that poule (" + poule + "), other serie id: " + series[poule].id);
 
                         }
@@ -1960,7 +2061,7 @@ namespace CompetitionCreator
                 string bezoekersploeg = StringElement(wedstrijd, "bezoekersploeg");
                 string sporthal = StringElement(wedstrijd, "sporthal");
                 string poule = StringElement(wedstrijd, "reeks");
-                if(series.ContainsKey(poule))
+                if (series.ContainsKey(poule))
                 {
                     reeks = series[poule].name;
                     reeksId = series[poule].id.ToString();

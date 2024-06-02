@@ -270,7 +270,7 @@
             this.importSavedOutputOverlappingCompetition.Name = "importSavedOutputOverlappingCompetition";
             this.importSavedOutputOverlappingCompetition.Size = new System.Drawing.Size(306, 22);
             this.importSavedOutputOverlappingCompetition.Text = "Optimized related competition";
-            this.importSavedOutputOverlappingCompetition.Click += new System.EventHandler(this.directFromVolleyVlaanderenCalendarToolStripMenuItem_Click);
+            this.importSavedOutputOverlappingCompetition.Click += new System.EventHandler(this.importSavedOutputOverlappingCompetition_Click);
             // 
             // exportToolStripMenuItem
             // 
