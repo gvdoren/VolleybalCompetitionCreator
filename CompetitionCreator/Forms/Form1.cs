@@ -918,6 +918,30 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             importExport.LoadSavedOverlappingComptition(model, openFileDialog1.FileName);
             closeViews();
         }
+
+        private void directFromVolleyVlaanderenCalendarOnlyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (model.licenseKey.ValidUntil() < DateTime.Now)
+            {
+                MessageBox.Show("License not valid any more");
+                return;
+            }
+            try
+            {
+                var provincie = SiteImporter.SiteImporter.provincies[5]; // Nationaal
+                SiteImporter.SiteImporter.ImportSite(provincie);
+                importExport.ImportCSV(model, BaseDirectory + "\\" + provincie.Name + "_huidige_wedstrijden.csv", true);
+                closeViews();
+                model.RenewConstraints();
+                model.Evaluate(null);
+                model.Changed();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Failed to import data from Volley Vlaanderen site (" + ex.ToString() + ")");
+            }
+
+        }
     }
 }
 

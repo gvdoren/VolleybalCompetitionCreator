@@ -1508,9 +1508,9 @@ namespace CompetitionCreator
             //const int sporthallIdIndex = 9;
             const int dateIndex = 10;
             const int timeIndex = 11;
-            const int homeClubIndex = 12;
+            // const int homeClubIndex = 12;
             const int homeClubIdIndex = 13;
-            const int visitorClubIndex = 14;
+            // const int visitorClubIndex = 14;
             const int visitorClubIdIndex = 15;
 
             string[] lines = System.IO.File.ReadAllLines(fileName);
@@ -1533,23 +1533,28 @@ namespace CompetitionCreator
                 int homeClubId = int.Parse(parameters[homeClubIdIndex]);
                 Club homeClub = model.clubs.Find(s => s.Id == homeClubId);
                 if (homeClub == null)
+                    homeClub = model.clubs.Find(s => s.name == "Nationaal");
+                if (homeClub == null)
                 {
-                    homeClub = new Club(homeClubId, parameters[homeClubIndex], null);
+                    homeClub = new Club(0, "Nationaal", null);
+                    //                        homeClub = new Club(homeClubId, parameters[homeClubIndex], null);
                     model.clubs.Add(homeClub);
-                    //System.Windows.Forms.MessageBox.Show(string.Format("Club id '{0}' is unknown", homeClubId));
                 }
                 Club visitorClub = null;
                 if (parameters[visitorClubIdIndex].Length > 0)
                 {
                     int visitorClubId = int.Parse(parameters[visitorClubIdIndex]);
                     visitorClub = model.clubs.Find(s => s.Id == visitorClubId);
-                    if (visitorClub == null)
-                    {
-                        visitorClub = new Club(visitorClubId, parameters[visitorClubIndex], null);
-                        model.clubs.Add(visitorClub);
-                        //System.Windows.Forms.MessageBox.Show(string.Format("Club id '{0}' is unknown", visitorClubId));
-                    }
                 }
+                if (visitorClub == null)
+                    visitorClub = model.clubs.Find(s => s.name == "Nationaal");
+                if (visitorClub == null)
+                {
+                    visitorClub = new Club(0, "Nationaal", null);
+                    //                        visitorClub = new Club(visitorClubId, parameters[visitorClubIndex], null);
+                    model.clubs.Add(visitorClub);
+                }
+
                 // Calculate the size of the poule
                 List<string> teamsList = new List<string>();
                 List<string[]> SelectedLines = ParameterLines.FindAll(l => l[serieIndex] == parameters[serieIndex] && l[pouleIndex] == parameters[pouleIndex]);
