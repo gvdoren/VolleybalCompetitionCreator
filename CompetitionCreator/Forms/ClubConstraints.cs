@@ -106,7 +106,7 @@ namespace CompetitionCreator
             UpdateTeamsTab();
             UpdateFreeFormatTab();
             UpdateTeamConstraints();
-            checkBox1.Checked = club.PerWeek;
+            checkBox1.Checked = club.GroupAllWeek;
         }
 
         private void dataGridView2_SelectionChanged(object sender, EventArgs e)
@@ -725,7 +725,7 @@ namespace CompetitionCreator
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            club.PerWeek = checkBox1.Checked;
+            club.GroupAllWeek = checkBox1.Checked;
             UpdateTeamConstraints();
             model.RenewConstraints();
             model.Evaluate(null);

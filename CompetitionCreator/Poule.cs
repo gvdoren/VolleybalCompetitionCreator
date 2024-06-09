@@ -7,6 +7,13 @@ namespace CompetitionCreator
 {
     public class Poule: ConstraintAdmin
     {
+        public static UInt64 GlobalImprovementCounter = 1;
+        public UInt64 ImprovementCounter = 0;
+        public void Changed()
+        {
+            GlobalImprovementCounter++;
+            ImprovementCounter = GlobalImprovementCounter;
+        }
         public class SnapShot
         {
             public List<Team> resultTeams = new List<Team>();
@@ -262,6 +269,7 @@ namespace CompetitionCreator
         public enum SnapshotStatus { Worse, Close, Better };
         public SnapshotStatus SnapShotIfImproved(Model model, bool equalAllowed = true)
         {
+            Changed();
             SnapshotStatus result = SnapshotStatus.Worse;
             var snapShot = CreateSnapShot(model);
             if (snapShot.TotalRelatedConflicts < bestSnapShot.TotalRelatedConflicts)
@@ -312,6 +320,7 @@ namespace CompetitionCreator
 
         public void RestoreSnapShot(SnapShot snapShot)
         {
+            Changed();
             teams = new List<Team>(snapShot.resultTeams);
             weeks = CopyWeeks(snapShot.resultWeeks);
             matches = CopyMatches(snapShot.resultMatches);

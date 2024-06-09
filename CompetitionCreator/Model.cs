@@ -5,6 +5,7 @@ using System.Text;
 using BrightIdeasSoftware;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.IO;
 
 namespace CompetitionCreator
 {
@@ -44,13 +45,13 @@ namespace CompetitionCreator
             teams.Remove(team);
             MakeDirty();
         }
-        public YearPlans yearPlans = null; 
+        public YearPlans yearPlans = null;
         public List<TeamConstraint> teamConstraints = new List<TeamConstraint>();
         public List<Constraint> constraints = new List<Constraint>();
         public List<Sporthal> sporthalls = new List<Sporthal>();
         public void Optimize()
         {
-            poules.Sort(delegate(Poule p1, Poule p2) { return p1.conflict_cost.CompareTo(p2.conflict_cost); });
+            poules.Sort(delegate (Poule p1, Poule p2) { return p1.conflict_cost.CompareTo(p2.conflict_cost); });
             foreach (Poule p in poules)
             {
                 //p.OptimizeTeamAssignment(this);
@@ -108,7 +109,7 @@ namespace CompetitionCreator
         public void EvaluateRelatedConstraints(Poule p)
         {
             //Evaluate(p); return;
-            
+
             lock (this)
             {
                 ClearAllConflicts();
@@ -200,30 +201,38 @@ namespace CompetitionCreator
                 {
                     if (te.evaluated)
                     {
-                        if(te.poule != null)
+                        if (te.poule != null)
                         {
                             constraints.Add(new ConstraintSporthallNotAvailable(te));
                             if (te.fixedNumber > 0) constraints.Add(new ConstraintTeamFixedNumber(te));
-                        } else
+                        }
+                        else
                         {
                             constraints.Add(new ConstraintNoPouleAssigned(te));
                         }
-                
+
                     }
                 }
-                foreach(TeamConstraint con in  teamConstraints.FindAll(c => c.what == TeamConstraint.What.NotOnSameTime))
+                foreach (TeamConstraint con in teamConstraints.FindAll(c => c.what == TeamConstraint.What.NotOnSameTime))
                 {
                     constraints.Add(new ConstraintPlayAtSameTime(con.team1, con.team2));
                 }
-                                
-                // All group related constraints
-                //foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
-                //{
-                //    ConstructGroupConstraintsDay(day);
-                //}
-                ConstructGroupConstraintsDay();
-                //ConstructGroupConstraintsWeekend();
-                //ConstructGroupConstraintsWeekendForClub();
+
+                // ConstructGroupConstraintsDay(); // tijdelijk uit zetten
+
+                foreach (Club club in clubs)
+                {
+                    club.CreateGroups(this);
+                    foreach (var ab in club.ABGroups)
+                        constraints.Add(new ConstraintGroupingAB(club, ab));
+                }
+                using (StreamWriter outputFile = new StreamWriter("groupinfo_laden.txt"))
+                {
+                    foreach (Club club in clubs)
+                    {
+                        club.PrintGroupsInfo(outputFile);
+                    }
+                }
 
                 // Deze moet als laatste
                 foreach (Team te in teams)
@@ -249,7 +258,7 @@ namespace CompetitionCreator
 
         bool EqualDay(Team team, DayOfWeek day2)
         {
-            if (team.club.PerWeek) // eigenlijk per week
+            if (team.club.GroupAllWeek) // eigenlijk per week
                 return true;
             return team.defaultDay == day2;
         }
@@ -274,7 +283,7 @@ namespace CompetitionCreator
 
         XY GetGroup(ref List<XY> XY_groups, Team team, ref bool X)
         {
-            foreach(var selectedXy in XY_groups)
+            foreach (var selectedXy in XY_groups)
             {
                 if (selectedXy.X.Contains(team))
                 {
@@ -347,12 +356,12 @@ namespace CompetitionCreator
                 var selectedClub = remaining.First();
                 sharedClubs.Add(selectedClub);
                 remaining.Remove(selectedClub);
-                var perWeek = selectedClub.PerWeek;
+                var perWeek = selectedClub.GroupAllWeek;
                 foreach (var sharedClub in selectedClub.SharingSporthal)
                 {
                     remaining.Remove(sharedClub);
                     sharedClubs.Add(sharedClub);
-                    if (sharedClub.PerWeek)
+                    if (sharedClub.GroupAllWeek)
                         perWeek = true;
                 }
                 if (perWeek)
@@ -378,15 +387,15 @@ namespace CompetitionCreator
             }
 
             // Merge groups based on day constraints
-            foreach (var dayContraint in  teamConstraints.FindAll(c => c.team1 != null && c.team2 != null &&
-                                                                      (c.what == TeamConstraint.What.HomeNotOnSameDay || c.what == TeamConstraint.What.HomeOnSameDay) &&
-                                                                      c.team1.evaluated && c.team2.evaluated))
+            foreach (var dayContraint in teamConstraints.FindAll(c => c.team1 != null && c.team2 != null &&
+                                                                     (c.what == TeamConstraint.What.HomeNotOnSameDay || c.what == TeamConstraint.What.HomeOnSameDay) &&
+                                                                     c.team1.evaluated && c.team2.evaluated))
             {
                 bool x1 = false;
                 var group1 = GetGroup(ref XY_groups, dayContraint.team1, ref x1);
                 bool x2 = false;
                 var group2 = GetGroup(ref XY_groups, dayContraint.team2, ref x2);
-                if (group1 == group2 && ((x1==x2) != (dayContraint.what == TeamConstraint.What.HomeOnSameDay)))
+                if (group1 == group2 && ((x1 == x2) != (dayContraint.what == TeamConstraint.What.HomeOnSameDay)))
                     IgnoredError(dayContraint);
                 else if (group1 == group2)
                 {
@@ -401,7 +410,7 @@ namespace CompetitionCreator
                         XY_groups.Remove(group1);
                         XY_groups.Remove(group2);
                     }
-                    catch 
+                    catch
                     {
                         IgnoredError(dayContraint);
                     }
@@ -454,73 +463,6 @@ namespace CompetitionCreator
                 constraints.Add(groupCon);
             }
         }
-        
-        public void ConstructGroupConstraintsWeekend()
-        {
-            // Grouping of teams, and creating the constraints for it
-            // first weekend constraints
-            List<TeamConstraint> remaining = teamConstraints.FindAll(c => (c.what == TeamConstraint.What.HomeNotInSameWeekend || c.what == TeamConstraint.What.HomeInSameWeekend) &&
-                                                                           c.team1 != null && c.team2 != null && c.team1.evaluated && c.team2.evaluated); 
-            // find the first constraint in remaining that is day related
-            Team team = null;
-            do
-            {
-                team = null;
-                if (remaining.Count > 0) team = remaining[0].team1;
-                if (team != null)
-                {
-                    ConstraintGrouping groupCon = new ConstraintGrouping();
-                    groupCon.name = "Teams in different groups play on same weekends";
-                    groupCon.GroupA.Add(team);
-                    bool added = false;
-                    do
-                    {
-                        added = false;
-                        List<TeamConstraint> newCons = remaining.FindAll(c => groupCon.AddTeamConstraintWeekend(c));
-                        foreach (TeamConstraint tc in newCons)
-                        {
-                            remaining.Remove(tc);
-                            added = true;
-                        }
-                    } while (added);
-                    Error error = groupCon.GetError();
-                    constraints.Add(groupCon);
-                }
-            } while (team != null);
-
-        }
-
-        public void ConstructGroupConstraintsWeekendForClub()
-        {
-            foreach (var club in clubs)
-            {
-                bool groupX = false;
-                bool groupY = false;
-                foreach (var team in club.teams)
-                {
-                    if (team.group == TeamGroups.GroupX)
-                        groupX = true;
-                    if (team.group == TeamGroups.GroupY)
-                        groupY = true;
-                }
-                TeamGroups group = TeamGroups.NoGroup;
-                if (groupX && !groupY)
-                    group = TeamGroups.GroupX;
-                if (!groupX && groupY)
-                    group = TeamGroups.GroupY;
-                if (group != TeamGroups.NoGroup)
-                {
-                    // ToDo: Different type of constraint is required
-                    ConstraintGrouping groupCon = new ConstraintGrouping();
-                    groupCon.name = "Teams in different groups play on same weekends(Club)";
-                    foreach (var team in club.teams)
-                    {
-                        groupCon.GroupA.Add(team);
-                    }
-                    constraints.Add(groupCon);
-                }
-            }
-        }
 
         public int TotalConflictsSnapshot = 0;
         public event MyEventHandler OnMyChange;
@@ -546,7 +488,7 @@ namespace CompetitionCreator
         public Model model;
         public Team team2
         {
-            
+
             get { return model.teams.Find(t => t.Id == team2Id); }
         }
         public Team team1

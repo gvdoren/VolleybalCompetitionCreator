@@ -416,7 +416,7 @@ namespace CompetitionCreator
                     writer.WriteAttributeString("Name", club.name);
                     if (club.Stamnumber != null) writer.WriteAttributeString("StamNumber", club.Stamnumber);
                     if (club.groupingWithClub != null) writer.WriteAttributeString("LinkedClub", club.groupingWithClub.Id.ToString());
-                    if (club.PerWeek) writer.WriteAttributeString("GroupsPerWeek", "true");
+                    if (club.GroupAllWeek) writer.WriteAttributeString("GroupsPerWeek", "true");
                     writer.WriteElementString("FreeFormatConstraint", club.FreeFormatConstraints);
                     writer.WriteStartElement("Sporthalls");
                     foreach (SporthallAvailability sporthal in club.sporthalls)
@@ -1229,7 +1229,7 @@ namespace CompetitionCreator
                     }
 
                 }
-                cl.PerWeek = BoolOptionalAttribute(club, false, "GroupsPerWeek");
+                cl.GroupAllWeek = BoolOptionalAttribute(club, false, "GroupsPerWeek");
 
                 XElement freeformatconstraint = Element(club, "FreeFormatConstraint");
 

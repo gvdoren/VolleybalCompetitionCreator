@@ -13,9 +13,9 @@ namespace CompetitionCreator
             get
             {
                 string str = "";
-                foreach(Constraint con in conflictConstraints)
+                foreach (Constraint con in conflictConstraints)
                 {
-                    str += con.Title+" ";
+                    str += con.Title + " ";
                 }
                 return str;
             }
@@ -150,5 +150,11 @@ namespace CompetitionCreator
             this.conflict_cost = match.conflict_cost;
             this.time = match.time;
         }
+
+        public bool HasConflict()
+        {
+            return conflict > 0;
+        }
+
     }
 }

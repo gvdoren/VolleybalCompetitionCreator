@@ -388,6 +388,13 @@ namespace CompetitionCreator
         private void saveToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             ImportExport.WriteProject(model, model.savedFileName);
+            using (StreamWriter outputFile = new StreamWriter("groupinfo_saven.txt"))
+            {
+                foreach (Club club in model.clubs)
+                {
+                    club.PrintGroupsInfo(outputFile);
+                }
+            }
         }
 
         private void ImportSubscriptionsmodelbeToolStripMenuItem_Click(object sender, EventArgs e)
