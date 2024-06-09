@@ -9,7 +9,7 @@ using System.IO;
 namespace CompetitionCreator
 {
     //{"Id":"11","Name":"Avoc Achel","LogoId":"11"}
-    public class Club : ConstraintAdmin
+    public class Club : ConflictAdmin
     {
         public List<Team> teams = new List<Team>();
         public bool AddTeam(Team team)

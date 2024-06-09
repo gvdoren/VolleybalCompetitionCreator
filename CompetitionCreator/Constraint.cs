@@ -17,32 +17,119 @@ namespace CompetitionCreator
         }
     }
 
-    public class ConstraintAdmin
+    public class Conflict
     {
-        public List<Constraint> conflictConstraints = new List<Constraint>();
-        public int conflict { get; set; }
-        public int conflict_cost { get; set; }
-        public void ClearConflicts()
+        List<ConflictAdmin> admin = new List<ConflictAdmin>();
+        public Constraint con;
+        public int Cost;
+
+        public Conflict(Constraint c, int cost)
         {
-            conflictConstraints.Clear();
-            conflict = 0;
-            conflict_cost = 0;
+            con = c;
+            c.conflicts.Add(this);
+            Cost = cost;
         }
-        public virtual void AddConflict(Constraint constraint)
+        public void Delete()
         {
-            if (conflictConstraints.Contains(constraint) == false)
+            lock (this)
             {
-                conflictConstraints.Add(constraint);
+                foreach (var adm in admin)
+                    adm.RemoveConflict(this);
             }
-            conflict++;
-            conflict_cost += constraint.cost;
+        }
+        public void AddAdm(ConflictAdmin adm)
+        {
+            lock (this)
+            {
+                admin.Add(adm);
+            }
+        }
+        ~Conflict()
+        {
+            Delete();
+        }
+    }
+
+    public class ChangedAdmin
+    {
+        public static UInt64 GlobalImprovementCounter = 2;
+        public UInt64 ImprovementCounter = 1;
+        public void Changed()
+        {
+            GlobalImprovementCounter++;
+            ImprovementCounter = GlobalImprovementCounter;
+        }
+        public bool IsNewer(UInt64 counter)
+        {
+            if (ImprovementCounter > counter)
+            {
+                return true;
+            }
+            return false;
+        }
+    }
+
+    public class ConflictAdmin : ChangedAdmin
+    {
+        protected List<Conflict> conflictList = new List<Conflict>();
+
+        public List<Constraint> constraintList { get { lock (this) { return conflictList.Select(con => con.con).ToList(); } } }
+        public void RemoveConflict(Conflict con)
+        {
+            lock (this)
+            {
+                conflictList.Remove(con);
+            }
+        }
+        public int conflict
+        {
+            get
+            {
+                lock (this)
+                { return conflictList.Count(); }
+            }
+        }
+        public int conflict_cost
+        {
+            get
+            {
+                lock (this)
+                { return conflictList.Sum(c => c.Cost); }
+            }
+        }
+
+        public void AddConflict(Conflict con)
+        {
+            lock (this)
+            {
+                conflictList.Add(con);
+                con.AddAdm(this);
+            }
         }
     }
 
     public abstract class Constraint
     {
-        public virtual void ReInit()
-        { }
+        private List<ChangedAdmin> related = new List<ChangedAdmin>();
+        protected void AddRelated(ChangedAdmin admin)
+        {
+            if (related.Contains(admin) == false)
+                related.Add(admin);
+        }
+        UInt64 ImprovementCounter = 0;
+
+        public bool ShouldExecute()
+        {
+            foreach (var adm in related)
+            {
+                if (adm.IsNewer(ImprovementCounter))
+                {
+                    ImprovementCounter = ChangedAdmin.GlobalImprovementCounter;
+                    return true;
+                }
+            }
+            return false;
+        }
 
         public bool VisitorAlso = true;
         List<Error> errors = new List<Error>();
@@ -78,27 +165,6 @@ namespace CompetitionCreator
         public Club club { get; set; }
         public Poule poule { get; set; }
         public Team team { get; set; }
-        public virtual bool RelatedTo(List<Club> clubs) { return clubs.Contains(this.club); }
-        public virtual bool RelatedTo(List<Poule> poules) { return poules.Contains(this.poule); }
-        public virtual bool RelatedTo(List<Team> teams) { return teams.Contains(this.team); }
-        public virtual List<Club> RelatedClubs()
-        {
-            List<Club> clubs = new List<Club>();
-            if (club != null) clubs.Add(club);
-            return clubs;
-        }
-        public virtual List<Poule> RelatedPoules()
-        {
-            List<Poule> poules = new List<Poule>();
-            if (poule != null) poules.Add(poule);
-            return poules;
-        }
-        public virtual List<Team> RelatedTeams()
-        {
-            List<Team> teams = new List<Team>();
-            if (team != null) teams.Add(team);
-            return teams;
-        }
         public virtual string Context
         {
             get
@@ -124,37 +190,46 @@ namespace CompetitionCreator
         }
         public List<Match> conflictMatches = new List<Match>();
         protected enum VisitorHomeBoth { VisitorOnly, HomeOnly, Both };
+        public List<Conflict> conflicts = new List<Conflict>();
+        public void ClearConflicts()
+        {
+            foreach (var c in conflicts)
+                c.Delete();
+            conflicts.Clear();
+        }
         protected void AddConflictMatch(VisitorHomeBoth who, params Match[] matches)
         {
             for (int i = 0; i < matches.Length; i++)
             {
+                var conflict = new Conflict(this, conflict_cost);
                 conflict_cost += cost;
+
                 if (conflictMatches.Contains(matches[i]) == false)
                 {
                     if (matches[i].HasConflict() == false)
                     {
                         conflictMatches.Add(matches[i]);
-                        matches[i].AddConflict(this);
-                        matches[i].Week.AddConflict(this);
-                        matches[i].poule.AddConflict(this);
-                        matches[i].poule.serie.AddConflict(this);
-                        if (who != VisitorHomeBoth.VisitorOnly) matches[i].homeTeam.AddConflict(this);
-                        if (who != VisitorHomeBoth.HomeOnly) matches[i].visitorTeam.AddConflict(this);
+                        matches[i].AddConflict(conflict);
+                        matches[i].Week.AddConflict(conflict);
+                        matches[i].poule.AddConflict(conflict);
+                        matches[i].poule.serie.AddConflict(conflict);
+                        if (who != VisitorHomeBoth.VisitorOnly && matches[i].homeTeam.RealTeam()) matches[i].homeTeam.AddConflict(conflict);
+                        if (who != VisitorHomeBoth.HomeOnly && matches[i].visitorTeam.RealTeam()) matches[i].visitorTeam.AddConflict(conflict);
                         if (club != null)
                         {
-                            club.AddConflict(this);
+                            club.AddConflict(conflict);
                         }
                         else
                         {
                             if (who == VisitorHomeBoth.Both)
                             {
-                                matches[i].homeTeam.club.AddConflict(this);
-                                if (matches[i].homeTeam.club != matches[i].visitorTeam.club) matches[i].visitorTeam.club.AddConflict(this);
+                                matches[i].homeTeam.club.AddConflict(conflict);
+                                if (matches[i].homeTeam.club != matches[i].visitorTeam.club) matches[i].visitorTeam.club.AddConflict(conflict);
                             }
                             else
                             {
-                                if (who != VisitorHomeBoth.VisitorOnly) matches[i].homeTeam.club.AddConflict(this);
-                                if (who != VisitorHomeBoth.HomeOnly) matches[i].visitorTeam.club.AddConflict(this);
+                                if (who != VisitorHomeBoth.VisitorOnly) matches[i].homeTeam.club.AddConflict(conflict);
+                                if (who != VisitorHomeBoth.HomeOnly) matches[i].visitorTeam.club.AddConflict(conflict);
                             }
 
                         }
@@ -179,6 +254,7 @@ namespace CompetitionCreator
         }
         public override void Evaluate(Model model)
         {
+            ClearConflicts();
             conflict_cost = 0;
             conflictMatches.Clear();
             bool optimize = false;
@@ -229,6 +305,8 @@ namespace CompetitionCreator
         }
         public override void Evaluate(Model model)
         {
+            ClearConflicts();
+
             conflict_cost = 0;
             conflictMatches.Clear();
             if (poule.evaluated)
@@ -284,6 +362,8 @@ namespace CompetitionCreator
         }
         public override void Evaluate(Model model)
         {
+            ClearConflicts();
+
             conflict_cost = 0;
             conflictMatches.Clear();
             int[] counts = new int[poule.maxTeams];
@@ -330,6 +410,8 @@ namespace CompetitionCreator
         }
         public override void Evaluate(Model model)
         {
+            ClearConflicts();
+
             conflict_cost = 0;
             cost = MySettings.Settings.MatchTooManyAfterEachOtherCostLow;
             conflictMatches.Clear();
@@ -457,6 +539,8 @@ namespace CompetitionCreator
         }
         public override void Evaluate(Model model)
         {
+            ClearConflicts();
+
             //if (Number % 1000 == 0 || error == true) // Deze test niet elke keer uitvoeren.
             {
                 conflict_cost = 0;
@@ -568,6 +652,8 @@ namespace CompetitionCreator
         }
         public override void Evaluate(Model model)
         {
+            ClearConflicts();
+
             conflict_cost = 0;
             conflictMatches.Clear();
             ClearErrors();
@@ -598,6 +684,8 @@ namespace CompetitionCreator
         }
         public override void Evaluate(Model model)
         {
+            ClearConflicts();
+
             conflict_cost = 0;
             conflictMatches.Clear();
             if (poule.evaluated)
@@ -661,27 +749,17 @@ namespace CompetitionCreator
             name = "Teams in same group play on different days";
             VisitorAlso = false;
             cost = MySettings.Settings.NotAllInSameWeekCost;
+            // Related to
+            foreach (var t in teams)
+                if (t.poule != null)
+                    AddRelated(t.poule);
         }
-        public override bool RelatedTo(List<Team> teams)
-        {
-            return Team.Overlap(this.listTeams, teams);
-        }
-        public override List<Club> RelatedClubs()
-        {
-            List<Club> relatedClubs = new List<Club>();
-            foreach (Team team in listTeams)
-            {
-                if (relatedClubs.Contains(team.club) == false) relatedClubs.Add(team.club);
-            }
-            return relatedClubs;
-        }
-        public override List<Team> RelatedTeams()
-        {
-            return listTeams;
-        }
-
         public override void Evaluate(Model model)
         {
+            if (!ShouldExecute())
+                return;
+            ClearConflicts();
+
             // TODO: skip if poule is not related to club.
             conflict_cost = 0;
             conflictMatches.Clear();
@@ -746,9 +824,15 @@ namespace CompetitionCreator
             VisitorAlso = false;
             name = "Teams on the same time";
             cost = MySettings.Settings.PlayAtSameTime;
+            AddRelated(cl.poule);
+            AddRelated(cl2.poule);
         }
         public override void Evaluate(Model model)
         {
+            if (!ShouldExecute())
+                return;
+            ClearConflicts();
+
             conflict_cost = 0;
             conflictMatches.Clear();
             List<Match> team1Matches = team.poule.matches.FindAll(m => m.homeTeam == team || m.visitorTeam == team);
@@ -808,6 +892,8 @@ namespace CompetitionCreator
         }
         public override void Evaluate(Model model)
         {
+            ClearConflicts();
+
             conflict_cost = 0;
             conflictMatches.Clear();
             if (club.conflict > 0)
@@ -830,9 +916,15 @@ namespace CompetitionCreator
             poule = team.poule;
             VisitorAlso = false;
             name = "Relatief veel conflict tov # thuismatchen";
+            if (team.poule != null)
+                AddRelated(poule);
         }
         public override void Evaluate(Model model)
         {
+            if (!ShouldExecute())
+                return;
+            ClearConflicts();
+
             conflict_cost = 0;
             conflictMatches.Clear();
             int maxConflicts = 0;
@@ -865,18 +957,24 @@ namespace CompetitionCreator
             VisitorAlso = false;
             name = "Team staat niet op zijn vaste index in het schema";
             cost = 0;
+            AddRelated(poule);
         }
         public override void Evaluate(Model model)
         {
+            if (!ShouldExecute())
+                return;
+            ClearConflicts();
+
             conflict_cost = 0;
             conflictMatches.Clear();
             if (team.poule != null)
             {
                 if (team.fixedNumber > team.poule.teams.Count || team.fixedNumber <= 0 || team.poule.teams[team.fixedNumber - 1] != team)
                 {
-                    team.AddConflict(this);
-                    team.poule.AddConflict(this);
-                    team.club.AddConflict(this);
+                    var conflict = new Conflict(this, conflict_cost);
+                    team.AddConflict(conflict);
+                    team.poule.AddConflict(conflict);
+                    team.club.AddConflict(conflict);
                     conflict_cost += MySettings.Settings.FixedIndexConstraintCost;
                 }
             }
@@ -906,6 +1004,8 @@ namespace CompetitionCreator
         }
         public override void Evaluate(Model model)
         {
+            ClearConflicts();
+
             ClearErrors();
             bool found = false;
             List<Team> teams = new List<Team>();
@@ -964,11 +1064,16 @@ namespace CompetitionCreator
             VisitorAlso = false;
             cost = MySettings.Settings.DefaultCustomTeamConstraintCost;
             name = "Team conflict";
+            AddRelated(team.poule);
         }
         public string team1str { get { if (team != null) return team.name + " (" + team.seriePouleName + ")"; else return "? (Team removed)"; } }
 
         public override void Evaluate(Model model)
         {
+            if (!ShouldExecute())
+                return;
+            ClearConflicts();
+
             conflict_cost = 0;
             conflictMatches.Clear();
             if (team.poule != null)
@@ -993,8 +1098,9 @@ namespace CompetitionCreator
                         if (match == null)
                         {
                             conflict_cost += cost;
-                            team.AddConflict(this);
-                            team.club.AddConflict(this);
+                            var conflict = new Conflict(this, conflict_cost);
+                            team.AddConflict(conflict);
+                            team.club.AddConflict(conflict);
                         }
                         else if (match.homeTeam != team)
                         {
@@ -1005,8 +1111,9 @@ namespace CompetitionCreator
                         if (match == null)
                         {
                             conflict_cost += cost;
-                            team.AddConflict(this);
-                            team.club.AddConflict(this);
+                            var conflict = new Conflict(this, conflict_cost);
+                            team.AddConflict(conflict);
+                            team.club.AddConflict(conflict);
                         }
                         else if (match.visitorTeam != team)
                         {
@@ -1044,299 +1151,270 @@ namespace CompetitionCreator
         }
     }
 
-    class ConstraintGrouping : Constraint
-    {
-        public Error GetError()
-        {
-            ClearErrors();
-            if (GroupA.Find(t => GroupB.Contains(t)) != null)
-            {
-                Error error = new Error(Error.ErrorType.AutoClearable);
-                error.text = "Teams in group A and B should play not on the same day/weekend, but some teams are in both groups";
-                error.AddHelpHtml("The groups are calculated based on: the group of each team, and the inter team constraints that are specified. Typically, the cause can be found in the inter team constraints for the teams listed in  group A and B. These can be changed in Edit/Club Registrations.");
-                string html = " Having this error, it is of no use of optimizing the competition since conflicting constraints can make that the optimization takes the wrong decisions.<br/>";
-                html += "<b>Group A</b><ul>";
-                foreach (Team t in GroupA)
-                {
-                    html += "<li>" + t.club.name + " - " + t.name + "(" + t.seriePouleName + ")</li>";
-                }
-                html += "</ul>";
-                html += "<b>Group B</b><ul>";
-                foreach (Team t in GroupB)
-                {
-                    html += "<li>" + t.club.name + " - " + t.name + "(" + t.seriePouleName + ")</li>";
-                }
-                html += "</ul>";
-                error.AddDetailHtml(html);
-                AddError(error);
-                return error;
-            }
-            return null;
-        }
-        public List<Team> GroupA = new List<Team>();
-        public List<Team> GroupB = new List<Team>();
-
-        public List<MatchWeek> AWeeks = new List<MatchWeek>();
-        public List<MatchWeek> BWeeks = new List<MatchWeek>();
-        public ConstraintGrouping()
-        {
-            VisitorAlso = false;
-            name = "Group constraints";
-            ReInit();
-        }
-        public override bool RelatedTo(List<Team> teams)
-        {
-            foreach (Team team in teams)
-            {
-                if (GroupA.Contains(team) || GroupB.Contains(team)) return true;
-            }
-            return false;
-        }
-
-        public override List<Club> RelatedClubs()
-        {
-            List<Club> relatedClubs = new List<Club>();
-            foreach (Team team in GroupA)
-            {
-                if (relatedClubs.Contains(team.club) == false) relatedClubs.Add(team.club);
-            }
-            foreach (Team team in GroupB)
-            {
-                if (relatedClubs.Contains(team.club) == false) relatedClubs.Add(team.club);
-            }
-            return relatedClubs;
-        }
-        public override List<Team> RelatedTeams()
-        {
-            return new List<Team>(GroupA.Union(GroupB));
-        }
-        enum where { none, A, B };
-        private bool AddTeamIfNeeded(TeamConstraint.What what, Team team1, Team team2, List<Team> GroupA, List<Team> GroupB)
-        {
-            bool result = false;
-            if (team1.defaultDay == team2.defaultDay)
-            {
-                if (GroupA.Contains(team1))
-                {
-                    switch (what)
-                    {
-                        case TeamConstraint.What.HomeOnSameDay:
-                            if (GroupA.Contains(team2) == false) GroupA.Add(team2);
-                            result = true;
-                            break;
-                        case TeamConstraint.What.HomeNotOnSameDay:
-                            if (GroupB.Contains(team2) == false) GroupB.Add(team2);
-                            result = true;
-                            break;
-                        case TeamConstraint.What.HomeInSameWeekend: // also take these into account
-                            if (GroupA.Contains(team2) == false) GroupA.Add(team2);
-                            result = true;
-                            break;
-                        case TeamConstraint.What.HomeNotInSameWeekend: // also take these into account
-                            if (GroupB.Contains(team2) == false) GroupB.Add(team2);
-                            result = true;
-                            break;
-                    }
-                }
-            }
-            return result;
-        }
-        private bool AddTeamIfNeededWeekend(TeamConstraint.What what, Team team1, Team team2, List<Team> GroupA, List<Team> GroupB)
-        {
-            bool result = false;
-            if (GroupA.Contains(team1))
-            {
-                switch (what)
-                {
-                    case TeamConstraint.What.HomeInSameWeekend:
-                        if (GroupA.Contains(team2) == false) GroupA.Add(team2);
-                        result = true;
-                        break;
-                    case TeamConstraint.What.HomeNotInSameWeekend:
-                        if (GroupB.Contains(team2) == false) GroupB.Add(team2);
-                        result = true;
-                        break;
-                }
-            }
-            return result;
-        }
-        public bool AddTeamConstraintDay(TeamConstraint tc)
-        {
-            bool result = false;
-            result = result || AddTeamIfNeeded(tc.what, tc.team1, tc.team2, GroupA, GroupB);
-            result = result || AddTeamIfNeeded(tc.what, tc.team1, tc.team2, GroupB, GroupA);
-            result = result || AddTeamIfNeeded(tc.what, tc.team2, tc.team1, GroupA, GroupB);
-            result = result || AddTeamIfNeeded(tc.what, tc.team2, tc.team1, GroupB, GroupA);
-            return result;
-        }
-        public bool AddTeamConstraintWeekend(TeamConstraint tc)
-        {
-            bool result = false;
-            result = result || AddTeamIfNeededWeekend(tc.what, tc.team1, tc.team2, GroupA, GroupB);
-            result = result || AddTeamIfNeededWeekend(tc.what, tc.team1, tc.team2, GroupB, GroupA);
-            result = result || AddTeamIfNeededWeekend(tc.what, tc.team2, tc.team1, GroupA, GroupB);
-            result = result || AddTeamIfNeededWeekend(tc.what, tc.team2, tc.team1, GroupB, GroupA);
-            return result;
-        }
-
-        struct counters
-        {
-            public counters(int A, int B)
-            {
-                countA = A;
-                countB = B;
-                nonChangeableA = 0;
-                nonChangeableB = 0;
-                sporthalNotAvailableA = 0;
-                sporthalNotAvailableB = 0;
-            }
-            public counters(counters c)
-            {
-                countA = c.countA;
-                countB = c.countB;
-                nonChangeableA = c.nonChangeableA;
-                nonChangeableB = c.nonChangeableB;
-                sporthalNotAvailableA = c.sporthalNotAvailableA;
-                sporthalNotAvailableB = c.sporthalNotAvailableB;
-            }
-            public int countA;
-            public int countB;
-            public int nonChangeableA;
-            public int nonChangeableB;
-            public int sporthalNotAvailableA;
-            public int sporthalNotAvailableB;
-
-            public int score(bool A)
-            {
-                int temp = (nonChangeableA - nonChangeableB) * 10 + countA - countB - (sporthalNotAvailableA - sporthalNotAvailableB) * 10;
-                return A ? temp : -temp;
-            }
-        };
-        public void DetermineWeeks()
-        {
-            AWeeks = new List<MatchWeek>();
-            BWeeks = new List<MatchWeek>();
-            SortedDictionary<MatchWeek, counters> weeks = new SortedDictionary<MatchWeek, counters>();
-            foreach (Team team in GroupA)
-            {
-                if (team.poule != null)
-                {
-                    foreach (Match match in team.poule.matches)
-                    {
-                        if (!weeks.ContainsKey(match.Week))
-                            weeks.Add(match.Week, new counters());
-                        if (match.RealMatch() && team == match.homeTeam)
-                        {
-                            var c = new counters(weeks[match.Week]);
-                            c.countA++;
-                            if (team.poule.imported)
-                                c.nonChangeableA++;
-                            if (team.sporthal.NotAvailable.Contains(match.datetime.Date))
-                                c.sporthalNotAvailableA++;
-                            weeks[match.Week] = c;
-                        }
-                    }
-                }
-            }
-            foreach (Team team in GroupB)
-            {
-                if (team.poule != null)
-                {
-                    foreach (Match match in team.poule.matches)
-                    {
-                        if (!weeks.ContainsKey(match.Week))
-                            weeks.Add(match.Week, new counters());
-                        if (match.RealMatch() && team == match.homeTeam)
-                        {
-                            var c = new counters(weeks[match.Week]);
-                            c.countB++;
-                            if (team.poule.imported)
-                                c.nonChangeableB++;
-                            if (team.sporthal.NotAvailable.Contains(match.datetime.Date))
-                                c.sporthalNotAvailableB++;
-                            weeks[match.Week] = c;
-                        }
-                    }
-                }
-            }
-
-            bool turnA = true;
-            while (weeks.Count > 0)
-            {
-                int score = int.MinValue;
-                MatchWeek week = null;
-                foreach (var kvp in weeks)
-                {
-                    if (kvp.Value.score(turnA) > score)
-                    {
-                        score = kvp.Value.score(turnA);
-                        week = kvp.Key;
-                    }
-                }
-                if (turnA)
-                    AWeeks.Add(week);
-                else
-                    BWeeks.Add(week);
-                turnA = !turnA;
-                weeks.Remove(week);
-            }
-        }
-
-        public override void ReInit()
-        {
-            DetermineWeeks();
-        }
-        public override void Evaluate(Model model)
-        {
-            conflictMatches.Clear();
-            conflict_cost = 0;
-            cost = 0;
-            List<Match> AMatches = new List<Match>();
-            List<Match> BMatches = new List<Match>();
-            List<Club> clubs = new List<Club>();
-            foreach (Team team in GroupA)
-            {
-                if (team.poule != null)
-                {
-                    foreach (var match in team.poule.matches)
-                    {
-                        if (match.homeTeam == team && match.RealMatch() && BWeeks.Contains(match.Week))
-                            AddConflictMatch(VisitorHomeBoth.HomeOnly, match);
-                    }
-                }
-            }
-            foreach (Team team in GroupB)
-            {
-                if (team.poule != null)
-                {
-                    foreach (var match in team.poule.matches)
-                    {
-                        if (match.homeTeam == team && match.RealMatch() && AWeeks.Contains(match.Week))
-                            AddConflictMatch(VisitorHomeBoth.HomeOnly, match);
-                    }
-                }
-            }
-        }
-        private void CheckAtSameDay()
-        {
-
-        }
-        public override string[] GetTextDescription()
-        {
-            List<string> result = new List<string>();
-            result.Add("Group X:");
-            foreach (Team t in GroupA)
-            {
-                result.Add(" - " + t.serie.name.ToString() + " - " + t.name.ToString() + " (" + t.Id.ToString() + ")");
-            }
-            result.Add("Group Y:");
-            foreach (Team t in GroupB)
-            {
-                result.Add(" - " + t.serie.name.ToString() + " - " + t.name.ToString() + " (" + t.Id.ToString() + ")");
-            }
-            return result.ToArray();
-        }
-    }
+    // class ConstraintGrouping : Constraint
+    // {
+    //     public Error GetError()
+    //     {
+    //         ClearErrors();
+    //         if (GroupA.Find(t => GroupB.Contains(t)) != null)
+    //         {
+    //             Error error = new Error(Error.ErrorType.AutoClearable);
+    //             error.text = "Teams in group A and B should play not on the same day/weekend, but some teams are in both groups";
+    //             error.AddHelpHtml("The groups are calculated based on: the group of each team, and the inter team constraints that are specified. Typically, the cause can be found in the inter team constraints for the teams listed in  group A and B. These can be changed in Edit/Club Registrations.");
+    //             string html = " Having this error, it is of no use of optimizing the competition since conflicting constraints can make that the optimization takes the wrong decisions.<br/>";
+    //             html += "<b>Group A</b><ul>";
+    //             foreach (Team t in GroupA)
+    //             {
+    //                 html += "<li>" + t.club.name + " - " + t.name + "(" + t.seriePouleName + ")</li>";
+    //             }
+    //             html += "</ul>";
+    //             html += "<b>Group B</b><ul>";
+    //             foreach (Team t in GroupB)
+    //             {
+    //                 html += "<li>" + t.club.name + " - " + t.name + "(" + t.seriePouleName + ")</li>";
+    //             }
+    //             html += "</ul>";
+    //             error.AddDetailHtml(html);
+    //             AddError(error);
+    //             return error;
+    //         }
+    //         return null;
+    //     }
+    //     public List<Team> GroupA = new List<Team>();
+    //     public List<Team> GroupB = new List<Team>();
+    // 
+    //     public List<MatchWeek> AWeeks = new List<MatchWeek>();
+    //     public List<MatchWeek> BWeeks = new List<MatchWeek>();
+    //     public ConstraintGrouping()
+    //     {
+    //         VisitorAlso = false;
+    //         name = "Group constraints";
+    //     }
+    //     enum where { none, A, B };
+    //     private bool AddTeamIfNeeded(TeamConstraint.What what, Team team1, Team team2, List<Team> GroupA, List<Team> GroupB)
+    //     {
+    //         bool result = false;
+    //         if (team1.defaultDay == team2.defaultDay)
+    //         {
+    //             if (GroupA.Contains(team1))
+    //             {
+    //                 switch (what)
+    //                 {
+    //                     case TeamConstraint.What.HomeOnSameDay:
+    //                         if (GroupA.Contains(team2) == false) GroupA.Add(team2);
+    //                         result = true;
+    //                         break;
+    //                     case TeamConstraint.What.HomeNotOnSameDay:
+    //                         if (GroupB.Contains(team2) == false) GroupB.Add(team2);
+    //                         result = true;
+    //                         break;
+    //                     case TeamConstraint.What.HomeInSameWeekend: // also take these into account
+    //                         if (GroupA.Contains(team2) == false) GroupA.Add(team2);
+    //                         result = true;
+    //                         break;
+    //                     case TeamConstraint.What.HomeNotInSameWeekend: // also take these into account
+    //                         if (GroupB.Contains(team2) == false) GroupB.Add(team2);
+    //                         result = true;
+    //                         break;
+    //                 }
+    //             }
+    //         }
+    //         return result;
+    //     }
+    //     private bool AddTeamIfNeededWeekend(TeamConstraint.What what, Team team1, Team team2, List<Team> GroupA, List<Team> GroupB)
+    //     {
+    //         bool result = false;
+    //         if (GroupA.Contains(team1))
+    //         {
+    //             switch (what)
+    //             {
+    //                 case TeamConstraint.What.HomeInSameWeekend:
+    //                     if (GroupA.Contains(team2) == false) GroupA.Add(team2);
+    //                     result = true;
+    //                     break;
+    //                 case TeamConstraint.What.HomeNotInSameWeekend:
+    //                     if (GroupB.Contains(team2) == false) GroupB.Add(team2);
+    //                     result = true;
+    //                     break;
+    //             }
+    //         }
+    //         return result;
+    //     }
+    //     public bool AddTeamConstraintDay(TeamConstraint tc)
+    //     {
+    //         bool result = false;
+    //         result = result || AddTeamIfNeeded(tc.what, tc.team1, tc.team2, GroupA, GroupB);
+    //         result = result || AddTeamIfNeeded(tc.what, tc.team1, tc.team2, GroupB, GroupA);
+    //         result = result || AddTeamIfNeeded(tc.what, tc.team2, tc.team1, GroupA, GroupB);
+    //         result = result || AddTeamIfNeeded(tc.what, tc.team2, tc.team1, GroupB, GroupA);
+    //         return result;
+    //     }
+    //     public bool AddTeamConstraintWeekend(TeamConstraint tc)
+    //     {
+    //         bool result = false;
+    //         result = result || AddTeamIfNeededWeekend(tc.what, tc.team1, tc.team2, GroupA, GroupB);
+    //         result = result || AddTeamIfNeededWeekend(tc.what, tc.team1, tc.team2, GroupB, GroupA);
+    //         result = result || AddTeamIfNeededWeekend(tc.what, tc.team2, tc.team1, GroupA, GroupB);
+    //         result = result || AddTeamIfNeededWeekend(tc.what, tc.team2, tc.team1, GroupB, GroupA);
+    //         return result;
+    //     }
+    // 
+    //     struct counters
+    //     {
+    //         public counters(int A, int B)
+    //         {
+    //             countA = A;
+    //             countB = B;
+    //             nonChangeableA = 0;
+    //             nonChangeableB = 0;
+    //             sporthalNotAvailableA = 0;
+    //             sporthalNotAvailableB = 0;
+    //         }
+    //         public counters(counters c)
+    //         {
+    //             countA = c.countA;
+    //             countB = c.countB;
+    //             nonChangeableA = c.nonChangeableA;
+    //             nonChangeableB = c.nonChangeableB;
+    //             sporthalNotAvailableA = c.sporthalNotAvailableA;
+    //             sporthalNotAvailableB = c.sporthalNotAvailableB;
+    //         }
+    //         public int countA;
+    //         public int countB;
+    //         public int nonChangeableA;
+    //         public int nonChangeableB;
+    //         public int sporthalNotAvailableA;
+    //         public int sporthalNotAvailableB;
+    // 
+    //         public int score(bool A)
+    //         {
+    //             int temp = (nonChangeableA - nonChangeableB) * 10 + countA - countB - (sporthalNotAvailableA - sporthalNotAvailableB) * 10;
+    //             return A ? temp : -temp;
+    //         }
+    //     };
+    //     public void DetermineWeeks()
+    //     {
+    //         AWeeks = new List<MatchWeek>();
+    //         BWeeks = new List<MatchWeek>();
+    //         SortedDictionary<MatchWeek, counters> weeks = new SortedDictionary<MatchWeek, counters>();
+    //         foreach (Team team in GroupA)
+    //         {
+    //             if (team.poule != null)
+    //             {
+    //                 foreach (Match match in team.poule.matches)
+    //                 {
+    //                     if (!weeks.ContainsKey(match.Week))
+    //                         weeks.Add(match.Week, new counters());
+    //                     if (match.RealMatch() && team == match.homeTeam)
+    //                     {
+    //                         var c = new counters(weeks[match.Week]);
+    //                         c.countA++;
+    //                         if (team.poule.imported)
+    //                             c.nonChangeableA++;
+    //                         if (team.sporthal.NotAvailable.Contains(match.datetime.Date))
+    //                             c.sporthalNotAvailableA++;
+    //                         weeks[match.Week] = c;
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //         foreach (Team team in GroupB)
+    //         {
+    //             if (team.poule != null)
+    //             {
+    //                 foreach (Match match in team.poule.matches)
+    //                 {
+    //                     if (!weeks.ContainsKey(match.Week))
+    //                         weeks.Add(match.Week, new counters());
+    //                     if (match.RealMatch() && team == match.homeTeam)
+    //                     {
+    //                         var c = new counters(weeks[match.Week]);
+    //                         c.countB++;
+    //                         if (team.poule.imported)
+    //                             c.nonChangeableB++;
+    //                         if (team.sporthal.NotAvailable.Contains(match.datetime.Date))
+    //                             c.sporthalNotAvailableB++;
+    //                         weeks[match.Week] = c;
+    //                     }
+    //                 }
+    //             }
+    //         }
+    // 
+    //         bool turnA = true;
+    //         while (weeks.Count > 0)
+    //         {
+    //             int score = int.MinValue;
+    //             MatchWeek week = null;
+    //             foreach (var kvp in weeks)
+    //             {
+    //                 if (kvp.Value.score(turnA) > score)
+    //                 {
+    //                     score = kvp.Value.score(turnA);
+    //                     week = kvp.Key;
+    //                 }
+    //             }
+    //             if (turnA)
+    //                 AWeeks.Add(week);
+    //             else
+    //                 BWeeks.Add(week);
+    //             turnA = !turnA;
+    //             weeks.Remove(week);
+    //         }
+    //     }
+    // 
+    //     public override void Evaluate(Model model)
+    //     {
+    //         ClearConflicts();
+    // 
+    //         conflictMatches.Clear();
+    //         conflict_cost = 0;
+    //         cost = 0;
+    //         List<Match> AMatches = new List<Match>();
+    //         List<Match> BMatches = new List<Match>();
+    //         List<Club> clubs = new List<Club>();
+    //         foreach (Team team in GroupA)
+    //         {
+    //             if (team.poule != null)
+    //             {
+    //                 foreach (var match in team.poule.matches)
+    //                 {
+    //                     if (match.homeTeam == team && match.RealMatch() && BWeeks.Contains(match.Week))
+    //                         AddConflictMatch(VisitorHomeBoth.HomeOnly, match);
+    //                 }
+    //             }
+    //         }
+    //         foreach (Team team in GroupB)
+    //         {
+    //             if (team.poule != null)
+    //             {
+    //                 foreach (var match in team.poule.matches)
+    //                 {
+    //                     if (match.homeTeam == team && match.RealMatch() && AWeeks.Contains(match.Week))
+    //                         AddConflictMatch(VisitorHomeBoth.HomeOnly, match);
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     private void CheckAtSameDay()
+    //     {
+    // 
+    //     }
+    //     public override string[] GetTextDescription()
+    //     {
+    //         List<string> result = new List<string>();
+    //         result.Add("Group X:");
+    //         foreach (Team t in GroupA)
+    //         {
+    //             result.Add(" - " + t.serie.name.ToString() + " - " + t.name.ToString() + " (" + t.Id.ToString() + ")");
+    //         }
+    //         result.Add("Group Y:");
+    //         foreach (Team t in GroupB)
+    //         {
+    //             result.Add(" - " + t.serie.name.ToString() + " - " + t.name.ToString() + " (" + t.Id.ToString() + ")");
+    //         }
+    //         return result.ToArray();
+    //     }
+    // }
 
 
 
@@ -1376,53 +1454,21 @@ namespace CompetitionCreator
                 name = "AB: Too many weekends used";
             else
                 name = "AB: Constraints";
+
+            // calculated related entities
+            foreach (Team t in ABGroup.A)
+                AddRelated(t.poule);
+            foreach (Team t in ABGroup.B)
+                AddRelated(t.poule);
         }
 
-        public override void ReInit()
-        {
-        }
-
-        public override bool RelatedTo(List<Team> teams)
-        {
-            foreach (Team team in teams)
-            {
-                if (ABGroup.A.Contains(team) || ABGroup.B.Contains(team)) return true;
-            }
-            return false;
-        }
-
-        public override List<Club> RelatedClubs()
-        {
-            List<Club> relatedClubs = new List<Club>();
-            foreach (Team team in ABGroup.A)
-            {
-                if (relatedClubs.Contains(team.club) == false) relatedClubs.Add(team.club);
-            }
-            foreach (Team team in ABGroup.B)
-            {
-                if (relatedClubs.Contains(team.club) == false) relatedClubs.Add(team.club);
-            }
-            return relatedClubs;
-        }
-        public override List<Team> RelatedTeams()
-        {
-            return new List<Team>(ABGroup.A.Union(ABGroup.B));
-        }
-
-        UInt64 ImprovementCounter = 0;
         public override void Evaluate(Model model)
         {
-            UInt64 improvementCounter = 0;
-            foreach (Team t in ABGroup.A)
-                if (t.poule.ImprovementCounter > improvementCounter)
-                    improvementCounter = t.poule.ImprovementCounter;
-            foreach (Team t in ABGroup.B)
-                if (t.poule.ImprovementCounter > improvementCounter)
-                    improvementCounter = t.poule.ImprovementCounter;
+            if (!ShouldExecute())
+                return;
 
-            if (improvementCounter > ImprovementCounter)
-                ABGroup.DetermineWeeks();
-            ImprovementCounter = improvementCounter;
+            ClearConflicts();
+            ABGroup.DetermineWeeks();
 
             conflictMatches.Clear();
             conflict_cost = 0;
@@ -1434,7 +1480,7 @@ namespace CompetitionCreator
 
             List<Match> BMatches = new List<Match>();
             foreach (Team t in ABGroup.B)
-                    BMatches.AddRange(t.poule.matches.Where(m => m.homeTeam == t && m.homeTeam.club == club && m.RealMatch()));
+                BMatches.AddRange(t.poule.matches.Where(m => m.homeTeam == t && m.homeTeam.club == club && m.RealMatch()));
 
             foreach (var m1 in AMatches)
                 if (ABGroup.BWeeks.Contains(m1.Week))

@@ -637,7 +637,7 @@ namespace CompetitionCreator
                         {
                             writer.Write("{0},{1},{2},{3},{4},{5},{6},{7},{8}", poule.serie.name, poule.fullName, match.datetime.ToString("yyyy-MM-dd"), match.DayString, match.Time.ToString(), match.homeTeam.club.name, match.homeTeam.name, match.visitorTeam.club.name, match.visitorTeam.name);
 
-                            foreach (Constraint con in match.conflictConstraints)
+                            foreach (Constraint con in match.constraintList)
                             {
                                 writer.Write("," + con.name);
                             }
@@ -721,8 +721,9 @@ namespace CompetitionCreator
                 if (club.conflict_cost > 0)
                 {
                     writer.WriteLine("{0}", club.name);
-                    club.conflictConstraints.Sort(delegate (Constraint c1, Constraint c2) { return c1.Title.CompareTo(c2.Title); });
-                    foreach (Constraint constraint in club.conflictConstraints)
+                    var constraints = club.constraintList.ToList();
+                    constraints.Sort(delegate (Constraint c1, Constraint c2) { return c1.Title.CompareTo(c2.Title); });
+                    foreach (Constraint constraint in constraints)
                     {
                         if (constraint.conflict_cost > 0)
                         {
@@ -774,9 +775,9 @@ namespace CompetitionCreator
                     if (match.RealMatch())
                     {
                         string constraint = " - ";
-                        if (match.conflictConstraints.Count > 0) constraint = " * ";
+                        if (match.constraintList.Count > 0) constraint = " * ";
                         string conflicts = "";
-                        foreach (Constraint constr in match.conflictConstraints)
+                        foreach (Constraint constr in match.constraintList)
                         {
                             conflicts += constr.name + ",";
                         }

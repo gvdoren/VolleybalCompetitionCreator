@@ -7,7 +7,7 @@ using System.Diagnostics;
 namespace CompetitionCreator
 {
 
-    public class MatchWeek : ConstraintAdmin, IComparable<MatchWeek>
+    public class MatchWeek : ConflictAdmin, IComparable<MatchWeek>
     {
         public int round = -1;
         public bool dayOverruled = false;

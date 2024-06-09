@@ -92,7 +92,7 @@ namespace CompetitionCreator
                     GlobalState.selectedClubs.Add(team.club);
                     if (team.poule != null)
                     {
-                        constraints.AddRange(team.conflictConstraints);
+                        constraints.AddRange(team.constraintList);
                     }
                     GlobalState.Changed();
                 }

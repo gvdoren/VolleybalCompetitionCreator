@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CompetitionCreator
 {
-    public class Team: ConstraintAdmin
+    public class Team: ConflictAdmin
     {
         public enum WeekRestrictionEnum { Even, Odd, All };
         public WeekRestrictionEnum EvenOdd = WeekRestrictionEnum.All;
@@ -40,11 +40,6 @@ namespace CompetitionCreator
         public Time defaultTime;
         public bool deleted { get; set; }
         public string email;
-        public override void AddConflict(Constraint constraint)
-        {
-            // only for real teams.
-            if(RealTeam()) base.AddConflict(constraint);
-        }
         public string serieTeamName { get { return serie.name + " - " + name; } }
         public DayOfWeek defaultDay = DayOfWeek.Monday; // initial value since monday is never the default
         public int Index 

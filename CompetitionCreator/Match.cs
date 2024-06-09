@@ -6,14 +6,14 @@ using System.Diagnostics;
 
 namespace CompetitionCreator
 {
-    public class Match : ConstraintAdmin
+    public class Match : ConflictAdmin
     {
         public string ConflictString
         {
             get
             {
                 string str = "";
-                foreach (Constraint con in conflictConstraints)
+                foreach (var con in constraintList)
                 {
                     str += con.Title + " ";
                 }
@@ -146,8 +146,9 @@ namespace CompetitionCreator
             this.visitorTeamIndex = match.visitorTeamIndex;
             this.serie = match.serie;
             this.poule = match.poule;
-            this.conflict = match.conflict;
-            this.conflict_cost = match.conflict_cost;
+            this.conflictList = match.conflictList;
+            foreach (var con in conflictList)
+                con.AddAdm(this);
             this.time = match.time;
         }
 

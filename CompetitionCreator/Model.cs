@@ -6,6 +6,7 @@ using BrightIdeasSoftware;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace CompetitionCreator
 {
@@ -48,6 +49,8 @@ namespace CompetitionCreator
         public YearPlans yearPlans = null;
         public List<TeamConstraint> teamConstraints = new List<TeamConstraint>();
         public List<Constraint> constraints = new List<Constraint>();
+        public List<Constraint> constraints_1 = new List<Constraint>();
+        public List<Constraint> constraints_2 = new List<Constraint>();
         public List<Sporthal> sporthalls = new List<Sporthal>();
         public void Optimize()
         {
@@ -58,66 +61,23 @@ namespace CompetitionCreator
                 Changed();
             }
         }
-        private void ClearAllConflicts()
-        {
-            foreach (Team team in teams) team.ClearConflicts();
-            foreach (Poule poule in poules)
-            {
-                poule.ClearConflicts();
-                foreach (Match match in poule.matches)
-                {
-                    match.ClearConflicts();
-                }
-                foreach (MatchWeek week in poule.weeks)
-                {
-                    week.ClearConflicts();
-                }
-            }
-            foreach (Serie serie in series)
-            {
-                serie.ClearConflicts();
-            }
-            foreach (Club club in clubs)
-            {
-                club.ClearConflicts();
-            }
-
-        }
-
-        public void ReInit()
-        {
-            lock (this)
-            {
-                foreach (Constraint constraint in constraints)
-                {
-                    constraint.ReInit();
-                }
-            }
-        }
 
         public void Evaluate(Poule p)
         {
             lock (this)
             {
-                ClearAllConflicts();
-                foreach (Constraint constraint in constraints)
+                //foreach (var constraint in constraints)
+                //    constraint.Evaluate(this);
+                Parallel.ForEach(constraints, constraint =>
                 {
                     constraint.Evaluate(this);
-                }
-            }
-        }
-        public void EvaluateRelatedConstraints(Poule p)
-        {
-            //Evaluate(p); return;
-
-            lock (this)
-            {
-                ClearAllConflicts();
-                foreach (Constraint constraint in p.relatedConstraints)
-                //foreach (Constraint constraint in constraints)
+                });
+                Parallel.ForEach(constraints_2, constraint =>
                 {
                     constraint.Evaluate(this);
-                }
+                });
+                foreach (var constraint in constraints_2)
+                    constraint.Evaluate(this);
             }
         }
         public int TotalConflicts()
@@ -129,18 +89,6 @@ namespace CompetitionCreator
                 {
                     conflicts += constraint.conflict_cost;
                     //Console.WriteLine("{0} - {1}", constraint.name, constraint.conflict_cost);
-                }
-                return conflicts;
-            }
-        }
-        public int TotalRelatedConflicts(Poule p)
-        {
-            lock (this)
-            {
-                int conflicts = 0;
-                foreach (Constraint constraint in p.relatedConstraints)
-                {
-                    conflicts += constraint.conflict_cost;
                 }
                 return conflicts;
             }
@@ -226,32 +174,26 @@ namespace CompetitionCreator
                     foreach (var ab in club.ABGroups)
                         constraints.Add(new ConstraintGroupingAB(club, ab));
                 }
-                using (StreamWriter outputFile = new StreamWriter("groupinfo_laden.txt"))
-                {
-                    foreach (Club club in clubs)
-                    {
-                        club.PrintGroupsInfo(outputFile);
-                    }
-                }
+                //using (StreamWriter outputFile = new StreamWriter("groupinfo_laden.txt"))
+                //{
+                //    foreach (Club club in clubs)
+                //    {
+                //        club.PrintGroupsInfo(outputFile);
+                //    }
+                //}
 
                 // Deze moet als laatste
                 foreach (Team te in teams)
                 {
                     if (te.evaluated)
                     {
-                        constraints.Add(new ConstraintTeamTooManyConflicts(te));
+                        constraints_1.Add(new ConstraintTeamTooManyConflicts(te));
                     }
                 }
                 foreach (Club club in clubs)
                 {
-                    constraints.Add(new ConstraintClubTooManyConflicts(club));
-                    constraints.Add(new ConstraintTeamNaming(club));
-                }
-                foreach (var con in constraints)
-                    con.ReInit();
-                foreach (Poule poule in poules)
-                {
-                    poule.CalculateRelatedConstraints(this);
+                    constraints_2.Add(new ConstraintClubTooManyConflicts(club));
+                    constraints_2.Add(new ConstraintTeamNaming(club));
                 }
             }
         }
@@ -344,125 +286,125 @@ namespace CompetitionCreator
 
         }
 
-        public void ConstructGroupConstraintsDay()
-        {
-            List<XY> XY_groups = new List<XY>();
-
-            // Groups per club (that share a sporthall)
-            List<Club> remaining = new List<Club>(clubs);
-            while (remaining.Count > 0)
-            {
-                List<Club> sharedClubs = new List<Club>();
-                var selectedClub = remaining.First();
-                sharedClubs.Add(selectedClub);
-                remaining.Remove(selectedClub);
-                var perWeek = selectedClub.GroupAllWeek;
-                foreach (var sharedClub in selectedClub.SharingSporthal)
-                {
-                    remaining.Remove(sharedClub);
-                    sharedClubs.Add(sharedClub);
-                    if (sharedClub.GroupAllWeek)
-                        perWeek = true;
-                }
-                if (perWeek)
-                {
-                    XY xy = new XY();
-                    foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
-                        foreach (var sharedClub in sharedClubs)
-                            CreateGroupsPerClub(sharedClub, day, ref xy);
-                    if (xy.X.Count + xy.Y.Count > 1)
-                        XY_groups.Add(xy);
-                }
-                else
-                {
-                    foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
-                    {
-                        XY xy = new XY();
-                        foreach (var sharedClub in sharedClubs)
-                            CreateGroupsPerClub(sharedClub, day, ref xy);
-                        if (xy.X.Count + xy.Y.Count > 1)
-                            XY_groups.Add(xy);
-                    }
-                }
-            }
-
-            // Merge groups based on day constraints
-            foreach (var dayContraint in teamConstraints.FindAll(c => c.team1 != null && c.team2 != null &&
-                                                                     (c.what == TeamConstraint.What.HomeNotOnSameDay || c.what == TeamConstraint.What.HomeOnSameDay) &&
-                                                                     c.team1.evaluated && c.team2.evaluated))
-            {
-                bool x1 = false;
-                var group1 = GetGroup(ref XY_groups, dayContraint.team1, ref x1);
-                bool x2 = false;
-                var group2 = GetGroup(ref XY_groups, dayContraint.team2, ref x2);
-                if (group1 == group2 && ((x1 == x2) != (dayContraint.what == TeamConstraint.What.HomeOnSameDay)))
-                    IgnoredError(dayContraint);
-                else if (group1 == group2)
-                {
-                    // Nothing has to be changed, are already in same group in correct x en y
-                }
-                else
-                {
-                    bool sw = (x1 == x2) != (dayContraint.what == TeamConstraint.What.HomeOnSameDay); // switch needed
-                    try
-                    {
-                        XY_groups.Add(MergeGroup(group1, group2, sw));
-                        XY_groups.Remove(group1);
-                        XY_groups.Remove(group2);
-                    }
-                    catch
-                    {
-                        IgnoredError(dayContraint);
-                    }
-                }
-            }
-
-            // Merge groups based on week constraints
-            foreach (var dayContraint in teamConstraints.FindAll(c => c.team1 != null && c.team2 != null &&
-                                                                     (c.what == TeamConstraint.What.HomeInSameWeekend || c.what == TeamConstraint.What.HomeNotInSameWeekend) &&
-                                                                     c.team1.evaluated && c.team2.evaluated))
-            {
-                bool x1 = false;
-                var group1 = GetGroup(ref XY_groups, dayContraint.team1, ref x1);
-                bool x2 = false;
-                var group2 = GetGroup(ref XY_groups, dayContraint.team2, ref x2);
-                if (group1 == group2 && ((x1 == x2) != (dayContraint.what == TeamConstraint.What.HomeInSameWeekend)))
-                    IgnoredError(dayContraint);
-                else if (group1 == group2)
-                {
-                    // Nothing has to be changed, are already in same group in correct x en y
-                }
-                else
-                {
-                    bool sw = (x1 == x2) != (dayContraint.what == TeamConstraint.What.HomeInSameWeekend); //switch needed
-                    try
-                    {
-                        XY_groups.Add(MergeGroup(group1, group2, sw));
-                        XY_groups.Remove(group1);
-                        XY_groups.Remove(group2);
-                    }
-                    catch
-                    {
-                        IgnoredError(dayContraint);
-                    }
-                }
-            }
-
-            // Create constraints
-            foreach (var xy in XY_groups)
-            {
-                ConstraintGrouping groupCon = new ConstraintGrouping();
-
-                if (xy.X.Count == 0 || xy.Y.Count == 0)
-                    groupCon.name = "Only 1 Group. Too many weekends are used.";
-                else
-                    groupCon.name = "Teams in different groups play in same week.";
-
-                groupCon.GroupA.AddRange(xy.X);
-                groupCon.GroupB.AddRange(xy.Y);
-                constraints.Add(groupCon);
-            }
-        }
+        //public void ConstructGroupConstraintsDay()
+        //{
+        //    List<XY> XY_groups = new List<XY>();
+        //
+        //    // Groups per club (that share a sporthall)
+        //    List<Club> remaining = new List<Club>(clubs);
+        //    while (remaining.Count > 0)
+        //    {
+        //        List<Club> sharedClubs = new List<Club>();
+        //        var selectedClub = remaining.First();
+        //        sharedClubs.Add(selectedClub);
+        //        remaining.Remove(selectedClub);
+        //        var perWeek = selectedClub.GroupAllWeek;
+        //        foreach (var sharedClub in selectedClub.SharingSporthal)
+        //        {
+        //            remaining.Remove(sharedClub);
+        //            sharedClubs.Add(sharedClub);
+        //            if (sharedClub.GroupAllWeek)
+        //                perWeek = true;
+        //        }
+        //        if (perWeek)
+        //        {
+        //            XY xy = new XY();
+        //            foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
+        //                foreach (var sharedClub in sharedClubs)
+        //                    CreateGroupsPerClub(sharedClub, day, ref xy);
+        //            if (xy.X.Count + xy.Y.Count > 1)
+        //                XY_groups.Add(xy);
+        //        }
+        //        else
+        //        {
+        //            foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
+        //            {
+        //                XY xy = new XY();
+        //                foreach (var sharedClub in sharedClubs)
+        //                    CreateGroupsPerClub(sharedClub, day, ref xy);
+        //                if (xy.X.Count + xy.Y.Count > 1)
+        //                    XY_groups.Add(xy);
+        //            }
+        //        }
+        //    }
+        //
+        //    // Merge groups based on day constraints
+        //    foreach (var dayContraint in teamConstraints.FindAll(c => c.team1 != null && c.team2 != null &&
+        //                                                             (c.what == TeamConstraint.What.HomeNotOnSameDay || c.what == TeamConstraint.What.HomeOnSameDay) &&
+        //                                                             c.team1.evaluated && c.team2.evaluated))
+        //    {
+        //        bool x1 = false;
+        //        var group1 = GetGroup(ref XY_groups, dayContraint.team1, ref x1);
+        //        bool x2 = false;
+        //        var group2 = GetGroup(ref XY_groups, dayContraint.team2, ref x2);
+        //        if (group1 == group2 && ((x1 == x2) != (dayContraint.what == TeamConstraint.What.HomeOnSameDay)))
+        //            IgnoredError(dayContraint);
+        //        else if (group1 == group2)
+        //        {
+        //            // Nothing has to be changed, are already in same group in correct x en y
+        //        }
+        //        else
+        //        {
+        //            bool sw = (x1 == x2) != (dayContraint.what == TeamConstraint.What.HomeOnSameDay); // switch needed
+        //            try
+        //            {
+        //                XY_groups.Add(MergeGroup(group1, group2, sw));
+        //                XY_groups.Remove(group1);
+        //                XY_groups.Remove(group2);
+        //            }
+        //            catch
+        //            {
+        //                IgnoredError(dayContraint);
+        //            }
+        //        }
+        //    }
+        //
+        //    // Merge groups based on week constraints
+        //    foreach (var dayContraint in teamConstraints.FindAll(c => c.team1 != null && c.team2 != null &&
+        //                                                             (c.what == TeamConstraint.What.HomeInSameWeekend || c.what == TeamConstraint.What.HomeNotInSameWeekend) &&
+        //                                                             c.team1.evaluated && c.team2.evaluated))
+        //    {
+        //        bool x1 = false;
+        //        var group1 = GetGroup(ref XY_groups, dayContraint.team1, ref x1);
+        //        bool x2 = false;
+        //        var group2 = GetGroup(ref XY_groups, dayContraint.team2, ref x2);
+        //        if (group1 == group2 && ((x1 == x2) != (dayContraint.what == TeamConstraint.What.HomeInSameWeekend)))
+        //            IgnoredError(dayContraint);
+        //        else if (group1 == group2)
+        //        {
+        //            // Nothing has to be changed, are already in same group in correct x en y
+        //        }
+        //        else
+        //        {
+        //            bool sw = (x1 == x2) != (dayContraint.what == TeamConstraint.What.HomeInSameWeekend); //switch needed
+        //            try
+        //            {
+        //                XY_groups.Add(MergeGroup(group1, group2, sw));
+        //                XY_groups.Remove(group1);
+        //                XY_groups.Remove(group2);
+        //            }
+        //            catch
+        //            {
+        //                IgnoredError(dayContraint);
+        //            }
+        //        }
+        //    }
+        //
+        //    // Create constraints
+        //    foreach (var xy in XY_groups)
+        //    {
+        //        ConstraintGrouping groupCon = new ConstraintGrouping();
+        //
+        //        if (xy.X.Count == 0 || xy.Y.Count == 0)
+        //            groupCon.name = "Only 1 Group. Too many weekends are used.";
+        //        else
+        //            groupCon.name = "Teams in different groups play in same week.";
+        //
+        //        groupCon.GroupA.AddRange(xy.X);
+        //        groupCon.GroupB.AddRange(xy.Y);
+        //        constraints.Add(groupCon);
+        //    }
+        //}
 
         public int TotalConflictsSnapshot = 0;
         public event MyEventHandler OnMyChange;
@@ -504,35 +446,6 @@ namespace CompetitionCreator
             //VisitorAlso = true;
             //cost = MySettings.Settings.DefaultTeamsConstraintCost;
             //name = ToText(what);
-        }
-        public /*override*/ bool RelatedTo(List<Team> teams)
-        {
-            if (team1 == null || team2 == null) return false;
-            return teams.Contains(this.team1) || teams.Contains(this.team2);
-        }
-        public /*override*/ List<Club> RelatedClubs()
-        {
-            List<Club> clubs = new List<Club>();
-            if (team1 == null || team2 == null) return clubs;
-            if (team1 != null) clubs.Add(team1.club);
-            if (team2 != null) clubs.Add(team2.club);
-            return clubs;
-        }
-        public /*override*/ List<Poule> RelatedPoules()
-        {
-            List<Poule> poules = new List<Poule>();
-            if (team1 == null || team2 == null) return poules;
-            if (team1 != null && team1.poule != null) poules.Add(team1.poule);
-            if (team2 != null && team2.poule != null) poules.Add(team2.poule);
-            return poules;
-        }
-        public /*override*/ List<Team> RelatedTeams()
-        {
-            List<Team> teams = new List<Team>();
-            if (team1 == null || team2 == null) return teams;
-            if (team1 != null) teams.Add(team1);
-            if (team2 != null) teams.Add(team2);
-            return teams;
         }
         public string team1str { get { if (team1 != null) return team1.name + " (" + team1.seriePouleName + ")"; else return "? (Team removed)"; } }
         public string team2str { get { if (team2 != null) return team2.name + " (" + team2.seriePouleName + ")"; else return "? (Team removed)"; } }

@@ -112,8 +112,6 @@ namespace CompetitionCreator
             OptimizePoules(intf, model.poules);
         }
 
-        static int countReInit = 0;
-
         private void OptimizePoules(IProgress intf, List<Poule> poules)
         {
             int score;
@@ -167,9 +165,6 @@ namespace CompetitionCreator
                     }
                 }
 
-                // This can increase cost, so not too often
-                if (countReInit++ % 10 == 0)
-                    model.ReInit();
                 model.Evaluate(null);
             } while (model.TotalConflictsSnapshot<score);
         }

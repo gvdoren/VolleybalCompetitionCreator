@@ -293,7 +293,7 @@ namespace CompetitionCreator
                 foreach (Object obj in objectListView1.SelectedObjects)
                 {
                     Team team = (Team)obj;
-                    constraints.AddRange(team.conflictConstraints);
+                    constraints.AddRange(team.constraintList);
                 }
                 GlobalState.ShowConstraints(constraints);
             }
@@ -307,7 +307,7 @@ namespace CompetitionCreator
                 foreach (Object obj in objectListView2.SelectedObjects)
                 {
                     Match match = (Match)obj;
-                    constraints.AddRange(match.conflictConstraints);
+                    constraints.AddRange(match.constraintList);
                 }
                 GlobalState.ShowConstraints(constraints);
             }
@@ -398,7 +398,7 @@ namespace CompetitionCreator
                 foreach (Object obj in objectListWeeks.SelectedObjects)
                 {
                     KeyValuePair<MatchWeek, KeyValuePair<int, int>> kvp = (KeyValuePair<MatchWeek, KeyValuePair<int, int>>)obj;
-                    constraints.AddRange(kvp.Key.conflictConstraints);
+                    constraints.AddRange(kvp.Key.constraintList);
                 }
                 GlobalState.ShowConstraints(constraints);
             }

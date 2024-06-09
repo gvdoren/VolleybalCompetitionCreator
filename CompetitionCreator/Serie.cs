@@ -6,7 +6,7 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace CompetitionCreator
 {
-    public class Serie : ConstraintAdmin
+    public class Serie : ConflictAdmin
     {
         public bool imported
         {

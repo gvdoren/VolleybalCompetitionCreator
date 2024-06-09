@@ -5,21 +5,13 @@ using System.Text;
 
 namespace CompetitionCreator
 {
-    public class Poule: ConstraintAdmin
+    public class Poule: ConflictAdmin
     {
-        public static UInt64 GlobalImprovementCounter = 1;
-        public UInt64 ImprovementCounter = 0;
-        public void Changed()
-        {
-            GlobalImprovementCounter++;
-            ImprovementCounter = GlobalImprovementCounter;
-        }
         public class SnapShot
         {
             public List<Team> resultTeams = new List<Team>();
             public List<MatchWeek> resultWeeks = new List<MatchWeek>();
             public List<Match> resultMatches = new List<Match>();
-            public int TotalRelatedConflicts = 0;
             public int TotalConflicts = -1;
         }
 
@@ -47,7 +39,6 @@ namespace CompetitionCreator
             return OptimizeNumber(model) || OptimizeHomeVisit(model) || OptimizeSchema(model);
         }
         public bool evaluated { get { return serie.evaluated && imported == false; } }
-        public List<Constraint> relatedConstraints = new List<Constraint>();
         private int _maxTeams;
         public int maxTeams { get { return _maxTeams;}}
         public Serie serie = null;
@@ -157,59 +148,6 @@ namespace CompetitionCreator
             return weeks1;
         }
 
-        public void CalculateRelatedConstraints(Model model)
-        {
-            relatedConstraints = new List<Constraint>();
-            List<Club> clubs = new List<Club>();
-            List<Poule> poules = new List<Poule>();
-            poules.Add(this);
-            foreach (Team team in teams)
-            {
-                if (clubs.Contains(team.club) == false) clubs.Add(team.club);
-            }
-            foreach (Constraint con in model.constraints)
-            {
-                if (con.RelatedTo(clubs) ||
-                    con.RelatedTo(poules)||
-                    con.RelatedTo(teams))
-                {
-                    relatedConstraints.Add(con);
-                }
-            }
-
-            // Dan krijg je de teams+clubs die via een constraint afhankelijkheid beinvloed worden
-            List<Team> extraTeams = new List<Team>();
-            List<Club> extraClubs = new List<Club>();
-            List<Poule> extraPoules = new List<Poule>();
-            foreach (Constraint con in relatedConstraints)
-            {
-                List<Team> teams1 = con.RelatedTeams();
-                foreach (Team t in teams1)
-                {
-                    if (teams.Contains(t) == false) extraTeams.Add(t);
-                }
-                List<Club> clubs1 = con.RelatedClubs();
-                foreach (Club c in clubs1)
-                {
-                    if (clubs.Contains(c) == false) extraClubs.Add(c);
-                }
-                // Zijn related poules relevant????
-            }
-            foreach (Constraint con in model.constraints)
-            {
-                if (con.RelatedTo(extraClubs) ||
-                    con.RelatedTo(extraPoules) ||
-                    con.RelatedTo(extraTeams))
-                {
-                    if (relatedConstraints.Contains(con) == false)
-                    {
-                        relatedConstraints.Add(con);
-                    }
-                }
-            }
-
-        }
-
         public void OptimizeWeeks(Model model, IProgress intf, int optimizationLevel)
         {
             if (OptimizeNumber(model))
@@ -272,12 +210,9 @@ namespace CompetitionCreator
             Changed();
             SnapshotStatus result = SnapshotStatus.Worse;
             var snapShot = CreateSnapShot(model);
-            if (snapShot.TotalRelatedConflicts < bestSnapShot.TotalRelatedConflicts)
+            if (snapShot.TotalConflicts < bestSnapShot.TotalConflicts)
             {
-                // check based on a full check:
-                model.Evaluate(this);
-                snapShot.TotalConflicts = model.TotalConflicts();
-                if (snapShot.TotalRelatedConflicts < bestSnapShot.TotalRelatedConflicts + optimisationThreshold)
+                if (snapShot.TotalConflicts < bestSnapShot.TotalConflicts + optimisationThreshold)
                     result = SnapshotStatus.Close;
                 if (snapShot.TotalConflicts < bestSnapShot.TotalConflicts || (equalAllowed && snapShot.TotalConflicts == bestSnapShot.TotalConflicts))
                 { 
@@ -290,9 +225,9 @@ namespace CompetitionCreator
         }
         public SnapShot CreateSnapShot(Model model)
         {
-            model.EvaluateRelatedConstraints(this);
+            model.Evaluate(this);
             SnapShot snapShot = new Poule.SnapShot();
-            snapShot.TotalRelatedConflicts = model.TotalRelatedConflicts(this);
+            snapShot.TotalConflicts = model.TotalConflicts();
             snapShot.resultTeams = new List<Team>(teams);
             snapShot.resultWeeks = CopyWeeks(weeks);
             snapShot.resultMatches = CopyMatches(matches);
@@ -310,7 +245,7 @@ namespace CompetitionCreator
         public void SetBestSnapShot(SnapShot snapShot)
         {
             SnapShot newSnapShot = new Poule.SnapShot();
-            newSnapShot.TotalRelatedConflicts = snapShot.TotalRelatedConflicts;
+            newSnapShot.TotalConflicts = snapShot.TotalConflicts;
             newSnapShot.resultTeams = new List<Team>(snapShot.resultTeams);
             newSnapShot.resultWeeks = CopyWeeks(snapShot.resultWeeks);
             newSnapShot.resultMatches = CopyMatches(snapShot.resultMatches);
@@ -472,7 +407,7 @@ namespace CompetitionCreator
                 {
                     Swap(teams, i, i+1);
                 }*/
-                model.EvaluateRelatedConstraints(this);
+                model.Evaluate(this);
                 int index = 0;
                 foreach (Team team in fixedOrderList)
                 {

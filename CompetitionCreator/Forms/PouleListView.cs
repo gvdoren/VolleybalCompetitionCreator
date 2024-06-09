@@ -126,7 +126,7 @@ namespace CompetitionCreator
                 foreach (Object obj in objectListView1.SelectedObjects)
                 {
                     Poule poule = (Poule)obj;
-                    constraints.AddRange(poule.conflictConstraints);
+                    constraints.AddRange(poule.constraintList);
                     GlobalState.selectedPoules.Add(poule);
                 }
                 GlobalState.selectedClubs.Clear();

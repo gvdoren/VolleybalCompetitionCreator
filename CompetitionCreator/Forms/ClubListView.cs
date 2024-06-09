@@ -113,7 +113,7 @@ namespace CompetitionCreator
                 foreach (Object obj in objectListView1.SelectedObjects)
                 {
                     Club club = (Club)obj;
-                    constraints.AddRange(club.conflictConstraints);
+                    constraints.AddRange(club.constraintList);
                 }
                 GlobalState.ShowConstraints(constraints);
             }

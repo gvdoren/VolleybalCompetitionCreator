@@ -166,9 +166,9 @@ namespace CompetitionCreator
                 labelGroup.Text = "Group: " + match.homeTeam.group.ToStringCustom();
                 string context = "";
                 string conflict = "";
-                foreach(Constraint con in match.conflictConstraints)
+                foreach(Constraint con in match.constraintList)
                 {
-                    foreach (string line in match.conflictConstraints[0].GetTextDescription())
+                    foreach (string line in match.constraintList[0].GetTextDescription())
                     {
                         context += line + Environment.NewLine;
                     }

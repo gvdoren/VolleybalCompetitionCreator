@@ -134,7 +134,11 @@ namespace CompetitionCreator
             {
                 percentage = 0;
             }
-            toolStripStatusLabel1.Text = "Conflict-matches: " + conflictMatches.ToString() + string.Format(" ({0:F1}%)     Cost: {1}", percentage, conflicts.ToString());
+            toolStripStatusLabel1.Text = "Conflict-matches: " + conflictMatches.ToString() + string.Format(" ({0:F1}%)     Cost: {1}", percentage, conflicts.ToString("N0", new NumberFormatInfo()
+            {
+                NumberGroupSizes = new[] { 3 },
+                NumberGroupSeparator = "."
+            }));
         }
 
 
