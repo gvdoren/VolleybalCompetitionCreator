@@ -1,7 +1,18 @@
 ﻿9-6-2024:
 Groepen worden nu beinvloed door: AllSporthal, AllDay, AllWeek
 Voor AB constraint wordt nu op basis van improvement counter gekeken of ie opnieuw moet worden berekend
-Team constraints worden nu nog niet meegenomen!!!!!! die moeten nog onafhankelijk worden gechecked. 
+Parallel evalueren
+Betere structuur voor evalueren. Niet meer deels evaluatie die niet 100% was.
+
+Nog doen:
+- Team constraints worden nu nog niet meegenomen!!!!!! die moeten nog onafhankelijk worden gechecked. 
+- gui voor groep options
+opschonen:
+- niet info bestand wegschrijven bij laden/saven
+- kosten netjes toevoegen zodat ze aanpasbaar zijn
+
+
+
 
 15-6-2022:
 Voor clubs met alleen X, wordt nu ook dezelde code als X en Y gebruikt. 

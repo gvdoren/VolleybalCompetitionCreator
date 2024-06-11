@@ -131,7 +131,13 @@ namespace CompetitionCreator
             lock (this)
             {
                 //constraints.Clear();
+                foreach(var con in constraints)
+                {
+                    if (con as SpecificConstraint == null)
+                        con.ClearConflicts();
+                }
                 constraints.RemoveAll(c => (c as SpecificConstraint) == null); // alles behalve specialecontraints die zijn opgegeven.
+
                 foreach (Poule poule in this.poules)
                 {
                     if (poule.serie.evaluated)
@@ -140,8 +146,6 @@ namespace CompetitionCreator
                         constraints.Add(new ConstraintPouleInconsistent(poule));
                         constraints.Add(new ConstraintPouleTwoTeamsOfSameClub(poule));
                         constraints.Add(new ConstraintSchemaTooManyHome(poule));
-                        //constraints.Add(new ConstraintPouleOddEvenWeek(poule));
-                        //constraints.Add(new ConstraintPouleFullLastTwoWeeks(poule));
                         constraints.Add(new ConstraintSchemaTooManyHomeAfterEachOther(poule));
                     }
                 }
@@ -174,13 +178,6 @@ namespace CompetitionCreator
                     foreach (var ab in club.ABGroups)
                         constraints.Add(new ConstraintGroupingAB(club, ab));
                 }
-                //using (StreamWriter outputFile = new StreamWriter("groupinfo_laden.txt"))
-                //{
-                //    foreach (Club club in clubs)
-                //    {
-                //        club.PrintGroupsInfo(outputFile);
-                //    }
-                //}
 
                 // Deze moet als laatste
                 foreach (Team te in teams)

@@ -22,14 +22,7 @@ namespace CompetitionCreator
         {
             get
             {
-                if (week.dayOverruled)
-                {
-                    return week.PlayTime(week.OverruledDay).ToString("dd-MM-yyyy") + "("+ week.OverruledDay.ToString() +")";
-                }
-                else
-                {
-                    return week.Monday.ToString("dd-MM-yyyy") + " - " + week.Sunday.ToString("dd-MM-yyyy");
-                }
+                return week.Monday.ToString("dd-MM-yyyy") + " - " + week.Sunday.ToString("dd-MM-yyyy");
             }
         }
         public YearPlanWeek(MatchWeek we)
@@ -90,7 +83,6 @@ namespace CompetitionCreator
                         {
                             writer.WriteStartElement("Week");
                             writer.WriteAttributeString("Date", week.week.Saturday.ToString("yyyy-MM-dd"));
-                            if (week.week.dayOverruled) writer.WriteAttributeString("OverruledDay", week.week.OverruledDay.ToString());
                             if (week.week.round >= 0) writer.WriteAttributeString("Round", week.week.round.ToString());
                             writer.WriteAttributeString("WeekNumber", week.weekNr.ToString());
                             writer.WriteEndElement();
@@ -133,22 +125,6 @@ namespace CompetitionCreator
                         YearPlanWeek anWeek = new YearPlanWeek(we);
                         re.weeks.Add(anWeek);
 
-                        string overruledDayString = ImportExport.StringOptionalAttribute(week, "No", "OverruledDay");
-                        if (overruledDayString == "No")
-                        {
-                            anWeek.week.dayOverruled = false;
-                        }
-                        else
-                        {
-                            anWeek.week.dayOverruled = true;
-                            if (overruledDayString == DayOfWeek.Monday.ToString()) anWeek.week.OverruledDay = DayOfWeek.Monday;
-                            if (overruledDayString == DayOfWeek.Tuesday.ToString()) anWeek.week.OverruledDay = DayOfWeek.Tuesday;
-                            if (overruledDayString == DayOfWeek.Wednesday.ToString()) anWeek.week.OverruledDay = DayOfWeek.Wednesday;
-                            if (overruledDayString == DayOfWeek.Thursday.ToString()) anWeek.week.OverruledDay = DayOfWeek.Thursday;
-                            if (overruledDayString == DayOfWeek.Friday.ToString()) anWeek.week.OverruledDay = DayOfWeek.Friday;
-                            if (overruledDayString == DayOfWeek.Saturday.ToString()) anWeek.week.OverruledDay = DayOfWeek.Saturday;
-                            if (overruledDayString == DayOfWeek.Sunday.ToString()) anWeek.week.OverruledDay = DayOfWeek.Sunday;
-                        }
                         anWeek.weekNr = ImportExport.IntegerAttribute(week, "WeekNumber");
                     }
                     re.weeks.Sort((w1, w2) => { return w1.week.CompareTo(w2.week); });

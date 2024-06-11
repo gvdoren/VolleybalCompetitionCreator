@@ -10,8 +10,6 @@ namespace CompetitionCreator
     public class MatchWeek : ConflictAdmin, IComparable<MatchWeek>
     {
         public int round = -1;
-        public bool dayOverruled = false;
-        public DayOfWeek OverruledDay = DayOfWeek.Wednesday;
         private DateTime date;
         DateTime[] cachedDates = new DateTime[8];
         bool[] cachedDatesB = new bool[8];
@@ -28,7 +26,6 @@ namespace CompetitionCreator
         }
         public DateTime PlayTimeInt(DayOfWeek day)
         {
-            if (dayOverruled) return Monday.AddDays(OverruledDay - DayOfWeek.Monday).Date;
             if (day == 0) day += 7;
             return Monday.AddDays(day - DayOfWeek.Monday).Date;
         }
@@ -45,41 +42,33 @@ namespace CompetitionCreator
         public MatchWeek(MatchWeek week)
         {
             this.round = week.round;
-            this.dayOverruled = week.dayOverruled;
-            this.OverruledDay = week.OverruledDay;
             this.date = week.date;
             CalculateMonday();
         }
         public static bool operator <(MatchWeek w1, MatchWeek w2)
         {
-            return w1.Monday < w2.Monday || (w1.Monday == w2.Monday && w1.dayOverruled && w2.dayOverruled == false);
+            return w1.Monday < w2.Monday;
         }
         public static bool operator >(MatchWeek w1, MatchWeek w2)
         {
-            return w2.Monday < w1.Monday || (w2.Monday == w1.Monday && w2.dayOverruled && w1.dayOverruled == false);
+            return w2.Monday < w1.Monday;
         }
         public override string ToString()
         {
-            if (dayOverruled)
-            {
-                return PlayTime(OverruledDay) + "* - " + PlayTime(OverruledDay);
-            } else
             return Monday.ToString("yyyy-MM-dd") + "-" + Monday.AddDays(6).ToString("yyyy-MM-dd");
         }
         public string Start
         {
             get 
             {
-                if (dayOverruled) return PlayTime(OverruledDay).ToString("dd-MM");
-                else return Saturday.ToString("dd-MM");
+                return Saturday.ToString("dd-MM");
             }
         }
         public string End
         {
             get
             {
-                if (dayOverruled) return "*"+OverruledDay.ToString();
-                else return Sunday.ToString("dd-MM");
+                return Sunday.ToString("dd-MM");
             }
         }
         public override bool Equals(Object obj)
@@ -102,7 +91,7 @@ namespace CompetitionCreator
             if (xo == null && yo != null) return false;
             if (xo != null && yo == null) return false;
             if (xo == null && yo == null) return true;
-            return x.Monday == y.Monday && x.dayOverruled == y.dayOverruled && y.OverruledDay == x.OverruledDay;
+            return x.Monday == y.Monday;
         }
         public static bool operator !=(MatchWeek x, MatchWeek y)
         {

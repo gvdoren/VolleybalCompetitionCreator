@@ -206,7 +206,7 @@ namespace CompetitionCreator
 
                 if (conflictMatches.Contains(matches[i]) == false)
                 {
-                    if (matches[i].HasConflict() == false)
+//                    if (matches[i].HasConflict() == false)
                     {
                         conflictMatches.Add(matches[i]);
                         matches[i].AddConflict(conflict);
@@ -1474,20 +1474,20 @@ namespace CompetitionCreator
             conflict_cost = 0;
             cost = 1000; // Must come from setting
 
-            List<Match> AMatches = new List<Match>();
             foreach (Team t in ABGroup.A)
-                AMatches.AddRange(t.poule.matches.Where(m => m.homeTeam == t && m.homeTeam.club == club && m.RealMatch()));
+                foreach (var m in t.poule.matches)
+                {
+                    if (m.homeTeam == t && m.homeTeam.club == club && m.RealMatch() && ABGroup.BWeeks[m.Week.WeekNr()])
+                        AddConflictMatch(VisitorHomeBoth.HomeOnly, m);
 
-            List<Match> BMatches = new List<Match>();
+                }
             foreach (Team t in ABGroup.B)
-                BMatches.AddRange(t.poule.matches.Where(m => m.homeTeam == t && m.homeTeam.club == club && m.RealMatch()));
+                foreach (var m in t.poule.matches)
+                {
+                    if (m.homeTeam == t && m.homeTeam.club == club && m.RealMatch() && ABGroup.AWeeks[m.Week.WeekNr()])
+                        AddConflictMatch(VisitorHomeBoth.HomeOnly, m);
 
-            foreach (var m1 in AMatches)
-                if (ABGroup.BWeeks.Contains(m1.Week))
-                    AddConflictMatch(VisitorHomeBoth.HomeOnly, m1);
-            foreach (var m1 in BMatches)
-                if (ABGroup.AWeeks.Contains(m1.Week))
-                    AddConflictMatch(VisitorHomeBoth.HomeOnly, m1);
+                }
         }
         public override string[] GetTextDescription()
         {

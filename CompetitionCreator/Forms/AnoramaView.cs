@@ -124,34 +124,6 @@ namespace CompetitionCreator
                
             }
         }
-
-        private void objectListView1_CellRightClick(object sender, CellRightClickEventArgs e)
-        {
-            if (e.Column.Index > model.yearPlans.reeksen.Count) return;
-            YearPlanWeek week = (YearPlanWeek)objectListView1.SelectedObject;
-            if (e.Column.Index > 0)
-            {
-                List<Selection> days = new List<Selection>();
-                foreach (DayOfWeek day in typeof(DayOfWeek).GetEnumValues())
-                {
-                    Selection sel = new Selection(day.ToString(), day);
-                    days.Add(sel);
-                }
-                SelectionDialog diag = new SelectionDialog(days);
-                diag.Text = "Overrule the day when match must take place";
-                diag.ShowDialog();
-                if(diag.Ok)
-                {
-                    YearPlanWeek anWeek = new YearPlanWeek(week.week);
-                    week.week.dayOverruled = true;
-                    week.week.OverruledDay = (DayOfWeek)diag.Selection.obj;
-                    YearPlan reeks = model.yearPlans.reeksen[e.Column.Index - 1];
-                    reeks.weeks.Add(anWeek);
-                    model.yearPlans.WriteXML();
-                    UpdateForm();
-                }
-            }
-        }
     }
     class DelegateObject
     {

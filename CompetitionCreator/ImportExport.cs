@@ -416,7 +416,10 @@ namespace CompetitionCreator
                     writer.WriteAttributeString("Name", club.name);
                     if (club.Stamnumber != null) writer.WriteAttributeString("StamNumber", club.Stamnumber);
                     if (club.groupingWithClub != null) writer.WriteAttributeString("LinkedClub", club.groupingWithClub.Id.ToString());
-                    if (club.GroupAllWeek) writer.WriteAttributeString("GroupsPerWeek", "true");
+                    writer.WriteAttributeString("GroupAllWeek", club.GroupAllWeek ? "true" : "false");
+                    writer.WriteAttributeString("GroupAllSporthalls", club.GroupAllSporthalls ? "true" : "false");
+                    writer.WriteAttributeString("GroupAllDay", club.GroupAllDay ? "true" : "false");
+                    // true is default
                     writer.WriteElementString("FreeFormatConstraint", club.FreeFormatConstraints);
                     writer.WriteStartElement("Sporthalls");
                     foreach (SporthallAvailability sporthal in club.sporthalls)
@@ -850,7 +853,6 @@ namespace CompetitionCreator
                     int round = week.round + 1;
                     writer.WriteAttributeString("Round", round.ToString());
                     writer.WriteAttributeString("Date", week.Monday.Date.ToString("yyyy-MM-dd"));
-                    if (week.dayOverruled) writer.WriteAttributeString("OverruledDay", "true");
                     writer.WriteEndElement();
                 }
                 writer.WriteEndElement();
@@ -990,7 +992,6 @@ namespace CompetitionCreator
                     int round = IntegerOptionalAttribute(week, 1, "Round");
                     MatchWeek w = new MatchWeek(date);
                     w.round = round - 1;
-                    w.dayOverruled = BoolOptionalAttribute(week, false, "OverruledDay");
                     po.weeks.Add(w);
                 }
                 // piece of code that can be removed after some time. This is to read in data without round info.
@@ -1230,7 +1231,9 @@ namespace CompetitionCreator
                     }
 
                 }
-                cl.GroupAllWeek = BoolOptionalAttribute(club, false, "GroupsPerWeek");
+                cl.GroupAllWeek = BoolOptionalAttribute(club, false, "GroupAllWeek");
+                cl.GroupAllSporthalls = BoolOptionalAttribute(club, true, "GroupAllSporthalls");
+                cl.GroupAllDay = BoolOptionalAttribute(club, true, "GroupAllDay");
 
                 XElement freeformatconstraint = Element(club, "FreeFormatConstraint");
 

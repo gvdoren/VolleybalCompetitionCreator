@@ -50,6 +50,17 @@
             this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label1 = new System.Windows.Forms.Label();
             this.availabilityGrid = new System.Windows.Forms.DataGridView();
+            this.week = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.until = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.WeekNr = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.monday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.tuesday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.wednesday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.thursday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.friday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.saturday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.sunday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
@@ -74,17 +85,8 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.label4 = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.week = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.until = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.WeekNr = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.monday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.tuesday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.wednesday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.thursday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.friday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.saturday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.sunday = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.availabilityGrid)).BeginInit();
@@ -139,11 +141,12 @@
             this.objectListView1.GridLines = true;
             this.objectListView1.HasCollapsibleGroups = false;
             this.objectListView1.HideSelection = false;
-            this.objectListView1.Location = new System.Drawing.Point(3, 248);
+            this.objectListView1.Location = new System.Drawing.Point(2, 161);
+            this.objectListView1.Margin = new System.Windows.Forms.Padding(2);
             this.objectListView1.MultiSelect = false;
             this.objectListView1.Name = "objectListView1";
             this.objectListView1.ShowGroups = false;
-            this.objectListView1.Size = new System.Drawing.Size(736, 257);
+            this.objectListView1.Size = new System.Drawing.Size(443, 168);
             this.objectListView1.TabIndex = 0;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
@@ -278,11 +281,12 @@
             // 
             this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Location = new System.Drawing.Point(7, 27);
+            this.textBox1.Location = new System.Drawing.Point(4, 18);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(2);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(732, 160);
+            this.textBox1.Size = new System.Drawing.Size(441, 105);
             this.textBox1.TabIndex = 3;
             // 
             // dataGridView2
@@ -294,12 +298,13 @@
             this.dataGridView2.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
             this.Column5});
-            this.dataGridView2.Location = new System.Drawing.Point(745, 10);
+            this.dataGridView2.Location = new System.Drawing.Point(447, 6);
+            this.dataGridView2.Margin = new System.Windows.Forms.Padding(2);
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.RowHeadersVisible = false;
             this.dataGridView2.RowHeadersWidth = 62;
             this.dataGridView2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView2.Size = new System.Drawing.Size(288, 87);
+            this.dataGridView2.Size = new System.Drawing.Size(173, 57);
             this.dataGridView2.TabIndex = 5;
             this.dataGridView2.SelectionChanged += new System.EventHandler(this.dataGridView2_SelectionChanged);
             // 
@@ -321,9 +326,10 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(745, 100);
+            this.label1.Location = new System.Drawing.Point(447, 65);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(130, 20);
+            this.label1.Size = new System.Drawing.Size(84, 13);
             this.label1.TabIndex = 6;
             this.label1.Text = "Beschikbaar op:";
             // 
@@ -348,303 +354,14 @@
             this.friday,
             this.saturday,
             this.sunday});
-            this.availabilityGrid.Location = new System.Drawing.Point(745, 151);
+            this.availabilityGrid.Location = new System.Drawing.Point(447, 98);
+            this.availabilityGrid.Margin = new System.Windows.Forms.Padding(2);
             this.availabilityGrid.Name = "availabilityGrid";
             this.availabilityGrid.RowHeadersVisible = false;
             this.availabilityGrid.RowHeadersWidth = 62;
-            this.availabilityGrid.Size = new System.Drawing.Size(288, 623);
+            this.availabilityGrid.Size = new System.Drawing.Size(173, 405);
             this.availabilityGrid.TabIndex = 7;
             this.availabilityGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView3_CellContentClick);
-            // 
-            // tabControl1
-            // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl1.Controls.Add(this.tabPage3);
-            this.tabControl1.Location = new System.Drawing.Point(1, 4);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(877, 540);
-            this.tabControl1.TabIndex = 0;
-            // 
-            // button2
-            // 
-            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Enabled = false;
-            this.button2.Location = new System.Drawing.Point(640, 193);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 10;
-            this.button2.Text = "Delete";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // button1
-            // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Enabled = false;
-            this.button1.Location = new System.Drawing.Point(559, 193);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 9;
-            this.button1.Text = "New";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
-            // 
-            // objectListView2
-            // 
-            this.objectListView2.AllColumns.Add(this.olvColumn12);
-            this.objectListView2.AllColumns.Add(this.olvColumn15);
-            this.objectListView2.AllColumns.Add(this.olvColumn16);
-            this.objectListView2.AllColumns.Add(this.olvColumn11);
-            this.objectListView2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.objectListView2.CellEditActivation = BrightIdeasSoftware.ObjectListView.CellEditActivateMode.SingleClick;
-            this.objectListView2.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.olvColumn12,
-            this.olvColumn15,
-            this.olvColumn16,
-            this.olvColumn11});
-            this.objectListView2.FullRowSelect = true;
-            this.objectListView2.HideSelection = false;
-            this.objectListView2.Location = new System.Drawing.Point(6, 23);
-            this.objectListView2.MultiSelect = false;
-            this.objectListView2.Name = "objectListView2";
-            this.objectListView2.ShowGroups = false;
-            this.objectListView2.Size = new System.Drawing.Size(712, 164);
-            this.objectListView2.TabIndex = 8;
-            this.objectListView2.UseCompatibleStateImageBehavior = false;
-            this.objectListView2.View = System.Windows.Forms.View.Details;
-            this.objectListView2.CellEditFinishing += new BrightIdeasSoftware.CellEditEventHandler(this.objectListView2_CellEditFinishing);
-            this.objectListView2.SelectionChanged += new System.EventHandler(this.objectListView2_SelectionChanged);
-            this.objectListView2.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.objectListView2_MouseDoubleClick);
-            // 
-            // olvColumn12
-            // 
-            this.olvColumn12.AspectName = "team1str";
-            this.olvColumn12.CellPadding = null;
-            this.olvColumn12.FillsFreeSpace = true;
-            this.olvColumn12.IsEditable = false;
-            this.olvColumn12.Text = "Team";
-            // 
-            // olvColumn15
-            // 
-            this.olvColumn15.AspectName = "date";
-            this.olvColumn15.AspectToStringFormat = "{0:dd-MM-yyyy}";
-            this.olvColumn15.CellPadding = null;
-            this.olvColumn15.MinimumWidth = 100;
-            this.olvColumn15.Text = "Date";
-            this.olvColumn15.Width = 100;
-            // 
-            // olvColumn16
-            // 
-            this.olvColumn16.AspectName = "homeVisitNone";
-            this.olvColumn16.CellPadding = null;
-            this.olvColumn16.Text = "What";
-            this.olvColumn16.Width = 100;
-            // 
-            // olvColumn11
-            // 
-            this.olvColumn11.AspectName = "cost";
-            this.olvColumn11.CellPadding = null;
-            this.olvColumn11.Text = "Cost";
-            // 
-            // button3
-            // 
-            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button3.Enabled = false;
-            this.button3.Location = new System.Drawing.Point(649, 511);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(89, 23);
-            this.button3.TabIndex = 9;
-            this.button3.Text = "Add Team";
-            this.button3.UseVisualStyleBackColor = true;
-            // 
-            // button4
-            // 
-            this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button4.Enabled = false;
-            this.button4.Location = new System.Drawing.Point(595, 510);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(89, 23);
-            this.button4.TabIndex = 9;
-            this.button4.Text = "Delete Team";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
-            // 
-            // button5
-            // 
-            this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button5.Enabled = false;
-            this.button5.Location = new System.Drawing.Point(556, 511);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(89, 23);
-            this.button5.TabIndex = 9;
-            this.button5.Text = "Undelete Team";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Visible = false;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
-            // 
-            // label2
-            // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(9, 9);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(155, 20);
-            this.label2.TabIndex = 11;
-            this.label2.Text = "Date constraints:";
-            // 
-            // objectListView3
-            // 
-            this.objectListView3.AllColumns.Add(this.olvColumn22);
-            this.objectListView3.AllColumns.Add(this.olvColumn24);
-            this.objectListView3.AllColumns.Add(this.olvColumn20);
-            this.objectListView3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.objectListView3.CellEditActivation = BrightIdeasSoftware.ObjectListView.CellEditActivateMode.SingleClick;
-            this.objectListView3.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.olvColumn22,
-            this.olvColumn24,
-            this.olvColumn20});
-            this.objectListView3.FullRowSelect = true;
-            this.objectListView3.HideSelection = false;
-            this.objectListView3.Location = new System.Drawing.Point(6, 23);
-            this.objectListView3.MultiSelect = false;
-            this.objectListView3.Name = "objectListView3";
-            this.objectListView3.ShowGroups = false;
-            this.objectListView3.Size = new System.Drawing.Size(716, 168);
-            this.objectListView3.TabIndex = 12;
-            this.objectListView3.UseCompatibleStateImageBehavior = false;
-            this.objectListView3.View = System.Windows.Forms.View.Details;
-            this.objectListView3.CellEditFinishing += new BrightIdeasSoftware.CellEditEventHandler(this.objectListView3_CellEditFinishing);
-            this.objectListView3.SelectedIndexChanged += new System.EventHandler(this.objectListView3_SelectedIndexChanged);
-            this.objectListView3.MouseClick += new System.Windows.Forms.MouseEventHandler(this.objectListView3_MouseClick);
-            this.objectListView3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.objectListView3_MouseDoubleClick);
-            // 
-            // olvColumn22
-            // 
-            this.olvColumn22.AspectName = "team1str";
-            this.olvColumn22.CellPadding = null;
-            this.olvColumn22.FillsFreeSpace = true;
-            this.olvColumn22.IsEditable = false;
-            this.olvColumn22.Text = "Team";
-            // 
-            // olvColumn24
-            // 
-            this.olvColumn24.AspectName = "team2str";
-            this.olvColumn24.CellPadding = null;
-            this.olvColumn24.FillsFreeSpace = true;
-            this.olvColumn24.IsEditable = false;
-            this.olvColumn24.Text = "Team";
-            // 
-            // olvColumn20
-            // 
-            this.olvColumn20.AspectName = "what";
-            this.olvColumn20.CellPadding = null;
-            this.olvColumn20.FillsFreeSpace = true;
-            this.olvColumn20.IsEditable = false;
-            this.olvColumn20.MaximumWidth = 120;
-            this.olvColumn20.Text = "Constraint";
-            // 
-            // label3
-            // 
-            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(8, 9);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(161, 20);
-            this.label3.TabIndex = 11;
-            this.label3.Text = "Team constraints:";
-            // 
-            // tabControl2
-            // 
-            this.tabControl2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl2.Controls.Add(this.tabPage1);
-            this.tabControl2.Controls.Add(this.tabPage2);
-            this.tabControl2.Location = new System.Drawing.Point(3, 524);
-            this.tabControl2.Name = "tabControl2";
-            this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(736, 250);
-            this.tabControl2.TabIndex = 13;
-            // 
-            // tabPage1
-            // 
-            this.tabPage1.Controls.Add(this.buttonNewTeamRequirement);
-            this.tabPage1.Controls.Add(this.buttonDeleteTeamRequirements);
-            this.tabPage1.Controls.Add(this.objectListView3);
-            this.tabPage1.Controls.Add(this.label3);
-            this.tabPage1.Location = new System.Drawing.Point(4, 29);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(728, 217);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Team constraints";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // buttonNewTeamRequirement
-            // 
-            this.buttonNewTeamRequirement.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonNewTeamRequirement.Location = new System.Drawing.Point(566, 197);
-            this.buttonNewTeamRequirement.Name = "buttonNewTeamRequirement";
-            this.buttonNewTeamRequirement.Size = new System.Drawing.Size(75, 23);
-            this.buttonNewTeamRequirement.TabIndex = 13;
-            this.buttonNewTeamRequirement.Text = "New";
-            this.buttonNewTeamRequirement.UseVisualStyleBackColor = true;
-            this.buttonNewTeamRequirement.Click += new System.EventHandler(this.buttonNewTeamRequirements_Click);
-            // 
-            // buttonDeleteTeamRequirements
-            // 
-            this.buttonDeleteTeamRequirements.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonDeleteTeamRequirements.Location = new System.Drawing.Point(647, 197);
-            this.buttonDeleteTeamRequirements.Name = "buttonDeleteTeamRequirements";
-            this.buttonDeleteTeamRequirements.Size = new System.Drawing.Size(75, 23);
-            this.buttonDeleteTeamRequirements.TabIndex = 13;
-            this.buttonDeleteTeamRequirements.Text = "Delete";
-            this.buttonDeleteTeamRequirements.UseVisualStyleBackColor = true;
-            this.buttonDeleteTeamRequirements.Click += new System.EventHandler(this.buttonDeleteTeamRequirements_Click);
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.objectListView2);
-            this.tabPage2.Controls.Add(this.button2);
-            this.tabPage2.Controls.Add(this.label2);
-            this.tabPage2.Controls.Add(this.button1);
-            this.tabPage2.Location = new System.Drawing.Point(4, 29);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(728, 217);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Date Requirements";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(8, 11);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(189, 20);
-            this.label4.TabIndex = 2;
-            this.label4.Text = "Free format constraints:";
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(3, 205);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(295, 24);
-            this.checkBox1.TabIndex = 14;
-            this.checkBox1.Text = "Team groups hold for week iso day";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // week
             // 
@@ -732,11 +449,347 @@
             this.sunday.Name = "sunday";
             this.sunday.Width = 30;
             // 
+            // tabControl1
+            // 
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Location = new System.Drawing.Point(1, 4);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(877, 540);
+            this.tabControl1.TabIndex = 0;
+            // 
+            // button2
+            // 
+            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button2.Enabled = false;
+            this.button2.Location = new System.Drawing.Point(384, 125);
+            this.button2.Margin = new System.Windows.Forms.Padding(2);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(45, 15);
+            this.button2.TabIndex = 10;
+            this.button2.Text = "Delete";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.Enabled = false;
+            this.button1.Location = new System.Drawing.Point(335, 125);
+            this.button1.Margin = new System.Windows.Forms.Padding(2);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(45, 15);
+            this.button1.TabIndex = 9;
+            this.button1.Text = "New";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
+            // objectListView2
+            // 
+            this.objectListView2.AllColumns.Add(this.olvColumn12);
+            this.objectListView2.AllColumns.Add(this.olvColumn15);
+            this.objectListView2.AllColumns.Add(this.olvColumn16);
+            this.objectListView2.AllColumns.Add(this.olvColumn11);
+            this.objectListView2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.objectListView2.CellEditActivation = BrightIdeasSoftware.ObjectListView.CellEditActivateMode.SingleClick;
+            this.objectListView2.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.olvColumn12,
+            this.olvColumn15,
+            this.olvColumn16,
+            this.olvColumn11});
+            this.objectListView2.FullRowSelect = true;
+            this.objectListView2.HideSelection = false;
+            this.objectListView2.Location = new System.Drawing.Point(4, 15);
+            this.objectListView2.Margin = new System.Windows.Forms.Padding(2);
+            this.objectListView2.MultiSelect = false;
+            this.objectListView2.Name = "objectListView2";
+            this.objectListView2.ShowGroups = false;
+            this.objectListView2.Size = new System.Drawing.Size(429, 108);
+            this.objectListView2.TabIndex = 8;
+            this.objectListView2.UseCompatibleStateImageBehavior = false;
+            this.objectListView2.View = System.Windows.Forms.View.Details;
+            this.objectListView2.CellEditFinishing += new BrightIdeasSoftware.CellEditEventHandler(this.objectListView2_CellEditFinishing);
+            this.objectListView2.SelectionChanged += new System.EventHandler(this.objectListView2_SelectionChanged);
+            this.objectListView2.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.objectListView2_MouseDoubleClick);
+            // 
+            // olvColumn12
+            // 
+            this.olvColumn12.AspectName = "team1str";
+            this.olvColumn12.CellPadding = null;
+            this.olvColumn12.FillsFreeSpace = true;
+            this.olvColumn12.IsEditable = false;
+            this.olvColumn12.Text = "Team";
+            // 
+            // olvColumn15
+            // 
+            this.olvColumn15.AspectName = "date";
+            this.olvColumn15.AspectToStringFormat = "{0:dd-MM-yyyy}";
+            this.olvColumn15.CellPadding = null;
+            this.olvColumn15.MinimumWidth = 100;
+            this.olvColumn15.Text = "Date";
+            this.olvColumn15.Width = 100;
+            // 
+            // olvColumn16
+            // 
+            this.olvColumn16.AspectName = "homeVisitNone";
+            this.olvColumn16.CellPadding = null;
+            this.olvColumn16.Text = "What";
+            this.olvColumn16.Width = 100;
+            // 
+            // olvColumn11
+            // 
+            this.olvColumn11.AspectName = "cost";
+            this.olvColumn11.CellPadding = null;
+            this.olvColumn11.Text = "Cost";
+            // 
+            // button3
+            // 
+            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button3.Enabled = false;
+            this.button3.Location = new System.Drawing.Point(389, 332);
+            this.button3.Margin = new System.Windows.Forms.Padding(2);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(53, 15);
+            this.button3.TabIndex = 9;
+            this.button3.Text = "Add Team";
+            this.button3.UseVisualStyleBackColor = true;
+            // 
+            // button4
+            // 
+            this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button4.Enabled = false;
+            this.button4.Location = new System.Drawing.Point(357, 331);
+            this.button4.Margin = new System.Windows.Forms.Padding(2);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(53, 15);
+            this.button4.TabIndex = 9;
+            this.button4.Text = "Delete Team";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // button5
+            // 
+            this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button5.Enabled = false;
+            this.button5.Location = new System.Drawing.Point(334, 332);
+            this.button5.Margin = new System.Windows.Forms.Padding(2);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(53, 15);
+            this.button5.TabIndex = 9;
+            this.button5.Text = "Undelete Team";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Visible = false;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
+            // label2
+            // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(5, 6);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(104, 13);
+            this.label2.TabIndex = 11;
+            this.label2.Text = "Date constraints:";
+            // 
+            // objectListView3
+            // 
+            this.objectListView3.AllColumns.Add(this.olvColumn22);
+            this.objectListView3.AllColumns.Add(this.olvColumn24);
+            this.objectListView3.AllColumns.Add(this.olvColumn20);
+            this.objectListView3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.objectListView3.CellEditActivation = BrightIdeasSoftware.ObjectListView.CellEditActivateMode.SingleClick;
+            this.objectListView3.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.olvColumn22,
+            this.olvColumn24,
+            this.olvColumn20});
+            this.objectListView3.FullRowSelect = true;
+            this.objectListView3.HideSelection = false;
+            this.objectListView3.Location = new System.Drawing.Point(4, 15);
+            this.objectListView3.Margin = new System.Windows.Forms.Padding(2);
+            this.objectListView3.MultiSelect = false;
+            this.objectListView3.Name = "objectListView3";
+            this.objectListView3.ShowGroups = false;
+            this.objectListView3.Size = new System.Drawing.Size(431, 111);
+            this.objectListView3.TabIndex = 12;
+            this.objectListView3.UseCompatibleStateImageBehavior = false;
+            this.objectListView3.View = System.Windows.Forms.View.Details;
+            this.objectListView3.CellEditFinishing += new BrightIdeasSoftware.CellEditEventHandler(this.objectListView3_CellEditFinishing);
+            this.objectListView3.SelectedIndexChanged += new System.EventHandler(this.objectListView3_SelectedIndexChanged);
+            this.objectListView3.MouseClick += new System.Windows.Forms.MouseEventHandler(this.objectListView3_MouseClick);
+            this.objectListView3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.objectListView3_MouseDoubleClick);
+            // 
+            // olvColumn22
+            // 
+            this.olvColumn22.AspectName = "team1str";
+            this.olvColumn22.CellPadding = null;
+            this.olvColumn22.FillsFreeSpace = true;
+            this.olvColumn22.IsEditable = false;
+            this.olvColumn22.Text = "Team";
+            // 
+            // olvColumn24
+            // 
+            this.olvColumn24.AspectName = "team2str";
+            this.olvColumn24.CellPadding = null;
+            this.olvColumn24.FillsFreeSpace = true;
+            this.olvColumn24.IsEditable = false;
+            this.olvColumn24.Text = "Team";
+            // 
+            // olvColumn20
+            // 
+            this.olvColumn20.AspectName = "what";
+            this.olvColumn20.CellPadding = null;
+            this.olvColumn20.FillsFreeSpace = true;
+            this.olvColumn20.IsEditable = false;
+            this.olvColumn20.MaximumWidth = 120;
+            this.olvColumn20.Text = "Constraint";
+            // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(5, 6);
+            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(108, 13);
+            this.label3.TabIndex = 11;
+            this.label3.Text = "Team constraints:";
+            // 
+            // tabControl2
+            // 
+            this.tabControl2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl2.Controls.Add(this.tabPage1);
+            this.tabControl2.Controls.Add(this.tabPage2);
+            this.tabControl2.Location = new System.Drawing.Point(2, 341);
+            this.tabControl2.Margin = new System.Windows.Forms.Padding(2);
+            this.tabControl2.Name = "tabControl2";
+            this.tabControl2.SelectedIndex = 0;
+            this.tabControl2.Size = new System.Drawing.Size(442, 162);
+            this.tabControl2.TabIndex = 13;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.buttonNewTeamRequirement);
+            this.tabPage1.Controls.Add(this.buttonDeleteTeamRequirements);
+            this.tabPage1.Controls.Add(this.objectListView3);
+            this.tabPage1.Controls.Add(this.label3);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Margin = new System.Windows.Forms.Padding(2);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(2);
+            this.tabPage1.Size = new System.Drawing.Size(434, 136);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Team constraints";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // buttonNewTeamRequirement
+            // 
+            this.buttonNewTeamRequirement.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonNewTeamRequirement.Location = new System.Drawing.Point(340, 128);
+            this.buttonNewTeamRequirement.Margin = new System.Windows.Forms.Padding(2);
+            this.buttonNewTeamRequirement.Name = "buttonNewTeamRequirement";
+            this.buttonNewTeamRequirement.Size = new System.Drawing.Size(45, 15);
+            this.buttonNewTeamRequirement.TabIndex = 13;
+            this.buttonNewTeamRequirement.Text = "New";
+            this.buttonNewTeamRequirement.UseVisualStyleBackColor = true;
+            this.buttonNewTeamRequirement.Click += new System.EventHandler(this.buttonNewTeamRequirements_Click);
+            // 
+            // buttonDeleteTeamRequirements
+            // 
+            this.buttonDeleteTeamRequirements.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonDeleteTeamRequirements.Location = new System.Drawing.Point(388, 128);
+            this.buttonDeleteTeamRequirements.Margin = new System.Windows.Forms.Padding(2);
+            this.buttonDeleteTeamRequirements.Name = "buttonDeleteTeamRequirements";
+            this.buttonDeleteTeamRequirements.Size = new System.Drawing.Size(45, 15);
+            this.buttonDeleteTeamRequirements.TabIndex = 13;
+            this.buttonDeleteTeamRequirements.Text = "Delete";
+            this.buttonDeleteTeamRequirements.UseVisualStyleBackColor = true;
+            this.buttonDeleteTeamRequirements.Click += new System.EventHandler(this.buttonDeleteTeamRequirements_Click);
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.objectListView2);
+            this.tabPage2.Controls.Add(this.button2);
+            this.tabPage2.Controls.Add(this.label2);
+            this.tabPage2.Controls.Add(this.button1);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Margin = new System.Windows.Forms.Padding(2);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(2);
+            this.tabPage2.Size = new System.Drawing.Size(434, 136);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Date Requirements";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(5, 7);
+            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(117, 13);
+            this.label4.TabIndex = 2;
+            this.label4.Text = "Free format constraints:";
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(2, 133);
+            this.checkBox1.Margin = new System.Windows.Forms.Padding(2);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(55, 17);
+            this.checkBox1.TabIndex = 14;
+            this.checkBox1.Text = "Week";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Location = new System.Drawing.Point(61, 133);
+            this.checkBox2.Margin = new System.Windows.Forms.Padding(2);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(65, 17);
+            this.checkBox2.TabIndex = 15;
+            this.checkBox2.Text = "Sporthal";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+            // 
+            // checkBox3
+            // 
+            this.checkBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBox3.AutoSize = true;
+            this.checkBox3.Location = new System.Drawing.Point(130, 133);
+            this.checkBox3.Margin = new System.Windows.Forms.Padding(2);
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.Size = new System.Drawing.Size(49, 17);
+            this.checkBox3.TabIndex = 16;
+            this.checkBox3.Text = "Time";
+            this.checkBox3.UseVisualStyleBackColor = true;
+            this.checkBox3.CheckedChanged += new System.EventHandler(this.checkBox3_CheckedChanged);
+            // 
             // InschrijvingenView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1048, 775);
+            this.ClientSize = new System.Drawing.Size(629, 504);
+            this.Controls.Add(this.checkBox3);
+            this.Controls.Add(this.checkBox2);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
@@ -749,6 +802,7 @@
             this.Controls.Add(this.objectListView1);
             this.Controls.Add(this.tabControl2);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "InschrijvingenView";
             this.Text = "Registrations";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ClubConstraints_FormClosed);
@@ -827,5 +881,7 @@
         private System.Windows.Forms.DataGridViewCheckBoxColumn friday;
         private System.Windows.Forms.DataGridViewCheckBoxColumn saturday;
         private System.Windows.Forms.DataGridViewCheckBoxColumn sunday;
+        private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.CheckBox checkBox3;
     }
 }

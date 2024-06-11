@@ -110,8 +110,8 @@ namespace CompetitionCreator
         {
             public List<Team> A = new List<Team>();
             public List<Team> B = new List<Team>();
-            public List<MatchWeek> AWeeks = new List<MatchWeek>();
-            public List<MatchWeek> BWeeks = new List<MatchWeek>();
+            public bool[] AWeeks = new bool[53];
+            public bool[] BWeeks = new bool[53];
 
             struct counters
             {
@@ -148,32 +148,48 @@ namespace CompetitionCreator
             };
             public void DetermineWeeks()
             {
-                AWeeks = new List<MatchWeek>();
-                BWeeks = new List<MatchWeek>();
+                AWeeks = new bool[53];
+                BWeeks = new bool[53];
                 SortedDictionary<MatchWeek, counters> weeks = new SortedDictionary<MatchWeek, counters>();
                 foreach (Team team in A)
                 {
-                    foreach (Match match in team.poule.matches.Where(m => m.RealMatch() && m.homeTeam == team))
+                    foreach (var w in team.poule.weeks)
                     {
-                        if (!weeks.ContainsKey(match.Week))
-                            weeks.Add(match.Week, new counters());
+                        if (!weeks.ContainsKey(w))
+                            weeks.Add(w, new counters());
+                    }
+                }
+                foreach (Team team in B)
+                {
+                    foreach (var w in team.poule.weeks)
+                    {
+                        if (!weeks.ContainsKey(w))
+                            weeks.Add(w, new counters());
+                    }
+                }
+
+                foreach (Team team in A)
+                {
+                    foreach (Match match in team.poule.matches.Where(m => m.RealMatch()))
+                    {
                         var c = new counters(weeks[match.Week]);
-                        c.countA++;
+                        if (match.homeTeam == team)
+                            c.countA++;
                         if (team.poule.imported)
                             c.nonChangeableA++;
                         if (team.sporthal.NotAvailable.Contains(match.datetime.Date))
                             c.sporthalNotAvailableA++;
                         weeks[match.Week] = c;
+
                     }
                 }
                 foreach (Team team in B)
                 {
-                    foreach (Match match in team.poule.matches.Where(m => m.RealMatch() && m.homeTeam == team))
+                    foreach (Match match in team.poule.matches.Where(m => m.RealMatch()))
                     {
-                        if (!weeks.ContainsKey(match.Week))
-                            weeks.Add(match.Week, new counters());
                         var c = new counters(weeks[match.Week]);
-                        c.countB++;
+                        if (match.homeTeam == team)
+                            c.countB++;
                         if (team.poule.imported)
                             c.nonChangeableB++;
                         if (team.sporthal.NotAvailable.Contains(match.datetime.Date))
@@ -182,31 +198,30 @@ namespace CompetitionCreator
                     }
                 }
 
+                int voorkeur = 0;//  1 + (int)Math.Round((double)weeks.Count * 0.1); // bv 20 weken (2x10) dan 4 dagen extra, 12 (6) -> 3
                 int turnA = 1;
-                int voorkeur = 1 + (int)Math.Round((double)weeks.Count * 0.1); // bv 20 weken (2x10) dan 4 dagen extra, 12 (6) -> 3
                 if (B.Count() == 0)
                     turnA += voorkeur; // A mag eerst x keer extra kiezen
-
                 while (weeks.Count > 0)
                 {
                     int score = int.MinValue;
                     MatchWeek week = null;
                     foreach (var kvp in weeks)
                     {
-                        if (kvp.Value.score(turnA>0) > score)
+                        if (kvp.Value.score(turnA > 0) > score)
                         {
-                            score = kvp.Value.score(turnA>0);
+                            score = kvp.Value.score(turnA > 0);
                             week = kvp.Key;
                         }
                     }
                     if (turnA > 0)
                     {
-                        AWeeks.Add(week);
+                        AWeeks[week.WeekNr()] = true;
                         turnA--;
                     }
                     else
                     {
-                        BWeeks.Add(week);
+                        BWeeks[week.WeekNr()] = true;
                         turnA++;
                     }
                     weeks.Remove(week);
@@ -219,30 +234,30 @@ namespace CompetitionCreator
         bool MatchTeamGroup(Team t1, Team t2)
         {
             var dayMatch = GroupAllWeek ? true : t1.defaultDay == t2.defaultDay;
-            var sporthalMatch = GroupAllSporthalls ? true : t1.sporthal == t2.sporthal;
+            var sporthalMatch = GroupAllSporthalls ? true : t1.sporthal.id == t2.sporthal.id;
             var timeMatch = GroupAllDay ? true : Math.Abs(t1.defaultTime.Hours - t2.defaultTime.Hours) < 2; // Als ze minder dan 2 uur uit elkaar liggen zijn ze overlappend
             return dayMatch & sporthalMatch & timeMatch;
         }
 
 
-        public void PrintGroupsInfo(StreamWriter outputFile)
-        {
-            foreach (var ab in ABGroups)
-            {
-                foreach (var t in ab.A)
-                {
-                    outputFile.WriteLine(t.club.name + t.name + t.poule.name);
-                }
-                foreach (var t in ab.B)
-                {
-                    outputFile.WriteLine(t.club.name + t.name + t.poule.name);
-                }
-                foreach (var w in ab.AWeeks)
-                    outputFile.WriteLine(w.ToString() + w.WeekNr());
-                foreach (var w in ab.BWeeks)
-                    outputFile.WriteLine(w.ToString() + w.WeekNr());
-            }
-        }
+//        public void PrintGroupsInfo(StreamWriter outputFile)
+//        {
+//            foreach (var ab in ABGroups)
+//            {
+//                foreach (var t in ab.A)
+//                {
+//                    outputFile.WriteLine(t.club.name + t.name + t.poule.name);
+//                }
+//                foreach (var t in ab.B)
+//                {
+//                    outputFile.WriteLine(t.club.name + t.name + t.poule.name);
+//                }
+//                foreach (var w in ab.AWeeks)
+//                    outputFile.WriteLine(w.ToString() + w.WeekNr());
+//                foreach (var w in ab.BWeeks)
+//                    outputFile.WriteLine(w.ToString() + w.WeekNr());
+//            }
+//        }
 
         public void CreateGroups(Model model)
         {
