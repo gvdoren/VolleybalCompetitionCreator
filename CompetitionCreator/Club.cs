@@ -69,10 +69,31 @@ namespace CompetitionCreator
                     }
                 }
                 if (c == 0) return 0;
-                return (conflict * 100) / c;
+                return (conflictMatches * 100) / c;
 
             }
         }
+
+        public int conflictMatches
+        {
+            get
+            {
+                int c = 0;
+                foreach (Team t in teams)
+                {
+                    if (t.poule != null && t.poule.evaluated)
+                    {
+                        foreach (var m in t.poule.matches)
+                        {
+                            if (m.RealMatch() && m.homeTeam.club == this && m.HasConflict())
+                                c++;
+                        }
+                    }
+                }
+                return c;
+            }
+        }
+
         public int EvaluatedTeamCount
         {
             get

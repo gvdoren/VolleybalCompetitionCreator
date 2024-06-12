@@ -419,7 +419,8 @@ namespace CompetitionCreator
             {
                 List<Match> sortedMatches = new List<Match>(poule.matches);
                 sortedMatches.Sort(delegate (Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
-                sortedMatches = sortedMatches.Where((Match m) => m.RealMatch()).ToList();
+                var temp = sortedMatches.Where((Match m) => m.RealMatch());
+                sortedMatches = temp.ToList();
                 foreach (Team team in poule.teams)
                 {
                     List<Match> maxMatches = new List<Match>();

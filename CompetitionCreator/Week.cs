@@ -11,39 +11,26 @@ namespace CompetitionCreator
     {
         public int round = -1;
         private DateTime date;
-        DateTime[] cachedDates = new DateTime[8];
-        bool[] cachedDatesB = new bool[8];
+        int weeknr;
+
         public DateTime PlayTime(DayOfWeek day)
-        {
-            if (cachedDatesB[(int)day])
-                return cachedDates[(int)day];
-            else
-            {
-                cachedDates[(int)day] = PlayTimeInt(day);
-                cachedDatesB[(int)day] = true;
-                return cachedDates[(int)day];
-            }
-        }
-        public DateTime PlayTimeInt(DayOfWeek day)
         {
             if (day == 0) day += 7;
             return Monday.AddDays(day - DayOfWeek.Monday).Date;
         }
         public MatchWeek(string datestr)
         {
-            date = ImportExport.ParseDateTime(datestr).Date;
-            CalculateMonday();
+            CalculateMonday(ImportExport.ParseDateTime(datestr).Date);
         }
         public MatchWeek(DateTime date)
         {
-            this.date = date.Date;
-            CalculateMonday();
+            CalculateMonday(date);
         }
         public MatchWeek(MatchWeek week)
         {
             this.round = week.round;
             this.date = week.date;
-            CalculateMonday();
+            this.weeknr = week.weeknr;
         }
         public static bool operator <(MatchWeek w1, MatchWeek w2)
         {
@@ -103,64 +90,37 @@ namespace CompetitionCreator
             else if (this == other) return 0;
             else return 1;
         }
-        //private const DayOfWeek Monday = DayOfWeek.Monday;
-        private DateTime _Monday;
-        public DateTime Monday { get { return _Monday; } }
-        private DateTime _Tuesday;
-        public DateTime Tuesday { get { return _Tuesday; } }
-        private DateTime _Wednesday;
-        public DateTime Wednesday { get { return _Wednesday; } }
-        private DateTime _Thursday;
-        public DateTime Thursday { get { return _Thursday; } }
-        private DateTime _Friday;
-        public DateTime Friday { get { return _Friday; } }
-        private DateTime _Saturday;
-        public DateTime Saturday { get { return _Saturday; } }
-        private DateTime _Sunday;
-        public DateTime Sunday { get { return _Sunday; } }
-        private void CalculateMonday()
+        public DateTime Monday { get { return date; } }
+        public DateTime Tuesday { get { return date.AddDays(1); } }
+        public DateTime Wednesday { get { return date.AddDays(2); } }
+        public DateTime Thursday { get { return date.AddDays(3); } }
+        public DateTime Friday { get { return date.AddDays(4); } }
+        public DateTime Saturday { get { return date.AddDays(5); } }
+        public DateTime Sunday { get { return date.AddDays(6); } }
+        private void CalculateMonday(DateTime d)
         {
-            int daysOffset = date.DayOfWeek - DayOfWeek.Monday;
+            int daysOffset = d.DayOfWeek - DayOfWeek.Monday;
             if (daysOffset < 0) daysOffset += 7;
 
-            _Monday = date.AddDays(-daysOffset);
-            _Tuesday = Monday.AddDays(1);
-            _Wednesday = Monday.AddDays(2);
-            _Thursday = Monday.AddDays(3);
-            _Friday = Monday.AddDays(4);
-            _Saturday = _Monday.AddDays(5);
-            _Sunday = _Monday.AddDays(6);
-
-            foreach(DayOfWeek dow in Enum.GetValues(typeof(DayOfWeek)))
-            {
-                cachedDatesB[(int)dow] = false;
-            }
-        }
-        //public int WeekNr()
-        //{
-        //    int WeekNr = 0;
-        //    System.Globalization.CultureInfo cul = System.Globalization.CultureInfo.CurrentCulture;
-        //    WeekNr = cul.Calendar.GetWeekOfYear(
-        //        date,
-        //        System.Globalization.CalendarWeekRule.FirstFullWeek,
-        //        DayOfWeek.Monday);
-        //    return WeekNr;
-        //}
-        public int WeekNumber { get { return WeekNr(); } }
-        public int WeekNr()
-        {
+            date = d.AddDays(-daysOffset);
             // Seriously cheat.  If its Monday, Tuesday or Wednesday, then it'll 
             // be the same week# as whatever Thursday, Friday or Saturday are,
             // and we always get those right
-            DateTime time = date;
-            DayOfWeek day = System.Globalization.CultureInfo.InvariantCulture.Calendar.GetDayOfWeek(time);
-            if (day >= DayOfWeek.Monday && day <= DayOfWeek.Wednesday)
-            {
-                time = time.AddDays(3);
-            }
-
-            // Return the week of our adjusted day
-            return System.Globalization.CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(time, System.Globalization.CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+            // DateTime time = date;
+            // DayOfWeek day = System.Globalization.CultureInfo.InvariantCulture.Calendar.GetDayOfWeek(time);
+            // if (day >= DayOfWeek.Monday && day <= DayOfWeek.Wednesday)
+            // {
+            //     time = time.AddDays(3);
+            // }
+            // 
+            // // Return the week of our adjusted day
+            // return System.Globalization.CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(time, System.Globalization.CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+            weeknr = System.Globalization.CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(date.AddDays(3), System.Globalization.CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+        }
+        public int WeekNumber { get { return weeknr; } }
+        public int WeekNr()
+        {
+            return weeknr;
         }
     }
 }

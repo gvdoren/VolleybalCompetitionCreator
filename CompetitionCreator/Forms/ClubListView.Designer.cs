@@ -54,8 +54,9 @@
             this.objectListView1.HasCollapsibleGroups = false;
             this.objectListView1.HideSelection = false;
             this.objectListView1.Location = new System.Drawing.Point(1, 1);
+            this.objectListView1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.objectListView1.Name = "objectListView1";
-            this.objectListView1.Size = new System.Drawing.Size(282, 260);
+            this.objectListView1.Size = new System.Drawing.Size(171, 170);
             this.objectListView1.TabIndex = 0;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.UseFiltering = true;
@@ -76,7 +77,7 @@
             // 
             // olvColumn1
             // 
-            this.olvColumn1.AspectName = "conflict";
+            this.olvColumn1.AspectName = "conflictMatches";
             this.olvColumn1.CellPadding = null;
             this.olvColumn1.MaximumWidth = 55;
             this.olvColumn1.Text = "Conflicts";
@@ -97,15 +98,16 @@
             this.olvColumn3.MaximumWidth = 30;
             this.olvColumn3.MinimumWidth = 25;
             this.olvColumn3.Text = "%";
-            this.olvColumn3.Width = 54;
+            this.olvColumn3.Width = 30;
             // 
             // ClubListView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 262);
+            this.ClientSize = new System.Drawing.Size(170, 170);
             this.Controls.Add(this.objectListView1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "ClubListView";
             this.Text = "Club-conflicts";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ClubListView_FormClosed);
