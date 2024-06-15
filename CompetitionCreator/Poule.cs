@@ -223,12 +223,14 @@ namespace CompetitionCreator
             }
             return result;
         }
+
+        // After a snapshot is created, it can never change
         public SnapShot CreateSnapShot(Model model)
         {
             model.Evaluate(this);
             SnapShot snapShot = new Poule.SnapShot();
             snapShot.TotalConflicts = model.TotalConflicts();
-            snapShot.resultTeams = new List<Team>(teams);
+            snapShot.resultTeams = new List<Team>(teams); // No deep copy of teams. Is not changed during optimization
             snapShot.resultWeeks = CopyWeeks(weeks);
             snapShot.resultMatches = CopyMatches(matches);
             return snapShot;
@@ -237,28 +239,23 @@ namespace CompetitionCreator
         public void SetInitialSnapShot(Model model)
         {
             var sn = CreateSnapShot(model);
-            model.Evaluate(this);
-            sn.TotalConflicts = model.TotalConflicts();
             bestSnapShot = sn;
         }
 
         public void SetBestSnapShot(SnapShot snapShot)
         {
-            SnapShot newSnapShot = new Poule.SnapShot();
-            newSnapShot.TotalConflicts = snapShot.TotalConflicts;
-            newSnapShot.resultTeams = new List<Team>(snapShot.resultTeams);
-            newSnapShot.resultWeeks = CopyWeeks(snapShot.resultWeeks);
-            newSnapShot.resultMatches = CopyMatches(snapShot.resultMatches);
-
-            bestSnapShot = newSnapShot;
+            bestSnapShot = snapShot;
         }
 
         public void RestoreSnapShot(SnapShot snapShot)
         {
-            Changed();
             teams = new List<Team>(snapShot.resultTeams);
             weeks = CopyWeeks(snapShot.resultWeeks);
             matches = CopyMatches(snapShot.resultMatches);
+            // teams = snapShot.resultTeams;
+            // weeks = snapShot.resultWeeks;
+            // matches = snapShot.resultMatches;
+            // model.Evaluate(this); Is this needed. // conflicts are not copied in the weeks
         }
 
         private void Swap(List<MatchWeek> list, int i, int j)
@@ -319,7 +316,6 @@ namespace CompetitionCreator
                     OptimizeTeam(model, intf, team, optimizeLevel);
                     if (intf.Cancelled()) return;
                 }
-                Console.WriteLine(" - {1}:totalConflicts: {0}", model.TotalConflicts(), team.poule.fullName);
             }
         }
 
@@ -966,11 +962,8 @@ namespace CompetitionCreator
                 //Calculate1stRound(day);
                 if (day % 2 == 0)
                 {
-                    Console.Write(String.Format("\n\nDay {0}\n", (day + 1)));
-
                     int teamIdx = day % teamSize;
 
-                    Console.Write(String.Format("{0} vs {1}\n", teams[teamIdx], temp[0]));
                     Match m1 = new Match(day, teams[teamIdx], temp[0], serie, this);
                     matches.Add(m1);
 
@@ -982,7 +975,6 @@ namespace CompetitionCreator
 
                         if (firstTeam != secondTeam)
                         {
-                            Console.Write(String.Format("{0} vs {1}\n", teams[firstTeam], teams[secondTeam]));
                             Match m2 = new Match(day, teams[firstTeam], teams[secondTeam], serie, this);
                             matches.Add(m2);
                         }
@@ -994,9 +986,6 @@ namespace CompetitionCreator
                 {
                     int teamIdx = day % teamSize;
 
-                    Console.Write(String.Format("\n\nDay {0}\n", (day + 1)));
-
-                    Console.Write(String.Format("{0} vs {1}\n", temp[0], teams[teamIdx]));
                     Match m1 = new Match(day, temp[0],teams[teamIdx], serie, this);
                     matches.Add(m1);
 
@@ -1007,7 +996,6 @@ namespace CompetitionCreator
 
                         if (firstTeam != secondTeam)
                         {
-                            Console.Write(String.Format("{0} vs {1}\n", teams[secondTeam], teams[firstTeam]));
                             Match m2 = new Match(day, teams[secondTeam], teams[firstTeam], serie, this);
                             matches.Add(m2);
                         }

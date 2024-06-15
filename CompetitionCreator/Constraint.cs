@@ -72,6 +72,13 @@ namespace CompetitionCreator
     public class ConflictAdmin : ChangedAdmin
     {
         protected List<Conflict> conflictList = new List<Conflict>();
+        public List<Conflict> GetConflictList()
+        {
+            lock (this)
+            {
+                return new List<Conflict>(conflictList);
+            }
+        }
 
         public List<Constraint> constraintList { get { lock (this) { return conflictList.Select(con => con.con).ToList(); } } }
         public void RemoveConflict(Conflict con)
@@ -102,7 +109,10 @@ namespace CompetitionCreator
         {
             lock (this)
             {
-                conflictList.Add(con);
+                if (con != null)
+                    conflictList.Add(con);
+                else
+                    conflictList.Add(con);
                 con.AddAdm(this);
             }
         }
@@ -110,25 +120,19 @@ namespace CompetitionCreator
 
     public abstract class Constraint
     {
-        private List<ChangedAdmin> related = new List<ChangedAdmin>();
-        protected void AddRelated(ChangedAdmin admin)
+        private List<Poule> related = new List<Poule>();
+        protected void AddRelated(Poule admin)
         {
             if (related.Contains(admin) == false)
                 related.Add(admin);
         }
         UInt64 ImprovementCounter = 0;
 
-        public bool ShouldExecute()
+        public bool IsRelated(Poule poule)
         {
-            foreach (var adm in related)
-            {
-                if (adm.IsNewer(ImprovementCounter))
-                {
-                    ImprovementCounter = ChangedAdmin.GlobalImprovementCounter;
-                    return true;
-                }
-            }
-            return false;
+            if (related.Count == 0)
+                return true;
+            return related.Contains(poule);
         }
 
         public bool VisitorAlso = true;
@@ -251,6 +255,7 @@ namespace CompetitionCreator
             this.team = team;
             VisitorAlso = false;
             cost = MySettings.Settings.SporthalNotAvailableCostLow;
+            AddRelated(team.poule);
         }
         public override void Evaluate(Model model)
         {
@@ -302,6 +307,7 @@ namespace CompetitionCreator
         {
             name = "Heen en Terug te dicht bij elkaar";
             this.poule = poule;
+            AddRelated(poule);
         }
         public override void Evaluate(Model model)
         {
@@ -359,6 +365,7 @@ namespace CompetitionCreator
         {
             name = "Teveel thuiswedstrijden";
             this.poule = poule;
+            AddRelated(poule);
         }
         public override void Evaluate(Model model)
         {
@@ -407,6 +414,7 @@ namespace CompetitionCreator
             name = "Too many home or visit matches after each other";
             this.poule = poule;
             this.cost = MySettings.Settings.MatchTooManyAfterEachOtherCostLow;
+            AddRelated(poule);
         }
         public override void Evaluate(Model model)
         {
@@ -537,6 +545,7 @@ namespace CompetitionCreator
             name = "Internal test - poule consistency";
             this.poule = poule;
             cost = MySettings.Settings.InconsistentCost;
+            AddRelated(poule);
         }
         public override void Evaluate(Model model)
         {
@@ -682,6 +691,7 @@ namespace CompetitionCreator
             this.poule = poule;
             this.VisitorAlso = false;
             this.cost = MySettings.Settings.TwoPoulesOfSameClubInPouleCost;
+            AddRelated(poule);
         }
         public override void Evaluate(Model model)
         {
@@ -757,8 +767,6 @@ namespace CompetitionCreator
         }
         public override void Evaluate(Model model)
         {
-            if (!ShouldExecute())
-                return;
             ClearConflicts();
 
             // TODO: skip if poule is not related to club.
@@ -830,8 +838,6 @@ namespace CompetitionCreator
         }
         public override void Evaluate(Model model)
         {
-            if (!ShouldExecute())
-                return;
             ClearConflicts();
 
             conflict_cost = 0;
@@ -922,8 +928,6 @@ namespace CompetitionCreator
         }
         public override void Evaluate(Model model)
         {
-            if (!ShouldExecute())
-                return;
             ClearConflicts();
 
             conflict_cost = 0;
@@ -962,8 +966,6 @@ namespace CompetitionCreator
         }
         public override void Evaluate(Model model)
         {
-            if (!ShouldExecute())
-                return;
             ClearConflicts();
 
             conflict_cost = 0;
@@ -1071,8 +1073,6 @@ namespace CompetitionCreator
 
         public override void Evaluate(Model model)
         {
-            if (!ShouldExecute())
-                return;
             ClearConflicts();
 
             conflict_cost = 0;
@@ -1465,9 +1465,6 @@ namespace CompetitionCreator
 
         public override void Evaluate(Model model)
         {
-            if (!ShouldExecute())
-                return;
-
             ClearConflicts();
             ABGroup.DetermineWeeks();
 

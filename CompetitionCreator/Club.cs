@@ -26,6 +26,7 @@ namespace CompetitionCreator
         }
 
         public List<Club> SharingSporthal = new List<Club>();
+        public bool SharingSporthalBool { get { return SharingSporthal.Count() > 0; } }
         public List<Team> GetGroupX()
         {
             var X = teams.FindAll(t => t.group == TeamGroups.GroupX);
@@ -60,29 +61,58 @@ namespace CompetitionCreator
 
             get
             {
-                int c = 0;
+                int selectedMatches = 0;
+                int conflicts = 0;
+                List<Poule> poules = new List<Poule>();
                 foreach (Team t in teams)
                 {
-                    if (t.poule != null)
+                    if (t.poule != null && t.poule.evaluated && poules.Contains(t.poule) == false)
                     {
-                        c += t.poule.teams.Count - 1;
+                        poules.Add(t.poule);
+                        foreach (Match match in t.poule.matches)
+                        {
+                            if (match.RealMatch() && match.homeTeam.club == this)
+                            {
+                                selectedMatches++;
+                                if (match.HasConflict())
+                                    conflicts++;
+                            }
+                        }
                     }
                 }
-                if (c == 0) return 0;
-                return (conflictMatches * 100) / c;
-
+                if (selectedMatches == 0) return 0;
+                return (int)Math.Round((double)conflicts * 100 / (double)selectedMatches);
             }
+        }
+
+        public int maxGroupSize()
+        {
+            int max = 0;
+            foreach(var ab in ABGroups)
+            {
+                var size = ab.A.Count + ab.B.Count;
+                if (size > max)
+                    max = size;
+            }
+            return max;
+        }
+
+        public int sporthallCount()
+        {
+            return sporthalls.Count;
         }
 
         public int conflictMatches
         {
             get
             {
+                List<Poule> poules = new List<Poule>();
                 int c = 0;
                 foreach (Team t in teams)
                 {
-                    if (t.poule != null && t.poule.evaluated)
+                    if (t.poule != null && t.poule.evaluated && poules.Contains(t.poule) == false)
                     {
+                        poules.Add(t.poule);
                         foreach (var m in t.poule.matches)
                         {
                             if (m.RealMatch() && m.homeTeam.club == this && m.HasConflict())
@@ -136,33 +166,18 @@ namespace CompetitionCreator
 
             struct counters
             {
-                public counters(int A, int B)
-                {
-                    countA = A;
-                    countB = B;
-                    nonChangeableA = 0;
-                    nonChangeableB = 0;
-                    sporthalNotAvailableA = 0;
-                    sporthalNotAvailableB = 0;
-                }
-                public counters(counters c)
-                {
-                    countA = c.countA;
-                    countB = c.countB;
-                    nonChangeableA = c.nonChangeableA;
-                    nonChangeableB = c.nonChangeableB;
-                    sporthalNotAvailableA = c.sporthalNotAvailableA;
-                    sporthalNotAvailableB = c.sporthalNotAvailableB;
-                }
                 public int countA;
                 public int countB;
                 public int nonChangeableA;
                 public int nonChangeableB;
                 public int sporthalNotAvailableA;
                 public int sporthalNotAvailableB;
+                public bool used;
+                public int weeknr;
 
                 public int score(bool A)
                 {
+                    if (!used) return int.MinValue;
                     int temp = (nonChangeableA - nonChangeableB) * 10 + countA - countB - (sporthalNotAvailableA - sporthalNotAvailableB) * 10;
                     return A ? temp : -temp;
                 }
@@ -171,51 +186,38 @@ namespace CompetitionCreator
             {
                 AWeeks = new bool[53];
                 BWeeks = new bool[53];
-                SortedDictionary<MatchWeek, counters> weeks = new SortedDictionary<MatchWeek, counters>();
-                foreach (Team team in A)
-                {
-                    foreach (var w in team.poule.weeks)
-                    {
-                        if (!weeks.ContainsKey(w))
-                            weeks.Add(w, new counters());
-                    }
-                }
-                foreach (Team team in B)
-                {
-                    foreach (var w in team.poule.weeks)
-                    {
-                        if (!weeks.ContainsKey(w))
-                            weeks.Add(w, new counters());
-                    }
-                }
+                counters[] weekCounters = new counters[53];
+                for (int i = 0; i < 53; i++)
+                    weekCounters[i].weeknr = i;
 
                 foreach (Team team in A)
                 {
                     foreach (Match match in team.poule.matches.Where(m => m.RealMatch()))
                     {
-                        var c = new counters(weeks[match.Week]);
+                        weekCounters[match.Week.WeekNumber].used = true;
                         if (match.homeTeam == team)
-                            c.countA++;
-                        if (team.poule.imported)
-                            c.nonChangeableA++;
+                        {
+                            weekCounters[match.Week.WeekNumber].countA++;
+                            if (team.poule.imported)
+                                weekCounters[match.Week.WeekNumber].nonChangeableA++;
+                        }
                         if (team.sporthal.NotAvailable.Contains(match.datetime.Date))
-                            c.sporthalNotAvailableA++;
-                        weeks[match.Week] = c;
-
+                            weekCounters[match.Week.WeekNumber].sporthalNotAvailableA++;
                     }
                 }
                 foreach (Team team in B)
                 {
                     foreach (Match match in team.poule.matches.Where(m => m.RealMatch()))
                     {
-                        var c = new counters(weeks[match.Week]);
+                        weekCounters[match.Week.WeekNumber].used = true;
                         if (match.homeTeam == team)
-                            c.countB++;
-                        if (team.poule.imported)
-                            c.nonChangeableB++;
+                        {
+                            weekCounters[match.Week.WeekNumber].countB++;
+                            if (team.poule.imported)
+                                weekCounters[match.Week.WeekNumber].nonChangeableB++;
+                        }
                         if (team.sporthal.NotAvailable.Contains(match.datetime.Date))
-                            c.sporthalNotAvailableB++;
-                        weeks[match.Week] = c;
+                            weekCounters[match.Week.WeekNumber].sporthalNotAvailableB++;
                     }
                 }
 
@@ -223,26 +225,27 @@ namespace CompetitionCreator
                 int turnA = 1;
                 if (B.Count() == 0)
                     turnA += voorkeur; // A mag eerst x keer extra kiezen
+                var weeks = weekCounters.Where(wc => wc.used).ToList();
                 while (weeks.Count > 0)
                 {
                     int score = int.MinValue;
-                    MatchWeek week = null;
+                    counters week = new counters();
                     foreach (var kvp in weeks)
                     {
-                        if (kvp.Value.score(turnA > 0) > score)
+                        if (kvp.score(turnA > 0) > score)
                         {
-                            score = kvp.Value.score(turnA > 0);
-                            week = kvp.Key;
+                            score = kvp.score(turnA > 0);
+                            week = kvp;
                         }
                     }
                     if (turnA > 0)
                     {
-                        AWeeks[week.WeekNr()] = true;
+                        AWeeks[week.weeknr] = true;
                         turnA--;
                     }
                     else
                     {
-                        BWeeks[week.WeekNr()] = true;
+                        BWeeks[week.weeknr] = true;
                         turnA++;
                     }
                     weeks.Remove(week);

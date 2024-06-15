@@ -118,7 +118,6 @@ namespace CompetitionCreator
             do
             {
                 score = model.TotalConflictsSnapshot;
-                Console.WriteLine("OptimizePoules: score: {0}", score);
                 foreach (Poule poule in poules)
                 {
                     if (poule.serie != null && poule.Optimize(model) == true)

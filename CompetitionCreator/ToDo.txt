@@ -6,9 +6,7 @@ Betere structuur voor evalueren. Niet meer deels evaluatie die niet 100% was.
 
 Nog doen:
 - Team constraints worden nu nog niet meegenomen!!!!!! die moeten nog onafhankelijk worden gechecked. 
-- gui voor groep options
 opschonen:
-- niet info bestand wegschrijven bij laden/saven
 - kosten netjes toevoegen zodat ze aanpasbaar zijn
 
 

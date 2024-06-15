@@ -62,21 +62,45 @@ namespace CompetitionCreator
             }
         }
 
+        Poule lastPoule = null;
+        public bool initial = true;
+        List<Constraint> lastConstraints = null;
+        List<Constraint> lastConstraints_1 = null;
+        List<Constraint> lastConstraints_2 = null;
+
+
         public void Evaluate(Poule p)
         {
+            if (initial || p!= lastPoule)
+            {
+                initial = false;
+                lastPoule = p;
+                lastConstraints = new List<Constraint>();
+                foreach (var c in constraints)
+                    if (p == null || c.IsRelated(p))
+                        lastConstraints.Add(c);
+                lastConstraints_1 = new List<Constraint>();
+                foreach (var c in constraints_1)
+                    if (p == null || c.IsRelated(p))
+                        lastConstraints_1.Add(c);
+                lastConstraints_2 = new List<Constraint>();
+                foreach (var c in constraints_2)
+                    if (p == null || c.IsRelated(p))
+                        lastConstraints_2.Add(c);
+            }
             lock (this)
             {
                 //foreach (var constraint in constraints)
                 //    constraint.Evaluate(this);
-                Parallel.ForEach(constraints, constraint =>
+                Parallel.ForEach(lastConstraints, constraint =>
                 {
                     constraint.Evaluate(this);
                 });
-                Parallel.ForEach(constraints_2, constraint =>
+                Parallel.ForEach(lastConstraints_1, constraint =>
                 {
                     constraint.Evaluate(this);
                 });
-                foreach (var constraint in constraints_2)
+                foreach (var constraint in lastConstraints_2)
                     constraint.Evaluate(this);
             }
         }
@@ -130,6 +154,7 @@ namespace CompetitionCreator
         {
             lock (this)
             {
+                initial = true;
                 //constraints.Clear();
                 foreach(var con in constraints)
                 {

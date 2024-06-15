@@ -1810,7 +1810,6 @@ namespace CompetitionCreator
                         if (!club.SharingSporthal.Contains(club1))
                         {
                             club.SharingSporthal.Add(club1);
-                            Console.WriteLine(club.name + " - " + club1.name);
                         }
 
                     }

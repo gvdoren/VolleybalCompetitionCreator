@@ -37,8 +37,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.objectListView1 = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn5 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn6 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -141,6 +141,7 @@
             this.label1.Size = new System.Drawing.Size(138, 13);
             this.label1.TabIndex = 3;
             this.label1.Text = "Matches:0  Conflicts:0  (0%)";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // objectListView1
             // 
@@ -167,6 +168,7 @@
             this.olvColumn8,
             this.olvColumn9});
             this.objectListView1.FullRowSelect = true;
+            this.objectListView1.HideSelection = false;
             this.objectListView1.Location = new System.Drawing.Point(0, 19);
             this.objectListView1.MultiSelect = false;
             this.objectListView1.Name = "objectListView1";
@@ -187,14 +189,6 @@
             this.olvColumn1.Text = "Datum";
             this.olvColumn1.Width = 70;
             // 
-            // olvColumn3
-            // 
-            this.olvColumn3.AspectName = "DayString";
-            this.olvColumn3.CellPadding = null;
-            this.olvColumn3.DisplayIndex = 1;
-            this.olvColumn3.Text = "Dag";
-            this.olvColumn3.Width = 35;
-            // 
             // olvColumn2
             // 
             this.olvColumn2.AspectName = "Time";
@@ -202,6 +196,14 @@
             this.olvColumn2.DisplayIndex = 2;
             this.olvColumn2.Text = "Tijd";
             this.olvColumn2.Width = 40;
+            // 
+            // olvColumn3
+            // 
+            this.olvColumn3.AspectName = "DayString";
+            this.olvColumn3.CellPadding = null;
+            this.olvColumn3.DisplayIndex = 1;
+            this.olvColumn3.Text = "Dag";
+            this.olvColumn3.Width = 35;
             // 
             // olvColumn4
             // 

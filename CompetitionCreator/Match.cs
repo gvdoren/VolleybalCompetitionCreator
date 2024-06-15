@@ -146,9 +146,7 @@ namespace CompetitionCreator
             this.visitorTeamIndex = match.visitorTeamIndex;
             this.serie = match.serie;
             this.poule = match.poule;
-            this.conflictList = match.conflictList;
-            foreach (var con in conflictList)
-                con.AddAdm(this);
+            // this.conflictList; - this is not copied. The conflicts are anyhow useless when the week has been changed.
             this.time = match.time;
         }
 

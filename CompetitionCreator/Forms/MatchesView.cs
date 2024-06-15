@@ -52,6 +52,7 @@ namespace CompetitionCreator
             }
             int conflicts = 0;
             int allSelectedMatches = 0;
+            List<Poule> poules = new List<Poule>();
             List<Match> matches = new List<Match>();
             if(GlobalState.selectedClubs.Count>0)
             {
@@ -59,19 +60,22 @@ namespace CompetitionCreator
                 {
                     foreach(Team team in club.teams)
                     {
-                        if(team.poule != null)
+                        if(team.poule != null && team.poule.evaluated && poules.Contains(team.poule) == false)
                         {
+                            poules.Add(team.poule);
                             foreach(Match match in team.poule.matches)
                             {
-                                if (match.homeTeam.club == club)
+                                if (match.homeTeam.club == club && match.RealMatch())
                                 {
-                                    if (!matches.Contains(match))
+                                    allSelectedMatches++;
+                                    if (match.HasConflict())
                                     {
-                                        allSelectedMatches++;
-                                        if (checkBoxConflictsOnly.Checked == false || match.conflict > 0)
-                                            matches.Add(match);
-                                        if (match.conflict > 0)
-                                            conflicts++;
+                                        matches.Add(match);
+                                        conflicts++;
+                                    }
+                                    else if (checkBoxConflictsOnly.Checked == false)
+                                    {
+                                        matches.Add(match);
                                     }
                                 }
                             }
@@ -83,20 +87,30 @@ namespace CompetitionCreator
             {
                 foreach(Poule poule in GlobalState.selectedPoules)
                 {
-                    foreach (Match match in poule.matches)
+                    if (poule != null && poules.Contains(poule) == false)
                     {
-                        if (!matches.Contains(match))
+                        poules.Add(poule);
+                        foreach (Match match in poule.matches)
                         {
-                            allSelectedMatches++;
-                            if (checkBoxConflictsOnly.Checked == false || match.conflict > 0)
-                                matches.Add(match);
-                            if (match.conflict > 0)
-                                conflicts++;
+                            if (/*match.homeTeam.club == club &&*/ match.RealMatch())
+                            {
+                                allSelectedMatches++;
+                                if (match.HasConflict())
+                                {
+                                    matches.Add(match);
+                                    conflicts++;
+                                }
+                                else if (checkBoxConflictsOnly.Checked == false)
+                                {
+                                    matches.Add(match);
+                                }
+                            }
                         }
                     }
                 }
             }
             objectListView1.SetObjects(matches, true);
+            
             label1.Text = string.Format("Matches:{0}  Conflicts:{1}  ({2:F1}%)", allSelectedMatches, conflicts, ((double)conflicts * 100) / allSelectedMatches);
             /*
             objectListView1.ClearObjects();
@@ -190,6 +204,11 @@ namespace CompetitionCreator
         private void checkBoxConflictsOnly_CheckedChanged(object sender, EventArgs e)
         {
             UpdateTabPage2();
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

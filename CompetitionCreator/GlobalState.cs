@@ -24,7 +24,6 @@ namespace CompetitionCreator
             {
                 showConstraints = constraints;
                 GlobalState.Changed();
-                Console.WriteLine("Show constraints updated");
             }
         }
         static public event MyEventHandler OnMyChange;

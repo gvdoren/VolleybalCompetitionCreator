@@ -134,13 +134,19 @@ namespace CompetitionCreator
             {
                 percentage = 0;
             }
-            toolStripStatusLabel1.Text = "Conflict-matches: " + conflictMatches.ToString() + string.Format(" ({0:F1}%)     Cost: {1}", percentage, conflicts.ToString("N0", new NumberFormatInfo()
+            var newText = "Conflict-matches: " + conflictMatches.ToString() + string.Format(" ({0:F1}%)     Cost: {1}", percentage, conflicts.ToString("N0", new NumberFormatInfo()
             {
                 NumberGroupSizes = new[] { 3 },
                 NumberGroupSeparator = "."
             }));
+            toolStripStatusLabel1.Text = newText;
+            if (newText != prevText)
+            {
+                Console.WriteLine(newText);
+                prevText = newText;
+            }
         }
-
+        static string prevText = null;
 
         private void clubsToolStripMenuItem_Click(object sender, EventArgs e)
         {
