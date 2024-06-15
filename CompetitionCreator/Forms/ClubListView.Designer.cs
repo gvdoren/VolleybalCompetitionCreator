@@ -91,7 +91,7 @@
             // 
             // olvColumn2
             // 
-            this.olvColumn2.AspectName = "teams.Count";
+            this.olvColumn2.AspectName = "OptimizedTeamCount";
             this.olvColumn2.CellPadding = null;
             this.olvColumn2.MaximumWidth = 45;
             this.olvColumn2.Text = "Teams";

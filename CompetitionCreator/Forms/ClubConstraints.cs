@@ -193,7 +193,7 @@ namespace CompetitionCreator
         }
         private void UpdateTeamsTab()
         {
-            objectListView1.SetObjects(club.teams,true);
+            objectListView1.SetObjects(club.teams.Where(t => t.serie.evaluated),true);
             objectListView1_SelectionChanged(null, null); // otherwise it is not triggered for some reason.
             //objectListView1.BuildList(true);
             

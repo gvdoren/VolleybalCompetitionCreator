@@ -1,8 +1,6 @@
 ﻿9-6-2024:
 Groepen worden nu beinvloed door: AllSporthal, AllDay, AllWeek
-Voor AB constraint wordt nu op basis van improvement counter gekeken of ie opnieuw moet worden berekend
 Parallel evalueren
-Betere structuur voor evalueren. Niet meer deels evaluatie die niet 100% was.
 
 Nog doen:
 - Team constraints worden nu nog niet meegenomen!!!!!! die moeten nog onafhankelijk worden gechecked. 

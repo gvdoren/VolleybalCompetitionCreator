@@ -207,7 +207,6 @@ namespace CompetitionCreator
         public enum SnapshotStatus { Worse, Close, Better };
         public SnapshotStatus SnapShotIfImproved(Model model, bool equalAllowed = true)
         {
-            Changed();
             SnapshotStatus result = SnapshotStatus.Worse;
             var snapShot = CreateSnapShot(model);
             if (snapShot.TotalConflicts < bestSnapShot.TotalConflicts)

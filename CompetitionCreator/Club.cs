@@ -283,6 +283,11 @@ namespace CompetitionCreator
 //            }
 //        }
 
+        public int OptimizedTeamCount()
+        {
+            return teams.Where(t => t.serie.evaluated).Count();
+        }
+
         public void CreateGroups(Model model)
         {
             ABGroups.Clear();
