@@ -8,6 +8,7 @@ namespace CompetitionCreator
 {
     public class Match : ConflictAdmin
     {
+        public bool Used = false;
         public string ConflictString
         {
             get
@@ -138,6 +139,7 @@ namespace CompetitionCreator
             this.visitorTeamIndex = visitorTeam;
             this.serie = serie;
             this.poule = poule;
+            this.Used = false;
         }
         public Match(Match match)
         {
@@ -148,6 +150,7 @@ namespace CompetitionCreator
             this.poule = match.poule;
             // this.conflictList; - this is not copied. The conflicts are anyhow useless when the week has been changed.
             this.time = match.time;
+            this.Used = match.Used;
         }
 
         public bool HasConflict()

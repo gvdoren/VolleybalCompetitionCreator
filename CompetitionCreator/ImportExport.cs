@@ -907,7 +907,7 @@ namespace CompetitionCreator
                 Properties.Settings.Default.LastOpenedProject = fileName;
                 Properties.Settings.Default.Save();
             }
-            //model.Changed();
+            model.Changed();
         }
 
 

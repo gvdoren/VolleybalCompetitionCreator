@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+
 namespace CompetitionCreator
 {
-    public class Poule: ConflictAdmin
+    public class Poule : ConflictAdmin
     {
         public class SnapShot
         {
@@ -20,7 +21,7 @@ namespace CompetitionCreator
 
         // Temp lists for snapshot
         public bool imported = false;
-        private int optimisationThreshold = 200;
+        // private int optimisationThreshold = 200;
 
         public bool OptimizeNumber(Model model)
         {
@@ -40,15 +41,15 @@ namespace CompetitionCreator
         }
         public bool evaluated { get { return serie.evaluated && imported == false; } }
         private int _maxTeams;
-        public int maxTeams { get { return _maxTeams;}}
+        public int maxTeams { get { return _maxTeams; } }
         public Serie serie = null;
         public string name { get; set; }
         public List<Team> teams = new List<Team>();
         public bool AddTeam(Team team, int index = -1)
         {
-            if(TeamCount< maxTeams && teams.Contains(team) == false)
+            if (TeamCount < maxTeams && teams.Contains(team) == false)
             {
-                if(index<0) index = teams.FindIndex(t => t.RealTeam() == false);
+                if (index < 0) index = teams.FindIndex(t => t.RealTeam() == false);
                 if (index >= 0)
                 {
                     if (team.poule != null) team.poule.RemoveTeam(team);
@@ -68,7 +69,7 @@ namespace CompetitionCreator
         public bool RemoveTeam(Team team)
         {
             int index = teams.FindIndex(t => t == team);
-            if (index >=0 )
+            if (index >= 0)
             {
                 Team dummy = Team.CreateNullTeam(null, serie);
                 dummy.poule = this;
@@ -85,10 +86,10 @@ namespace CompetitionCreator
             TeamCount = 0;
             foreach (Team team in teams)
             {
-                if(team.RealTeam()) TeamCount++;
+                if (team.RealTeam()) TeamCount++;
             }
         }
-        public Poule(string name, int maxTeams, Serie serie) 
+        public Poule(string name, int maxTeams, Serie serie)
         {
             /*while (maxTeams != 4 &&
                   maxTeams != 6 &&
@@ -101,13 +102,13 @@ namespace CompetitionCreator
             this._maxTeams = maxTeams;
             for (int i = 0; i < maxTeams; i++)
             {
-                Team t = Team.CreateNullTeam(null,serie);
+                Team t = Team.CreateNullTeam(null, serie);
                 teams.Add(t);
                 t.poule = this;  // initially, this cannot be done by CreateNullTeam
             }
-            this.name = name; 
+            this.name = name;
         }
-        public string fullName { get { return serie.name + name; ;} }
+        public string fullName { get { return serie.name + name; ; } }
         public List<MatchWeek> weeks = new List<MatchWeek>();
         public int CalculateDistances(Team t1)
         {
@@ -117,13 +118,13 @@ namespace CompetitionCreator
             {
                 foreach (Team t2 in teams)
                 {
-                    if(t2.RealTeam() && t1.sporthal != null) distance += t1.sporthal.sporthall.Distance(t2.sporthal.sporthall);
+                    if (t2.RealTeam() && t1.sporthal != null) distance += t1.sporthal.sporthall.Distance(t2.sporthal.sporthall);
                     if (t2 == t1) extraTeam = 0; // zit al in de teamcount
                 }
             }
             if (TeamCount > 1)
             {
-                distance = (distance / (extraTeam+TeamCount - 1));
+                distance = (distance / (extraTeam + TeamCount - 1));
             }
             return distance;
         }
@@ -161,7 +162,7 @@ namespace CompetitionCreator
                         List<MatchWeek> previousRoundList = weeks.Where(w => w.round < round).ToList();
                         List<MatchWeek> currentRoundList = weeks.Where(w => w.round == round).ToList();
                         List<MatchWeek> nextRoundList = weeks.Where(w => w.round > round).ToList();
-                        if(currentRoundList.Count > 5)//12)
+                        if (currentRoundList.Count > 5)//12)
                         {
                             for (int i = 0; i < currentRoundList.Count; i++)
                             {
@@ -173,8 +174,8 @@ namespace CompetitionCreator
                                     weeks = new List<MatchWeek>(previousRoundList);
                                     weeks.AddRange(currentRoundList);
                                     weeks.AddRange(nextRoundList);
-                                    var result = SnapShotIfImproved(model,false);
-                                    if (result == SnapshotStatus.Better || result == SnapshotStatus.Close)
+                                    var result = SnapShotIfImproved(model, false);
+                                    if (result)
                                     {
                                         if (optimizationLevel > 0) OptimizeHomeVisitor(model, optimizationLevel > 1);
                                     }
@@ -193,34 +194,28 @@ namespace CompetitionCreator
                                 weeks = new List<MatchWeek>(previousRoundList);
                                 GenerateWeekCombination(model, ref weeks, remaining, nextRoundList, intf);
                             }
-                            finally 
-                            { 
+                            finally
+                            {
                                 RestoreSnapShot(startSnapShot);
                             }
                         }
                         totalIndex += currentRoundList.Count;
                         round++;
-                    } while (totalIndex < weeks.Count && round<4);
+                    } while (totalIndex < weeks.Count && round < 4);
                 }
             }
         }
         public enum SnapshotStatus { Worse, Close, Better };
-        public SnapshotStatus SnapShotIfImproved(Model model, bool equalAllowed = true)
+        public bool SnapShotIfImproved(Model model, bool equalAllowed = true)
         {
-            SnapshotStatus result = SnapshotStatus.Worse;
             var snapShot = CreateSnapShot(model);
             if (snapShot.TotalConflicts < bestSnapShot.TotalConflicts)
             {
-                if (snapShot.TotalConflicts < bestSnapShot.TotalConflicts + optimisationThreshold)
-                    result = SnapshotStatus.Close;
-                if (snapShot.TotalConflicts < bestSnapShot.TotalConflicts || (equalAllowed && snapShot.TotalConflicts == bestSnapShot.TotalConflicts))
-                { 
-                    bestSnapShot = snapShot;
-                    model.stateNotSaved = true;
-                    result = SnapshotStatus.Better;
-                }
+                bestSnapShot = snapShot;
+                model.stateNotSaved = true;
+                return true;
             }
-            return result;
+            return false;
         }
 
         // After a snapshot is created, it can never change
@@ -283,7 +278,7 @@ namespace CompetitionCreator
             {
                 int index = weeks.Count;
                 weeks.AddRange(lastWeeks);
-                SnapShotIfImproved(model,false);
+                SnapShotIfImproved(model, false);
                 weeks.RemoveRange(index, lastWeeks.Count);
                 if (intf.Cancelled())
                 {
@@ -306,7 +301,7 @@ namespace CompetitionCreator
                     }
                 }
             }
-            teamList.Sort(delegate(Team t1, Team t2) { return t1.conflict_cost.CompareTo(t2.conflict_cost); });
+            teamList.Sort(delegate (Team t1, Team t2) { return t1.conflict_cost.CompareTo(t2.conflict_cost); });
             teamList.Reverse();
             foreach (Team team in teamList)
             {
@@ -335,7 +330,7 @@ namespace CompetitionCreator
                             // Voegt dit veel toe?
                             OptimizeWeeks(model, intf, optimizationLevel);
                             if (intf.Cancelled() == false) break;
-                            if(optimizationLevel>0) OptimizeHomeVisitor(model);
+                            if (optimizationLevel > 0) OptimizeHomeVisitor(model);
                             //SnapShotIfImproved(model, ref minConflict);
                             Swap(teams, i, teamindex); // swap back
                         }
@@ -391,9 +386,9 @@ namespace CompetitionCreator
         public int[,] AnalyzeTeamAssignment(Model model, IProgress intf)
         {
             var startSnapShot = CreateSnapShot(model);
-            int[,] score = new int[maxTeams,maxTeams];
+            int[,] score = new int[maxTeams, maxTeams];
             List<Team> fixedOrderList = new List<Team>(teams);
-            for(int k = 1;k<=maxTeams;k++)
+            for (int k = 1; k <= maxTeams; k++)
             {
                 teams.Add(teams[0]);
                 teams.RemoveAt(0);
@@ -448,7 +443,120 @@ namespace CompetitionCreator
             }
             RestoreSnapShot(startSnapShot);
         }
-        
+
+        int FirstTeam(UInt32 teamIndices)
+        {
+            for (int i = 0; i < 32; i++)
+            {
+                UInt32 mask = 1u << i;
+                if ((teamIndices & mask) == 0)
+                {
+                    return i;
+                }
+            }
+            return 32;
+        }
+
+        int weekCount = 0;
+        Match[,] matchArray;
+        uint combinations = 0;
+        int[] weekIndices;
+
+        public void GenerateAllMatchCombinationsExt(Model model, IProgress intf)
+        {
+            Random rnd = new Random();
+//            Console.WriteLine("Matches: " + serie.name + name);
+            weekCount = 4;
+            if (maxTeams <= 6)
+                weekCount = 5;
+            if (maxTeams > 10)
+                weekCount = 3;
+            weekIndices = new int[weekCount];
+
+            int rounds = weeks.Max(w => w.round);
+            List<int> indices = new List<int>();
+            for(int round = 0; round < rounds; round++)
+            {
+                for (int i = 0; i < weeks.Count(); i++)
+                {
+                    if (weeks[i].round == round)
+                    {
+                        indices.Add(i);
+                    }
+                }
+
+                int maxIterations = Math.Max(1, indices.Count - weekCount);
+                for (int i = 0; i < maxIterations; i++)
+                {
+                    if (intf.Cancelled())
+                        return;
+                    intf.Progress(i, maxIterations);
+                    weekIndices = indices.OrderBy(x => rnd.Next()).Take(weekCount).ToArray();
+                    GenerateAllMatchCombinations(model);
+                    RestoreSnapShot(bestSnapShot);
+                }
+            }
+        }
+
+        public void GenerateAllMatchCombinations(Model model)
+        {
+            var start = CreateSnapShot(model);
+            combinations = 0;
+
+            matchArray = new Match[maxTeams, weeks.Count()];
+            foreach (var m in matches.Where(m => weekIndices.Contains(m.weekIndex)))
+            {
+                matchArray[m.homeTeamIndex, m.weekIndex] = m;
+                matchArray[m.visitorTeamIndex, m.weekIndex] = m;
+                m.Used = false;
+            }
+
+            GenerateAllMatchCombinations_rec(model, 0, 0, 0);
+            // Console.WriteLine("Combinations: {0}", combinations);
+        }
+
+        public void GenerateAllMatchCombinations_rec(Model model, uint teamIndices, int wk, int row)
+        {
+            if (row < maxTeams / 2)
+            {
+                var teamIndex = FirstTeam(teamIndices);
+                foreach (int wi in weekIndices)
+                {
+                     Match m = matchArray[teamIndex, wi];
+                    var mask = (1u << m.homeTeamIndex) | (1u << m.visitorTeamIndex);
+                    if (m.Used == false && (mask & teamIndices) == 0)
+                    {
+                        m.Used = true;
+                        int prev_wk = m.weekIndex;
+                        m.weekIndex = weekIndices[wk];
+                        GenerateAllMatchCombinations_rec(
+                            model,
+                            teamIndices | mask,
+                            wk,
+                            row + 1);
+                        if (m.Used == false)
+                        {
+                            Console.WriteLine("Error");
+                        }
+                        m.weekIndex = prev_wk;
+                        m.Used = false;
+                    }
+                }
+            }
+            else if (wk < weekIndices.Count() - 1)
+            {
+                GenerateAllMatchCombinations_rec(model, 0, wk + 1, 0);
+            }
+            else
+            {
+                combinations++;
+                if (SnapShotIfImproved(model, false))
+                {
+                    Console.WriteLine("Improved");
+                }
+            }
+        }
+
         public void OptimizeFullTeamAssignment(Model model, IProgress intf)
         {
             if (OptimizeNumber(model))
@@ -473,9 +581,9 @@ namespace CompetitionCreator
             Team ti = list[i];
             Team tj = list[j];
             list.RemoveAt(i);
-            list.Insert(i,tj);
+            list.Insert(i, tj);
             list.RemoveAt(j);
-            list.Insert(j,ti);
+            list.Insert(j, ti);
         }
         private void GenerateTeamCombination(Model model, List<Team> remainingTeams, IProgress intf)
         {
@@ -485,7 +593,7 @@ namespace CompetitionCreator
                 {
                     if (teams.Count == 0)
                     {
-                        intf.Progress(i,remainingTeams.Count-1);
+                        intf.Progress(i, remainingTeams.Count - 1);
                     }
                     teams.Add(remainingTeams[0]);
                     remainingTeams.RemoveAt(0);
@@ -536,28 +644,28 @@ namespace CompetitionCreator
             }
         }
 
- /*       public void SwitchHomeTeamVisitorTeam(Model model, Match match)
-        {
-            if (optimizableHomeVisit)
-            {
-                Match match2 = null;
-                Match match1 = null;
-                foreach (Match m in matches)
-                {
-                    if (m.homeTeam == match.visitorTeam && m.visitorTeam == match.homeTeam) match2 = m;
-                    if (m.homeTeam == match.homeTeam && m.visitorTeam == match.visitorTeam) match1 = m;
-                }
-                if (match2 != null && match1 != null)
-                {
-                    // swap teams
-                    match1.homeTeamIndex = match2.homeTeamIndex;
-                    match1.visitorTeamIndex = match2.visitorTeamIndex;
-                    match2.homeTeamIndex = match1.visitorTeamIndex;
-                    match2.visitorTeamIndex = match1.homeTeamIndex;
-                }
-            }
-        }
-        */
+        /*       public void SwitchHomeTeamVisitorTeam(Model model, Match match)
+               {
+                   if (optimizableHomeVisit)
+                   {
+                       Match match2 = null;
+                       Match match1 = null;
+                       foreach (Match m in matches)
+                       {
+                           if (m.homeTeam == match.visitorTeam && m.visitorTeam == match.homeTeam) match2 = m;
+                           if (m.homeTeam == match.homeTeam && m.visitorTeam == match.visitorTeam) match1 = m;
+                       }
+                       if (match2 != null && match1 != null)
+                       {
+                           // swap teams
+                           match1.homeTeamIndex = match2.homeTeamIndex;
+                           match1.visitorTeamIndex = match2.visitorTeamIndex;
+                           match2.homeTeamIndex = match1.visitorTeamIndex;
+                           match2.visitorTeamIndex = match1.homeTeamIndex;
+                       }
+                   }
+               }
+               */
         public Team BestFit(string name)
         {
             Team result = null;
@@ -592,11 +700,11 @@ namespace CompetitionCreator
                     if (match.conflict_cost > compareTo)
                     {
                         SwitchHomeTeamVisitorTeam(model, match);
-                        if (SnapShotIfImproved(model,false) == SnapshotStatus.Worse)
+                        if (!SnapShotIfImproved(model, false))
                         { // switch back
                             SwitchHomeTeamVisitorTeam(model, match);
                         }
-                        else 
+                        else
                         {
                             changed = true;
                         }
@@ -618,7 +726,7 @@ namespace CompetitionCreator
                     if (match.conflict_cost > compareTo)
                     {
                         SwitchHomeTeamVisitorTeam(model, match);
-                        if (SnapShotIfImproved(model, false) == SnapshotStatus.Worse)
+                        if (!SnapShotIfImproved(model, false))
                         { // switch back
                             SwitchHomeTeamVisitorTeam(model, match);
                         }
@@ -630,16 +738,16 @@ namespace CompetitionCreator
         {
             int count = 0;
             int round = 0;
-            while(OptimizeSchema6Int(model, intf, optimizationLevel, ref round, ref count));
+            while (OptimizeSchema6Int(model, intf, optimizationLevel, ref round, ref count)) ;
             return false;
         }
         public bool OptimizeSchema6Int(Model model, IProgress intf, int optimizationLevel, ref int roundref, ref int count)
         {
             if (maxTeams > 6) return false;
-            while(roundref < 4)
+            while (roundref < 4)
             {
                 int round = roundref;
-                UInt32[] bitPatterns = new UInt32[(maxTeams * (maxTeams-1))/2];
+                UInt32[] bitPatterns = new UInt32[(maxTeams * (maxTeams - 1)) / 2];
                 UInt32[] schema = new UInt32[(maxTeams * (maxTeams - 1)) / 2];
                 List<Match> selectedMatches = matches.Where(m => m.Week.round == round).ToList();
                 if (selectedMatches.Count == 0)
@@ -661,7 +769,7 @@ namespace CompetitionCreator
                 }
                 List<List<UInt32>> schemas = new List<List<uint>>();
                 RecursiveFullSchema(model, ref days, ref bitPatterns, ref schema, ref schemas, selectedMatches.Count - 1);
-                while(count < schemas.Count)
+                while (count < schemas.Count)
                 {
                     var sch = schemas[count];
                     count++;
@@ -675,13 +783,13 @@ namespace CompetitionCreator
                         Match m = selectedMatches[i];
                         m.weekIndex = indexes[(int)sch[i]];
                     }
-                    var result = SnapShotIfImproved(model,false);
-                    if (result == SnapshotStatus.Better || result == SnapshotStatus.Close) // kans nog aanwezig op goede score
+                    var result = SnapShotIfImproved(model, false);
+                    if (result) // kans nog aanwezig op goede score
                     {
                         if (optimizationLevel > 1)
                         {
                             //if (OptimizeHomeVisitor(model, false))
-                              //  return true; // administration is not correct anymore, so jump out
+                            //  return true; // administration is not correct anymore, so jump out
                             if (OptimizeHomeVisitor(model, optimizationLevel > 1))
                                 return true; // administration is not correct anymore, so jump out
                         }
@@ -718,11 +826,15 @@ namespace CompetitionCreator
                 //schemas.Add(newSchema);
                 schemas.Add(schema.ToList());
             }
-         }
+        }
+
+
+        // Deze functie wisseld 'setSize' matches met elkaar. Er wordt over de verschillende speelweken heen gelopen
+        // Als er een dag gevonden wordt waar dezelfde teams 'tegen elkaar'spelen, dan kunnen die matches gewisseld worden
 
         public bool OptimizeSchema(Model model, IProgress intf, int setSize, int optimizationLevel)
         {
-            if (maxTeams > 6)
+            if (maxTeams >= setSize * 2)
             {
                 if (OptimizeNumber(model))
                 {
@@ -777,7 +889,7 @@ namespace CompetitionCreator
                                         {
                                             SwitchMatches(index1, matches1, index2, matches2);
                                             var result = SnapShotIfImproved(model, false);
-                                            if (result == SnapshotStatus.Better || result == SnapshotStatus.Close)
+                                            if (result)
                                             {
                                                 if (OptimizeHomeVisitor(model, optimizationLevel > 1))
                                                     throw new Exception();  // admin is not correct any more
@@ -786,7 +898,7 @@ namespace CompetitionCreator
                                         }
                                     }
                                 }
-                            } while(NextSetMatches(ref indices, setSize, matchesDay.Count-1));
+                            } while (NextSetMatches(ref indices, setSize, matchesDay.Count - 1));
                         }
                         catch
                         {
@@ -805,9 +917,9 @@ namespace CompetitionCreator
 
         bool NextSetMatches(ref int[] indices, int indicesCount, int maxIndex)
         {
-            int current = indicesCount-1;
+            int current = indicesCount - 1;
             indices[current]++;
-            while(indices[current]>maxIndex)
+            while (indices[current] > maxIndex)
             {
                 indices[current] = 0;
                 current--;
@@ -818,7 +930,7 @@ namespace CompetitionCreator
                 {
                     indices[i] = indices[i - 1] + 1;
                     if (indices[i] > maxIndex)
-                        return false; 
+                        return false;
                 }
             }
             return true;
@@ -826,9 +938,9 @@ namespace CompetitionCreator
 
         private void SwitchMatches(int index1, IEnumerable<Match> matches1, int index2, IEnumerable<Match> matches2)
         {
-            foreach(Match m in matches1)
+            foreach (Match m in matches1)
                 m.weekIndex = index2;
-            foreach(Match m in matches2)
+            foreach (Match m in matches2)
                 m.weekIndex = index1;
         }
 
@@ -893,8 +1005,8 @@ namespace CompetitionCreator
                                                 match_1.weekIndex = index;
                                                 match_2.weekIndex = index;
                                                 match_3.weekIndex = index;
-                                                var result = SnapShotIfImproved(model,false);
-                                                if (result == SnapshotStatus.Better || result == SnapshotStatus.Close)
+                                                var result = SnapShotIfImproved(model, false);
+                                                if (result)
                                                 {
                                                     if (OptimizeHomeVisitor(model, optimizationLevel > 1))
                                                         throw new Exception();  // admin is not correct any more
@@ -925,9 +1037,9 @@ namespace CompetitionCreator
 
         public void CreateMatchesFromSchemaFiles(Schema schema, Serie serie, Poule poule)
         {
-            foreach(SchemaWeek week in schema.weeks.Values)
+            foreach (SchemaWeek week in schema.weeks.Values)
             {
-                foreach(SchemaMatch match in week.matches)
+                foreach (SchemaMatch match in week.matches)
                 {
                     Match m = new Match(week.WeekNr, match.team1, match.team2, serie, poule);
                     weeks[week.WeekNr].round = week.round;
@@ -985,7 +1097,7 @@ namespace CompetitionCreator
                 {
                     int teamIdx = day % teamSize;
 
-                    Match m1 = new Match(day, temp[0],teams[teamIdx], serie, this);
+                    Match m1 = new Match(day, temp[0], teams[teamIdx], serie, this);
                     matches.Add(m1);
 
                     for (int idx = 0; idx < halfsize; idx++)

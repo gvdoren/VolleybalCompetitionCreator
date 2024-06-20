@@ -127,22 +127,27 @@ namespace CompetitionCreator
                             {
                                 intf.SetText("Optimizing - " + poule.serie.name + poule.name);
                                 poule.SetInitialSnapShot(model);
-                                poule.OptimizeTeamAssignment(model, intf);
+                                poule.GenerateAllMatchCombinationsExt(model, intf);
                                 //poule.OptimizeTeams(model, intf, state.optimizeLevel);
                                 if (poule.OptimizeSchema(model))
                                 {
+                                    poule.OptimizeTeamAssignment(model, intf);
                                     poule.RestoreSnapShot(poule.bestSnapShot);
                                     if (intf.Cancelled() == false) poule.OptimizeWeeks(model, intf, GlobalState.optimizeLevel);
                                     poule.RestoreSnapShot(poule.bestSnapShot);
-                                    if (poule.maxTeams > 6)
                                     {
+                                        if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema(model, intf, 5, GlobalState.optimizeLevel);
                                         if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema(model, intf, 4, GlobalState.optimizeLevel);
                                         if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema(model, intf, 3, GlobalState.optimizeLevel);
                                         if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema(model, intf, 2, GlobalState.optimizeLevel);
+                                        
+                                        // Volgens mij kan deze nooit. Er is in dezelfde ronde nooit een complementaire match te vinden
                                         if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema(model, intf, 1, GlobalState.optimizeLevel);
-                                        //  if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema3(model, intf, GlobalState.optimizeLevel);
+                                
+                                        // Iets doet deze anders, want zorgt wel voor extra optimalisaties
+                                        if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema3(model, intf, GlobalState.optimizeLevel);
                                     }
-                                    else
+                                    if (poule.maxTeams > 6)
                                     {
                                        while (intf.Cancelled() == false && GlobalState.optimizeLevel > 0 && poule.OptimizeSchema6(model, intf, GlobalState.optimizeLevel) == true) ;
                                     } 
@@ -158,10 +163,7 @@ namespace CompetitionCreator
                         model.Evaluate(poule);
                         model.Changed();
                     }
-                    lock (model)
-                    {
-                        ImportExport.WriteProject(model, model.savedFileName, true);
-                    }
+                    ImportExport.WriteProject(model, model.savedFileName, true);
                 }
 
                 model.Evaluate(null);
