@@ -43,6 +43,8 @@
             this.NumberOptimization = new System.Windows.Forms.CheckBox();
             this.HomeVisitOptimization = new System.Windows.Forms.CheckBox();
             this.SchemaOptimization = new System.Windows.Forms.CheckBox();
+            this.OptimizingThreshold = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -171,6 +173,8 @@
             // groupBox3
             // 
             this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox3.Controls.Add(this.label2);
+            this.groupBox3.Controls.Add(this.OptimizingThreshold);
             this.groupBox3.Controls.Add(this.label1);
             this.groupBox3.Controls.Add(this.comboBox1);
             this.groupBox3.Location = new System.Drawing.Point(335, 203);
@@ -244,6 +248,23 @@
             this.SchemaOptimization.UseVisualStyleBackColor = true;
             this.SchemaOptimization.CheckedChanged += new System.EventHandler(this.SchemaOptimization_CheckedChanged);
             // 
+            // OptimizingThreshold
+            // 
+            this.OptimizingThreshold.Location = new System.Drawing.Point(9, 78);
+            this.OptimizingThreshold.Name = "OptimizingThreshold";
+            this.OptimizingThreshold.Size = new System.Drawing.Size(100, 20);
+            this.OptimizingThreshold.TabIndex = 13;
+            this.OptimizingThreshold.Text = "0";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(7, 61);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(54, 13);
+            this.label2.TabIndex = 14;
+            this.label2.Text = "Threshold";
+            // 
             // OptimizeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -288,5 +309,7 @@
         private System.Windows.Forms.CheckBox HomeVisitOptimization;
         private System.Windows.Forms.CheckBox SchemaOptimization;
         private BrightIdeasSoftware.OLVColumn olvColumn1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox OptimizingThreshold;
     }
 }

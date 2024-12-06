@@ -112,62 +112,86 @@ namespace CompetitionCreator
             OptimizePoules(intf, model.poules);
         }
 
+        public void SetThreshold(string str)
+        {
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action(() => SetThreshold(str)));
+                return;
+            }
+            OptimizingThreshold.Text = str;
+        }
+
         private void OptimizePoules(IProgress intf, List<Poule> poules)
         {
+            uint threshold;
+            uint.TryParse(OptimizingThreshold.Text, out threshold);
             int score;
             do
             {
-                score = model.TotalConflictsSnapshot;
-                foreach (Poule poule in poules)
+                if (threshold <= 50)
+                    threshold = 0; // To let it finish
+                Poule.OptimizeThreshold = threshold;
+                SetThreshold(threshold.ToString());
+                do
                 {
-                    if (poule.serie != null && poule.Optimize(model) == true)
+                    score = model.TotalConflictsSnapshot;
+                    foreach (Poule poule in poules)
                     {
+                        if (poule.serie != null && poule.Optimize(model) == true)
                         {
-                            lock (model)
                             {
-                                intf.SetText("Optimizing - " + poule.serie.name + poule.name);
-                                poule.SetInitialSnapShot(model);
-                                poule.GenerateAllMatchCombinationsExt(model, intf);
-                                //poule.OptimizeTeams(model, intf, state.optimizeLevel);
-                                if (poule.OptimizeSchema(model))
+                                lock (model)
                                 {
+                                    intf.SetText("Optimizing - " + poule.serie.name + poule.name);
+                                    poule.SetInitialSnapShot(model);
+
+                                    // Optimize number
                                     poule.OptimizeTeamAssignment(model, intf);
-                                    poule.RestoreSnapShot(poule.bestSnapShot);
-                                    if (intf.Cancelled() == false) poule.OptimizeWeeks(model, intf, GlobalState.optimizeLevel);
-                                    poule.RestoreSnapShot(poule.bestSnapShot);
+
+                                    // Home visit
+                                    if (intf.Cancelled() == false) poule.OptimizeHomeVisitor(model, intf, GlobalState.optimizeLevel > 0);
+                                    if (intf.Cancelled() == false) poule.OptimizeHomeVisitorReverse(model, intf, GlobalState.optimizeLevel > 0);
+
+
+                                    // Optimize Schema
+                                    if (poule.OptimizeSchema(model))
                                     {
-                                        if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema(model, intf, 5, GlobalState.optimizeLevel);
-                                        if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema(model, intf, 4, GlobalState.optimizeLevel);
-                                        if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema(model, intf, 3, GlobalState.optimizeLevel);
-                                        if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema(model, intf, 2, GlobalState.optimizeLevel);
-                                        
-                                        // Volgens mij kan deze nooit. Er is in dezelfde ronde nooit een complementaire match te vinden
-                                        if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema(model, intf, 1, GlobalState.optimizeLevel);
-                                
-                                        // Iets doet deze anders, want zorgt wel voor extra optimalisaties
-                                        if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema3(model, intf, GlobalState.optimizeLevel);
+                                        poule.RestoreSnapShot(poule.bestSnapShot);
+                                        // Onduidelijk of onderstaande nog nodig is
+                                        // if (intf.Cancelled() == false) poule.OptimizeWeeks(model, intf, GlobalState.optimizeLevel);
+                                        // poule.RestoreSnapShot(poule.bestSnapShot);
+                                        // {
+                                        //     if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema(model, intf, 5, GlobalState.optimizeLevel);
+                                        //     if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema(model, intf, 4, GlobalState.optimizeLevel);
+                                        //     if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema(model, intf, 3, GlobalState.optimizeLevel);
+                                        //     if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema(model, intf, 2, GlobalState.optimizeLevel);
+                                        // 
+                                        //     // Iets doet deze anders, want zorgt wel voor extra optimalisaties
+                                        //     if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema3(model, intf, GlobalState.optimizeLevel);
+                                        // }
+                                        // if (poule.maxTeams > 6)
+                                        // {
+                                        //     while (intf.Cancelled() == false && GlobalState.optimizeLevel > 0 && poule.OptimizeSchema6(model, intf, GlobalState.optimizeLevel) == true) ;
+                                        // }
+                                        poule.GenerateAllMatchCombinationsExt(model, intf);
                                     }
-                                    if (poule.maxTeams > 6)
-                                    {
-                                       while (intf.Cancelled() == false && GlobalState.optimizeLevel > 0 && poule.OptimizeSchema6(model, intf, GlobalState.optimizeLevel) == true) ;
-                                    } 
+                                    if (intf.Cancelled() == false) poule.RestoreSnapShot(poule.bestSnapShot);
+
+                                    model.Evaluate(poule);
+                                    if (intf.Cancelled()) return;
                                 }
-                                if (intf.Cancelled() == false) poule.OptimizeHomeVisitor(model, GlobalState.optimizeLevel > 0);
-                                if (intf.Cancelled() == false) poule.OptimizeHomeVisitorReverse(model, GlobalState.optimizeLevel > 0);
-                                poule.RestoreSnapShot(poule.bestSnapShot);
-
-                                model.Evaluate(poule);
-                                if (intf.Cancelled()) return;
                             }
+                            model.Evaluate(poule);
+                            model.Changed();
                         }
-                        model.Evaluate(poule);
-                        model.Changed();
+                        ImportExport.WriteProject(model, model.savedFileName, true);
                     }
-                    ImportExport.WriteProject(model, model.savedFileName, true);
-                }
 
-                model.Evaluate(null);
-            } while (model.TotalConflictsSnapshot<score);
+                    model.Evaluate(null);
+                } while (model.TotalConflictsSnapshot < score);
+                threshold /= 2;
+            } while (threshold > 0);
         }
         private void OptimizePoulesCompleted(IProgress intf)
         {

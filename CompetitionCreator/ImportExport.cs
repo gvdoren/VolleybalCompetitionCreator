@@ -444,14 +444,13 @@ namespace CompetitionCreator
                                 }
                                 writer.WriteEndElement();
                             }
-                            writer.WriteStartElement("NotAvailable");
-                            foreach (DateTime date in sporthal.NotAvailable)
+                            foreach (Period period in sporthal.NotAvailable)
                             {
-                                //writer.WriteStartElement("Date");
-                                writer.WriteElementString("Date", date.ToString("yyyy-MM-dd"));
-                                //writer.WriteEndElement();
+                                writer.WriteStartElement("NotAvailable");
+                                writer.WriteAttributeString("from", period.From.ToString("yyyy-MM-dd H:mm"));
+                                writer.WriteAttributeString("until", period.Until.ToString("yyyy-MM-dd H:mm"));
+                                writer.WriteEndElement();
                             }
-                            writer.WriteEndElement();
                             writer.WriteEndElement();
                         }
 
@@ -1304,32 +1303,48 @@ namespace CompetitionCreator
 
                     //clear original dates (for re-reading the subscriptions)
                     sp.NotAvailable.Clear();
+                    XElement element = null;
                     if (OptionalElement(sporthal, "NotAvailables") != null)
+                        element = Element(sporthal, "NotAvailables");
+                    else
+                        element = sporthal;
+
+                    foreach (var notAvailable in element.Elements("NotAvailable"))
                     {
-                        foreach (var notAvailable in Element(sporthal, "NotAvailables").Elements("NotAvailable"))
+                        if (notAvailable.Attribute("from") != null && notAvailable.Attributes("until") != null)
                         {
                             string from = notAvailable.Attribute("from").Value;
                             string until = notAvailable.Attribute("until").Value;
-                            DateTime dt = ParseDateTime(from);
-                            DateTime dtFrom = new DateTime(dt.Year, dt.Month, dt.Day);
+
+                            DateTime dtFrom = ParseDateTime(from);
+                            DateTime dtFromDay = new DateTime(dtFrom.Year, dtFrom.Month, dtFrom.Day);
                             DateTime dtUntil = ParseDateTime(until);
+                            DateTime dtUntilDay = new DateTime(dtUntil.Year, dtUntil.Month, dtUntil.Day);
 
-                            while (dtFrom < dtUntil)
+                            if (dtFromDay == dtUntilDay) // from and until on same day
                             {
-
-                                if (sp.NotAvailable.Contains(dtFrom) == false) sp.NotAvailable.Add(dtFrom);
-                                dtFrom = dtFrom.AddDays(1);
+                                sp.NotAvailable.Add(new Period(dtFrom, dtUntil));
+                                continue;
+                            }
+                            dtFromDay = dtFromDay.AddDays(1);
+                            if (dtFromDay <= dtUntilDay) // minstens 2 dagen
+                            {
+                                sp.NotAvailable.Add(new Period(dtFrom, dtFromDay.AddMinutes(-1)));
+                                sp.NotAvailable.Add(new Period(dtUntilDay, dtUntil));
+                            }
+                            while (dtFromDay < dtUntilDay)
+                            {
+                                sp.NotAvailable.Add(new Period(dtFromDay, dtFromDay.AddHours(23).AddMinutes(59)));
+                                dtFromDay = dtFromDay.AddDays(1);
                             }
                         }
-                    }
-                    else if (OptionalElement(sporthal, "NotAvailable") != null)
-                    {
-                        foreach (var date in Element(sporthal, "NotAvailable").Elements("Date"))
+                        foreach (var date in notAvailable.Elements("Date"))
                         {
                             DateTime dt = ParseDateTime(date.Value.ToString());
-                            if (sp.NotAvailable.Contains(dt) == false) sp.NotAvailable.Add(dt);
+                            sp.NotAvailable.Add(new Period(dt, dt.AddHours(23).AddMinutes(59)));
                         }
                     }
+
                     if (cl.sporthalls.Contains(sp) == false) cl.sporthalls.Add(sp);
                 }
 

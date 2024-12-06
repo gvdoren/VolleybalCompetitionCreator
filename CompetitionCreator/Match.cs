@@ -16,7 +16,7 @@ namespace CompetitionCreator
                 string str = "";
                 foreach (var con in constraintList)
                 {
-                    str += con.Title + " ";
+                    str += con.Title + ", ";
                 }
                 return str;
             }

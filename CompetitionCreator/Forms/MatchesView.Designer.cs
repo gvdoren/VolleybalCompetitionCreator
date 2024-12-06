@@ -250,10 +250,11 @@
             this.olvColumn9.AspectName = "ConflictString";
             this.olvColumn9.CellPadding = null;
             this.olvColumn9.FillsFreeSpace = true;
-            this.olvColumn9.MaximumWidth = 300;
+            this.olvColumn9.MaximumWidth = 600;
             this.olvColumn9.MinimumWidth = 70;
             this.olvColumn9.Text = "Conflict";
             this.olvColumn9.Width = 70;
+            this.olvColumn9.WordWrap = true;
             // 
             // richTextConflict
             // 

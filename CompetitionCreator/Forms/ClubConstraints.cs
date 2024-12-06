@@ -179,18 +179,31 @@ namespace CompetitionCreator
                     MatchWeek w = new MatchWeek(current);
                     availabilityGrid.Rows.Add(w, w.Monday.ToString("dd-MM"), w.Sunday.ToString("dd-MM"),
                                                     w.WeekNr(),
-                                                    sporthal.NotAvailable.Contains(w.Monday) == false, 
-                                                    sporthal.NotAvailable.Contains(w.Tuesday) == false,
-                                                    sporthal.NotAvailable.Contains(w.Wednesday) == false,
-                                                    sporthal.NotAvailable.Contains(w.Thursday) == false,
-                                                    sporthal.NotAvailable.Contains(w.Friday) == false,
-                                                    sporthal.NotAvailable.Contains(w.Saturday) == false,
-                                                    sporthal.NotAvailable.Contains(w.Sunday) == false
+                                                    DetermineCheckState(sporthal.NotAvailable,w.Monday), 
+                                                    DetermineCheckState(sporthal.NotAvailable,w.Tuesday),
+                                                    DetermineCheckState(sporthal.NotAvailable,w.Wednesday),
+                                                    DetermineCheckState(sporthal.NotAvailable,w.Thursday),
+                                                    DetermineCheckState(sporthal.NotAvailable,w.Friday),
+                                                    DetermineCheckState(sporthal.NotAvailable,w.Saturday),
+                                                    DetermineCheckState(sporthal.NotAvailable,w.Sunday)
                                                     );
                 }
                 
             }
         }
+
+        CheckState DetermineCheckState(List<Period> notAvailable, DateTime dateTime)
+        {
+            foreach (var period in notAvailable)
+            {
+                if (period.InPeriod(dateTime))
+                    return CheckState.Unchecked;
+                if (period.From.Date == dateTime.Date && (period.Until-period.From).Hours < 16)
+                    return CheckState.Indeterminate;
+            }
+            return CheckState.Checked;
+        }
+
         private void UpdateTeamsTab()
         {
             objectListView1.SetObjects(club.teams.Where(t => t.serie.evaluated),true);
@@ -214,15 +227,41 @@ namespace CompetitionCreator
         }
         private void dataGridView3_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+            DataGridViewCheckBoxColumn col1 = this.availabilityGrid.Columns[e.ColumnIndex] as DataGridViewCheckBoxColumn;
+
+            if (col1 != null && col1.ThreeState)
+            {
+                CheckState state = (CheckState)this.availabilityGrid[e.ColumnIndex, e.RowIndex].EditedFormattedValue;
+
+                if (state == CheckState.Indeterminate)
+                {
+                    this.availabilityGrid[e.ColumnIndex, e.RowIndex].Value = CheckState.Unchecked;
+                    this.availabilityGrid.RefreshEdit();
+                    this.availabilityGrid.NotifyCurrentCellDirty(true);
+                }
+            }
+
+
             if (e.ColumnIndex > 1 && e.RowIndex >= 0)
             {
+                CheckState state = (CheckState)this.availabilityGrid[e.ColumnIndex, e.RowIndex].EditedFormattedValue;
                 DataGridViewRow row = availabilityGrid.Rows[e.RowIndex];
                 MatchWeek w = (MatchWeek)row.Cells[0].Value;
                 DataGridViewCheckBoxCell cell = (DataGridViewCheckBoxCell)row.Cells[e.ColumnIndex];
-                cell.TrueValue = true;
-                cell.FalseValue = false;
+                cell.TrueValue = CheckState.Checked;
+                cell.FalseValue = CheckState.Unchecked;
+                cell.IndeterminateValue = CheckState.Indeterminate;
+
                 DataGridViewColumn col = availabilityGrid.Columns[e.ColumnIndex];
-                bool b = ((bool)cell.Value) == false;
+                bool b;
+                if (state == CheckState.Indeterminate)
+                {
+                    b = true;
+                }
+                else if (state == CheckState.Checked)
+                    b = true;
+                else 
+                    b = false;
                 if (col == monday)
                     changeAvailability(w.Monday, b);
                 if (col == tuesday)
@@ -247,11 +286,11 @@ namespace CompetitionCreator
         {
             if (available)
             {
-                sporthal.NotAvailable.Remove(date);
+                sporthal.NotAvailable = sporthal.NotAvailable.Where(period => period.From.Date != date.Date).ToList(); //not exactly correct
             }
             else
             {
-                if (sporthal.NotAvailable.Contains(date) == false) sporthal.NotAvailable.Add(date);
+                if (sporthal.NotAvailable.Any(period => period.InPeriod(date)) == false) sporthal.NotAvailable.Add(new Period(date, date.AddHours(23).AddMinutes(59)));
             }
         }
         private void objectListView1_ItemsChanged(object sender, ItemsChangedEventArgs e)

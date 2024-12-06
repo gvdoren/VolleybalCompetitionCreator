@@ -436,7 +436,7 @@ namespace CompetitionCreator
             intf.SetText("Optimizing poule - " + poule.serie.name + poule.name);
             poule.SetInitialSnapShot(model);
             poule.OptimizeTeamAssignment(model, intf);
-            poule.OptimizeHomeVisitor(model);
+            poule.OptimizeHomeVisitor(model, intf);
             poule.OptimizeWeeks(model, intf, GlobalState.optimizeLevel);
             poule.SetBestSnapShot(poule.bestSnapShot);
             model.Evaluate(null);

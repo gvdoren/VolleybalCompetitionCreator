@@ -177,7 +177,7 @@ namespace CompetitionCreator
 
                 public int score(bool A)
                 {
-                    if (!used) return int.MinValue;
+                    if (!used) return 0;
                     int temp = (nonChangeableA - nonChangeableB) * 10 + countA - countB - (sporthalNotAvailableA - sporthalNotAvailableB) * 10;
                     return A ? temp : -temp;
                 }
@@ -201,7 +201,7 @@ namespace CompetitionCreator
                             if (team.poule.imported)
                                 weekCounters[match.Week.WeekNumber].nonChangeableA++;
                         }
-                        if (team.sporthal.NotAvailable.Contains(match.datetime.Date))
+                        if (team.sporthal.NotAvailable.Any(period => period.InPeriod((match.datetime.Date))))
                             weekCounters[match.Week.WeekNumber].sporthalNotAvailableA++;
                     }
                 }
@@ -216,7 +216,7 @@ namespace CompetitionCreator
                             if (team.poule.imported)
                                 weekCounters[match.Week.WeekNumber].nonChangeableB++;
                         }
-                        if (team.sporthal.NotAvailable.Contains(match.datetime.Date))
+                        if (team.sporthal.NotAvailable.Any(period => period.InPeriod((match.datetime.Date))))
                             weekCounters[match.Week.WeekNumber].sporthalNotAvailableB++;
                     }
                 }

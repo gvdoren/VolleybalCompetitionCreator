@@ -32,6 +32,20 @@ namespace CompetitionCreator
         }
     }
 
+    public class Period
+    {
+        public DateTime From;
+        public DateTime Until;
+        public Period(DateTime from, DateTime until)
+        {
+            From = from;
+            Until = until;
+        }
+        public bool InPeriod(DateTime time)
+        {
+            return time >= From && time < Until;
+        }
+    }
     public class SporthallAvailability
     {
         public Sporthal sporthall;
@@ -53,7 +67,7 @@ namespace CompetitionCreator
         }
         public double lat { get { return sporthall.lat; } }
         public double lng { get { return sporthall.lng; } }
-        public List<DateTime> NotAvailable = new List<DateTime>();
+        public List<Period> NotAvailable = new List<Period>();
         public List<Field> fields { get; set; }
         public override string ToString()
         {

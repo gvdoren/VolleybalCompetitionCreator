@@ -175,10 +175,11 @@ namespace CompetitionCreator
                                     weeks.AddRange(currentRoundList);
                                     weeks.AddRange(nextRoundList);
                                     var result = SnapShotIfImproved(model, false);
-                                    if (result)
-                                    {
-                                        if (optimizationLevel > 0) OptimizeHomeVisitor(model, optimizationLevel > 1);
-                                    }
+                                    // commented out. Wil be done in next iteration
+                                    // if (result)
+                                    // {
+                                    //     if (optimizationLevel > 0) OptimizeHomeVisitor(model, optimizationLevel > 1);
+                                    // }
                                     RestoreSnapShot(startSnapShot);
                                     if (intf.Cancelled()) return;
                                 }
@@ -206,10 +207,11 @@ namespace CompetitionCreator
             }
         }
         public enum SnapshotStatus { Worse, Close, Better };
+        public static uint OptimizeThreshold = 0;
         public bool SnapShotIfImproved(Model model, bool equalAllowed = true)
         {
             var snapShot = CreateSnapShot(model);
-            if (snapShot.TotalConflicts < bestSnapShot.TotalConflicts)
+            if (snapShot.TotalConflicts < bestSnapShot.TotalConflicts + OptimizeThreshold)
             {
                 bestSnapShot = snapShot;
                 model.stateNotSaved = true;
@@ -464,11 +466,11 @@ namespace CompetitionCreator
 
         public void GenerateAllMatchCombinationsExt(Model model, IProgress intf)
         {
+            if (!OptimizeSchema(model))
+                return;
             Random rnd = new Random();
 //            Console.WriteLine("Matches: " + serie.name + name);
             weekCount = 4;
-            if (maxTeams <= 6)
-                weekCount = 5;
             if (maxTeams > 10)
                 weekCount = 3;
             weekIndices = new int[weekCount];
@@ -688,15 +690,17 @@ namespace CompetitionCreator
         }
 
 
-        public bool OptimizeHomeVisitor(Model model, bool tryZeroCostMatches = true)
+        public bool OptimizeHomeVisitor(Model model, IProgress intf = null, bool tryZeroCostMatches = true)
         {
             bool changed = false;
             int compareTo = 0;
             if (tryZeroCostMatches) compareTo = -1;
             if (OptimizeHomeVisit(model))
             {
+                int count = 0;
                 foreach (Match match in matches)
                 {
+                    if (intf != null) intf.Progress(count++, matches.Count);
                     if (match.conflict_cost > compareTo)
                     {
                         SwitchHomeTeamVisitorTeam(model, match);
@@ -713,7 +717,7 @@ namespace CompetitionCreator
             }
             return changed;
         }
-        public void OptimizeHomeVisitorReverse(Model model, bool equalAllowed = true)
+        public void OptimizeHomeVisitorReverse(Model model, IProgress intf = null, bool equalAllowed = true)
         {
             int compareTo = 0;
             if (equalAllowed) compareTo = -1;
@@ -721,8 +725,10 @@ namespace CompetitionCreator
             {
                 List<Match> reverseMatches = new List<Match>(matches);
                 reverseMatches.Reverse();
+                int count = 0;
                 foreach (Match match in reverseMatches)
                 {
+                    if (intf != null) intf.Progress(count++, matches.Count);
                     if (match.conflict_cost > compareTo)
                     {
                         SwitchHomeTeamVisitorTeam(model, match);
@@ -790,7 +796,7 @@ namespace CompetitionCreator
                         {
                             //if (OptimizeHomeVisitor(model, false))
                             //  return true; // administration is not correct anymore, so jump out
-                            if (OptimizeHomeVisitor(model, optimizationLevel > 1))
+                            if (OptimizeHomeVisitor(model, null, optimizationLevel > 1))
                                 return true; // administration is not correct anymore, so jump out
                         }
                     }
@@ -836,7 +842,7 @@ namespace CompetitionCreator
         {
             if (maxTeams >= setSize * 2)
             {
-                if (OptimizeNumber(model))
+                if (OptimizeSchema(model))
                 {
                     List<Match>[] matchesPerWeek = new List<Match>[weeks.Count];
                     for (int index = 0; index < weeks.Count; index++)
@@ -891,7 +897,7 @@ namespace CompetitionCreator
                                             var result = SnapShotIfImproved(model, false);
                                             if (result)
                                             {
-                                                if (OptimizeHomeVisitor(model, optimizationLevel > 1))
+                                                if (OptimizeHomeVisitor(model, null, optimizationLevel > 1))
                                                     throw new Exception();  // admin is not correct any more
                                             }
                                             SwitchMatches(index2, matches1, index1, matches2);
@@ -1008,7 +1014,7 @@ namespace CompetitionCreator
                                                 var result = SnapShotIfImproved(model, false);
                                                 if (result)
                                                 {
-                                                    if (OptimizeHomeVisitor(model, optimizationLevel > 1))
+                                                    if (OptimizeHomeVisitor(model, null, optimizationLevel > 1))
                                                         throw new Exception();  // admin is not correct any more
                                                 }
                                                 match_1.weekIndex = index2;

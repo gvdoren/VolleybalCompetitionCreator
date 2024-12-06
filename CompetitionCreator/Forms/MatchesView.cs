@@ -182,12 +182,15 @@ namespace CompetitionCreator
                 string conflict = "";
                 foreach(Constraint con in match.constraintList)
                 {
-                    foreach (string line in match.constraintList[0].GetTextDescription())
+                    foreach (var confl in match.GetConflictList())
                     {
-                        context += line + Environment.NewLine;
+                        if (conflict == "")
+                            conflict = confl.con.Title;
+                        foreach (string line in confl.con.GetTextDescription(match))
+                        {
+                            context += line + Environment.NewLine;
+                        }
                     }
-                    if (conflict == "")
-                        conflict = con.Title;
                 }
                 conflictLabel.Text = "Conflict: " + conflict;
                 richTextConflict.Text = context;

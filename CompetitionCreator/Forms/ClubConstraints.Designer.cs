@@ -1,4 +1,6 @@
-﻿namespace CompetitionCreator
+﻿using System.Windows.Forms;
+
+namespace CompetitionCreator
 {
     partial class InschrijvingenView
     {
@@ -28,6 +30,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.objectListView1 = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -44,6 +47,7 @@
             this.olvColumn0 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn14 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn18 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn7 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -88,7 +92,8 @@
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.olvColumn7 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.GroupTips = new System.Windows.Forms.ToolTip(this.components);
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.availabilityGrid)).BeginInit();
@@ -281,6 +286,12 @@
             this.olvColumn18.IsVisible = false;
             this.olvColumn18.Text = "Fixed Number";
             // 
+            // olvColumn7
+            // 
+            this.olvColumn7.AspectName = "sporthal.id";
+            this.olvColumn7.CellPadding = null;
+            this.olvColumn7.Text = "SporthallId";
+            // 
             // textBox1
             // 
             this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -400,57 +411,85 @@
             // 
             // monday
             // 
+            this.monday.FalseValue = "";
             this.monday.HeaderText = "Mon";
+            this.monday.IndeterminateValue = "";
             this.monday.MinimumWidth = 30;
             this.monday.Name = "monday";
             this.monday.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.monday.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.monday.ThreeState = true;
+            this.monday.TrueValue = "";
             this.monday.Width = 30;
             // 
             // tuesday
             // 
+            this.tuesday.FalseValue = "";
             this.tuesday.HeaderText = "Tue";
+            this.tuesday.IndeterminateValue = "";
             this.tuesday.MinimumWidth = 30;
             this.tuesday.Name = "tuesday";
             this.tuesday.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.tuesday.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.tuesday.ThreeState = true;
+            this.tuesday.TrueValue = "";
             this.tuesday.Width = 30;
             // 
             // wednesday
             // 
+            this.wednesday.FalseValue = "";
             this.wednesday.HeaderText = "Wed";
+            this.wednesday.IndeterminateValue = "";
             this.wednesday.MinimumWidth = 30;
             this.wednesday.Name = "wednesday";
             this.wednesday.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.wednesday.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.wednesday.ThreeState = true;
+            this.wednesday.TrueValue = "";
             this.wednesday.Width = 30;
             // 
             // thursday
             // 
+            this.thursday.FalseValue = "";
             this.thursday.HeaderText = "Thu";
+            this.thursday.IndeterminateValue = "";
             this.thursday.MinimumWidth = 30;
             this.thursday.Name = "thursday";
+            this.thursday.ThreeState = true;
+            this.thursday.TrueValue = "";
             this.thursday.Width = 30;
             // 
             // friday
             // 
+            this.friday.FalseValue = "";
             this.friday.HeaderText = "Fri";
+            this.friday.IndeterminateValue = "";
             this.friday.MinimumWidth = 30;
             this.friday.Name = "friday";
+            this.friday.ThreeState = true;
+            this.friday.TrueValue = "";
             this.friday.Width = 30;
             // 
             // saturday
             // 
+            this.saturday.FalseValue = "";
             this.saturday.HeaderText = "Sat";
+            this.saturday.IndeterminateValue = "";
             this.saturday.MinimumWidth = 30;
             this.saturday.Name = "saturday";
+            this.saturday.ThreeState = true;
+            this.saturday.TrueValue = "";
             this.saturday.Width = 30;
             // 
             // sunday
             // 
+            this.sunday.FalseValue = "";
             this.sunday.HeaderText = "Sun";
+            this.sunday.IndeterminateValue = "";
             this.sunday.MinimumWidth = 30;
             this.sunday.Name = "sunday";
+            this.sunday.ThreeState = true;
+            this.sunday.TrueValue = "";
             this.sunday.Width = 30;
             // 
             // tabControl1
@@ -756,6 +795,7 @@
             this.checkBox1.Size = new System.Drawing.Size(55, 17);
             this.checkBox1.TabIndex = 14;
             this.checkBox1.Text = "Week";
+            this.GroupTips.SetToolTip(this.checkBox1, "Makes that group X/Y works for the whole week (iso for each day individually)");
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
@@ -767,9 +807,11 @@
             this.checkBox2.Location = new System.Drawing.Point(146, 133);
             this.checkBox2.Margin = new System.Windows.Forms.Padding(2);
             this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(65, 17);
+            this.checkBox2.Size = new System.Drawing.Size(67, 17);
             this.checkBox2.TabIndex = 15;
-            this.checkBox2.Text = "Sporthal";
+            this.checkBox2.Text = "Sporthall";
+            this.GroupTips.SetToolTip(this.checkBox2, "Makes that group X/Y works for all sporthals used (iso for each sporthall individ" +
+        "ually)");
             this.checkBox2.UseVisualStyleBackColor = true;
             this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
             // 
@@ -784,6 +826,7 @@
             this.checkBox3.Size = new System.Drawing.Size(49, 17);
             this.checkBox3.TabIndex = 16;
             this.checkBox3.Text = "Time";
+            this.GroupTips.SetToolTip(this.checkBox3, "Makes that group X/Y works for the whole day (iso for overlapping matches)");
             this.checkBox3.UseVisualStyleBackColor = true;
             this.checkBox3.CheckedChanged += new System.EventHandler(this.checkBox3_CheckedChanged);
             // 
@@ -796,17 +839,20 @@
             this.label5.TabIndex = 17;
             this.label5.Text = "Group settings:";
             // 
-            // olvColumn7
+            // toolStrip1
             // 
-            this.olvColumn7.AspectName = "sporthal.id";
-            this.olvColumn7.CellPadding = null;
-            this.olvColumn7.Text = "SporthallId";
+            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(629, 25);
+            this.toolStrip1.TabIndex = 18;
+            this.toolStrip1.Text = "toolStrip1";
             // 
             // InschrijvingenView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(629, 504);
+            this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.checkBox3);
             this.Controls.Add(this.checkBox2);
@@ -890,20 +936,22 @@
         private BrightIdeasSoftware.OLVColumn olvColumn19;
         private System.Windows.Forms.Button buttonNewTeamRequirement;
         private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn week;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn until;
-        private System.Windows.Forms.DataGridViewTextBoxColumn WeekNr;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn monday;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn tuesday;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn wednesday;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn thursday;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn friday;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn saturday;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn sunday;
         private System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.CheckBox checkBox3;
         private System.Windows.Forms.Label label5;
         private BrightIdeasSoftware.OLVColumn olvColumn7;
+        private DataGridViewTextBoxColumn week;
+        private DataGridViewTextBoxColumn Column2;
+        private DataGridViewTextBoxColumn until;
+        private DataGridViewTextBoxColumn WeekNr;
+        private DataGridViewCheckBoxColumn monday;
+        private DataGridViewCheckBoxColumn tuesday;
+        private DataGridViewCheckBoxColumn wednesday;
+        private DataGridViewCheckBoxColumn thursday;
+        private DataGridViewCheckBoxColumn friday;
+        private DataGridViewCheckBoxColumn saturday;
+        private DataGridViewCheckBoxColumn sunday;
+        private ToolTip GroupTips;
+        private ToolStrip toolStrip1;
     }
 }
