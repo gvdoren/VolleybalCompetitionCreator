@@ -171,8 +171,8 @@ namespace CompetitionCreator
                     if (day == DayOfWeek.Saturday) saturday.Visible = true;
                     if (day == DayOfWeek.Sunday) sunday.Visible = true;
                 }
-                DateTime begin = new DateTime(model.year, 9, 1);
-                DateTime end = new DateTime(model.year+1, 5, 1);
+                DateTime begin = model.yearPlans.start;
+                DateTime end = model.yearPlans.end;
                 availabilityGrid.Rows.Clear();
                 for (DateTime current = begin; current < end; current = current.AddDays(7))
                 {

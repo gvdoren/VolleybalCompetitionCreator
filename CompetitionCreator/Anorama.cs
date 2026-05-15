@@ -45,7 +45,7 @@ namespace CompetitionCreator
         {
             reeksen.Clear();
             start = new DateTime(year, 9, 1);
-            end = new DateTime(year + 1, 5, 1);
+            end = new DateTime(year + 1, 6, 1);
             title = string.Format("Year plan: {0}-{1}", year, year + 1);
         }
         public YearPlan GetReeks(string name)
