@@ -251,7 +251,7 @@ namespace CompetitionCreator
                 {
                     foreach (Match match in poule.matches)
                     {
-                        DateTime dt = match.dateday.Date;
+                        DateTime dt = match.datetime;
                         if (match.homeTeam == team &&
                             match.RealMatch() &&
                             team.sporthal.NotAvailable.Any(period => period.InPeriod((dt))))
@@ -722,6 +722,8 @@ namespace CompetitionCreator
             return result.ToArray();
         }
     }
+
+    // ToDo: niet gebruikt?
     class ConstraintNotAllInSameHomeDay : Constraint
     {
         List<Team> listTeams;
@@ -837,6 +839,7 @@ namespace CompetitionCreator
                     if (m1.RealMatch() && m2.RealMatch())
                     {
                         double delta = MySettings.Settings.NormalLengthMatch - 0.01; // normale lengte wedstrijd
+                        // ToDo: reistijd afhankelijk van afstand
                         if (m1.homeTeam.club != m2.homeTeam.club) delta += MySettings.Settings.TravelingTime; // extra reistijd
                         DateTime st1 = m1.datetime;
                         DateTime en1 = st1.AddHours(delta);
@@ -844,9 +847,10 @@ namespace CompetitionCreator
                         DateTime st2 = m2.datetime;
                         DateTime en2 = st2.AddHours(delta);
                         st2 = st2.AddHours(-m2.serie.extraTimeBefore); // reserve wedstrijd
-                        if (st1 <= en2 && en1 >= st2)
+
+                        if (st1 <= en2 && en1 >= st2) // if (!(st2 > en1 || st1 > en2))
                         {
-                            this.AddConflictMatch(VisitorHomeBoth.HomeOnly, m1, m2);
+                            this.AddConflictMatch(VisitorHomeBoth.Both, m1, m2);
                         }
                     }
                     i1++;
@@ -857,9 +861,102 @@ namespace CompetitionCreator
         public override string[] GetTextDescription(Match match)
         {
             List<string> result = new List<string>();
+            result.Add("Team: " + team.name + " - " + team.defaultTime);
+            result.Add("Team: " + team2.name + " - " + team2.defaultTime);
+            result.Add("Conflict matches:");
+            foreach (var m in conflictMatches)
+            {
+                result.Add($"{m.datetime}: {m.homeTeam.name} - {m.visitorTeam.name}");
+            }
+
             return result.ToArray();
         }
     }
+
+
+
+    class ConstraintPlayOnSameDay: Constraint
+    {
+        Team team2;
+        TeamConstraint.What what;
+        public ConstraintPlayOnSameDay(Team cl, Team cl2, TeamConstraint.What _what)
+        {
+            team2 = cl2;
+            team = cl;
+            what = _what;
+            VisitorAlso = false;
+            if (what == TeamConstraint.What.HomeNotOnSameDay)
+                name = "Teams on the same day";
+            else if (what == TeamConstraint.What.HomeOnSameDay)
+                name = "Teams not on the same day";
+            else if (what == TeamConstraint.What.HomeInSameWeekend)
+                name = "Teams not in same weekend";
+            else 
+                name = "Teams in same weekend";
+
+            cost = MySettings.Settings.PlayAtSameTime;
+            AddRelated(cl.poule);
+            AddRelated(cl2.poule);
+        }
+        public override void Evaluate(Model model)
+        {
+            ClearConflicts();
+
+            conflict_cost = 0;
+            conflictMatches.Clear();
+            List<Match> team1Matches = team.poule.matches.FindAll(m => m.RealMatch() && m.homeTeam == team);
+            team1Matches.Sort(delegate (Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
+            List<Match> team2Matches = team2.poule.matches.FindAll(m => m.RealMatch() && m.homeTeam == team2);
+            team2Matches.Sort(delegate (Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
+            Poule poule2 = team2.poule;
+            int i1 = 0;
+            int i2 = 0;
+            while (i1 < team1Matches.Count && i2 < team2Matches.Count)
+            {
+                Match m1 = team1Matches[i1];
+                Match m2 = team2Matches[i2];
+                if (m1.datetime.Date < m2.datetime.Date)
+                {
+                    i1++;
+                    if (what == TeamConstraint.What.HomeOnSameDay || what == TeamConstraint.What.HomeInSameWeekend)
+                        this.AddConflictMatch(VisitorHomeBoth.HomeOnly, m1);
+                }
+                else if (m2.datetime.Date < m1.datetime.Date)
+                {
+                    i2++;
+                    if (what == TeamConstraint.What.HomeOnSameDay || what == TeamConstraint.What.HomeInSameWeekend)
+                        this.AddConflictMatch(VisitorHomeBoth.HomeOnly, m2);
+                }
+                else
+                {
+                    if (what == TeamConstraint.What.HomeNotOnSameDay || what == TeamConstraint.What.HomeNotInSameWeekend)
+                        this.AddConflictMatch(VisitorHomeBoth.Both, m1, m2);
+                    i1++;
+                    i2++;
+                }
+            }
+        }
+        public override string[] GetTextDescription(Match match)
+        {
+            List<string> result = new List<string>();
+            string s = "Team '" + team.name + " (" + team.serie.name + ")' should ";
+            if (what == TeamConstraint.What.HomeNotOnSameDay || what == TeamConstraint.What.HomeNotInSameWeekend)
+                s += "not ";
+            s += "play at the same day as '" + team2.name + " (" + team2.serie.name + ").";
+            result.Add(s);
+            return result.ToArray();
+        }
+    }
+
+
+
+
+
+
+
+
+
+
     class ConstraintClubTooManyConflicts : Constraint
     {
         public ConstraintClubTooManyConflicts(Club cl)
@@ -924,6 +1021,8 @@ namespace CompetitionCreator
         }
 
     }
+
+    // ToDo: TeamConstraint
     class ConstraintTeamFixedNumber : Constraint
     {
         public ConstraintTeamFixedNumber(Team team)
@@ -967,6 +1066,7 @@ namespace CompetitionCreator
         }
 
     }
+    // ToDo: TeamConstraint
     class ConstraintTeamNaming : Constraint
     {
         public ConstraintTeamNaming(Club club)

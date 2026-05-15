@@ -180,16 +180,13 @@ namespace CompetitionCreator
                 labelGroup.Text = "Group: " + match.homeTeam.group.ToStringCustom();
                 string context = "";
                 string conflict = "";
-                foreach(Constraint con in match.constraintList)
+                foreach (var confl in match.GetConflictList())
                 {
-                    foreach (var confl in match.GetConflictList())
+                    if (conflict == "")
+                        conflict = confl.con.Title;
+                    foreach (string line in confl.con.GetTextDescription(match))
                     {
-                        if (conflict == "")
-                            conflict = confl.con.Title;
-                        foreach (string line in confl.con.GetTextDescription(match))
-                        {
-                            context += line + Environment.NewLine;
-                        }
+                        context += line + Environment.NewLine;
                     }
                 }
                 conflictLabel.Text = "Conflict: " + conflict;

@@ -30,6 +30,22 @@ namespace CompetitionCreator
             }
             return 0;
         }
+
+        public bool SameSporthall(Sporthal hall)
+        {
+            if (id == hall.id)
+                return true;
+            if (hall.lat != 0 && hall.lng != 0 && lat != 0 && lng != 0)
+            {
+                double lat_km = Math.Abs(lat - hall.lat) * 110.0;
+                double lng_km = Math.Abs(lng - hall.lng) * Math.Cos((Math.PI / 180) * lat) * 111.0;
+                double estimated_distance_km = 1.2 * Math.Sqrt((lat_km * lat_km) + (lng_km * lng_km));
+                if (estimated_distance_km < 0.2)
+                    return true;
+            }
+            return false;
+        }
+
     }
 
     public class Period
@@ -43,7 +59,8 @@ namespace CompetitionCreator
         }
         public bool InPeriod(DateTime time)
         {
-            return time >= From && time < Until;
+            var endTime = time.AddHours(2); // reserved for a match
+            return (time >= From && time < Until) || (endTime >= From && endTime < Until);
         }
     }
     public class SporthallAvailability

@@ -99,7 +99,21 @@ namespace CompetitionCreator
 
         public int sporthallCount()
         {
-            return sporthalls.Count;
+            if (sporthalls.Count == 1)
+                return 1;
+
+            List<Sporthal> uniqueSporthalls = new List<Sporthal>();
+
+            foreach (var sp in sporthalls)
+            {
+                bool unique = true;
+                foreach (var s in uniqueSporthalls)
+                    if (sp.sporthall.SameSporthall(s))
+                        unique = false;
+                if (unique)
+                    uniqueSporthalls.Add(sp.sporthall);
+            }
+            return uniqueSporthalls.Count;
         }
 
         public int conflictMatches
@@ -184,11 +198,14 @@ namespace CompetitionCreator
             };
             public void DetermineWeeks()
             {
-                AWeeks = new bool[53];
-                BWeeks = new bool[53];
-                counters[] weekCounters = new counters[53];
-                for (int i = 0; i < 53; i++)
+                AWeeks = new bool[54];
+                BWeeks = new bool[54];
+                counters[] weekCounters = new counters[54];
+                for (int i = 0; i < 54; i++)
                     weekCounters[i].weeknr = i;
+
+                if (A.Count() == 0 || B.Count() == 0)
+                    return;
 
                 foreach (Team team in A)
                 {
@@ -222,7 +239,14 @@ namespace CompetitionCreator
                 }
 
                 int voorkeur = 0;//  1 + (int)Math.Round((double)weeks.Count * 0.1); // bv 20 weken (2x10) dan 4 dagen extra, 12 (6) -> 3
+
+
+                // Zorgen dat als je vanuit 1 club bekijkt, of vanuit de andere club dat de weken hetzelfde blijven
+                // Dus absolute geordend
                 int turnA = 1;
+                if (A.Count() > B.Count() || (A.Count() == B.Count() &&  A.First().name.CompareTo(B.First().name) > 0))
+                    turnA = 0;
+
                 if (B.Count() == 0)
                     turnA += voorkeur; // A mag eerst x keer extra kiezen
                 var weeks = weekCounters.Where(wc => wc.used).ToList();
@@ -258,7 +282,7 @@ namespace CompetitionCreator
         bool MatchTeamGroup(Team t1, Team t2)
         {
             var dayMatch = GroupAllWeek ? true : t1.defaultDay == t2.defaultDay;
-            var sporthalMatch = GroupAllSporthalls ? true : t1.sporthal.id == t2.sporthal.id;
+            var sporthalMatch = GroupAllSporthalls ? true : t1.sporthal.sporthall.SameSporthall(t2.sporthal.sporthall); // Id can be different for same sporthall
             var timeMatch = GroupAllDay ? true : Math.Abs(t1.defaultTime.Hours - t2.defaultTime.Hours) < 2; // Als ze minder dan 2 uur uit elkaar liggen zijn ze overlappend
             return dayMatch & sporthalMatch & timeMatch;
         }
@@ -292,6 +316,7 @@ namespace CompetitionCreator
         {
             ABGroups.Clear();
             var remainder = new List<Team>(teams.Where(t => t.evaluated && t.poule != null));
+
             while (remainder.Count() > 0)
             {
                 var t1 = remainder.First();
@@ -332,6 +357,9 @@ namespace CompetitionCreator
                     }
                 }
             }
+
+//            ABGroups = ABGroups.Where(ab => ab.A.Count + ab.B.Count > 1).ToList();
+
             foreach (var ab in ABGroups)
                 ab.DetermineWeeks();
         }

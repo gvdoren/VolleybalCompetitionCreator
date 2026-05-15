@@ -301,7 +301,7 @@ namespace CompetitionCreator
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(441, 105);
+            this.textBox1.Size = new System.Drawing.Size(387, 105);
             this.textBox1.TabIndex = 3;
             // 
             // dataGridView2
@@ -313,13 +313,13 @@ namespace CompetitionCreator
             this.dataGridView2.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
             this.Column5});
-            this.dataGridView2.Location = new System.Drawing.Point(447, 6);
+            this.dataGridView2.Location = new System.Drawing.Point(395, 6);
             this.dataGridView2.Margin = new System.Windows.Forms.Padding(2);
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.RowHeadersVisible = false;
             this.dataGridView2.RowHeadersWidth = 62;
             this.dataGridView2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView2.Size = new System.Drawing.Size(173, 57);
+            this.dataGridView2.Size = new System.Drawing.Size(225, 57);
             this.dataGridView2.TabIndex = 5;
             this.dataGridView2.SelectionChanged += new System.EventHandler(this.dataGridView2_SelectionChanged);
             // 

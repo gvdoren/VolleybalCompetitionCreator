@@ -53,6 +53,8 @@
             this.button7 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.button5 = new System.Windows.Forms.Button();
+            this.textBoxFilter = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView3)).BeginInit();
@@ -72,11 +74,11 @@
             this.olvColumn3});
             this.objectListView1.FullRowSelect = true;
             this.objectListView1.HideSelection = false;
-            this.objectListView1.Location = new System.Drawing.Point(0, 8);
+            this.objectListView1.Location = new System.Drawing.Point(0, 47);
             this.objectListView1.Margin = new System.Windows.Forms.Padding(2);
             this.objectListView1.Name = "objectListView1";
             this.objectListView1.ShowGroups = false;
-            this.objectListView1.Size = new System.Drawing.Size(498, 528);
+            this.objectListView1.Size = new System.Drawing.Size(498, 489);
             this.objectListView1.TabIndex = 0;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
@@ -214,6 +216,7 @@
             this.objectListView3.FormatCell += new System.EventHandler<BrightIdeasSoftware.FormatCellEventArgs>(this.objectListView3_FormatCell);
             this.objectListView3.SelectionChanged += new System.EventHandler(this.objectListView3_SelectionChanged);
             this.objectListView3.DoubleClick += new System.EventHandler(this.objectListView3_DoubleClick);
+            this.objectListView3.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.objectListView3_KeyPress);
             // 
             // olvColumn6
             // 
@@ -223,7 +226,7 @@
             this.olvColumn6.MaximumWidth = 220;
             this.olvColumn6.MinimumWidth = 300;
             this.olvColumn6.Text = "Team";
-            this.olvColumn6.Width = 220;
+            this.olvColumn6.Width = 300;
             // 
             // olvColumn7
             // 
@@ -370,11 +373,30 @@
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
+            // textBoxFilter
+            // 
+            this.textBoxFilter.Location = new System.Drawing.Point(38, 20);
+            this.textBoxFilter.Name = "textBoxFilter";
+            this.textBoxFilter.Size = new System.Drawing.Size(459, 20);
+            this.textBoxFilter.TabIndex = 13;
+            this.textBoxFilter.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(0, 23);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(32, 13);
+            this.label2.TabIndex = 14;
+            this.label2.Text = "Filter:";
+            // 
             // SerieView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(793, 535);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.textBoxFilter);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button7);
@@ -428,5 +450,7 @@
         private BrightIdeasSoftware.OLVColumn olvColumn11;
         private BrightIdeasSoftware.OLVColumn olvColumn12;
         private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.TextBox textBoxFilter;
+        private System.Windows.Forms.Label label2;
     }
 }

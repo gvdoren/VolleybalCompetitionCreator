@@ -158,22 +158,21 @@ namespace CompetitionCreator
                                     if (poule.OptimizeSchema(model))
                                     {
                                         poule.RestoreSnapShot(poule.bestSnapShot);
-                                        // Onduidelijk of onderstaande nog nodig is
-                                        // if (intf.Cancelled() == false) poule.OptimizeWeeks(model, intf, GlobalState.optimizeLevel);
-                                        // poule.RestoreSnapShot(poule.bestSnapShot);
-                                        // {
-                                        //     if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema(model, intf, 5, GlobalState.optimizeLevel);
-                                        //     if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema(model, intf, 4, GlobalState.optimizeLevel);
-                                        //     if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema(model, intf, 3, GlobalState.optimizeLevel);
-                                        //     if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema(model, intf, 2, GlobalState.optimizeLevel);
-                                        // 
-                                        //     // Iets doet deze anders, want zorgt wel voor extra optimalisaties
-                                        //     if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema3(model, intf, GlobalState.optimizeLevel);
-                                        // }
-                                        // if (poule.maxTeams > 6)
-                                        // {
-                                        //     while (intf.Cancelled() == false && GlobalState.optimizeLevel > 0 && poule.OptimizeSchema6(model, intf, GlobalState.optimizeLevel) == true) ;
-                                        // }
+                                        if (intf.Cancelled() == false) poule.OptimizeWeeks(model, intf, GlobalState.optimizeLevel);
+                                        poule.RestoreSnapShot(poule.bestSnapShot);
+                                        {
+                                            if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema(model, intf, 5, GlobalState.optimizeLevel);
+                                            if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema(model, intf, 4, GlobalState.optimizeLevel);
+                                            if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema(model, intf, 3, GlobalState.optimizeLevel);
+                                            if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema(model, intf, 2, GlobalState.optimizeLevel);
+                                        
+                                            // Iets doet deze anders, want zorgt wel voor extra optimalisaties
+                                            if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema3(model, intf, GlobalState.optimizeLevel);
+                                        }
+                                        if (poule.maxTeams > 6)
+                                        {
+                                            while (intf.Cancelled() == false && GlobalState.optimizeLevel > 0 && poule.OptimizeSchema6(model, intf, GlobalState.optimizeLevel) == true) ;
+                                        }
                                         poule.GenerateAllMatchCombinationsExt(model, intf);
                                     }
                                     if (intf.Cancelled() == false) poule.RestoreSnapShot(poule.bestSnapShot);
@@ -184,8 +183,12 @@ namespace CompetitionCreator
                             }
                             model.Evaluate(poule);
                             model.Changed();
+                            try
+                            {
+                                ImportExport.WriteProject(model, model.savedFileName, true);
+                            }
+                            catch { } // negeer een eventueel falen van back-up wegschrijven. 1x gezien. Mogelijk virus scanner die hem claimed
                         }
-                        ImportExport.WriteProject(model, model.savedFileName, true);
                     }
 
                     model.Evaluate(null);

@@ -1,14 +1,13 @@
-﻿9-6-2024:
-Groepen worden nu beinvloed door: AllSporthal, AllDay, AllWeek
-Parallel evalueren
-
+﻿
 Nog doen:
 - Team constraints worden nu nog niet meegenomen!!!!!! die moeten nog onafhankelijk worden gechecked. 
 opschonen:
 - kosten netjes toevoegen zodat ze aanpasbaar zijn
 
 
-
+9-6-2024:
+Groepen worden nu beinvloed door: AllSporthal, AllDay, AllWeek
+Parallel evalueren
 
 15-6-2022:
 Voor clubs met alleen X, wordt nu ook dezelde code als X en Y gebruikt. 

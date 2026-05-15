@@ -32,7 +32,7 @@ namespace CompetitionCreator
             this.model = model;
             this.state = state;
             InitializeComponent();
-            objectListView1.SetObjects(model.series.Where(s => s.imported == false && s.optimize == true));
+            objectListView1.SetObjects(model.series.Where(s => s.imported == false && s.optimize == true && s.teams.Count > 0));
 //            foreach (YearPlan reeks in model.yearPlans.reeksen)
 //            {
 //                comboBox1.Items.Add(reeks.Name);
@@ -82,7 +82,7 @@ namespace CompetitionCreator
         }
         void UpdateSerieList()
         {
-            objectListView1.SetObjects(model.series.Where(s =>s.imported == false && s.teams.Count > 0 ), true);
+            objectListView1.SetObjects(model.series.Where(s =>s.imported == false && s.optimize == true && s.teams.Count > 0 && (textBoxFilter.Text.Length == 0 || s.name.ToLower().Contains(textBoxFilter.Text.ToLower())) ), true);
             if (serie != null)
             {
                 objectListView1.SelectedObject = serie;
@@ -675,6 +675,49 @@ namespace CompetitionCreator
         private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
 
+        }
+
+        private void objectListView3_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            var index = objectListView3.SelectedIndex;
+            Team team = (Team)objectListView3.SelectedObject;
+            if (team != null)
+            {
+                Poule p = null;
+                foreach (Poule poule in serie.poules)
+                {
+                    if (poule.name.ToLower() == e.KeyChar.ToString().ToLower())
+                        p = poule;
+                }
+                if (p != null)
+                {
+                    if (p.TeamCount < p.maxTeams)
+                        p.AddTeam(team);
+                }
+                else if (team.poule != null)
+                    team.poule.RemoveTeam(team);
+                model.RenewConstraints();
+                model.Evaluate(null);
+                model.Changed();
+            }
+            Console.WriteLine($"Line: {index}");
+            var currentIndex = objectListView3.SelectedIndex;
+            if (currentIndex < objectListView3.GetItemCount() - 1)
+            {
+                objectListView3.SelectedIndex = -1; // Deselecteer alles
+                objectListView3.SelectObjects(new List<object> { objectListView3.GetModelObject(currentIndex + 1) });
+                objectListView3.EnsureModelVisible(objectListView3.GetModelObject(currentIndex + 1)); // Zorg ervoor dat de nieuwe regel in beeld is
+
+                // objectListView3.SelectObject(objectListView3.GetModelObject(currentIndex + 1));
+                // objectListView3.SelectObjects(new List<object> { objectListView3.GetModelObject(currentIndex + 1)});
+                // objectListView3.SelectedIndex = currentIndex + 1;
+            }
+            objectListView3.Update();
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            UpdateSerieList();
         }
     }
 }

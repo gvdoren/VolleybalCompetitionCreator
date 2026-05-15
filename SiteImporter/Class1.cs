@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
-using System.IO;
-using System.Globalization;
 
 namespace SiteImporter
 {
@@ -39,7 +40,8 @@ namespace SiteImporter
             new ProvincieInfo { Name = "ANTWERPEN", Id = 1 , RemoveTeams = false },
             new ProvincieInfo { Name = "WEST-VLAANDEREN", Id = 9 , RemoveTeams = false },
             new ProvincieInfo { Name = "OOST-VLAANDEREN", Id = 5 , RemoveTeams = false },
-            new ProvincieInfo { Name = "VOLLEY VLAANDEREN", Id = 11 , RemoveTeams = true }
+            new ProvincieInfo { Name = "VOLLEY VLAANDEREN", Id = 11 , RemoveTeams = true },
+            new ProvincieInfo { Name = "BRUGS RECREATIEF VOLLEYBAL", Id = 11 , RemoveTeams = true }
         };
         // https://www.volleyadmin2.be/download/seriesubscriptions/5_11/  Divisie inschrijvingen voor Limburg
         // http://volleyadmin2.be/services/series_xml.php?province_id=4&all=1  voor alle series (zodat ik de id's heb)
@@ -126,6 +128,11 @@ namespace SiteImporter
 
             int year = DateTime.Now.AddMonths(-2).Year;
             // Inschrijvingen alle reeksen alle provincies zonder beker
+
+            // HACK!!
+            // year = 2025;
+
+
             string filename = "https://www.volleyadmin2.be/download/seriesubscriptions/" + (year - 2013).ToString() + "_0_1/";
             XDocument doc = XDocument.Load(filename, LoadOptions.SetLineInfo | LoadOptions.SetBaseUri);
 
