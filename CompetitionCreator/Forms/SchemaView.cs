@@ -43,22 +43,26 @@ namespace CompetitionCreator
             objectListView2.Scrollable = true;
             objectListView3.Scrollable = true;
             objectListView4.Scrollable = true;
+            objectListView5.Scrollable = true;
+            objectListView6.Scrollable = true;
             objectListView1.ShowGroups = false;
             objectListView2.ShowGroups = false;
             objectListView3.ShowGroups = false;
             objectListView4.ShowGroups = false;
-//            if (model.licenseKey.Feature(Security.LicenseKey.FeatureType.Expert))
-//            {
-//                textBox1.Visible = true;
-//            }
-//            else 
-//            {
-//                textBox1.Visible = false;
-//            }
+            objectListView5.ShowGroups = false;
+            objectListView6.ShowGroups = false;
+            //            if (model.licenseKey.Feature(Security.LicenseKey.FeatureType.Expert))
+            //            {
+            //                textBox1.Visible = true;
+            //            }
+            //            else 
+            //            {
+            //                textBox1.Visible = false;
+            //            }
         }
         private void UpdateForm(int schemaNr)
         {
-            for (int round = 0; round < 4; round++)
+            for (int round = 0; round < 6; round++)
             {
                 ObjectListView view = objectListView1;
                 TabPage tab = tabPage1;
@@ -76,6 +80,16 @@ namespace CompetitionCreator
                 {
                     view = objectListView4;
                     tab = tabPage4;
+                }
+                if (round == 4)
+                {
+                    view = objectListView5;
+                    tab = tabPage5;
+                }
+                if (round == 5)
+                {
+                    view = objectListView6;
+                    tab = tabPage6;
                 }
                 tabControl1.TabPages.Remove(tab);
                 if (selectedSchema.weeks.Values.Count(w => w.round == round) > 0)
