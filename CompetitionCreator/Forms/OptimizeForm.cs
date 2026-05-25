@@ -126,7 +126,7 @@ namespace CompetitionCreator
         {
             uint threshold;
             uint.TryParse(OptimizingThreshold.Text, out threshold);
-            int score;
+            Int64 score;
             do
             {
                 if (threshold <= 50)
@@ -239,7 +239,7 @@ namespace CompetitionCreator
         private void OptimizeTeamsSelectedClubs(IProgress intf)
         {
             List<Team> teamList = null;
-            int score;
+            Int64 score;
             do
             {
                 score = model.TotalConflictsSnapshot;
@@ -299,7 +299,7 @@ namespace CompetitionCreator
         }
         private void OptimizePoulesHomeVisit(IProgress intf)
         {
-            int score;
+            Int64 score;
             do
             {
                 score = model.TotalConflictsSnapshot;

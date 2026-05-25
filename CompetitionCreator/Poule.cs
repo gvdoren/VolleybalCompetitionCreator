@@ -13,7 +13,7 @@ namespace CompetitionCreator
             public List<Team> resultTeams = new List<Team>();
             public List<MatchWeek> resultWeeks = new List<MatchWeek>();
             public List<Match> resultMatches = new List<Match>();
-            public int TotalConflicts = -1;
+            public Int64 TotalConflicts = -1;
         }
 
         Stack<SnapShot> snapShots = new Stack<SnapShot>();

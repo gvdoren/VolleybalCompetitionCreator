@@ -98,7 +98,7 @@ namespace CompetitionCreator
         }
         private void UpdateConflictCount()
         {
-            int conflicts = 0;
+            Int64 conflicts = 0;
             foreach (Constraint constraint in model.constraints)
             {
                 conflicts += constraint.conflict_cost;

@@ -104,11 +104,11 @@ namespace CompetitionCreator
                     constraint.Evaluate(this);
             }
         }
-        public int TotalConflicts()
+        public Int64 TotalConflicts()
         {
             lock (this)
             {
-                int conflicts = 0;
+                Int64 conflicts = 0;
                 foreach (Constraint constraint in constraints)
                 {
                     conflicts += constraint.conflict_cost;
@@ -338,7 +338,7 @@ namespace CompetitionCreator
 
         }
 
-        public int TotalConflictsSnapshot = 0;
+        public Int64 TotalConflictsSnapshot = 0;
         public event MyEventHandler OnMyChange;
         public void Changed(Model p = null)
         {
