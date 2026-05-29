@@ -376,7 +376,6 @@ namespace CompetitionCreator
             this.team2Id = team2Id;
             this.what = what;
             //VisitorAlso = true;
-            //cost = MySettings.Settings.DefaultTeamsConstraintCost;
             //name = ToText(what);
         }
         public string team1str { get { if (team1 != null) return team1.name + " (" + team1.seriePouleName + ")"; else return "? (Team removed)"; } }

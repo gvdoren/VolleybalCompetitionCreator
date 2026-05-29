@@ -234,7 +234,7 @@ namespace CompetitionCreator
             name = "Sporthall not available";
             this.team = team;
             VisitorAlso = false;
-            cost = MySettings.Settings.SporthalNotAvailableCostLow;
+            cost = MySettings.Settings.SporthalNotAvailableCost;
             AddRelated(team.poule);
         }
         public override void Evaluate(Model model)
@@ -256,7 +256,6 @@ namespace CompetitionCreator
                             match.RealMatch() &&
                             team.sporthal.NotAvailable.Any(period => period.InPeriod((dt))))
                         {
-                            cost = MySettings.Settings.SporthalNotAvailableCostMedium;
                             this.AddConflictMatch(VisitorHomeBoth.HomeOnly, match);
                         }
                     }
@@ -723,79 +722,6 @@ namespace CompetitionCreator
         }
     }
 
-    // ToDo: niet gebruikt?
-    class ConstraintNotAllInSameHomeDay : Constraint
-    {
-        List<Team> listTeams;
-        public ConstraintNotAllInSameHomeDay(List<Team> teams)
-        {
-            this.listTeams = teams;
-            name = "Teams in same group play on different days";
-            VisitorAlso = false;
-            cost = MySettings.Settings.NotAllInSameWeekCost;
-            // Related to
-            foreach (var t in teams)
-                if (t.poule != null)
-                    AddRelated(t.poule);
-        }
-        public override void Evaluate(Model model)
-        {
-            ClearConflicts();
-
-            // TODO: skip if poule is not related to club.
-            conflict_cost = 0;
-            conflictMatches.Clear();
-            int maxTeams = 0;
-            SortedList<MatchWeek, List<Match>> CountPerWeek = new SortedList<MatchWeek, List<Match>>();
-            foreach (Team team in listTeams)
-            {
-                if (team.poule != null)
-                {
-                    if (team.poule.TeamCount > maxTeams) maxTeams = team.poule.TeamCount;
-                    foreach (Match match in team.poule.matches)
-                    {
-                        // Alleen als speeldatum toevoegen als de sporthal beschikbaar is. Anders wordt het een populaire datum.
-                        if (match.RealMatch() && match.homeTeam == team && match.homeTeam.sporthal.NotAvailable.All(period => !period.InPeriod((match.datetime.Date))) && match.poule.Optimize(model))
-                        {
-                            if (CountPerWeek.ContainsKey(match.Week) == false) CountPerWeek.Add(match.Week, new List<Match>());
-                            CountPerWeek[match.Week].Add(match);
-                        }
-                    }
-                }
-            }
-            List<List<Match>> sortedCounts = CountPerWeek.Values.ToList();
-            sortedCounts.Sort(delegate (List<Match> l1, List<Match> l2)
-            {
-                return l1.Count.CompareTo(l2.Count);
-            });
-            int week_cost = cost;
-            //            for (int i = 0; i < sortedCounts.Count - maxTeams + 1; i++) // 11 thuiswedstrijden, precies genoeg. Oud: 12 teams, 11 thuiswedstrijden, dus hier is 1 extra wedstrijd toegestaan
-            for (int i = sortedCounts.Count - maxTeams - 1; i >= 0; i--) // 11 thuiswedstrijden, precies genoeg. Oud: 12 teams, 11 thuiswedstrijden, dus hier is 1 extra wedstrijd toegestaan
-            {
-                foreach (Match match in sortedCounts[i])
-                {
-                    this.AddConflictMatch(VisitorHomeBoth.HomeOnly, match);
-                }
-                if (sortedCounts[i].Count > 0)
-                {
-                    this.conflict_cost += week_cost * sortedCounts[i].Count;
-                    week_cost *= 2;
-                }
-            }
-        }
-        public override string[] GetTextDescription(Match match)
-        {
-            List<string> result = new List<string>();
-            result.Add("Groep:");
-            foreach (Team t in listTeams)
-            {
-                result.Add(" - " + t.serie.name.ToString() + " - " + t.name.ToString() + " (" + t.Id.ToString() + ")");
-            }
-            return result.ToArray();
-        }
-    }
-
-
     class ConstraintPlayAtSameTime : Constraint
     {
         Team team2;
@@ -1250,7 +1176,7 @@ namespace CompetitionCreator
 
             conflictMatches.Clear();
             conflict_cost = 0;
-            cost = 1000; // Must come from setting
+            cost =  MySettings.Settings.DifferentGroupsOnSameDayCostHigh;
 
             foreach (Team t in ABGroup.A)
                 foreach (var m in t.poule.matches)
