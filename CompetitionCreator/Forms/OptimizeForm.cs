@@ -129,7 +129,7 @@ namespace CompetitionCreator
             Int64 score;
             do
             {
-                if (threshold <= 50)
+                if (threshold <= 40)
                     threshold = 0; // To let it finish
                 Poule.OptimizeThreshold = threshold;
                 SetThreshold(threshold.ToString());

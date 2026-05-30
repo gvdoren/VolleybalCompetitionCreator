@@ -1062,7 +1062,7 @@ namespace CompetitionCreator
             this.team = team;
             this.club = team.club;
             VisitorAlso = false;
-            cost = MySettings.Settings.DefaultCustomTeamConstraintCost;
+            // cost = MySettings.Settings.DefaultCustomTeamConstraintCost;
             name = "Team conflict";
             AddRelated(team.poule);
         }

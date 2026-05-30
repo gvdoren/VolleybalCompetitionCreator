@@ -52,8 +52,9 @@
             this.saveToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.subscriptionsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.importSubscriptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.directFromVolleyVlaanderenCalendarOnlyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.subscriptionsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.importRankingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importRankingWebsiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cSVCompetitionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -93,7 +94,6 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.directFromVolleyVlaanderenCalendarOnlyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -232,19 +232,26 @@
             this.importToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.importToolStripMenuItem.Text = "Import";
             // 
-            // subscriptionsToolStripMenuItem1
-            // 
-            this.subscriptionsToolStripMenuItem1.Name = "subscriptionsToolStripMenuItem1";
-            this.subscriptionsToolStripMenuItem1.Size = new System.Drawing.Size(362, 22);
-            this.subscriptionsToolStripMenuItem1.Text = "Registrations - file";
-            this.subscriptionsToolStripMenuItem1.Click += new System.EventHandler(this.subscriptionsToolStripMenuItem1_Click);
-            // 
             // importSubscriptionsToolStripMenuItem
             // 
             this.importSubscriptionsToolStripMenuItem.Name = "importSubscriptionsToolStripMenuItem";
             this.importSubscriptionsToolStripMenuItem.Size = new System.Drawing.Size(362, 22);
             this.importSubscriptionsToolStripMenuItem.Text = "Direct from Volley Vlaanderen - registrations";
             this.importSubscriptionsToolStripMenuItem.Click += new System.EventHandler(this.ImportSubscriptionsmodelbeToolStripMenuItem_Click);
+            // 
+            // directFromVolleyVlaanderenCalendarOnlyToolStripMenuItem
+            // 
+            this.directFromVolleyVlaanderenCalendarOnlyToolStripMenuItem.Name = "directFromVolleyVlaanderenCalendarOnlyToolStripMenuItem";
+            this.directFromVolleyVlaanderenCalendarOnlyToolStripMenuItem.Size = new System.Drawing.Size(362, 22);
+            this.directFromVolleyVlaanderenCalendarOnlyToolStripMenuItem.Text = "Direct from Volley Vlaanderen - National Calendar only";
+            this.directFromVolleyVlaanderenCalendarOnlyToolStripMenuItem.Click += new System.EventHandler(this.directFromVolleyVlaanderenCalendarOnlyToolStripMenuItem_Click);
+            // 
+            // subscriptionsToolStripMenuItem1
+            // 
+            this.subscriptionsToolStripMenuItem1.Name = "subscriptionsToolStripMenuItem1";
+            this.subscriptionsToolStripMenuItem1.Size = new System.Drawing.Size(362, 22);
+            this.subscriptionsToolStripMenuItem1.Text = "Registrations - file";
+            this.subscriptionsToolStripMenuItem1.Click += new System.EventHandler(this.subscriptionsToolStripMenuItem1_Click);
             // 
             // importRankingToolStripMenuItem
             // 
@@ -286,14 +293,14 @@
             // exportCompetitionToolStripMenuItem
             // 
             this.exportCompetitionToolStripMenuItem.Name = "exportCompetitionToolStripMenuItem";
-            this.exportCompetitionToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+            this.exportCompetitionToolStripMenuItem.Size = new System.Drawing.Size(231, 22);
             this.exportCompetitionToolStripMenuItem.Text = "Generated Competition (.xml)";
             this.exportCompetitionToolStripMenuItem.Click += new System.EventHandler(this.exportCompetitionToolStripMenuItem_Click);
             // 
             // exportRegistrationsToolStripMenuItem
             // 
             this.exportRegistrationsToolStripMenuItem.Name = "exportRegistrationsToolStripMenuItem";
-            this.exportRegistrationsToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+            this.exportRegistrationsToolStripMenuItem.Size = new System.Drawing.Size(231, 22);
             this.exportRegistrationsToolStripMenuItem.Text = "Club Registrations (.xml)";
             this.exportRegistrationsToolStripMenuItem.Click += new System.EventHandler(this.exportRegistrationsToolStripMenuItem_Click);
             // 
@@ -365,21 +372,21 @@
             // clubteamVergelijkingToolStripMenuItem
             // 
             this.clubteamVergelijkingToolStripMenuItem.Name = "clubteamVergelijkingToolStripMenuItem";
-            this.clubteamVergelijkingToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+            this.clubteamVergelijkingToolStripMenuItem.Size = new System.Drawing.Size(252, 22);
             this.clubteamVergelijkingToolStripMenuItem.Text = "Vergelijk Teams met ander project";
             this.clubteamVergelijkingToolStripMenuItem.Click += new System.EventHandler(this.clubteamVergelijkingToolStripMenuItem_Click);
             // 
             // convertKlvvToCSVToolStripMenuItem
             // 
             this.convertKlvvToCSVToolStripMenuItem.Name = "convertKlvvToCSVToolStripMenuItem";
-            this.convertKlvvToCSVToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+            this.convertKlvvToCSVToolStripMenuItem.Size = new System.Drawing.Size(252, 22);
             this.convertKlvvToCSVToolStripMenuItem.Text = "Convert KLVV-site to CSV";
             this.convertKlvvToCSVToolStripMenuItem.Click += new System.EventHandler(this.convertKlvvToCSVToolStripMenuItem_Click);
             // 
             // vVBConvertToolStripMenuItem
             // 
             this.vVBConvertToolStripMenuItem.Name = "vVBConvertToolStripMenuItem";
-            this.vVBConvertToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+            this.vVBConvertToolStripMenuItem.Size = new System.Drawing.Size(252, 22);
             this.vVBConvertToolStripMenuItem.Text = "Convert VVB-site to CSV";
             this.vVBConvertToolStripMenuItem.Click += new System.EventHandler(this.vVBConvertToolStripMenuItem_Click);
             // 
@@ -540,13 +547,6 @@
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(118, 17);
             this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
             this.toolStripStatusLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // directFromVolleyVlaanderenCalendarOnlyToolStripMenuItem
-            // 
-            this.directFromVolleyVlaanderenCalendarOnlyToolStripMenuItem.Name = "directFromVolleyVlaanderenCalendarOnlyToolStripMenuItem";
-            this.directFromVolleyVlaanderenCalendarOnlyToolStripMenuItem.Size = new System.Drawing.Size(362, 22);
-            this.directFromVolleyVlaanderenCalendarOnlyToolStripMenuItem.Text = "Direct from Volley Vlaanderen - National Calendar only";
-            this.directFromVolleyVlaanderenCalendarOnlyToolStripMenuItem.Click += new System.EventHandler(this.directFromVolleyVlaanderenCalendarOnlyToolStripMenuItem_Click);
             // 
             // Form1
             // 

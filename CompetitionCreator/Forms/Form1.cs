@@ -96,16 +96,17 @@ namespace CompetitionCreator
                 UpdateConflictCount();
             }
         }
-        private void UpdateConflictCount()
+
+        private double CalculatePercentage(ref int conflictMatches, ref Int64 conflicts)
         {
-            Int64 conflicts = 0;
+            conflicts = 0;
             foreach (Constraint constraint in model.constraints)
             {
                 conflicts += constraint.conflict_cost;
 
             }
             int totalMatches = 0;
-            int conflictMatches = 0;
+            conflictMatches = 0;
             foreach (Poule poule in model.poules)
             {
                 if (poule.evaluated)
@@ -134,6 +135,14 @@ namespace CompetitionCreator
             {
                 percentage = 0;
             }
+            return percentage;
+        }
+
+        private void UpdateConflictCount()
+        {
+            int conflictMatches = 0;
+            Int64 conflicts = 0;
+            double percentage = CalculatePercentage(ref conflictMatches, ref conflicts);
             var newText = "Conflict-matches: " + conflictMatches.ToString() + string.Format(" ({0:F1}%)     Cost: {1}", percentage, conflicts.ToString("N0", new NumberFormatInfo()
             {
                 NumberGroupSizes = new[] { 3 },
@@ -309,7 +318,11 @@ namespace CompetitionCreator
         {
             DateTime now = DateTime.Now;
             saveFileDialog1 = new SaveFileDialog();
-            saveFileDialog1.FileName = string.Format("FullCompetition{0:00}{1:00}{2:00}_{3:00}{4:00}.xml", now.Year, now.Month, now.Day, now.Hour, now.Minute);
+            string user = model.licenseKey.ValidUser().Replace("(", "").Replace(")", "");
+            int dummy = 0;
+            Int64 dummy1 = 0;
+            var percentage = CalculatePercentage(ref dummy, ref dummy1);
+            saveFileDialog1.FileName = string.Format("FullCompetition_{5}_{6}_{0:00}{1:00}{2:00}_{3:00}{4:00}.xml", now.Year, now.Month, now.Day, now.Hour, now.Minute, user, string.Format("{0:F1}", percentage).Replace(".","_").Replace(",","_"));
             saveFileDialog1.Filter = "Xml (*.xml)|*.xml";
             saveFileDialog1.InitialDirectory = BaseDirectory;
             saveFileDialog1.FileOk += new CancelEventHandler(saveFileDialog1_FileOk3);
@@ -952,6 +965,7 @@ MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             }
 
         }
+
     }
 }
 
