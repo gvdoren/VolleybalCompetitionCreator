@@ -17,6 +17,7 @@
             {
                 components.Dispose();
             }
+            OnMyIteration -= OnIteration;
             base.Dispose(disposing);
         }
 
@@ -38,17 +39,25 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.label2 = new System.Windows.Forms.Label();
+            this.OptimizingThreshold = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.NumberOptimization = new System.Windows.Forms.CheckBox();
             this.HomeVisitOptimization = new System.Windows.Forms.CheckBox();
             this.SchemaOptimization = new System.Windows.Forms.CheckBox();
-            this.OptimizingThreshold = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.Iteration = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Conflicts = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Percentage = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Cost = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Temp = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Time = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // objectListView1
@@ -71,12 +80,13 @@
             this.objectListView1.HideSelection = false;
             this.objectListView1.Location = new System.Drawing.Point(2, 8);
             this.objectListView1.Margin = new System.Windows.Forms.Padding(2);
-            this.objectListView1.MaximumSize = new System.Drawing.Size(602, 6501);
+            this.objectListView1.MaximumSize = new System.Drawing.Size(400, 6501);
+            this.objectListView1.MinimumSize = new System.Drawing.Size(300, 4);
             this.objectListView1.Name = "objectListView1";
             this.objectListView1.OwnerDraw = true;
             this.objectListView1.ShowGroups = false;
             this.objectListView1.ShowImagesOnSubItems = true;
-            this.objectListView1.Size = new System.Drawing.Size(172, 328);
+            this.objectListView1.Size = new System.Drawing.Size(300, 448);
             this.objectListView1.TabIndex = 0;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.UseSubItemCheckBoxes = true;
@@ -148,7 +158,7 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.button1);
-            this.groupBox1.Location = new System.Drawing.Point(344, 7);
+            this.groupBox1.Location = new System.Drawing.Point(737, 7);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
@@ -161,7 +171,7 @@
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.button3);
-            this.groupBox2.Location = new System.Drawing.Point(344, 65);
+            this.groupBox2.Location = new System.Drawing.Point(737, 65);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(2);
@@ -172,25 +182,68 @@
             // 
             // groupBox3
             // 
-            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox3.Controls.Add(this.dataGridView1);
             this.groupBox3.Controls.Add(this.label2);
             this.groupBox3.Controls.Add(this.OptimizingThreshold);
             this.groupBox3.Controls.Add(this.label1);
             this.groupBox3.Controls.Add(this.comboBox1);
-            this.groupBox3.Location = new System.Drawing.Point(335, 203);
+            this.groupBox3.Location = new System.Drawing.Point(442, 120);
             this.groupBox3.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox3.Size = new System.Drawing.Size(124, 110);
+            this.groupBox3.Size = new System.Drawing.Size(413, 336);
             this.groupBox3.TabIndex = 10;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Expert";
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.AllowUserToAddRows = false;
+            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Iteration,
+            this.Conflicts,
+            this.Percentage,
+            this.Cost,
+            this.Temp,
+            this.Time});
+            this.dataGridView1.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.dataGridView1.Location = new System.Drawing.Point(6, 106);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.RowHeadersVisible = false;
+            this.dataGridView1.Size = new System.Drawing.Size(398, 225);
+            this.dataGridView1.TabIndex = 15;
+            // 
+            // label2
+            // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(221, 47);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(57, 13);
+            this.label2.TabIndex = 14;
+            this.label2.Text = "Threshold:";
+            // 
+            // OptimizingThreshold
+            // 
+            this.OptimizingThreshold.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.OptimizingThreshold.Location = new System.Drawing.Point(294, 44);
+            this.OptimizingThreshold.Name = "OptimizingThreshold";
+            this.OptimizingThreshold.Size = new System.Drawing.Size(100, 20);
+            this.OptimizingThreshold.TabIndex = 13;
+            this.OptimizingThreshold.Text = "0";
             // 
             // label1
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(40, 12);
+            this.label1.Location = new System.Drawing.Point(184, 15);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(94, 13);
@@ -201,7 +254,7 @@
             // 
             this.comboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(7, 34);
+            this.comboBox1.Location = new System.Drawing.Point(294, 12);
             this.comboBox1.Margin = new System.Windows.Forms.Padding(2);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(115, 21);
@@ -213,7 +266,7 @@
             // 
             this.NumberOptimization.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.NumberOptimization.AutoSize = true;
-            this.NumberOptimization.Location = new System.Drawing.Point(191, 27);
+            this.NumberOptimization.Location = new System.Drawing.Point(584, 27);
             this.NumberOptimization.Margin = new System.Windows.Forms.Padding(2);
             this.NumberOptimization.Name = "NumberOptimization";
             this.NumberOptimization.Size = new System.Drawing.Size(121, 17);
@@ -226,7 +279,7 @@
             // 
             this.HomeVisitOptimization.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.HomeVisitOptimization.AutoSize = true;
-            this.HomeVisitOptimization.Location = new System.Drawing.Point(191, 58);
+            this.HomeVisitOptimization.Location = new System.Drawing.Point(584, 58);
             this.HomeVisitOptimization.Margin = new System.Windows.Forms.Padding(2);
             this.HomeVisitOptimization.Name = "HomeVisitOptimization";
             this.HomeVisitOptimization.Size = new System.Drawing.Size(136, 17);
@@ -239,7 +292,7 @@
             // 
             this.SchemaOptimization.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.SchemaOptimization.AutoSize = true;
-            this.SchemaOptimization.Location = new System.Drawing.Point(191, 87);
+            this.SchemaOptimization.Location = new System.Drawing.Point(584, 87);
             this.SchemaOptimization.Margin = new System.Windows.Forms.Padding(2);
             this.SchemaOptimization.Name = "SchemaOptimization";
             this.SchemaOptimization.Size = new System.Drawing.Size(123, 17);
@@ -248,28 +301,55 @@
             this.SchemaOptimization.UseVisualStyleBackColor = true;
             this.SchemaOptimization.CheckedChanged += new System.EventHandler(this.SchemaOptimization_CheckedChanged);
             // 
-            // OptimizingThreshold
+            // Iteration
             // 
-            this.OptimizingThreshold.Location = new System.Drawing.Point(9, 78);
-            this.OptimizingThreshold.Name = "OptimizingThreshold";
-            this.OptimizingThreshold.Size = new System.Drawing.Size(100, 20);
-            this.OptimizingThreshold.TabIndex = 13;
-            this.OptimizingThreshold.Text = "0";
+            this.Iteration.FillWeight = 64.8597F;
+            this.Iteration.HeaderText = "Iteration";
+            this.Iteration.Name = "Iteration";
+            this.Iteration.ReadOnly = true;
             // 
-            // label2
+            // Conflicts
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(7, 61);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(54, 13);
-            this.label2.TabIndex = 14;
-            this.label2.Text = "Threshold";
+            this.Conflicts.FillWeight = 67.41389F;
+            this.Conflicts.HeaderText = "Conflicts";
+            this.Conflicts.Name = "Conflicts";
+            this.Conflicts.ReadOnly = true;
+            // 
+            // Percentage
+            // 
+            this.Percentage.FillWeight = 106.824F;
+            this.Percentage.HeaderText = "Percentage";
+            this.Percentage.Name = "Percentage";
+            this.Percentage.ReadOnly = true;
+            // 
+            // Cost
+            // 
+            this.Cost.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.Cost.FillWeight = 152.2843F;
+            this.Cost.HeaderText = "Cost";
+            this.Cost.Name = "Cost";
+            this.Cost.ReadOnly = true;
+            this.Cost.Width = 53;
+            // 
+            // Temp
+            // 
+            this.Temp.FillWeight = 89.1404F;
+            this.Temp.HeaderText = "Temp";
+            this.Temp.Name = "Temp";
+            this.Temp.ReadOnly = true;
+            // 
+            // Time
+            // 
+            this.Time.FillWeight = 119.4778F;
+            this.Time.HeaderText = "Time";
+            this.Time.Name = "Time";
+            this.Time.ReadOnly = true;
             // 
             // OptimizeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(465, 343);
+            this.ClientSize = new System.Drawing.Size(858, 463);
             this.Controls.Add(this.SchemaOptimization);
             this.Controls.Add(this.HomeVisitOptimization);
             this.Controls.Add(this.NumberOptimization);
@@ -287,6 +367,7 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -304,12 +385,19 @@
         private BrightIdeasSoftware.OLVColumn evaluatedColumn;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox NumberOptimization;
         private System.Windows.Forms.CheckBox HomeVisitOptimization;
         private System.Windows.Forms.CheckBox SchemaOptimization;
         private BrightIdeasSoftware.OLVColumn olvColumn1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox OptimizingThreshold;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Iteration;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Conflicts;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Percentage;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Cost;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Temp;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Time;
     }
 }

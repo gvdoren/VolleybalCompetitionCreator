@@ -1,7 +1,9 @@
-﻿using System;
+﻿using BrightIdeasSoftware;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 
 namespace CompetitionCreator
 {
@@ -56,6 +58,7 @@ namespace CompetitionCreator
         }
     }
     public delegate void MyEventHandler(object source, MyEventArgs e);
+    public delegate void MyIterationEventHandler(object source, MyIterationEventArgs e);
 
     public class MyEventArgs : EventArgs
     {
@@ -65,4 +68,5 @@ namespace CompetitionCreator
             this.model = model;
         }
     }
+
 }

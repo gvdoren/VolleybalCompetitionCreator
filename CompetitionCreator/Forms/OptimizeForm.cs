@@ -1,17 +1,19 @@
-﻿using System;
+﻿using BrightIdeasSoftware;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-using WeifenLuo.WinFormsUI.Docking;
-using BrightIdeasSoftware;
 using System.Xml;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace CompetitionCreator
 {
+
     public partial class OptimizeForm : DockContent
     {
        Model model = null;
@@ -24,6 +26,7 @@ namespace CompetitionCreator
             objectListView1.SetObjects(model.series);
             model.OnMyChange += state_OnMyChange;
             GlobalState.OnMyChange += state_OnMyChange;
+            OnMyIteration += OnIteration;
             if(model.licenseKey.Feature(Security.LicenseKey.FeatureType.Expert))
             {
                 this.groupBox3.Visible = true;
@@ -102,6 +105,7 @@ namespace CompetitionCreator
 
         private void button1_Click(object sender, EventArgs e)
         {
+            dataGridView1.Rows.Clear();
             ProgressDialog diag = new ProgressDialog();
             diag.WorkFunction += OptimizeAllPoules;
             diag.CompletionFunction += OptimizePoulesCompleted;
@@ -122,79 +126,101 @@ namespace CompetitionCreator
             OptimizingThreshold.Text = str;
         }
 
+
         private void OptimizePoules(IProgress intf, List<Poule> poules)
         {
-            uint threshold;
-            uint.TryParse(OptimizingThreshold.Text, out threshold);
-            Int64 score;
-            do
+            using (var guard = new SleepGuard())
             {
-                if (threshold <= 40)
-                    threshold = 0; // To let it finish
-                Poule.OptimizeThreshold = threshold;
-                SetThreshold(threshold.ToString());
+                // Alles hierbinnen houdt de pc wakker
+                uint smallDelta = 1;
+                uint bigDelta = 20;
+                uint threshold;
+                DateTime start = DateTime.Now;
+
+                uint.TryParse(OptimizingThreshold.Text, out threshold);
+                Int64 score;
+                int iteration = 0;
+                var MainForm = Application.OpenForms["Form1"] as Form1;
+                int conflictMatches = 0;
+                Int64 dummy1 = 0;
                 do
                 {
-                    score = model.TotalConflictsSnapshot;
-                    foreach (Poule poule in poules)
+                    // if (threshold <= bigDelta)
+                    //     threshold = 0; // To let it finish
+
+                    Poule.OptimizeThreshold = threshold;
+                    SetThreshold(threshold.ToString());
+                    do
                     {
-                        if (poule.serie != null && poule.Optimize(model) == true)
+                        Iterated(iteration, MainForm.CalculatePercentage(ref conflictMatches, ref dummy1), threshold, model.TotalConflicts(), start, conflictMatches);
+//                        score = model.TotalConflictsSnapshot;
+                        score = model.TotalConflicts();
+                        foreach (Poule poule in poules)
                         {
+                            if (poule.serie != null && poule.Optimize(model) == true)
                             {
-                                lock (model)
                                 {
-                                    intf.SetText("Optimizing - " + poule.serie.name + poule.name);
-                                    poule.SetInitialSnapShot(model);
-
-                                    // Optimize number
-                                    poule.OptimizeTeamAssignment(model, intf);
-
-                                    // Home visit
-                                    if (intf.Cancelled() == false) poule.OptimizeHomeVisitor(model, intf, GlobalState.optimizeLevel > 0);
-                                    if (intf.Cancelled() == false) poule.OptimizeHomeVisitorReverse(model, intf, GlobalState.optimizeLevel > 0);
-
-
-                                    // Optimize Schema
-                                    if (poule.OptimizeSchema(model))
+                                    lock (model)
                                     {
-                                        poule.RestoreSnapShot(poule.bestSnapShot);
-                                        if (intf.Cancelled() == false) poule.OptimizeWeeks(model, intf, GlobalState.optimizeLevel);
-                                        poule.RestoreSnapShot(poule.bestSnapShot);
+                                        intf.SetText("Optimizing - " + poule.serie.name + poule.name);
+                                        poule.SetInitialSnapShot(model);
+
+                                        // Optimize number
+                                        poule.OptimizeTeamAssignment(model, intf);
+
+                                        // Home visit
+                                        if (intf.Cancelled() == false) poule.OptimizeHomeVisitor(model, intf, GlobalState.optimizeLevel > 0);
+                                        if (intf.Cancelled() == false) poule.OptimizeHomeVisitorReverse(model, intf, GlobalState.optimizeLevel > 0);
+
+
+                                        // Optimize Schema
+                                        if (poule.OptimizeSchema(model))
                                         {
-                                            if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema(model, intf, 5, GlobalState.optimizeLevel);
-                                            if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema(model, intf, 4, GlobalState.optimizeLevel);
-                                            if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema(model, intf, 3, GlobalState.optimizeLevel);
-                                            if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema(model, intf, 2, GlobalState.optimizeLevel);
-                                        
-                                            // Iets doet deze anders, want zorgt wel voor extra optimalisaties
-                                            if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema3(model, intf, GlobalState.optimizeLevel);
+                                            poule.RestoreSnapShot(poule.bestSnapShot);
+                                            if (intf.Cancelled() == false) poule.OptimizeWeeks(model, intf, GlobalState.optimizeLevel);
+                                            poule.RestoreSnapShot(poule.bestSnapShot);
+                                            {
+                                                if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema(model, intf, 5, GlobalState.optimizeLevel);
+                                                if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema(model, intf, 4, GlobalState.optimizeLevel);
+                                                if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema(model, intf, 3, GlobalState.optimizeLevel);
+                                                if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema(model, intf, 2, GlobalState.optimizeLevel);
+
+                                                // Iets doet deze anders, want zorgt wel voor extra optimalisaties
+                                                if (intf.Cancelled() == false && GlobalState.optimizeLevel > 0) poule.OptimizeSchema3(model, intf, GlobalState.optimizeLevel);
+                                            }
+                                            if (poule.maxTeams > 6)
+                                            {
+                                                while (intf.Cancelled() == false && GlobalState.optimizeLevel > 0 && poule.OptimizeSchema6(model, intf, GlobalState.optimizeLevel) == true) ;
+                                            }
+                                            poule.GenerateAllMatchCombinationsExt(model, intf);
                                         }
-                                        if (poule.maxTeams > 6)
-                                        {
-                                            while (intf.Cancelled() == false && GlobalState.optimizeLevel > 0 && poule.OptimizeSchema6(model, intf, GlobalState.optimizeLevel) == true) ;
-                                        }
-                                        poule.GenerateAllMatchCombinationsExt(model, intf);
+                                        if (intf.Cancelled() == false) poule.RestoreSnapShot(poule.bestSnapShot);
+
+                                        model.Evaluate(poule);
+                                        if (intf.Cancelled()) return;
                                     }
-                                    if (intf.Cancelled() == false) poule.RestoreSnapShot(poule.bestSnapShot);
-
-                                    model.Evaluate(poule);
-                                    if (intf.Cancelled()) return;
                                 }
+                                model.Evaluate(poule);
+                                model.Changed();
+                                try
+                                {
+                                    ImportExport.WriteProject(model, model.savedFileName, true);
+                                }
+                                catch { } // negeer een eventueel falen van back-up wegschrijven. 1x gezien. Mogelijk virus scanner die hem claimed
                             }
-                            model.Evaluate(poule);
-                            model.Changed();
-                            try
-                            {
-                                ImportExport.WriteProject(model, model.savedFileName, true);
-                            }
-                            catch { } // negeer een eventueel falen van back-up wegschrijven. 1x gezien. Mogelijk virus scanner die hem claimed
                         }
-                    }
-
-                    model.Evaluate(null);
-                } while (model.TotalConflictsSnapshot < score);
-                threshold /= 2;
-            } while (threshold > 0);
+                        model.Evaluate(null);
+                        iteration++;
+                        if (model.TotalConflicts() < score && threshold >= smallDelta)
+                            threshold -= smallDelta;
+                    } while (model.TotalConflicts() < score);
+                    if (threshold >= bigDelta)
+                        threshold -= bigDelta;
+                    else if (threshold >= smallDelta)
+                        threshold -= smallDelta;
+                } while (threshold > 0);
+                Iterated(iteration, MainForm.CalculatePercentage(ref conflictMatches, ref dummy1), threshold, model.TotalConflicts(), start, conflictMatches);
+            }
         }
         private void OptimizePoulesCompleted(IProgress intf)
         {
@@ -204,6 +230,7 @@ namespace CompetitionCreator
         private void button3_Click(object sender, EventArgs e)
         {
             ProgressDialog diag = new ProgressDialog();
+            dataGridView1.Rows.Clear();
             diag.WorkFunction += OptimizePoulesSelectedClubs;
             diag.CompletionFunction += OptimizePoulesCompleted;
             diag.Start("Optimizing", null);
@@ -361,6 +388,78 @@ namespace CompetitionCreator
 
         }
 
+
+
+        static public event MyIterationEventHandler OnMyIteration;
+        static public void Iterated(int iteration, double percentage, uint temperature, Int64 cost, DateTime start, int conflictMatches)
+        {
+            //call it then you need to update:
+            if (OnMyIteration != null)
+            {
+                MyIterationEventArgs e = new MyIterationEventArgs(iteration, percentage, temperature, cost, start, conflictMatches);
+                //e.EventInfo = content;
+                OnMyIteration(null, e);
+            }
+        }
+
+        public void OnIteration(object source, MyIterationEventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action(() => OnIteration(source, e)));
+                return;
+            }
+            TimeSpan delta = DateTime.Now - e.start;
+
+            dataGridView1.Rows.Add(e.iteration, e.conflictMatches, e.percentage, e.cost, e.temperature, delta);
+            int lastRow = dataGridView1.Rows.Count - 1;
+            dataGridView1.FirstDisplayedScrollingRowIndex = lastRow;
+            dataGridView1.ClearSelection();
+        }
     }
 
+    public class MyIterationEventArgs : EventArgs
+    {
+        public int iteration;
+        public double percentage;
+        public uint temperature;
+        public Int64 cost;
+        public DateTime start;
+        public int conflictMatches;
+        public MyIterationEventArgs(int iteration, double percentage, uint temperature, Int64 cost, DateTime start, int conflictMatches)
+        {
+            this.iteration = iteration;
+            this.percentage = percentage;
+            this.temperature = temperature;
+            this.cost = cost;
+            this.start = start;
+            this.conflictMatches = conflictMatches;
+        }
+    }
+    public sealed class SleepGuard : IDisposable
+    {
+        [DllImport("kernel32.dll")]
+        private static extern uint SetThreadExecutionState(uint esFlags);
+
+        private const uint ES_CONTINUOUS = 0x80000000;
+        private const uint ES_SYSTEM_REQUIRED = 0x00000001;
+
+        private bool _disposed;
+
+        public SleepGuard()
+        {
+            // PC wakker houden, scherm mag uit
+            SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED);
+        }
+
+        public void Dispose()
+        {
+            if (_disposed) return;
+
+            // Terug naar normaal gedrag
+            SetThreadExecutionState(ES_CONTINUOUS);
+
+            _disposed = true;
+        }
+    }
 }

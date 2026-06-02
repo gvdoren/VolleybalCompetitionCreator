@@ -97,10 +97,20 @@ namespace CompetitionCreator
             }
         }
 
-        private double CalculatePercentage(ref int conflictMatches, ref Int64 conflicts)
+        public double CalculatePercentage(ref int conflictMatches, ref Int64 conflicts)
         {
             conflicts = 0;
             foreach (Constraint constraint in model.constraints)
+            {
+                conflicts += constraint.conflict_cost;
+
+            }
+            foreach (Constraint constraint in model.constraints_1)
+            {
+                conflicts += constraint.conflict_cost;
+
+            }
+            foreach (Constraint constraint in model.constraints_2)
             {
                 conflicts += constraint.conflict_cost;
 
