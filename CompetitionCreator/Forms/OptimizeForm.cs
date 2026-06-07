@@ -16,7 +16,8 @@ namespace CompetitionCreator
 
     public partial class OptimizeForm : DockContent
     {
-       Model model = null;
+        Model model = null;
+        uint currentThreshold = 0;
         GlobalState state;
         public OptimizeForm(Model model, GlobalState state)
         {
@@ -111,9 +112,25 @@ namespace CompetitionCreator
             diag.CompletionFunction += OptimizePoulesCompleted;
             diag.Start("Optimizing", null);
         }
+        private void button2_Click(object sender, EventArgs e)
+        {
+            dataGridView1.Rows.Clear();
+            ProgressDialog diag = new ProgressDialog();
+            diag.WorkFunction += ResumeOptimizeAllPoules;
+            diag.CompletionFunction += OptimizePoulesCompleted;
+            diag.Start("Optimizing", null);
+        }
+
         private void OptimizeAllPoules(IProgress intf)
         {
-            OptimizePoules(intf, model.poules);
+            uint threshold = 0;
+            uint.TryParse(OptimizingThreshold.Text, out threshold);
+            OptimizePoules(intf, model.poules, threshold);
+        }
+
+        private void ResumeOptimizeAllPoules(IProgress intf)
+        {
+            OptimizePoules(intf, model.poules, currentThreshold);
         }
 
         public void SetThreshold(string str)
@@ -127,17 +144,16 @@ namespace CompetitionCreator
         }
 
 
-        private void OptimizePoules(IProgress intf, List<Poule> poules)
+        private void OptimizePoules(IProgress intf, List<Poule> poules, uint startThreshold)
         {
             using (var guard = new SleepGuard())
             {
                 // Alles hierbinnen houdt de pc wakker
                 uint smallDelta = 1;
                 uint bigDelta = 20;
-                uint threshold;
+                currentThreshold = startThreshold;
                 DateTime start = DateTime.Now;
 
-                uint.TryParse(OptimizingThreshold.Text, out threshold);
                 Int64 score;
                 int iteration = 0;
                 var MainForm = Application.OpenForms["Form1"] as Form1;
@@ -148,11 +164,10 @@ namespace CompetitionCreator
                     // if (threshold <= bigDelta)
                     //     threshold = 0; // To let it finish
 
-                    Poule.OptimizeThreshold = threshold;
-                    SetThreshold(threshold.ToString());
+                    Poule.OptimizeThreshold = currentThreshold;
                     do
                     {
-                        Iterated(iteration, MainForm.CalculatePercentage(ref conflictMatches, ref dummy1), threshold, model.TotalConflicts(), start, conflictMatches);
+                        Iterated(iteration, MainForm.CalculatePercentage(ref conflictMatches, ref dummy1), currentThreshold, model.TotalConflicts(), start, conflictMatches);
 //                        score = model.TotalConflictsSnapshot;
                         score = model.TotalConflicts();
                         foreach (Poule poule in poules)
@@ -211,15 +226,15 @@ namespace CompetitionCreator
                         }
                         model.Evaluate(null);
                         iteration++;
-                        if (model.TotalConflicts() < score && threshold >= smallDelta)
-                            threshold -= smallDelta;
+                        if (model.TotalConflicts() < score && currentThreshold >= smallDelta)
+                            currentThreshold -= smallDelta;
                     } while (model.TotalConflicts() < score);
-                    if (threshold >= bigDelta)
-                        threshold -= bigDelta;
-                    else if (threshold >= smallDelta)
-                        threshold -= smallDelta;
-                } while (threshold > 0);
-                Iterated(iteration, MainForm.CalculatePercentage(ref conflictMatches, ref dummy1), threshold, model.TotalConflicts(), start, conflictMatches);
+                    if (currentThreshold >= bigDelta)
+                        currentThreshold -= bigDelta;
+                    else if (currentThreshold >= smallDelta)
+                        currentThreshold -= smallDelta;
+                } while (currentThreshold > 0);
+                Iterated(iteration, MainForm.CalculatePercentage(ref conflictMatches, ref dummy1), currentThreshold, model.TotalConflicts(), start, conflictMatches);
             }
         }
         private void OptimizePoulesCompleted(IProgress intf)
@@ -231,11 +246,31 @@ namespace CompetitionCreator
         {
             ProgressDialog diag = new ProgressDialog();
             dataGridView1.Rows.Clear();
-            diag.WorkFunction += OptimizePoulesSelectedClubs;
+            diag.WorkFunction += StartOptimizePoulesSelectedClubs;
             diag.CompletionFunction += OptimizePoulesCompleted;
             diag.Start("Optimizing", null);
         }
-        private void OptimizePoulesSelectedClubs(IProgress intf)
+
+        private void button4_Click_1(object sender, EventArgs e)
+        {
+            ProgressDialog diag = new ProgressDialog();
+            dataGridView1.Rows.Clear();
+            diag.WorkFunction += ResumeOptimizePoulesSelectedClubs;
+            diag.CompletionFunction += OptimizePoulesCompleted;
+            diag.Start("Optimizing", null);
+        }
+
+        private void StartOptimizePoulesSelectedClubs(IProgress intf)
+        {
+            uint threshold = 0;
+            uint.TryParse(OptimizingThreshold.Text, out threshold);
+            OptimizePoulesSelectedClubs(intf, threshold);
+        }
+        private void ResumeOptimizePoulesSelectedClubs(IProgress intf)
+        {
+            OptimizePoulesSelectedClubs(intf, currentThreshold);
+        }
+        private void OptimizePoulesSelectedClubs(IProgress intf, uint startThreshold)
         {
             List<Poule> pouleList =  new List<Poule>();
             foreach (Club club in GlobalState.selectedClubs)
@@ -252,7 +287,9 @@ namespace CompetitionCreator
                     }
                 }
             }
-            OptimizePoules(intf, pouleList);
+            uint threshold = 0;
+            uint.TryParse(OptimizingThreshold.Text, out threshold);
+            OptimizePoules(intf, pouleList, threshold);
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -411,7 +448,7 @@ namespace CompetitionCreator
             }
             TimeSpan delta = DateTime.Now - e.start;
 
-            dataGridView1.Rows.Add(e.iteration, e.conflictMatches, e.percentage, e.cost, e.temperature, delta);
+            dataGridView1.Rows.Add(e.iteration, e.conflictMatches, e.percentage.ToString("F2"), e.cost, e.temperature, delta.ToString(@"hh\:mm"));
             int lastRow = dataGridView1.Rows.Count - 1;
             dataGridView1.FirstDisplayedScrollingRowIndex = lastRow;
             dataGridView1.ClearSelection();

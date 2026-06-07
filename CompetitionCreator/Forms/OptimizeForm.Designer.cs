@@ -37,13 +37,15 @@
             this.button1 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.button2 = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.button4 = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.label2 = new System.Windows.Forms.Label();
             this.OptimizingThreshold = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.NumberOptimization = new System.Windows.Forms.CheckBox();
             this.HomeVisitOptimization = new System.Windows.Forms.CheckBox();
             this.SchemaOptimization = new System.Windows.Forms.CheckBox();
@@ -86,7 +88,7 @@
             this.objectListView1.OwnerDraw = true;
             this.objectListView1.ShowGroups = false;
             this.objectListView1.ShowImagesOnSubItems = true;
-            this.objectListView1.Size = new System.Drawing.Size(300, 448);
+            this.objectListView1.Size = new System.Drawing.Size(400, 658);
             this.objectListView1.TabIndex = 0;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.UseSubItemCheckBoxes = true;
@@ -138,71 +140,138 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(110, 23);
             this.button1.TabIndex = 1;
-            this.button1.Text = "Optimize";
+            this.button1.Text = "Restart optimize";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // button3
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button3.Location = new System.Drawing.Point(3, 16);
+            this.button3.Location = new System.Drawing.Point(0, 16);
             this.button3.Margin = new System.Windows.Forms.Padding(2);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(114, 21);
             this.button3.TabIndex = 3;
-            this.button3.Text = "Optimize";
+            this.button3.Text = "Restart optimize";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // groupBox1
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.button2);
             this.groupBox1.Controls.Add(this.button1);
-            this.groupBox1.Location = new System.Drawing.Point(737, 7);
+            this.groupBox1.Location = new System.Drawing.Point(1191, 7);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox1.Size = new System.Drawing.Size(118, 54);
+            this.groupBox1.Size = new System.Drawing.Size(118, 68);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "All";
             // 
+            // button2
+            // 
+            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button2.Location = new System.Drawing.Point(4, 43);
+            this.button2.Margin = new System.Windows.Forms.Padding(2);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(110, 23);
+            this.button2.TabIndex = 2;
+            this.button2.Text = "Resume optimize";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
             // groupBox2
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.button4);
             this.groupBox2.Controls.Add(this.button3);
-            this.groupBox2.Location = new System.Drawing.Point(737, 65);
+            this.groupBox2.Location = new System.Drawing.Point(1191, 77);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox2.Size = new System.Drawing.Size(121, 51);
+            this.groupBox2.Size = new System.Drawing.Size(118, 74);
             this.groupBox2.TabIndex = 9;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Selected Clubs";
             // 
+            // button4
+            // 
+            this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button4.Location = new System.Drawing.Point(0, 41);
+            this.button4.Margin = new System.Windows.Forms.Padding(2);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(114, 21);
+            this.button4.TabIndex = 4;
+            this.button4.Text = "Resume optimize";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click_1);
+            // 
             // groupBox3
             // 
-            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox3.Controls.Add(this.dataGridView1);
+            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox3.Controls.Add(this.label2);
             this.groupBox3.Controls.Add(this.OptimizingThreshold);
             this.groupBox3.Controls.Add(this.label1);
             this.groupBox3.Controls.Add(this.comboBox1);
-            this.groupBox3.Location = new System.Drawing.Point(442, 120);
+            this.groupBox3.Location = new System.Drawing.Point(771, 11);
             this.groupBox3.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox3.Size = new System.Drawing.Size(413, 336);
+            this.groupBox3.Size = new System.Drawing.Size(247, 117);
             this.groupBox3.TabIndex = 10;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Expert";
             // 
+            // label2
+            // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(55, 47);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(57, 13);
+            this.label2.TabIndex = 14;
+            this.label2.Text = "Threshold:";
+            // 
+            // OptimizingThreshold
+            // 
+            this.OptimizingThreshold.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.OptimizingThreshold.Location = new System.Drawing.Point(128, 44);
+            this.OptimizingThreshold.Name = "OptimizingThreshold";
+            this.OptimizingThreshold.Size = new System.Drawing.Size(100, 20);
+            this.OptimizingThreshold.TabIndex = 13;
+            this.OptimizingThreshold.Text = "111";
+            // 
+            // label1
+            // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(18, 15);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(94, 13);
+            this.label1.TabIndex = 12;
+            this.label1.Text = "Optimization Type:";
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(128, 12);
+            this.comboBox1.Margin = new System.Windows.Forms.Padding(2);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(115, 21);
+            this.comboBox1.TabIndex = 11;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            this.comboBox1.SelectedValueChanged += new System.EventHandler(this.comboBox1_SelectedValueChanged);
+            // 
             // dataGridView1
             // 
             this.dataGridView1.AllowUserToAddRows = false;
-            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.dataGridView1.AllowUserToResizeColumns = false;
+            this.dataGridView1.AllowUserToResizeRows = false;
+            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -214,59 +283,18 @@
             this.Temp,
             this.Time});
             this.dataGridView1.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.dataGridView1.Location = new System.Drawing.Point(6, 106);
+            this.dataGridView1.Location = new System.Drawing.Point(968, 165);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersVisible = false;
-            this.dataGridView1.Size = new System.Drawing.Size(398, 225);
+            this.dataGridView1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.dataGridView1.Size = new System.Drawing.Size(341, 496);
             this.dataGridView1.TabIndex = 15;
-            // 
-            // label2
-            // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(221, 47);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(57, 13);
-            this.label2.TabIndex = 14;
-            this.label2.Text = "Threshold:";
-            // 
-            // OptimizingThreshold
-            // 
-            this.OptimizingThreshold.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.OptimizingThreshold.Location = new System.Drawing.Point(294, 44);
-            this.OptimizingThreshold.Name = "OptimizingThreshold";
-            this.OptimizingThreshold.Size = new System.Drawing.Size(100, 20);
-            this.OptimizingThreshold.TabIndex = 13;
-            this.OptimizingThreshold.Text = "0";
-            // 
-            // label1
-            // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(184, 15);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(94, 13);
-            this.label1.TabIndex = 12;
-            this.label1.Text = "Optimization Type:";
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(294, 12);
-            this.comboBox1.Margin = new System.Windows.Forms.Padding(2);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(115, 21);
-            this.comboBox1.TabIndex = 11;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
-            this.comboBox1.SelectedValueChanged += new System.EventHandler(this.comboBox1_SelectedValueChanged);
             // 
             // NumberOptimization
             // 
             this.NumberOptimization.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.NumberOptimization.AutoSize = true;
-            this.NumberOptimization.Location = new System.Drawing.Point(584, 27);
+            this.NumberOptimization.Location = new System.Drawing.Point(1038, 27);
             this.NumberOptimization.Margin = new System.Windows.Forms.Padding(2);
             this.NumberOptimization.Name = "NumberOptimization";
             this.NumberOptimization.Size = new System.Drawing.Size(121, 17);
@@ -279,7 +307,7 @@
             // 
             this.HomeVisitOptimization.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.HomeVisitOptimization.AutoSize = true;
-            this.HomeVisitOptimization.Location = new System.Drawing.Point(584, 58);
+            this.HomeVisitOptimization.Location = new System.Drawing.Point(1038, 58);
             this.HomeVisitOptimization.Margin = new System.Windows.Forms.Padding(2);
             this.HomeVisitOptimization.Name = "HomeVisitOptimization";
             this.HomeVisitOptimization.Size = new System.Drawing.Size(136, 17);
@@ -292,7 +320,7 @@
             // 
             this.SchemaOptimization.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.SchemaOptimization.AutoSize = true;
-            this.SchemaOptimization.Location = new System.Drawing.Point(584, 87);
+            this.SchemaOptimization.Location = new System.Drawing.Point(1038, 87);
             this.SchemaOptimization.Margin = new System.Windows.Forms.Padding(2);
             this.SchemaOptimization.Name = "SchemaOptimization";
             this.SchemaOptimization.Size = new System.Drawing.Size(123, 17);
@@ -303,44 +331,56 @@
             // 
             // Iteration
             // 
-            this.Iteration.FillWeight = 64.8597F;
+            this.Iteration.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.Iteration.FillWeight = 66.72842F;
             this.Iteration.HeaderText = "Iteration";
             this.Iteration.Name = "Iteration";
             this.Iteration.ReadOnly = true;
+            this.Iteration.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.Iteration.Width = 50;
             // 
             // Conflicts
             // 
-            this.Conflicts.FillWeight = 67.41389F;
+            this.Conflicts.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.Conflicts.FillWeight = 67.38863F;
             this.Conflicts.HeaderText = "Conflicts";
             this.Conflicts.Name = "Conflicts";
             this.Conflicts.ReadOnly = true;
+            this.Conflicts.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.Conflicts.Width = 55;
             // 
             // Percentage
             // 
-            this.Percentage.FillWeight = 106.824F;
+            this.Percentage.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.Percentage.FillWeight = 65.75957F;
             this.Percentage.HeaderText = "Percentage";
             this.Percentage.Name = "Percentage";
             this.Percentage.ReadOnly = true;
+            this.Percentage.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.Percentage.Width = 65;
             // 
             // Cost
             // 
-            this.Cost.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.Cost.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.Cost.FillWeight = 152.2843F;
             this.Cost.HeaderText = "Cost";
             this.Cost.Name = "Cost";
             this.Cost.ReadOnly = true;
-            this.Cost.Width = 53;
+            this.Cost.Width = 70;
             // 
             // Temp
             // 
-            this.Temp.FillWeight = 89.1404F;
+            this.Temp.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.Temp.FillWeight = 30.19956F;
             this.Temp.HeaderText = "Temp";
             this.Temp.Name = "Temp";
             this.Temp.ReadOnly = true;
+            this.Temp.Width = 50;
             // 
             // Time
             // 
-            this.Time.FillWeight = 119.4778F;
+            this.Time.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Time.FillWeight = 217.6396F;
             this.Time.HeaderText = "Time";
             this.Time.Name = "Time";
             this.Time.ReadOnly = true;
@@ -349,7 +389,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(858, 463);
+            this.ClientSize = new System.Drawing.Size(1312, 673);
+            this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.SchemaOptimization);
             this.Controls.Add(this.HomeVisitOptimization);
             this.Controls.Add(this.NumberOptimization);
@@ -393,6 +434,8 @@
         private System.Windows.Forms.TextBox OptimizingThreshold;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button4;
         private System.Windows.Forms.DataGridViewTextBoxColumn Iteration;
         private System.Windows.Forms.DataGridViewTextBoxColumn Conflicts;
         private System.Windows.Forms.DataGridViewTextBoxColumn Percentage;

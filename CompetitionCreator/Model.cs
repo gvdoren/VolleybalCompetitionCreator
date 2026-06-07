@@ -114,6 +114,16 @@ namespace CompetitionCreator
                     conflicts += constraint.conflict_cost;
                     //Console.WriteLine("{0} - {1}", constraint.name, constraint.conflict_cost);
                 }
+                foreach (Constraint constraint in constraints_1)
+                {
+                    conflicts += constraint.conflict_cost;
+                    //Console.WriteLine("{0} - {1}", constraint.name, constraint.conflict_cost);
+                }
+                foreach (Constraint constraint in constraints_2)
+                {
+                    conflicts += constraint.conflict_cost;
+                    //Console.WriteLine("{0} - {1}", constraint.name, constraint.conflict_cost);
+                }
                 return conflicts;
             }
         }
