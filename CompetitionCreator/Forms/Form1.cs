@@ -110,11 +110,6 @@ namespace CompetitionCreator
                 conflicts += constraint.conflict_cost;
 
             }
-            foreach (Constraint constraint in model.constraints_2)
-            {
-                conflicts += constraint.conflict_cost;
-
-            }
             int totalMatches = 0;
             conflictMatches = 0;
             foreach (Poule poule in model.poules)

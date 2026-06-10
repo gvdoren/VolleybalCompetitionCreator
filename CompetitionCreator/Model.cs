@@ -49,8 +49,7 @@ namespace CompetitionCreator
         public YearPlans yearPlans = null;
         public List<TeamConstraint> teamConstraints = new List<TeamConstraint>();
         public List<Constraint> constraints = new List<Constraint>();
-        public List<Constraint> constraints_1 = new List<Constraint>();
-        public List<Constraint> constraints_2 = new List<Constraint>();
+        public List<Constraint> constraints_1 = new List<Constraint>(); // constraints that depend on conflict matches, but don't add conflict matches themselves
         public List<Sporthal> sporthalls = new List<Sporthal>();
         public void Optimize()
         {
@@ -65,8 +64,7 @@ namespace CompetitionCreator
         Poule lastPoule = null;
         public bool initial = true;
         List<Constraint> lastConstraints = null;
-        List<Constraint> lastConstraints_1 = null;
-        List<Constraint> lastConstraints_2 = null;
+        List<Constraint> lastConstraints_1 = null; // constraints that depend on conflict matches, but don't add conflict matches themselves
 
 
         public void Evaluate(Poule p)
@@ -83,10 +81,6 @@ namespace CompetitionCreator
                 foreach (var c in constraints_1)
                     if (p == null || c.IsRelated(p))
                         lastConstraints_1.Add(c);
-                lastConstraints_2 = new List<Constraint>();
-                foreach (var c in constraints_2)
-                    if (p == null || c.IsRelated(p))
-                        lastConstraints_2.Add(c);
             }
             lock (this)
             {
@@ -100,8 +94,6 @@ namespace CompetitionCreator
                 {
                     constraint.Evaluate(this);
                 });
-                foreach (var constraint in lastConstraints_2)
-                    constraint.Evaluate(this);
             }
         }
         public Int64 TotalConflicts()
@@ -115,11 +107,6 @@ namespace CompetitionCreator
                     //Console.WriteLine("{0} - {1}", constraint.name, constraint.conflict_cost);
                 }
                 foreach (Constraint constraint in constraints_1)
-                {
-                    conflicts += constraint.conflict_cost;
-                    //Console.WriteLine("{0} - {1}", constraint.name, constraint.conflict_cost);
-                }
-                foreach (Constraint constraint in constraints_2)
                 {
                     conflicts += constraint.conflict_cost;
                     //Console.WriteLine("{0} - {1}", constraint.name, constraint.conflict_cost);
@@ -254,8 +241,8 @@ namespace CompetitionCreator
                 }
                 foreach (Club club in clubs)
                 {
-                    constraints_2.Add(new ConstraintClubTooManyConflicts(club));
-                    constraints_2.Add(new ConstraintTeamNaming(club));
+                    constraints_1.Add(new ConstraintClubTooManyConflicts(club));
+                    constraints_1.Add(new ConstraintTeamNaming(club));
                 }
             }
         }
