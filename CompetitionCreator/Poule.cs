@@ -331,7 +331,7 @@ namespace CompetitionCreator
                             Swap(teams, i, teamindex);
                             // Voegt dit veel toe?
                             OptimizeWeeks(model, intf, optimizationLevel);
-                            if (intf.Cancelled() == false) break;
+                            if (intf.Cancelled()) break;
                             if (optimizationLevel > 0) OptimizeHomeVisitor(model);
                             //SnapShotIfImproved(model, ref minConflict);
                             Swap(teams, i, teamindex); // swap back
@@ -476,9 +476,9 @@ namespace CompetitionCreator
             weekIndices = new int[weekCount];
 
             int rounds = weeks.Max(w => w.round);
-            List<int> indices = new List<int>();
-            for(int round = 0; round < rounds; round++)
+            for (int round = 0; round <= rounds; round++)
             {
+                List<int> indices = new List<int>();
                 for (int i = 0; i < weeks.Count(); i++)
                 {
                     if (weeks[i].round == round)

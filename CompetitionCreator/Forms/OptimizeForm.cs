@@ -210,8 +210,6 @@ namespace CompetitionCreator
                                             poule.GenerateAllMatchCombinationsExt(model, intf);
                                         }
                                         if (intf.Cancelled() == false) poule.RestoreSnapShot(poule.bestSnapShot);
-
-                                        model.Evaluate(poule);
                                         if (intf.Cancelled()) return;
                                     }
                                 }
