@@ -164,23 +164,27 @@ namespace CompetitionCreator
                         List<MatchWeek> nextRoundList = weeks.Where(w => w.round > round).ToList();
                         if (currentRoundList.Count > 5)//12)
                         {
+                            // Build the baseline ordering once for this round and test swaps in place.
+                            weeks = new List<MatchWeek>(previousRoundList);
+                            weeks.AddRange(currentRoundList);
+                            weeks.AddRange(nextRoundList);
+                            int currentOffset = previousRoundList.Count;
+
                             for (int i = 0; i < currentRoundList.Count; i++)
                             {
-                                intf.Progress(totalIndex, weeks.Count);
+                                intf.Progress(totalIndex + i, weeks.Count);
                                 for (int j = i + 1; j < currentRoundList.Count; j++)
                                 {
-                                    var startSnapShot = CreateSnapShot(model);
-                                    Swap(currentRoundList, i, j);
-                                    weeks = new List<MatchWeek>(previousRoundList);
-                                    weeks.AddRange(currentRoundList);
-                                    weeks.AddRange(nextRoundList);
-                                    var result = SnapShotIfImproved(model, false);
+                                    int indexI = currentOffset + i;
+                                    int indexJ = currentOffset + j;
+                                    Swap(weeks, indexI, indexJ);
+                                    SnapShotIfImproved(model, false);
                                     // commented out. Wil be done in next iteration
                                     // if (result)
                                     // {
                                     //     if (optimizationLevel > 0) OptimizeHomeVisitor(model, optimizationLevel > 1);
                                     // }
-                                    RestoreSnapShot(startSnapShot);
+                                    Swap(weeks, indexI, indexJ);
                                     if (intf.Cancelled()) return;
                                 }
                                 if (intf.Cancelled()) break;
