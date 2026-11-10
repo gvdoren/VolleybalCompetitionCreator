@@ -214,10 +214,11 @@ namespace CompetitionCreator
         public static uint OptimizeThreshold = 0;
         public bool SnapShotIfImproved(Model model, bool equalAllowed = true)
         {
-            var snapShot = CreateSnapShot(model);
-            if (snapShot.TotalConflicts < bestSnapShot.TotalConflicts + OptimizeThreshold)
+            model.Evaluate(this);
+            Int64 totalConflicts = model.TotalConflicts();
+            if (totalConflicts < bestSnapShot.TotalConflicts + OptimizeThreshold)
             {
-                bestSnapShot = snapShot;
+                bestSnapShot = CreateSnapShotAfterEvaluation(model, totalConflicts);
                 model.stateNotSaved = true;
                 return true;
             }
@@ -228,8 +229,13 @@ namespace CompetitionCreator
         public SnapShot CreateSnapShot(Model model)
         {
             model.Evaluate(this);
+            return CreateSnapShotAfterEvaluation(model, model.TotalConflicts());
+        }
+
+        private SnapShot CreateSnapShotAfterEvaluation(Model model, Int64 totalConflicts)
+        {
             SnapShot snapShot = new Poule.SnapShot();
-            snapShot.TotalConflicts = model.TotalConflicts();
+            snapShot.TotalConflicts = totalConflicts;
             snapShot.resultTeams = new List<Team>(teams); // No deep copy of teams. Is not changed during optimization
             snapShot.resultWeeks = CopyWeeks(weeks);
             snapShot.resultMatches = CopyMatches(matches);
