@@ -657,7 +657,7 @@ namespace CompetitionCreator
         }
         public ConstraintPouleTwoTeamsOfSameClub(Poule poule)
         {
-            name = "Teams of one club in one poule have to play on the first day";
+            name = "Teams of one club in one poule should play in the first week of a round";
             this.poule = poule;
             this.VisitorAlso = false;
             this.cost = MySettings.Settings.TwoPoulesOfSameClubInPouleCost;
@@ -671,42 +671,41 @@ namespace CompetitionCreator
             conflictMatches.Clear();
             if (poule.evaluated)
             {
-                foreach (Team t1 in poule.teams)
+                for (int t1Index = 0; t1Index < poule.teams.Count; t1Index++)
                 {
-                    foreach (Team t2 in poule.teams)
+                    Team t1 = poule.teams[t1Index];
+                    for (int t2Index = t1Index + 1; t2Index < poule.teams.Count; t2Index++)
                     {
-                        if (t1 != t2)
+                        Team t2 = poule.teams[t2Index];
+                        if (t1.club == t2.club)
                         {
-                            if (t1.club == t2.club)
+                            DateTime[] firstWeekend = new DateTime[4]; // max 4 rounds
+                            for (int i = 0; i < 4; i++)
+                                firstWeekend[i] = new DateTime(9999, 1, 1);
+                            Match[] firstPlayed = new Match[4];
+
+                            foreach (Match m in poule.matches)
                             {
-                                DateTime[] firstWeekend = new DateTime[4]; // max 4 rounds
-                                for (int i = 0; i < 4; i++)
-                                    firstWeekend[i] = new DateTime(9999, 1, 1);
-                                Match[] firstPlayed = new Match[4];
-
-                                foreach (Match m in poule.matches)
+                                if (m.datetime < firstWeekend[m.Week.round])
+                                    firstWeekend[m.Week.round] = m.datetime;
+                                if ((m.homeTeam == t1 && m.visitorTeam == t2) ||
+                                    (m.homeTeam == t2 && m.visitorTeam == t1))
                                 {
-                                    if (m.datetime < firstWeekend[m.Week.round])
-                                        firstWeekend[m.Week.round] = m.datetime;
-                                    if ((m.homeTeam == t1 && m.visitorTeam == t2) ||
-                                        (m.homeTeam == t2 && m.visitorTeam == t1)
-                                        )
-                                    {
-                                        firstPlayed[m.Week.round] = m;
-                                    }
+                                    firstPlayed[m.Week.round] = m;
                                 }
+                            }
 
-                                for (int i = 0; i < 4; i++)
+                            for (int i = 0; i < 4; i++)
+                            {
+                                if (firstPlayed[i] != null)
                                 {
-                                    if (firstPlayed[i] != null)
+                                    DateTime firstWeek = new MatchWeek(firstWeekend[i]).Monday.Date;
+                                    int weeksLate = (int)((firstPlayed[i].Week.Monday.Date - firstWeek).TotalDays / 7);
+                                    if (weeksLate > 0)
                                     {
-                                        var dt = firstPlayed[i].datetime.AddDays(-3);
-                                        if (dt > firstWeekend[i])
-                                        {
-                                            AddConflictMatch(VisitorHomeBoth.HomeOnly, firstPlayed[i]);
-                                            // The earlier the better to have this game. Required for optimization
-                                            conflict_cost += (int)dt.Subtract(firstWeekend[i]).TotalSeconds;
-                                        }
+                                        AddConflictMatch(VisitorHomeBoth.HomeOnly, firstPlayed[i]);
+                                        // AddConflictMatch charges the first delayed week; each further week adds another penalty.
+                                        conflict_cost += (weeksLate - 1) * cost;
                                     }
                                 }
                             }
@@ -718,6 +717,23 @@ namespace CompetitionCreator
         public override string[] GetTextDescription(Match match)
         {
             List<string> result = new List<string>();
+            if (match != null && conflictMatches.Contains(match))
+            {
+                DateTime firstMatchDate = poule.matches
+                    .Where(m => m.Week.round == match.Week.round)
+                    .Min(m => m.datetime);
+                DateTime firstWeek = new MatchWeek(firstMatchDate).Monday.Date;
+                int weeksAfterFirst = (int)((match.Week.Monday.Date - firstWeek).TotalDays / 7);
+                result.Add(string.Format(
+                    "Teams {0} and {1} from club {2} play each other {3} week(s) after the first scheduled week of round {4}. Penalty: {5} points ({6} per week).",
+                    match.homeTeam.name,
+                    match.visitorTeam.name,
+                    match.homeTeam.club.name,
+                    weeksAfterFirst,
+                    match.Week.round + 1,
+                    weeksAfterFirst * cost,
+                    cost));
+            }
             return result.ToArray();
         }
     }
