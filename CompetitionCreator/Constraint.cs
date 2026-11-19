@@ -816,9 +816,9 @@ namespace CompetitionCreator
             else if (what == TeamConstraint.What.HomeOnSameDay)
                 name = "Teams not on the same day";
             else if (what == TeamConstraint.What.HomeInSameWeekend)
-                name = "Teams not in same weekend";
+                name = "Teams not in the same week";
             else 
-                name = "Teams in same weekend";
+                name = "Teams in the same week";
 
             cost = MySettings.Settings.PlayAtSameTime;
             AddRelated(cl.poule);
@@ -837,17 +837,21 @@ namespace CompetitionCreator
             Poule poule2 = team2.poule;
             int i1 = 0;
             int i2 = 0;
+            bool isWeekConstraint = what == TeamConstraint.What.HomeInSameWeekend ||
+                what == TeamConstraint.What.HomeNotInSameWeekend;
             while (i1 < team1Matches.Count && i2 < team2Matches.Count)
             {
                 Match m1 = team1Matches[i1];
                 Match m2 = team2Matches[i2];
-                if (m1.datetime.Date < m2.datetime.Date)
+                DateTime period1 = isWeekConstraint ? m1.Week.Monday.Date : m1.datetime.Date;
+                DateTime period2 = isWeekConstraint ? m2.Week.Monday.Date : m2.datetime.Date;
+                if (period1 < period2)
                 {
                     i1++;
                     if (what == TeamConstraint.What.HomeOnSameDay || what == TeamConstraint.What.HomeInSameWeekend)
                         this.AddConflictMatch(VisitorHomeBoth.HomeOnly, m1);
                 }
-                else if (m2.datetime.Date < m1.datetime.Date)
+                else if (period2 < period1)
                 {
                     i2++;
                     if (what == TeamConstraint.What.HomeOnSameDay || what == TeamConstraint.What.HomeInSameWeekend)
@@ -865,10 +869,15 @@ namespace CompetitionCreator
         public override string[] GetTextDescription(Match match)
         {
             List<string> result = new List<string>();
+            bool isWeekConstraint = what == TeamConstraint.What.HomeInSameWeekend ||
+                what == TeamConstraint.What.HomeNotInSameWeekend;
+            bool shouldNotSharePeriod = what == TeamConstraint.What.HomeNotOnSameDay ||
+                what == TeamConstraint.What.HomeNotInSameWeekend;
+            string period = isWeekConstraint ? "week" : "day";
             string s = "Team '" + team.name + " (" + team.serie.name + ")' should ";
-            if (what == TeamConstraint.What.HomeNotOnSameDay || what == TeamConstraint.What.HomeNotInSameWeekend)
+            if (shouldNotSharePeriod)
                 s += "not ";
-            s += "play at the same day as '" + team2.name + " (" + team2.serie.name + ").";
+            s += "play in the same " + period + " as '" + team2.name + " (" + team2.serie.name + ").";
             result.Add(s);
             return result.ToArray();
         }

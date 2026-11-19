@@ -159,6 +159,9 @@ namespace CompetitionCreator
                         con.ClearConflicts();
                 }
                 constraints.RemoveAll(c => (c as SpecificConstraint) == null); // alles behalve specialecontraints die zijn opgegeven.
+                foreach (var con in constraints_1)
+                    con.ClearConflicts();
+                constraints_1.Clear(); // deze constraints zijn volledig afgeleid en worden hieronder opnieuw opgebouwd.
 
                 foreach (Poule poule in this.poules)
                 {
