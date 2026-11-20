@@ -413,7 +413,8 @@ namespace CompetitionCreator
                 int index = 0;
                 foreach (Team team in fixedOrderList)
                 {
-                    score[index, (index + maxTeams - k) % maxTeams] = team.conflict;
+                    // Hungarian minimizes this matrix, so use attributed penalty points rather than conflict counts.
+                    score[index, (index + maxTeams - k) % maxTeams] = team.conflict_cost;
                     index++;
                 }
             }

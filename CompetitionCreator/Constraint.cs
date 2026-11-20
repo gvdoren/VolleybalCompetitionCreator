@@ -185,7 +185,7 @@ namespace CompetitionCreator
         {
             for (int i = 0; i < matches.Length; i++)
             {
-                var conflict = new Conflict(this, conflict_cost);
+                var conflict = new Conflict(this, cost);
                 conflict_cost += cost;
 
                 if (conflictMatches.Contains(matches[i]) == false)
@@ -705,7 +705,9 @@ namespace CompetitionCreator
                                     {
                                         AddConflictMatch(VisitorHomeBoth.HomeOnly, firstPlayed[i]);
                                         // AddConflictMatch charges the first delayed week; each further week adds another penalty.
-                                        conflict_cost += (weeksLate - 1) * cost;
+                                        int additionalCost = (weeksLate - 1) * cost;
+                                        conflict_cost += additionalCost;
+                                        conflicts[conflicts.Count - 1].Cost += additionalCost;
                                     }
                                 }
                             }
@@ -995,11 +997,12 @@ namespace CompetitionCreator
             {
                 if (team.fixedNumber > team.poule.teams.Count || team.fixedNumber <= 0 || team.poule.teams[team.fixedNumber - 1] != team)
                 {
-                    var conflict = new Conflict(this, conflict_cost);
+                    int penalty = MySettings.Settings.FixedIndexConstraintCost;
+                    var conflict = new Conflict(this, penalty);
                     team.AddConflict(conflict);
                     team.poule.AddConflict(conflict);
                     team.club.AddConflict(conflict);
-                    conflict_cost += MySettings.Settings.FixedIndexConstraintCost;
+                    conflict_cost += penalty;
                 }
             }
         }
