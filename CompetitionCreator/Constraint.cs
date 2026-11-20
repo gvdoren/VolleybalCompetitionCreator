@@ -222,6 +222,64 @@ namespace CompetitionCreator
 
             }
         }
+        protected void AddConflictMatchWithCost(VisitorHomeBoth who, Match match, int penalty)
+        {
+            if (match == null || penalty <= 0)
+                return;
+
+            conflict_cost += penalty;
+            var existingConflict = match.GetConflictList().FirstOrDefault(c => c.con == this);
+            if (existingConflict != null)
+            {
+                existingConflict.Cost += penalty;
+                if (who != VisitorHomeBoth.VisitorOnly && match.homeTeam.RealTeam() &&
+                    !match.homeTeam.GetConflictList().Contains(existingConflict))
+                    match.homeTeam.AddConflict(existingConflict);
+                if (who != VisitorHomeBoth.HomeOnly && match.visitorTeam.RealTeam() &&
+                    !match.visitorTeam.GetConflictList().Contains(existingConflict))
+                    match.visitorTeam.AddConflict(existingConflict);
+
+                if (club == null)
+                {
+                    if (who != VisitorHomeBoth.VisitorOnly &&
+                        !match.homeTeam.club.GetConflictList().Contains(existingConflict))
+                        match.homeTeam.club.AddConflict(existingConflict);
+                    if (who != VisitorHomeBoth.HomeOnly &&
+                        !match.visitorTeam.club.GetConflictList().Contains(existingConflict))
+                        match.visitorTeam.club.AddConflict(existingConflict);
+                }
+                return;
+            }
+
+            var conflict = new Conflict(this, penalty);
+            conflictMatches.Add(match);
+            match.AddConflict(conflict);
+            match.Week.AddConflict(conflict);
+            match.poule.AddConflict(conflict);
+            match.poule.serie.AddConflict(conflict);
+            if (who != VisitorHomeBoth.VisitorOnly && match.homeTeam.RealTeam())
+                match.homeTeam.AddConflict(conflict);
+            if (who != VisitorHomeBoth.HomeOnly && match.visitorTeam.RealTeam())
+                match.visitorTeam.AddConflict(conflict);
+
+            if (club != null)
+            {
+                club.AddConflict(conflict);
+            }
+            else if (who == VisitorHomeBoth.Both)
+            {
+                match.homeTeam.club.AddConflict(conflict);
+                if (match.homeTeam.club != match.visitorTeam.club)
+                    match.visitorTeam.club.AddConflict(conflict);
+            }
+            else
+            {
+                if (who != VisitorHomeBoth.VisitorOnly)
+                    match.homeTeam.club.AddConflict(conflict);
+                if (who != VisitorHomeBoth.HomeOnly)
+                    match.visitorTeam.club.AddConflict(conflict);
+            }
+        }
         public void Sort()
         {
             conflictMatches.Sort(delegate (Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
@@ -414,38 +472,44 @@ namespace CompetitionCreator
                 sortedMatches = temp.ToList();
                 foreach (Team team in poule.teams)
                 {
-                    List<Match> homeMatches = new List<Match>();
-                    List<Match> visitorMatches = new List<Match>();
                     List<Match> homeFirstHalf = new List<Match>();
                     List<Match> homeSecondHalf = new List<Match>();
-
                     int matchNr = 0;
+                    bool? currentStreakIsHome = null;
+                    List<Match> currentStreak = new List<Match>();
+
                     foreach (Match match in sortedMatches)
                     {
+                        bool isHomeMatch;
                         if (match.homeTeam == team)
                         {
+                            isHomeMatch = true;
                             if (matchNr < poule.TeamCount) homeFirstHalf.Add(match);
                             else homeSecondHalf.Add(match);
-
-                            if (visitorMatches.Count >= MySettings.Settings.MatchTooManyAfterEachOther)
-                                AddConflictMatch(VisitorHomeBoth.VisitorOnly, visitorMatches.ToArray());
-                            if (visitorMatches.Count >= MySettings.Settings.MatchTooManyAfterEachOther - 1)
-                                cost += 5;
-                            visitorMatches = new List<Match>();
-                            homeMatches.Add(match);
-                            matchNr++;
                         }
-                        if (match.visitorTeam == team)
+                        else if (match.visitorTeam == team)
                         {
-                            if (homeMatches.Count >= MySettings.Settings.MatchTooManyAfterEachOther)
-                                AddConflictMatch(VisitorHomeBoth.HomeOnly, homeMatches.ToArray());
-                            if (homeMatches.Count >= MySettings.Settings.MatchTooManyAfterEachOther - 1)
-                                cost += 5;
-                            homeMatches = new List<Match>();
-                            visitorMatches.Add(match);
-                            matchNr++;
+                            isHomeMatch = false;
                         }
+                        else
+                        {
+                            continue;
+                        }
+
+                        if (currentStreakIsHome.HasValue && currentStreakIsHome.Value != isHomeMatch)
+                        {
+                            AddStreakPenalty(currentStreakIsHome.Value, currentStreak);
+                            currentStreak.Clear();
+                        }
+
+                        currentStreakIsHome = isHomeMatch;
+                        currentStreak.Add(match);
+                        matchNr++;
                     }
+
+                    // The last run also counts; it may not be followed by an opposite-side match.
+                    if (currentStreakIsHome.HasValue)
+                        AddStreakPenalty(currentStreakIsHome.Value, currentStreak);
 
                     // Ideal to spread home/visit evenly. Also for further optimisation
                     conflict_cost += Math.Max(0, homeFirstHalf.Count - ((int)((poule.TeamCount + 1) / 2)));
@@ -467,6 +531,19 @@ namespace CompetitionCreator
                         }
                     }
                 }
+            }
+        }
+        private void AddStreakPenalty(bool isHome, List<Match> streak)
+        {
+            int limit = MySettings.Settings.MatchTooManyAfterEachOther;
+            int baseCost = MySettings.Settings.MatchTooManyAfterEachOtherCostLow;
+            for (int i = limit - 1; i < streak.Count; i++)
+            {
+                int penalty = baseCost * (i - limit + 2);
+                AddConflictMatchWithCost(
+                    isHome ? VisitorHomeBoth.HomeOnly : VisitorHomeBoth.VisitorOnly,
+                    streak[i],
+                    penalty);
             }
         }
         private int maxNumberHomeMatches(int teamCount)
