@@ -48,6 +48,10 @@ namespace CompetitionCreator
             {
                 totErrors.AddRange(con.GetErrors());
             }
+            foreach (var con in model.diagnosticConstraints)
+            {
+                totErrors.AddRange(con.GetErrors());
+            }
             return totErrors;
         }
         private void buttonClearErrors_Click(object sender, EventArgs e)

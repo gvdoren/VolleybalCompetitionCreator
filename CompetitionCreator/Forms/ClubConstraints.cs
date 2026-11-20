@@ -629,6 +629,7 @@ namespace CompetitionCreator
                 TeamConstraint con = new TeamConstraint(model, team.Id, team.Id, TeamConstraint.What.HomeInSameWeekend);
                 model.teamConstraints.Add(con);
                 UpdateTeamConstraints();
+                model.RenewConstraints();
             }
             model.Evaluate(null);
             model.Changed();

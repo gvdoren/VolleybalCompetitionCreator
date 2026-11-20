@@ -215,6 +215,12 @@ namespace CompetitionCreator
         public bool SnapShotIfImproved(Model model, bool equalAllowed = true)
         {
             model.Evaluate(this);
+            foreach (BlockingConstraint constraint in model.blockingConstraints)
+            {
+                if (constraint.IsRelated(this) && !constraint.IsSatisfied())
+                    return false;
+            }
+
             Int64 totalConflicts = model.TotalConflicts();
             if (totalConflicts < bestSnapShot.TotalConflicts + OptimizeThreshold)
             {

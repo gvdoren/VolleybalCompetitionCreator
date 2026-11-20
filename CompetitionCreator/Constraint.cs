@@ -285,6 +285,93 @@ namespace CompetitionCreator
             conflictMatches.Sort(delegate (Match m1, Match m2) { return m1.datetime.CompareTo(m2.datetime); });
         }
     }
+
+    public abstract class BlockingConstraint
+    {
+        private readonly List<Poule> relatedPoules = new List<Poule>();
+
+        protected void AddRelated(Poule poule)
+        {
+            if (!relatedPoules.Contains(poule))
+                relatedPoules.Add(poule);
+        }
+
+        public bool IsRelated(Poule poule)
+        {
+            return relatedPoules.Count == 0 || relatedPoules.Contains(poule);
+        }
+
+        public abstract bool IsSatisfied();
+    }
+
+    class ConstraintTeamGroupConsistency : Constraint
+    {
+        public ConstraintTeamGroupConsistency()
+        {
+            name = "Team constraint/group consistency";
+            cost = 0;
+        }
+
+        public override void Evaluate(Model model)
+        {
+            // This diagnostic depends on mostly static input data, not on schedule evaluations.
+        }
+
+        public void Refresh(Model model)
+        {
+            ClearErrors();
+
+            foreach (TeamConstraint constraint in model.teamConstraints)
+            {
+                Team team1 = constraint.team1;
+                Team team2 = constraint.team2;
+                if (team1 == null || team2 == null || team1.club != team2.club)
+                    continue;
+
+                bool shouldShareGroup;
+                switch (constraint.what)
+                {
+                    case TeamConstraint.What.HomeNotOnSameDay:
+                    case TeamConstraint.What.HomeNotInSameWeekend:
+                        shouldShareGroup = false;
+                        break;
+                    case TeamConstraint.What.HomeOnSameDay:
+                    case TeamConstraint.What.HomeInSameWeekend:
+                        shouldShareGroup = true;
+                        break;
+                    default:
+                        continue;
+                }
+
+                bool teamsShareGroup = team1.group == team2.group;
+                if (teamsShareGroup == shouldShareGroup)
+                    continue;
+
+                string relation = constraint.what == TeamConstraint.What.HomeOnSameDay
+                    ? "on the same day"
+                    : constraint.what == TeamConstraint.What.HomeNotOnSameDay
+                        ? "not on the same day"
+                        : constraint.what == TeamConstraint.What.HomeInSameWeekend
+                            ? "in the same weekend"
+                            : "not in the same weekend";
+                string groupState = teamsShareGroup ? "the same group" : "different groups";
+                AddError(string.Format(
+                    "Inconsistent data: Teams '{0}' ({1}) and '{2}' ({3}) should play {4}, but are in {5}.",
+                    team1.name,
+                    team1.serie.name,
+                    team2.name,
+                    team2.serie.name,
+                    relation,
+                    groupState));
+            }
+        }
+
+        public override string[] GetTextDescription(Match match)
+        {
+            return ErrorInfo();
+        }
+    }
+
     class ConstraintSporthallNotAvailable : Constraint
     {
         public ConstraintSporthallNotAvailable(Team team)
@@ -393,51 +480,40 @@ namespace CompetitionCreator
         }
     }
 
-    class ConstraintSchemaTooManyHome : Constraint
+    class ConstraintIncreasedUnbalance : BlockingConstraint
     {
-        public override string Title
+        private readonly int baselineImbalance;
+        private readonly Poule poule;
+
+        public ConstraintIncreasedUnbalance(Poule poule)
         {
-            get
-            {
-                return name + " - " + poule.serie.name + poule.name;
-            }
-        }
-        public ConstraintSchemaTooManyHome(Poule poule)
-        {
-            name = "Teveel thuiswedstrijden";
             this.poule = poule;
             AddRelated(poule);
+            baselineImbalance = CalculateTotalImbalance();
         }
-        public override void Evaluate(Model model)
-        {
-            ClearConflicts();
 
-            conflict_cost = 0;
-            conflictMatches.Clear();
-            int[] counts = new int[poule.maxTeams];
-            if (poule.evaluated)
+        public override bool IsSatisfied()
+        {
+            return !poule.evaluated || CalculateTotalImbalance() <= baselineImbalance;
+        }
+
+        private int CalculateTotalImbalance()
+        {
+            int totalImbalance = 0;
+            foreach (Team team in poule.teams.Where(t => t.RealTeam()))
             {
-                foreach (Match m in poule.matches)
+                int homeCount = 0;
+                int visitorCount = 0;
+                foreach (Match match in poule.matches)
                 {
-                    counts[m.homeTeamIndex]++;
+                    if (!match.RealMatch())
+                        continue;
+                    if (match.homeTeam == team) homeCount++;
+                    if (match.visitorTeam == team) visitorCount++;
                 }
-                int upperLimit = (int)Math.Ceiling(((double)poule.matches.Count) / poule.TeamCount);
-                for (int i = 0; i < poule.maxTeams; i++)
-                {
-                    if (counts[i] > upperLimit)
-                    {
-                        cost = MySettings.Settings.MatchTooManyHomeMatches;
-                        Match match = poule.matches.First(m => m.homeTeamIndex == i);
-                        AddConflictMatch(VisitorHomeBoth.HomeOnly, match);
-                    }
-
-                }
+                totalImbalance += Math.Abs(homeCount - visitorCount);
             }
-        }
-        public override string[] GetTextDescription(Match match)
-        {
-            List<string> result = new List<string>();
-            return result.ToArray();
+            return totalImbalance;
         }
     }
 
@@ -591,101 +667,63 @@ namespace CompetitionCreator
         {
             name = "Internal test - poule consistency";
             this.poule = poule;
-            cost = MySettings.Settings.InconsistentCost;
             AddRelated(poule);
         }
         public override void Evaluate(Model model)
         {
-            ClearConflicts();
+            Number++;
+            if (Number != 1 && Number % 10000 != 0)
+                return;
 
-            //if (Number % 1000 == 0 || error == true) // Deze test niet elke keer uitvoeren.
+            ClearErrors();
+            if (poule.evaluated && poule.imported == false)
             {
-                conflict_cost = 0;
-                conflictMatches.Clear();
-                ClearErrors();
-                if (poule.evaluated && poule.imported == false)
+                foreach (Team team in poule.teams)
                 {
-                    SortedList<int, int> HomeMatches = new SortedList<int, int>();
-                    SortedList<int, int> VisitorMatches = new SortedList<int, int>();
-                    foreach (Team t in poule.teams)
+                    if (team.poule != poule)
                     {
-                        HomeMatches.Add(t.Index, 0);
-                        VisitorMatches.Add(t.Index, 0);
-                        if (t.poule.teams.Contains(t) == false)
-                        {
-                            conflict_cost += cost;
-                            AddError("Poule consistency: Poule does not contain team",
-                                     "The cause can be that an invalid xml is used as input, or that indicates a bug in the program. In both cases save your project and contact the author.");
-                        }
-                        if (t.serie.poules.Contains(poule) == false)
-                        {
-                            conflict_cost += cost;
-                            AddError("Poule consistency: Serie does not contain poule",
-                                     "The cause can be that an invalid xml is used as input, or that indicates a bug in the program. In both cases save your project and contact the author.");
-                        }
+                        AddError(string.Format("Poule consistency: Team '{0}' does not reference its containing poule '{1}'", team.name, poule.fullName),
+                                 "The cause can be that an invalid xml is used as input, or that indicates a bug in the program. In both cases save your project and contact the author.");
                     }
-                    UInt64[] days = new UInt64[poule.weeks.Count];
-                    for (int i = 0; i < poule.weeks.Count; i++)
+                    if (team.serie != poule.serie)
                     {
-                        days[i] = 0;
+                        AddError(string.Format("Poule consistency: Team '{0}' belongs to a different serie than poule '{1}'", team.name, poule.fullName),
+                                 "The cause can be that an invalid xml is used as input, or that indicates a bug in the program. In both cases save your project and contact the author.");
                     }
-                    foreach (var m in poule.matches)
-                    {
-                        if (m.RealMatch())
-                        {
-                            int index = m.weekIndex;
-                            UInt32 bitMask = (1u << m.homeTeamIndex) | (1u << m.visitorTeamIndex);
-                            if ((days[index] & bitMask) != 0)
-                            {
-                                conflict_cost += cost;
-                                AddError("Poule consistency: One teams plays more than one match on a single day",
-                                         "The cause can be that an invalid xml is used as input, or that indicates a bug in the program. In both cases save your project and contact the author.");
-                            }
-                            days[index] |= bitMask;
-                        }
-                    }
-                    int rounds = 0;
-                    for (int m1 = 0; m1 < poule.matches.Count; m1++)
-                    {
-                        Match match1 = poule.matches[m1];
-                        if (match1.Week.round > rounds)
-                            rounds = match1.Week.round;
-                        if (match1.RealMatch())
-                        {
-                            HomeMatches[match1.homeTeam.Index]++;
-                            VisitorMatches[match1.visitorTeam.Index]++;
-                        }
-                    }
-                    double expectedMatches = ((double)((poule.TeamCount - 1) * (rounds + 1))) / 2;
+                }
 
-                    foreach (Team t in poule.teams)
+                if (poule.serie == null || !poule.serie.poules.Contains(poule))
+                {
+                    AddError(string.Format("Poule consistency: Serie does not contain poule '{0}'", poule.fullName),
+                             "The cause can be that an invalid xml is used as input, or that indicates a bug in the program. In both cases save your project and contact the author.");
+                }
+
+                UInt64[] days = new UInt64[poule.weeks.Count];
+                foreach (Match match in poule.matches)
+                {
+                    if (!match.RealMatch())
+                        continue;
+
+                    int index = match.weekIndex;
+                    UInt32 bitMask = (1u << match.homeTeamIndex) | (1u << match.visitorTeamIndex);
+                    if ((days[index] & bitMask) != 0)
                     {
-                        if (t.RealTeam())
-                        {
-                            if (HomeMatches[t.Index] > expectedMatches + 0.51 || HomeMatches[t.Index] < expectedMatches - 0.51)
-                            {
-                                AddError(string.Format("Poule consistency: Aantal thuis matches klopt niet (poule: {0}, team: {1})", poule.fullName, t.name),
-                                                  "The cause can be that an invalid xml is used as input, or that indicates a bug in the program. In both cases save your project and contact the author.");
-                            }
-                            if (VisitorMatches[t.Index] > expectedMatches + 0.51 || VisitorMatches[t.Index] < expectedMatches - 0.51)
-                            {
-                                AddError(string.Format("Poule consistency: Aantal uit matches klopt niet (poule: {0}, team: {1})", poule.fullName, t.name),
-                                                  "The cause can be that an invalid xml is used as input, or that indicates a bug in the program. In both cases save your project and contact the author.");
-                            }
-                        }
+                        AddError("Poule consistency: One teams plays more than one match on a single day",
+                                 "The cause can be that an invalid xml is used as input, or that indicates a bug in the program. In both cases save your project and contact the author.");
                     }
-                    foreach (Team team in poule.teams)
+                    days[index] |= bitMask;
+                }
+
+                foreach (Team team in poule.teams)
+                {
+                    if (team.RealTeam() && team.poule.matches.Count(m =>
+                        m.RealMatch() && (m.homeTeam == team || m.visitorTeam == team)) == 0)
                     {
-                        if (team.RealTeam() && team.poule.matches.Count(m => m.homeTeam == team) == 0)
-                        {
-                            conflict_cost += cost;
-                            AddError(string.Format("Internal test - poule consistency: No matches for team '{0}'", team.name),
-                                     "The cause can be that an invalid xml is used as input, or that indicates a bug in the program. In both cases save your project and contact the author.");
-                        }
+                        AddError(string.Format("Internal test - poule consistency: No matches for team '{0}'", team.name),
+                                 "The cause can be that an invalid xml is used as input, or that indicates a bug in the program. In both cases save your project and contact the author.");
                     }
                 }
             }
-            Number++;
         }
         public override string[] GetTextDescription(Match match)
         {

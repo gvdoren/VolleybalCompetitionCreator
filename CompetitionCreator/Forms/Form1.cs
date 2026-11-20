@@ -89,6 +89,10 @@ namespace CompetitionCreator
                 {
                     totErrors.AddRange(con.GetErrors());
                 }
+                foreach (var con in model.diagnosticConstraints)
+                {
+                    totErrors.AddRange(con.GetErrors());
+                }
                 if (totErrors.Count > 0)
                     this.errorsToolStripMenuItem.ForeColor = Color.Red;
                 else

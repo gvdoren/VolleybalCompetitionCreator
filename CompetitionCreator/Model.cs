@@ -50,6 +50,8 @@ namespace CompetitionCreator
         public List<TeamConstraint> teamConstraints = new List<TeamConstraint>();
         public List<Constraint> constraints = new List<Constraint>();
         public List<Constraint> constraints_1 = new List<Constraint>(); // constraints that depend on conflict matches, but don't add conflict matches themselves
+        public List<Constraint> diagnosticConstraints = new List<Constraint>(); // refreshed only when constraints are renewed
+        public List<BlockingConstraint> blockingConstraints = new List<BlockingConstraint>();
         public List<Sporthal> sporthalls = new List<Sporthal>();
         public void Optimize()
         {
@@ -162,6 +164,8 @@ namespace CompetitionCreator
                 foreach (var con in constraints_1)
                     con.ClearConflicts();
                 constraints_1.Clear(); // deze constraints zijn volledig afgeleid en worden hieronder opnieuw opgebouwd.
+                diagnosticConstraints.Clear();
+                blockingConstraints.Clear();
 
                 foreach (Poule poule in this.poules)
                 {
@@ -170,7 +174,7 @@ namespace CompetitionCreator
                         constraints.Add(new ConstraintSchemaTooClose(poule));
                         constraints.Add(new ConstraintPouleInconsistent(poule));
                         constraints.Add(new ConstraintPouleTwoTeamsOfSameClub(poule));
-                        constraints.Add(new ConstraintSchemaTooManyHome(poule));
+                        blockingConstraints.Add(new ConstraintIncreasedUnbalance(poule));
                         constraints.Add(new ConstraintSchemaTooManyHomeAfterEachOther(poule));
                     }
                 }
@@ -203,28 +207,6 @@ namespace CompetitionCreator
                 foreach (TeamConstraint con in teamConstraints.FindAll(c => c.what != TeamConstraint.What.NotOnSameTime && c.team1 != null && c.team2 != null && c.team1.club != c.team2.club && c.team1.poule != null && c.team2.poule != null))
                     constraints.Add(new ConstraintPlayOnSameDay(con.team1, con.team2, con.what));
 
-                foreach (TeamConstraint con in teamConstraints.FindAll(c => c.what == TeamConstraint.What.HomeNotOnSameDay && c.team1 != null && c.team2 != null && c.team1.club ==c.team2.club))
-                    if (con.team1.group == con.team2.group)
-                        CompetitionCreator.Error.AddManualError("Inconsistent data: ",
-                            "Team " + con.team1.name + "(" + con.team1.serie.name + ") should not play on same day with " + con.team2.name + "(" + con.team2.serie.name + ") but has identical group");
-                
-                foreach (TeamConstraint con in teamConstraints.FindAll(c => c.what == TeamConstraint.What.HomeOnSameDay && c.team1 != null && c.team2 != null && c.team1.club == c.team2.club))
-                    if (con.team1.group != con.team2.group)
-                        CompetitionCreator.Error.AddManualError("Inconsistent data: ",
-                            "Team " + con.team1.name + "(" + con.team1.serie.name + ") should play on same day with " + con.team2.name + "(" + con.team2.serie.name + ") but has not identical group");
-                
-                foreach (TeamConstraint con in teamConstraints.FindAll(c => c.what == TeamConstraint.What.HomeNotInSameWeekend && c.team1 != null && c.team2 != null && c.team1.club == c.team2.club))
-                    if (con.team1.group == con.team2.group)
-                        CompetitionCreator.Error.AddManualError("Inconsistent data: ",
-                            "Team " + con.team1.name + "(" + con.team1.serie.name + ") should not play on same weekend with " + con.team2.name + "(" + con.team2.serie.name + ") but has identical group");
-                
-                foreach (TeamConstraint con in teamConstraints.FindAll(c => c.what == TeamConstraint.What.HomeInSameWeekend && c.team1 != null && c.team2 != null && c.team1.club == c.team2.club))
-                    if (con.team1.group != con.team2.group)
-                        CompetitionCreator.Error.AddManualError("Inconsistent data: ",
-                            "Team " + con.team1.name + "(" + con.team1.serie.name + ") should play in same weekend with " + con.team2.name + "(" + con.team2.serie.name + ") but has not identical group");
-
-
-
                 // ConstructGroupConstraintsDay(); // tijdelijk uit zetten
 
                 foreach (Club club in clubs)
@@ -233,6 +215,10 @@ namespace CompetitionCreator
                     foreach (var ab in club.ABGroups)
                         constraints.Add(new ConstraintGroupingAB(club, ab));
                 }
+
+                ConstraintTeamGroupConsistency groupConsistency = new ConstraintTeamGroupConsistency();
+                groupConsistency.Refresh(this);
+                diagnosticConstraints.Add(groupConsistency);
 
                 // Deze moet als laatste
                 foreach (Team te in teams)

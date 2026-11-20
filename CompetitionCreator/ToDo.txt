@@ -1,4 +1,53 @@
 ﻿
+
+Optimalisatie roadmap (2026-11-08)
+=================================
+
+Doel
+- Betere eindkwaliteit (minder conflict-cost) bij gelijke of kortere runtijd.
+- Minder kans op zoekfouten/regressies in optimalisatie.
+
+Status nu
+- [DONE] Break-conditie in team-optimalisatie hersteld.
+- [DONE] Round off-by-one in schema-combinaties hersteld.
+- [DONE] Round-indices per iteratie resetten in schema-combinaties.
+- [DONE] Dubbele Evaluate-call verwijderd in OptimizeForm.
+
+Fase 1 - Correctness en snelle winst (afgerond)
+- [DONE] Controleflow fixen zodat alle kandidaten effectief verkend worden.
+- [DONE] Laatste round meenemen bij GenerateAllMatchCombinationsExt.
+- [DONE] Per round alleen week-indices uit die round gebruiken.
+- [DONE] Dubbele evaluatie per poule-run vermijden.
+
+Fase 2 - Meetbaarheid en benchmark
+- [TODO] Baseline-meting toevoegen (startscore, eindscore, runtime, iteraties).
+- [TODO] Per poule loggen: score delta en tijd per optimalisatiestap.
+- [TODO] 3 vaste benchmark-datasets kiezen (klein/middel/groot) en resultaten bijhouden.
+- [TODO] Acceptance criteria vastleggen:
+  - Geen score-regressie op benchmarksets.
+  - Gemiddeld >= 15% kortere runtime of >= 10% lagere eindscore.
+
+Fase 3 - Performance optimalisaties (laag risico)
+- [TODO] Verminder snapshots in hete lussen (eerst cheap check, dan pas deep snapshot).
+- [TODO] Vermijd herhaalde LINQ-queries in loops door tijdelijke indexen/caches.
+- [TODO] Alleen Evaluate op relevante scope waar mogelijk (poule-scope i.p.v. full-scope).
+- [TODO] Profiler-run doen op CreateSnapShot/SnapShotIfImproved/OptimizeSchema*.
+
+Fase 4 - Zoekkwaliteit verbeteren (middel risico)
+- [TODO] Multi-start strategie: meerdere seeds, beste snapshot behouden.
+- [TODO] Tabu-achtig geheugen op recente swaps om cycling te voorkomen.
+- [TODO] Simulated annealing/light random acceptance voor lokale minima.
+- [TODO] Adaptive neighborhood: begin grof, eindig fijn (setSize/threshold dynamisch).
+
+Fase 5 - Robuustheid en onderhoud
+- [TODO] Deterministische random-seed optie toevoegen voor reproduceerbare runs.
+- [TODO] Unit/integratietests voor kritieke optimalisatiepaden toevoegen.
+- [TODO] Guardrails voor maximale looptijd + veilige resume checkpoints.
+- [TODO] Kort design-document met gekozen heuristieken en trade-offs.
+
+Concreet eerstvolgende stap
+- [NEXT] Benchmark-logging toevoegen in OptimizeForm + 1 testrun op bestaande dataset.
+
 Nog doen:
 - Team constraints worden nu nog niet meegenomen!!!!!! die moeten nog onafhankelijk worden gechecked. 
 opschonen:
